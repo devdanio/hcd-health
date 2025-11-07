@@ -3,6 +3,14 @@ import { useQuery } from 'convex/react'
 import { api } from '../../../convex/_generated/api'
 import { Id } from '../../../convex/_generated/dataModel'
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { useState } from 'react'
 
 export const Route = createFileRoute('/projects/$projectId')({
   component: ProjectDetailsPage,
@@ -10,6 +18,9 @@ export const Route = createFileRoute('/projects/$projectId')({
 
 function ProjectDetailsPage() {
   const { projectId } = Route.useParams()
+  const [selectedSessionId, setSelectedSessionId] =
+    useState<Id<'sessions'> | null>(null)
+
   const project = useQuery(api.projects.getProject, {
     projectId: projectId as Id<'projects'>,
   })
@@ -21,6 +32,19 @@ function ProjectDetailsPage() {
     projectId: projectId as Id<'projects'>,
     limit: 50,
   })
+  const pageViews = useQuery(
+    api.tracking.getSessionPageViews,
+    selectedSessionId
+      ? {
+          sessionId: selectedSessionId,
+        }
+      : 'skip',
+  )
+
+  // Find the selected session to get its client sessionId for display
+  const selectedSession = selectedSessionId
+    ? sessions?.find((s) => s._id === selectedSessionId)
+    : null
 
   if (
     project === undefined ||
@@ -225,9 +249,12 @@ function ProjectDetailsPage() {
                       className="border-t hover:bg-muted/50"
                     >
                       <td className="p-4">
-                        <code className="text-xs">
+                        <button
+                          onClick={() => setSelectedSessionId(session._id)}
+                          className="text-xs text-primary hover:underline cursor-pointer font-mono"
+                        >
                           {session.sessionId.slice(0, 8)}...
-                        </code>
+                        </button>
                       </td>
                       <td className="p-4">
                         <div className="text-sm">
@@ -264,6 +291,67 @@ function ProjectDetailsPage() {
           </div>
         )}
       </div>
+
+      {/* Session Pages Modal */}
+      <Dialog
+        open={selectedSessionId !== null}
+        onOpenChange={(open) => !open && setSelectedSessionId(null)}
+      >
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Pages Visited</DialogTitle>
+            <DialogDescription>
+              Session ID: {selectedSession?.sessionId.slice(0, 8)}...
+              {pageViews !== undefined && (
+                <span className="ml-2">
+                  ({pageViews?.length || 0} page views)
+                </span>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4">
+            {pageViews === undefined ? (
+              <p className="text-muted-foreground text-center py-8">
+                Loading page views...
+              </p>
+            ) : pageViews.length === 0 ? (
+              <p className="text-muted-foreground text-center py-8">
+                No pages tracked for this session
+              </p>
+            ) : (
+              <div className="space-y-2">
+                {pageViews.map((pageView, index) => (
+                  <div
+                    key={pageView._id}
+                    className="p-4 border rounded-lg hover:bg-muted/50"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-1 rounded">
+                            #{index + 1}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            {new Date(pageView._creationTime).toLocaleString()}
+                          </span>
+                        </div>
+                        <a
+                          href={pageView.url || '#'}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm font-medium text-primary hover:underline break-all"
+                        >
+                          {pageView.url || 'Unknown URL'}
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

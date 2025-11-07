@@ -48,7 +48,7 @@ export const trackSession = mutation({
     let visitor = await ctx.db
       .query('visitors')
       .withIndex('projectId_visitorId', (q) =>
-        q.eq('projectId', project._id).eq('visitorId', args.visitorId)
+        q.eq('projectId', project._id).eq('visitorId', args.visitorId),
       )
       .first()
 
@@ -75,7 +75,7 @@ export const trackSession = mutation({
     let session = await ctx.db
       .query('sessions')
       .withIndex('projectId_sessionId', (q) =>
-        q.eq('projectId', project._id).eq('sessionId', args.sessionId)
+        q.eq('projectId', project._id).eq('sessionId', args.sessionId),
       )
       .first()
 
@@ -87,7 +87,7 @@ export const trackSession = mutation({
         sessionId: args.sessionId,
         touchPoints: [args.touchPoint],
         startedAt: args.touchPoint.timestamp,
-        pageViews: 1,
+        pageViews: 0, // Will be incremented by trackPageView
         userAgent: args.userAgent,
         screenResolution: args.screenResolution,
         timezone: args.timezone,
@@ -104,10 +104,10 @@ export const trackSession = mutation({
       if (shouldAddTouchPoint) {
         await ctx.db.patch(session._id, {
           touchPoints: [...session.touchPoints, args.touchPoint],
-          pageViews: session.pageViews + 1,
+          // pageViews is now incremented by trackPageView, not here
           endedAt: args.touchPoint.timestamp,
           duration: Math.floor(
-            (args.touchPoint.timestamp - session.startedAt) / 1000
+            (args.touchPoint.timestamp - session.startedAt) / 1000,
           ),
         })
       } else {
@@ -115,7 +115,7 @@ export const trackSession = mutation({
         await ctx.db.patch(session._id, {
           endedAt: args.touchPoint.timestamp,
           duration: Math.floor(
-            (args.touchPoint.timestamp - session.startedAt) / 1000
+            (args.touchPoint.timestamp - session.startedAt) / 1000,
           ),
         })
       }
@@ -147,7 +147,7 @@ export const trackPageView = mutation({
     const session = await ctx.db
       .query('sessions')
       .withIndex('projectId_sessionId', (q) =>
-        q.eq('projectId', project._id).eq('sessionId', args.sessionId)
+        q.eq('projectId', project._id).eq('sessionId', args.sessionId),
       )
       .first()
 
@@ -155,12 +155,22 @@ export const trackPageView = mutation({
       throw new Error('Session not found')
     }
 
+    const now = Date.now()
+
+    // Create the pageview event
     const eventId = await ctx.db.insert('events', {
       projectId: project._id,
       visitorId: session.visitorId,
       sessionId: session._id,
       type: 'pageview',
       url: args.url,
+    })
+
+    // Increment pageViews count and update session activity
+    await ctx.db.patch(session._id, {
+      pageViews: session.pageViews + 1,
+      endedAt: now,
+      duration: Math.floor((now - session.startedAt) / 1000),
     })
 
     return { eventId }
@@ -190,7 +200,7 @@ export const trackEvent = mutation({
     const session = await ctx.db
       .query('sessions')
       .withIndex('projectId_sessionId', (q) =>
-        q.eq('projectId', project._id).eq('sessionId', args.sessionId)
+        q.eq('projectId', project._id).eq('sessionId', args.sessionId),
       )
       .first()
 
@@ -235,7 +245,7 @@ export const trackConversion = mutation({
     const session = await ctx.db
       .query('sessions')
       .withIndex('projectId_sessionId', (q) =>
-        q.eq('projectId', project._id).eq('sessionId', args.sessionId)
+        q.eq('projectId', project._id).eq('sessionId', args.sessionId),
       )
       .first()
 
@@ -320,7 +330,7 @@ export const getConversions = query({
               }
             : null,
         }
-      })
+      }),
     )
 
     return enrichedConversions
@@ -358,10 +368,32 @@ export const getSessionDetails = query({
   },
 })
 
+/**
+ * Get all pageview events for a session by Convex session ID
+ */
+export const getSessionPageViews = query({
+  args: {
+    sessionId: v.id('sessions'),
+  },
+  handler: async (ctx, args) => {
+    const allEvents = await ctx.db
+      .query('events')
+      .withIndex('sessionId', (q) => q.eq('sessionId', args.sessionId))
+      .collect()
+
+    // Filter to only pageview events and sort by creation time
+    const pageViews = allEvents
+      .filter((event) => event.type === 'pageview')
+      .sort((a, b) => a._creationTime - b._creationTime)
+
+    return pageViews
+  },
+})
+
 // Helper function to check if touchpoint has new attribution data
 function hasNewAttributionData(
   oldTouchPoint: any,
-  newTouchPoint: any
+  newTouchPoint: any,
 ): boolean {
   const attributionFields = [
     'utm_source',

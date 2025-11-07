@@ -2,7 +2,7 @@
  * Leadalytics Attribution Tracker
  * Lightweight, iOS-compatible attribution tracking script
  */
-(function () {
+;(function () {
   'use strict'
 
   // Configuration
@@ -95,7 +95,7 @@
     getOrCreateSessionId() {
       const existingSessionId = this.getCookie(STORAGE_KEYS.SESSION_ID)
       const sessionStart = parseInt(
-        this.getCookie(STORAGE_KEYS.SESSION_START) || '0'
+        this.getCookie(STORAGE_KEYS.SESSION_START) || '0',
       )
       const now = Date.now()
 
@@ -115,12 +115,12 @@
       this.setCookie(
         STORAGE_KEYS.SESSION_ID,
         newSessionId,
-        SESSION_COOKIE_EXPIRY_DAYS
+        SESSION_COOKIE_EXPIRY_DAYS,
       )
       this.setCookie(
         STORAGE_KEYS.SESSION_START,
         String(now),
-        SESSION_COOKIE_EXPIRY_DAYS
+        SESSION_COOKIE_EXPIRY_DAYS,
       )
       return newSessionId
     }
@@ -283,7 +283,7 @@
         this.setCookie(
           STORAGE_KEYS.SESSION_START,
           String(now),
-          SESSION_COOKIE_EXPIRY_DAYS
+          SESSION_COOKIE_EXPIRY_DAYS,
         )
       }
 
@@ -321,7 +321,7 @@
                 apiKey: this.apiKey,
                 apiUrl: this.apiUrl,
               },
-              event.origin
+              event.origin,
             )
             break
 
@@ -373,7 +373,7 @@
           const r = (Math.random() * 16) | 0
           const v = c === 'x' ? r : (r & 0x3) | 0x8
           return v.toString(16)
-        }
+        },
       )
     }
 
@@ -407,7 +407,8 @@
 
   // Expose global API
   window.Leadalytics = {
-    trackEvent: (eventName, metadata) => tracker.trackEvent(eventName, metadata),
+    trackEvent: (eventName, metadata) =>
+      tracker.trackEvent(eventName, metadata),
     trackConversion: (eventName, options) =>
       tracker.trackConversion(eventName, options),
     trackPageView: (url) => tracker.trackPageView(url),
