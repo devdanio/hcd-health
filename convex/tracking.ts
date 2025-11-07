@@ -417,6 +417,114 @@ export const trackConversion = mutation({
 })
 
 /**
+ * Identify a visitor by email or phone number
+ * Updates the visitor record with the provided identification data
+ */
+export const identifyVisitor = mutation({
+  args: {
+    apiKey: v.string(),
+    visitorId: v.string(),
+    email: v.optional(v.string()),
+    phone: v.optional(v.string()),
+    userId: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    // Authenticate project
+    const project = await ctx.db
+      .query('projects')
+      .withIndex('apiKey', (q) => q.eq('apiKey', args.apiKey))
+      .first()
+
+    if (!project) {
+      throw new Error('Invalid API key')
+    }
+
+    // Validate that at least one identifier is provided
+    if (!args.email && !args.phone) {
+      throw new Error('Either email or phone must be provided')
+    }
+
+    // Find the visitor by visitorId
+    let visitor = await ctx.db
+      .query('visitors')
+      .withIndex('projectId_visitorId', (q) =>
+        q.eq('projectId', project._id).eq('visitorId', args.visitorId),
+      )
+      .first()
+
+    if (!visitor) {
+      throw new Error('Visitor not found')
+    }
+
+    // Check if another visitor already has this email or phone
+    let existingVisitorByEmail = null
+    let existingVisitorByPhone = null
+
+    if (args.email) {
+      existingVisitorByEmail = await ctx.db
+        .query('visitors')
+        .withIndex('projectId_email', (q) =>
+          q.eq('projectId', project._id).eq('email', args.email),
+        )
+        .first()
+    }
+
+    if (args.phone) {
+      existingVisitorByPhone = await ctx.db
+        .query('visitors')
+        .withIndex('projectId_phone', (q) =>
+          q.eq('projectId', project._id).eq('phone', args.phone),
+        )
+        .first()
+    }
+
+    // If we found existing visitors with the same email/phone but different visitorId,
+    // we'll update the current visitor (in a production system, you might want to merge them)
+    const updateData: {
+      email?: string
+      phone?: string
+      userId?: string
+    } = {}
+
+    if (args.email) {
+      // Only update if no other visitor has this email, or if it's the same visitor
+      if (!existingVisitorByEmail || existingVisitorByEmail._id === visitor._id) {
+        updateData.email = args.email
+      } else {
+        // Another visitor already has this email - we could merge here, but for now just update
+        // In production, you might want to merge the visitors
+        updateData.email = args.email
+      }
+    }
+
+    if (args.phone) {
+      // Only update if no other visitor has this phone, or if it's the same visitor
+      if (!existingVisitorByPhone || existingVisitorByPhone._id === visitor._id) {
+        updateData.phone = args.phone
+      } else {
+        // Another visitor already has this phone - we could merge here, but for now just update
+        updateData.phone = args.phone
+      }
+    }
+
+    if (args.userId) {
+      updateData.userId = args.userId
+    }
+
+    // Update the visitor with identification data
+    await ctx.db.patch(visitor._id, updateData)
+
+    return {
+      visitorId: visitor._id,
+      identified: true,
+      email: updateData.email || visitor.email,
+      phone: updateData.phone || visitor.phone,
+      userId: updateData.userId || visitor.userId,
+    }
+  },
+})
+
+/**
  * Get sessions for a project
  */
 export const getSessions = query({

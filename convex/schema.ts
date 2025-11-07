@@ -40,9 +40,12 @@ export default defineSchema({
     lastSeen: v.number(),
     // Optional identified data
     email: v.optional(v.string()),
+    phone: v.optional(v.string()),
     userId: v.optional(v.string()),
   })
     .index('projectId_visitorId', ['projectId', 'visitorId'])
+    .index('projectId_email', ['projectId', 'email'])
+    .index('projectId_phone', ['projectId', 'phone'])
     .index('projectId', ['projectId']),
 
   sessions: defineTable({
@@ -72,7 +75,7 @@ export default defineSchema({
     type: v.union(
       v.literal('pageview'),
       v.literal('event'),
-      v.literal('conversion')
+      v.literal('conversion'),
     ),
     name: v.optional(v.string()), // Event name for custom events
     url: v.optional(v.string()), // URL for pageviews
@@ -104,9 +107,5 @@ export default defineSchema({
     title: v.string(),
     imageId: v.string(),
     price: v.number(),
-  }),
-  todos: defineTable({
-    text: v.string(),
-    completed: v.boolean(),
   }),
 })

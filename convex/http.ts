@@ -52,6 +52,17 @@ http.route({
   }),
 })
 
+http.route({
+  path: '/identifyVisitor',
+  method: 'OPTIONS',
+  handler: httpAction(async (_, request) => {
+    return new Response(null, {
+      status: 204,
+      headers: corsHeaders(request.headers.get('origin') || undefined),
+    })
+  }),
+})
+
 /**
  * Track Page View Endpoint
  * Consolidates session creation and page view tracking
@@ -193,6 +204,50 @@ http.route({
       })
     } catch (error: any) {
       console.error('Error tracking conversion:', error)
+      return new Response(
+        JSON.stringify({ error: error.message || 'Internal server error' }),
+        {
+          status: error.message === 'Invalid API key' ? 401 : 500,
+          headers: {
+            'Content-Type': 'application/json',
+            ...corsHeaders(origin),
+          },
+        },
+      )
+    }
+  }),
+})
+
+/**
+ * Identify Visitor Endpoint
+ * Identifies a visitor by email or phone number
+ */
+http.route({
+  path: '/identifyVisitor',
+  method: 'POST',
+  handler: httpAction(async (ctx, request) => {
+    const origin = request.headers.get('origin') || undefined
+
+    try {
+      const body = await request.json()
+
+      const result = await ctx.runMutation(api.tracking.identifyVisitor, {
+        apiKey: body.apiKey,
+        visitorId: body.visitorId,
+        email: body.email,
+        phone: body.phone,
+        userId: body.userId,
+      })
+
+      return new Response(JSON.stringify(result), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders(origin),
+        },
+      })
+    } catch (error: any) {
+      console.error('Error identifying visitor:', error)
       return new Response(
         JSON.stringify({ error: error.message || 'Internal server error' }),
         {
