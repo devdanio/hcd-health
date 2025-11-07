@@ -26,6 +26,7 @@
       this.sessionStart = null
       this.isInitialized = false
       this.queue = []
+      this.initialPageViewSent = false // Prevent duplicate initial pageview
 
       // Get config from script tag
       this.loadConfig()
@@ -127,78 +128,68 @@
 
     // Capture attribution data from URL and referrer
     captureAttribution() {
-      const touchPoint = {
-        // UTM parameters
-        utm_source: this.getUrlParam('utm_source'),
-        utm_medium: this.getUrlParam('utm_medium'),
-        utm_campaign: this.getUrlParam('utm_campaign'),
-        utm_content: this.getUrlParam('utm_content'),
-        utm_term: this.getUrlParam('utm_term'),
-
-        // Click IDs
-        fbclid: this.getUrlParam('fbclid'),
-        gclid: this.getUrlParam('gclid'),
-        msclkid: this.getUrlParam('msclkid'),
-        ttclid: this.getUrlParam('ttclid'),
-        twclid: this.getUrlParam('twclid'),
-        li_fat_id: this.getUrlParam('li_fat_id'),
-        ScCid: this.getUrlParam('ScCid'),
-
-        // Page data
-        url: window.location.href,
-        referrer: document.referrer || undefined,
-        timestamp: Date.now(),
-      }
-
-      // Send session data to backend
-      this.trackSession(touchPoint)
-    }
-
-    // Track session
-    async trackSession(touchPoint) {
-      try {
-        const response = await fetch(`${this.apiUrl}/trackSession`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            apiKey: this.apiKey,
-            visitorId: this.visitorId,
-            sessionId: this.sessionId,
-            touchPoint,
-            userAgent: navigator.userAgent,
-            screenResolution: `${screen.width}x${screen.height}`,
-            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-          }),
-        })
-
-        if (!response.ok) {
-          console.error('Leadalytics: Failed to track session', response)
-        }
-      } catch (error) {
-        console.error('Leadalytics: Error tracking session', error)
+      // Track initial page view with attribution data
+      // This will create the session if it doesn't exist
+      // Only send once per page load
+      if (!this.initialPageViewSent) {
+        this.initialPageViewSent = true
+        this.trackPageView(window.location.href, true)
       }
     }
 
     // Track page view
-    async trackPageView(url = window.location.href) {
+    // isInitialPage: true for the first pageview (includes attribution data)
+    async trackPageView(url = window.location.href, isInitialPage = false) {
       if (!this.isInitialized) {
-        this.queue.push({ type: 'pageview', url })
+        this.queue.push({ type: 'pageview', url, isInitialPage })
         return
       }
 
       try {
+        const body = {
+          apiKey: this.apiKey,
+          visitorId: this.visitorId,
+          sessionId: this.sessionId,
+          url,
+        }
+
+        // Include attribution data for initial pageview or when URL changes
+        if (isInitialPage) {
+          body.touchPoint = {
+            // UTM parameters
+            utm_source: this.getUrlParam('utm_source'),
+            utm_medium: this.getUrlParam('utm_medium'),
+            utm_campaign: this.getUrlParam('utm_campaign'),
+            utm_content: this.getUrlParam('utm_content'),
+            utm_term: this.getUrlParam('utm_term'),
+
+            // Click IDs
+            fbclid: this.getUrlParam('fbclid'),
+            gclid: this.getUrlParam('gclid'),
+            msclkid: this.getUrlParam('msclkid'),
+            ttclid: this.getUrlParam('ttclid'),
+            twclid: this.getUrlParam('twclid'),
+            li_fat_id: this.getUrlParam('li_fat_id'),
+            ScCid: this.getUrlParam('ScCid'),
+
+            // Page data
+            url: url,
+            referrer: document.referrer || undefined,
+            timestamp: Date.now(),
+          }
+
+          // Include device/browser info for initial pageview
+          body.userAgent = navigator.userAgent
+          body.screenResolution = `${screen.width}x${screen.height}`
+          body.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+        }
+
         await fetch(`${this.apiUrl}/trackPageView`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            apiKey: this.apiKey,
-            sessionId: this.sessionId,
-            url,
-          }),
+          body: JSON.stringify(body),
         })
       } catch (error) {
         console.error('Leadalytics: Error tracking page view', error)
@@ -347,7 +338,7 @@
         const item = this.queue.shift()
         switch (item.type) {
           case 'pageview':
-            this.trackPageView(item.url)
+            this.trackPageView(item.url, item.isInitialPage || false)
             break
           case 'event':
             this.trackEvent(item.eventName, item.metadata)

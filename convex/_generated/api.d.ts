@@ -8,6 +8,8 @@
  * @module
  */
 
+import type * as channelDefinitions from "../channelDefinitions.js";
+import type * as channelResolver from "../channelResolver.js";
 import type * as http from "../http.js";
 import type * as projects from "../projects.js";
 import type * as todos from "../todos.js";
@@ -28,6 +30,8 @@ import type {
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  channelDefinitions: typeof channelDefinitions;
+  channelResolver: typeof channelResolver;
   http: typeof http;
   projects: typeof projects;
   todos: typeof todos;

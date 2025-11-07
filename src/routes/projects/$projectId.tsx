@@ -11,6 +11,20 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { useState } from 'react'
+import {
+  Search,
+  Users,
+  MessageSquare,
+  Briefcase,
+  Video,
+  Globe,
+  Home,
+  ExternalLink,
+  Mail,
+  Monitor,
+  Link as LinkIcon,
+  MessageCircle,
+} from 'lucide-react'
 
 export const Route = createFileRoute('/projects/$projectId')({
   component: ProjectDetailsPage,
@@ -40,16 +54,127 @@ function ProjectDetailsPage() {
         }
       : 'skip',
   )
+  const trafficSources = useQuery(api.tracking.getTrafficSources, {
+    projectId: projectId as Id<'projects'>,
+  })
 
   // Find the selected session to get its client sessionId for display
   const selectedSession = selectedSessionId
     ? sessions?.find((s) => s._id === selectedSessionId)
     : null
 
+  // Icon mapping function
+  const getIconComponent = (iconName: string) => {
+    const iconMap: Record<
+      string,
+      React.ComponentType<{ className?: string }>
+    > = {
+      Search,
+      Users,
+      MessageSquare,
+      Briefcase,
+      Video,
+      Globe,
+      Home,
+      ExternalLink,
+      Mail,
+      Monitor,
+      Link: LinkIcon,
+      MessageCircle,
+    }
+    const IconComponent = iconMap[iconName] || ExternalLink
+    return <IconComponent className="size-5" />
+  }
+
+  // Category badge styling
+  const getCategoryBadge = (category: string) => {
+    const categoryMap: Record<string, { label: string; className: string }> = {
+      organic_search: {
+        label: 'Organic Search',
+        className:
+          'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+      },
+      paid_search: {
+        label: 'Paid Search',
+        className:
+          'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+      },
+      organic_social: {
+        label: 'Organic Social',
+        className:
+          'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+      },
+      paid_social: {
+        label: 'Paid Social',
+        className:
+          'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
+      },
+      email: {
+        label: 'Email',
+        className:
+          'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200',
+      },
+      referral: {
+        label: 'Referral',
+        className:
+          'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200',
+      },
+      display: {
+        label: 'Display',
+        className:
+          'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200',
+      },
+      affiliate: {
+        label: 'Affiliate',
+        className:
+          'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+      },
+      sms: {
+        label: 'SMS',
+        className:
+          'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200',
+      },
+      push: {
+        label: 'Push',
+        className:
+          'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200',
+      },
+      shopping: {
+        label: 'Shopping',
+        className:
+          'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200',
+      },
+      video: {
+        label: 'Video',
+        className: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+      },
+      direct: {
+        label: 'Direct',
+        className:
+          'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200',
+      },
+    }
+
+    const categoryInfo = categoryMap[category] || {
+      label: category,
+      className:
+        'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200',
+    }
+
+    return (
+      <span
+        className={`text-xs font-medium px-1.5 py-0.5 rounded ${categoryInfo.className}`}
+      >
+        {categoryInfo.label}
+      </span>
+    )
+  }
+
   if (
     project === undefined ||
     sessions === undefined ||
-    conversions === undefined
+    conversions === undefined ||
+    trafficSources === undefined
   ) {
     return <div className="container mx-auto p-8">Loading...</div>
   }
@@ -108,6 +233,51 @@ function ProjectDetailsPage() {
           </div>
           <div className="text-3xl font-bold">{conversionRate}%</div>
         </div>
+      </div>
+
+      {/* Traffic Sources Table */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-semibold mb-4">Traffic Sources</h2>
+        {trafficSources.length === 0 ? (
+          <div className="text-center py-12 border rounded-lg">
+            <p className="text-muted-foreground">No traffic sources yet</p>
+          </div>
+        ) : (
+          <div className="border rounded-lg overflow-hidden">
+            <table className="w-full">
+              <thead className="bg-muted">
+                <tr>
+                  <th className="text-left p-4 font-medium">Source</th>
+                  <th className="text-left p-4 font-medium">Category</th>
+                  <th className="text-left p-4 font-medium">Sessions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {trafficSources.map((source, index) => (
+                  <tr
+                    key={`${source.source}-${source.category}-${index}`}
+                    className="border-t hover:bg-muted/50"
+                  >
+                    <td className="p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="flex-shrink-0">
+                          {getIconComponent(source.icon)}
+                        </div>
+                        <span className="font-medium">{source.source}</span>
+                      </div>
+                    </td>
+                    <td className="p-4">{getCategoryBadge(source.category)}</td>
+                    <td className="p-4">
+                      <span className="font-semibold">
+                        {source.sessionCount.toLocaleString()}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       {/* API Key Section */}
@@ -232,7 +402,12 @@ function ProjectDetailsPage() {
               <thead className="bg-muted">
                 <tr>
                   <th className="text-left p-4 font-medium">Session ID</th>
-                  <th className="text-left p-4 font-medium">Source</th>
+                  <th className="text-left p-4 font-medium">
+                    First Session Source
+                  </th>
+                  <th className="text-left p-4 font-medium">
+                    Last Session Source
+                  </th>
                   <th className="text-left p-4 font-medium">Landing Page</th>
                   <th className="text-left p-4 font-medium">Page Views</th>
                   <th className="text-left p-4 font-medium">Duration</th>
@@ -257,17 +432,24 @@ function ProjectDetailsPage() {
                         </button>
                       </td>
                       <td className="p-4">
-                        <div className="text-sm">
-                          {firstTouch?.utm_source || 'Direct'}
-                        </div>
-                        {firstTouch?.utm_medium && (
-                          <div className="text-xs text-muted-foreground">
-                            {firstTouch.utm_medium}
+                        {session.firstSessionSource ? (
+                          <div className="text-sm font-medium">
+                            {session.firstSessionSource}
+                          </div>
+                        ) : (
+                          <div className="text-sm text-muted-foreground">
+                            {firstTouch?.utm_source || 'Direct'}
                           </div>
                         )}
-                        {firstTouch?.fbclid && (
-                          <div className="text-xs text-muted-foreground">
-                            fbclid: {firstTouch.fbclid.slice(0, 8)}...
+                      </td>
+                      <td className="p-4">
+                        {session.lastSessionSource ? (
+                          <div className="text-sm font-medium">
+                            {session.lastSessionSource}
+                          </div>
+                        ) : (
+                          <div className="text-sm text-muted-foreground">
+                            {firstTouch?.utm_source || 'Direct'}
                           </div>
                         )}
                       </td>
@@ -320,7 +502,7 @@ function ProjectDetailsPage() {
               </p>
             ) : (
               <div className="space-y-2">
-                {pageViews.map((pageView, index) => (
+                {pageViews.map((pageView: any, index) => (
                   <div
                     key={pageView._id}
                     className="p-4 border rounded-lg hover:bg-muted/50"
@@ -334,6 +516,17 @@ function ProjectDetailsPage() {
                           <span className="text-xs text-muted-foreground">
                             {new Date(pageView._creationTime).toLocaleString()}
                           </span>
+                          {pageView.channel && (
+                            <>
+                              <span className="text-xs text-muted-foreground">
+                                •
+                              </span>
+                              <span className="text-xs font-medium">
+                                {pageView.channel.source}
+                              </span>
+                              {getCategoryBadge(pageView.channel.category)}
+                            </>
+                          )}
                         </div>
                         <a
                           href={pageView.url || '#'}

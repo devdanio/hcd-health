@@ -58,6 +58,8 @@ export default defineSchema({
     ipAddress: v.optional(v.string()),
     screenResolution: v.optional(v.string()),
     timezone: v.optional(v.string()),
+    firstSessionSource: v.optional(v.string()), // Channel source from first touchpoint
+    lastSessionSource: v.optional(v.string()), // Channel source from last touchpoint
   })
     .index('projectId_sessionId', ['projectId', 'sessionId'])
     .index('visitorId', ['visitorId'])
