@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(pnpm run build)",
-      "Bash(pnpm exec tsc:*)"
+      "Bash(pnpm exec tsc:*)",
+      "mcp__ide__getDiagnostics"
     ],
     "deny": [],
     "ask": []

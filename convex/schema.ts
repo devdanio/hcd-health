@@ -41,6 +41,9 @@ export default defineSchema({
     // Optional identified data
     email: v.optional(v.string()),
     phone: v.optional(v.string()),
+    fullName: v.optional(v.string()),
+    firstName: v.optional(v.string()),
+    lastName: v.optional(v.string()),
     userId: v.optional(v.string()),
   })
     .index('projectId_visitorId', ['projectId', 'visitorId'])
