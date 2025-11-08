@@ -53,7 +53,7 @@ function ProjectsPage() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-3 py-2 border rounded-md"
+                className="w-full px-3 py-2 border rounded-md bg-background text-foreground"
                 placeholder="My Marketing Campaign"
                 required
               />
@@ -64,7 +64,7 @@ function ProjectsPage() {
                 type="text"
                 value={domain}
                 onChange={(e) => setDomain(e.target.value)}
-                className="w-full px-3 py-2 border rounded-md"
+                className="w-full px-3 py-2 border rounded-md bg-background text-foreground"
                 placeholder="example.com"
                 required
               />
@@ -86,7 +86,7 @@ function ProjectsPage() {
       {projects === undefined ? (
         <div>Loading projects...</div>
       ) : projects.length === 0 ? (
-        <div className="text-center py-12 border rounded-lg">
+        <div className="text-center py-12 border rounded-lg bg-card">
           <p className="text-muted-foreground mb-4">
             No projects yet. Create your first project to start tracking
             attribution.
@@ -102,7 +102,7 @@ function ProjectsPage() {
               params={{ projectId: project._id }}
               className="block"
             >
-              <div className="p-6 border rounded-lg hover:border-primary transition-colors cursor-pointer">
+              <div className="p-6 border rounded-lg bg-card text-card-foreground hover:border-primary transition-colors cursor-pointer">
                 <h3 className="text-xl font-semibold mb-2">{project.name}</h3>
                 <p className="text-sm text-muted-foreground mb-4">
                   {project.domain}

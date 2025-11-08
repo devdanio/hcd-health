@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm run build)",
+      "Bash(pnpm exec tsc:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
