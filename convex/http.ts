@@ -74,7 +74,6 @@ http.route({
     const origin = request.headers.get('origin') || undefined
 
     // Extract HTTP headers for referrer and user agent
-    // HTTP headers are more reliable as they can't be manipulated by client-side JS
     const refererHeader =
       request.headers.get('referer') ||
       request.headers.get('Referer') ||
@@ -87,12 +86,13 @@ http.route({
     try {
       const body = await request.json()
 
-      // If touchPoint is provided, merge HTTP referer header if available
+      // If touchPoint is provided, use document.referrer as primary source
+      // with HTTP referer header as fallback
       let touchPoint = body.touchPoint
       if (touchPoint) {
         touchPoint = {
           ...touchPoint,
-          referrer: refererHeader || touchPoint.referrer || undefined,
+          referrer: touchPoint.referrer || refererHeader || undefined,
         }
       }
 
