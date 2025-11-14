@@ -15,7 +15,10 @@ export const Route = createFileRoute('/companies')({
 })
 
 function CompaniesLayout() {
-  const company = useCompany()
+  // const company = useCompany()
+  const company = {
+    name: 'Test Company',
+  }
   return (
     <ThemeProvider defaultTheme="system" storageKey="leadalytics-ui-theme">
       <SidebarProvider>

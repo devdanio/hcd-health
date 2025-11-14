@@ -1,3 +1,4 @@
+import { convexQuery } from '@convex-dev/react-query'
 import { useParams } from '@tanstack/react-router'
 import { api } from 'convex/_generated/api'
 import { Id } from 'convex/_generated/dataModel'
@@ -8,7 +9,6 @@ export const useCompany = () => {
     strict: false,
     select: (params) => params.companyId,
   })
-  console.log('companyId', companyId)
 
   const company = useQuery(api.companies.getCompany, {
     companyId: companyId as Id<'companies'>,
