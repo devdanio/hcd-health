@@ -37,6 +37,13 @@ interface MyRouterContext {
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
+  notFoundComponent: () => <div>Not Found</div>,
+  errorComponent: ({ error, info }) => (
+    <div>
+      Error: {error.message}
+      {info?.componentStack ? <pre>{info.componentStack}</pre> : null}
+    </div>
+  ),
   beforeLoad: async () => {
     const { userId } = await fetchClerkAuth()
 

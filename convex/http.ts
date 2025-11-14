@@ -73,11 +73,11 @@ http.route({
   handler: httpAction(async (ctx, request) => {
     const origin = request.headers.get('origin') || undefined
 
-    // Extract HTTP headers for referrer and user agent
-    const refererHeader =
-      request.headers.get('referer') ||
-      request.headers.get('Referer') ||
-      undefined
+    // Currenently this defaults to the domain of the page, which is not what we want.
+    // const refererHeader =
+    //   request.headers.get('referer') ||
+    //   request.headers.get('Referer') ||
+    //   undefined
     const userAgentHeader =
       request.headers.get('user-agent') ||
       request.headers.get('User-Agent') ||
@@ -92,7 +92,8 @@ http.route({
       if (touchPoint) {
         touchPoint = {
           ...touchPoint,
-          referrer: touchPoint.referrer || refererHeader || undefined,
+          // referrer: touchPoint.referrer || refererHeader || undefined,
+          referrer: touchPoint.referrer || undefined,
         }
       }
 

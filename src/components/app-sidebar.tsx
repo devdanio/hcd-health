@@ -127,19 +127,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     ],
     documents: [
       {
-        name: 'Data Library',
-        url: '#',
+        name: 'Tracking',
+        url: `/companies/${companyId}/tracking`,
         icon: IconDatabase,
-      },
-      {
-        name: 'Reports',
-        url: '#',
-        icon: IconReport,
-      },
-      {
-        name: 'Word Assistant',
-        url: '#',
-        icon: IconFileWord,
       },
     ],
   }
