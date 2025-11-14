@@ -6,6 +6,11 @@ import { ThemeProvider } from '@/components/theme-provider'
 
 export const Route = createFileRoute('/companies')({
   component: CompaniesLayout,
+  beforeLoad: ({ context }) => {
+    if (!context.userId) {
+      throw new Error('Not authenticated')
+    }
+  },
 })
 
 function CompaniesLayout() {
