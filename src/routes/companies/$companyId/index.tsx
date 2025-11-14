@@ -340,6 +340,7 @@ function CompanyDetailsPage() {
                 <tr>
                   <th className="text-left p-4 font-medium w-12">Source</th>
                   <th className="text-left p-4 font-medium">Session ID</th>
+                  <th className="text-left p-4 font-medium">User Identity</th>
                   <th className="text-left p-4 font-medium">Current Page</th>
                   <th className="text-left p-4 font-medium">Page Views</th>
                   <th className="text-left p-4 font-medium">Duration</th>
@@ -356,6 +357,21 @@ function CompanyDetailsPage() {
                   const IconComponent = getIconForSource(source, category)
                   const lastActivity = session.endedAt || session.startedAt
 
+                  // Determine user identity display
+                  const getUserIdentity = () => {
+                    console.log('session', session.visitor)
+                    if (!session.visitor) return 'Anonymous'
+                    const { email, fullName, firstName, lastName, userId } =
+                      session.visitor
+                    if (email) return email
+                    if (fullName) return fullName
+                    if (firstName || lastName) {
+                      return [firstName, lastName].filter(Boolean).join(' ')
+                    }
+                    if (userId) return userId
+                    return 'Anonymous'
+                  }
+
                   return (
                     <tr
                       key={session._id}
@@ -371,6 +387,17 @@ function CompanyDetailsPage() {
                         >
                           {session.sessionId.slice(0, 8)}...
                         </button>
+                      </td>
+                      <td className="p-4 text-sm">
+                        <span
+                          className={
+                            getUserIdentity() === 'Anonymous'
+                              ? 'text-muted-foreground italic'
+                              : ''
+                          }
+                        >
+                          {getUserIdentity()}
+                        </span>
                       </td>
                       <td className="p-4 text-sm max-w-xs truncate">
                         {extractPathname(lastTouch?.url)}

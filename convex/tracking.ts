@@ -541,7 +541,27 @@ export const getSessions = query({
       .order('desc')
       .take(limit)
 
-    return sessions
+    // Enrich sessions with visitor identity data
+    const enrichedSessions = await Promise.all(
+      sessions.map(async (session) => {
+        const visitor = await ctx.db.get(session.visitorId)
+        return {
+          ...session,
+          visitor: visitor
+            ? {
+                email: visitor.email,
+                phone: visitor.phone,
+                fullName: visitor.fullName,
+                firstName: visitor.firstName,
+                lastName: visitor.lastName,
+                userId: visitor.userId,
+              }
+            : null,
+        }
+      }),
+    )
+
+    return enrichedSessions
   },
 })
 
