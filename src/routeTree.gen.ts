@@ -13,6 +13,8 @@ import { Route as CompaniesRouteImport } from './routes/companies'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CompaniesIndexRouteImport } from './routes/companies/index'
 import { Route as CompaniesCompanyIdIndexRouteImport } from './routes/companies/$companyId/index'
+import { Route as CompaniesCompanyIdVisitorsIndexRouteImport } from './routes/companies/$companyId/visitors/index'
+import { Route as CompaniesCompanyIdContactsIndexRouteImport } from './routes/companies/$companyId/contacts/index'
 
 const CompaniesRoute = CompaniesRouteImport.update({
   id: '/companies',
@@ -34,17 +36,33 @@ const CompaniesCompanyIdIndexRoute = CompaniesCompanyIdIndexRouteImport.update({
   path: '/$companyId/',
   getParentRoute: () => CompaniesRoute,
 } as any)
+const CompaniesCompanyIdVisitorsIndexRoute =
+  CompaniesCompanyIdVisitorsIndexRouteImport.update({
+    id: '/$companyId/visitors/',
+    path: '/$companyId/visitors/',
+    getParentRoute: () => CompaniesRoute,
+  } as any)
+const CompaniesCompanyIdContactsIndexRoute =
+  CompaniesCompanyIdContactsIndexRouteImport.update({
+    id: '/$companyId/contacts/',
+    path: '/$companyId/contacts/',
+    getParentRoute: () => CompaniesRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/companies': typeof CompaniesRouteWithChildren
   '/companies/': typeof CompaniesIndexRoute
   '/companies/$companyId': typeof CompaniesCompanyIdIndexRoute
+  '/companies/$companyId/contacts': typeof CompaniesCompanyIdContactsIndexRoute
+  '/companies/$companyId/visitors': typeof CompaniesCompanyIdVisitorsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/companies': typeof CompaniesIndexRoute
   '/companies/$companyId': typeof CompaniesCompanyIdIndexRoute
+  '/companies/$companyId/contacts': typeof CompaniesCompanyIdContactsIndexRoute
+  '/companies/$companyId/visitors': typeof CompaniesCompanyIdVisitorsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -52,13 +70,33 @@ export interface FileRoutesById {
   '/companies': typeof CompaniesRouteWithChildren
   '/companies/': typeof CompaniesIndexRoute
   '/companies/$companyId/': typeof CompaniesCompanyIdIndexRoute
+  '/companies/$companyId/contacts/': typeof CompaniesCompanyIdContactsIndexRoute
+  '/companies/$companyId/visitors/': typeof CompaniesCompanyIdVisitorsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/companies' | '/companies/' | '/companies/$companyId'
+  fullPaths:
+    | '/'
+    | '/companies'
+    | '/companies/'
+    | '/companies/$companyId'
+    | '/companies/$companyId/contacts'
+    | '/companies/$companyId/visitors'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/companies' | '/companies/$companyId'
-  id: '__root__' | '/' | '/companies' | '/companies/' | '/companies/$companyId/'
+  to:
+    | '/'
+    | '/companies'
+    | '/companies/$companyId'
+    | '/companies/$companyId/contacts'
+    | '/companies/$companyId/visitors'
+  id:
+    | '__root__'
+    | '/'
+    | '/companies'
+    | '/companies/'
+    | '/companies/$companyId/'
+    | '/companies/$companyId/contacts/'
+    | '/companies/$companyId/visitors/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -96,17 +134,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompaniesCompanyIdIndexRouteImport
       parentRoute: typeof CompaniesRoute
     }
+    '/companies/$companyId/visitors/': {
+      id: '/companies/$companyId/visitors/'
+      path: '/$companyId/visitors'
+      fullPath: '/companies/$companyId/visitors'
+      preLoaderRoute: typeof CompaniesCompanyIdVisitorsIndexRouteImport
+      parentRoute: typeof CompaniesRoute
+    }
+    '/companies/$companyId/contacts/': {
+      id: '/companies/$companyId/contacts/'
+      path: '/$companyId/contacts'
+      fullPath: '/companies/$companyId/contacts'
+      preLoaderRoute: typeof CompaniesCompanyIdContactsIndexRouteImport
+      parentRoute: typeof CompaniesRoute
+    }
   }
 }
 
 interface CompaniesRouteChildren {
   CompaniesIndexRoute: typeof CompaniesIndexRoute
   CompaniesCompanyIdIndexRoute: typeof CompaniesCompanyIdIndexRoute
+  CompaniesCompanyIdContactsIndexRoute: typeof CompaniesCompanyIdContactsIndexRoute
+  CompaniesCompanyIdVisitorsIndexRoute: typeof CompaniesCompanyIdVisitorsIndexRoute
 }
 
 const CompaniesRouteChildren: CompaniesRouteChildren = {
   CompaniesIndexRoute: CompaniesIndexRoute,
   CompaniesCompanyIdIndexRoute: CompaniesCompanyIdIndexRoute,
+  CompaniesCompanyIdContactsIndexRoute: CompaniesCompanyIdContactsIndexRoute,
+  CompaniesCompanyIdVisitorsIndexRoute: CompaniesCompanyIdVisitorsIndexRoute,
 }
 
 const CompaniesRouteWithChildren = CompaniesRoute._addFileChildren(
