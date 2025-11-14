@@ -4,13 +4,13 @@ import { api } from '../../../convex/_generated/api'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 
-export const Route = createFileRoute('/projects/')({
-  component: ProjectsPage,
+export const Route = createFileRoute('/companies/')({
+  component: CompaniesPage,
 })
 
-function ProjectsPage() {
-  const projects = useQuery(api.projects.getProjects)
-  const createProject = useMutation(api.projects.createProject)
+function CompaniesPage() {
+  const companies = useQuery(api.companies.getCompanies)
+  const createCompany = useMutation(api.companies.createCompany)
   const [isCreating, setIsCreating] = useState(false)
   const [name, setName] = useState('')
   const [domain, setDomain] = useState('')
@@ -20,12 +20,12 @@ function ProjectsPage() {
     if (!name || !domain) return
 
     try {
-      await createProject({ name, domain })
+      await createCompany({ name, domain })
       setName('')
       setDomain('')
       setIsCreating(false)
     } catch (error) {
-      console.error('Error creating project:', error)
+      console.error('Error creating company:', error)
     }
   }
 
@@ -33,21 +33,21 @@ function ProjectsPage() {
     <div className="container mx-auto p-8">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold">Projects</h1>
+          <h1 className="text-3xl font-bold">Companies</h1>
           <p className="text-muted-foreground mt-2">
-            Manage your attribution tracking projects
+            Manage your attribution tracking companies
           </p>
         </div>
-        <Button onClick={() => setIsCreating(true)}>Create Project</Button>
+        <Button onClick={() => setIsCreating(true)}>Create Company</Button>
       </div>
 
       {isCreating && (
         <div className="mb-8 p-6 border rounded-lg bg-card">
-          <h2 className="text-xl font-semibold mb-4">Create New Project</h2>
+          <h2 className="text-xl font-semibold mb-4">Create New Company</h2>
           <form onSubmit={handleCreate} className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-2">
-                Project Name
+                Company Name
               </label>
               <input
                 type="text"
@@ -83,32 +83,32 @@ function ProjectsPage() {
         </div>
       )}
 
-      {projects === undefined ? (
-        <div>Loading projects...</div>
-      ) : projects.length === 0 ? (
+      {companies === undefined ? (
+        <div>Loading companies...</div>
+      ) : companies.length === 0 ? (
         <div className="text-center py-12 border rounded-lg bg-card">
           <p className="text-muted-foreground mb-4">
-            No projects yet. Create your first project to start tracking
+            No companies yet. Create your first company to start tracking
             attribution.
           </p>
-          <Button onClick={() => setIsCreating(true)}>Create Project</Button>
+          <Button onClick={() => setIsCreating(true)}>Create Company</Button>
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project) => (
+          {companies.map((company) => (
             <Link
-              key={project._id}
-              to="/projects/$projectId"
-              params={{ projectId: project._id }}
+              key={company._id}
+              to="/companies/$companyId"
+              params={{ companyId: company._id }}
               className="block"
             >
               <div className="p-6 border rounded-lg bg-card text-card-foreground hover:border-primary transition-colors cursor-pointer">
-                <h3 className="text-xl font-semibold mb-2">{project.name}</h3>
+                <h3 className="text-xl font-semibold mb-2">{company.name}</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  {project.domain}
+                  {company.domain}
                 </p>
                 <div className="text-xs font-mono bg-muted p-2 rounded overflow-x-auto">
-                  {project.apiKey}
+                  {company.apiKey}
                 </div>
               </div>
             </Link>

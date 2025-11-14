@@ -27,14 +27,14 @@ const touchPointSchema = v.object({
 
 export default defineSchema({
   // Attribution Tracking Tables
-  projects: defineTable({
+  companies: defineTable({
     name: v.string(),
     domain: v.string(),
     apiKey: v.string(), // For authenticating tracking requests
   }).index('apiKey', ['apiKey']),
 
   visitors: defineTable({
-    projectId: v.id('projects'),
+    companyId: v.optional(v.id('companies')),
     visitorId: v.string(), // Client-generated UUID
     firstSeen: v.number(),
     lastSeen: v.number(),
@@ -46,13 +46,13 @@ export default defineSchema({
     lastName: v.optional(v.string()),
     userId: v.optional(v.string()),
   })
-    .index('projectId_visitorId', ['projectId', 'visitorId'])
-    .index('projectId_email', ['projectId', 'email'])
-    .index('projectId_phone', ['projectId', 'phone'])
-    .index('projectId', ['projectId']),
+    .index('companyId_visitorId', ['companyId', 'visitorId'])
+    .index('companyId_email', ['companyId', 'email'])
+    .index('companyId_phone', ['companyId', 'phone'])
+    .index('companyId', ['companyId']),
 
   sessions: defineTable({
-    projectId: v.id('projects'),
+    companyId: v.optional(v.id('companies')),
     visitorId: v.id('visitors'),
     sessionId: v.string(), // Client-generated session ID
     touchPoints: v.array(touchPointSchema),
@@ -67,12 +67,12 @@ export default defineSchema({
     firstSessionSource: v.optional(v.string()), // Channel source from first touchpoint
     lastSessionSource: v.optional(v.string()), // Channel source from last touchpoint
   })
-    .index('projectId_sessionId', ['projectId', 'sessionId'])
+    .index('companyId_sessionId', ['companyId', 'sessionId'])
     .index('visitorId', ['visitorId'])
-    .index('projectId', ['projectId']),
+    .index('companyId', ['companyId']),
 
   events: defineTable({
-    projectId: v.id('projects'),
+    companyId: v.optional(v.id('companies')),
     visitorId: v.id('visitors'),
     sessionId: v.id('sessions'),
     type: v.union(
@@ -85,11 +85,11 @@ export default defineSchema({
     metadata: v.optional(v.any()), // Custom event data
   })
     .index('sessionId', ['sessionId'])
-    .index('projectId_type', ['projectId', 'type'])
-    .index('projectId', ['projectId']),
+    .index('companyId_type', ['companyId', 'type'])
+    .index('companyId', ['companyId']),
 
   conversions: defineTable({
-    projectId: v.id('projects'),
+    companyId: v.id('companies'),
     visitorId: v.id('visitors'),
     sessionId: v.id('sessions'),
     eventId: v.id('events'),
@@ -103,7 +103,7 @@ export default defineSchema({
     metadata: v.optional(v.any()),
   })
     .index('sessionId', ['sessionId'])
-    .index('projectId', ['projectId']),
+    .index('companyId', ['companyId']),
 
   // Demo tables (can be removed later)
   products: defineTable({

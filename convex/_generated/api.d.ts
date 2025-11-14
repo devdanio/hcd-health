@@ -10,8 +10,8 @@
 
 import type * as channelDefinitions from "../channelDefinitions.js";
 import type * as channelResolver from "../channelResolver.js";
+import type * as companies from "../companies.js";
 import type * as http from "../http.js";
-import type * as projects from "../projects.js";
 import type * as tracking from "../tracking.js";
 
 import type {
@@ -31,8 +31,8 @@ import type {
 declare const fullApi: ApiFromModules<{
   channelDefinitions: typeof channelDefinitions;
   channelResolver: typeof channelResolver;
+  companies: typeof companies;
   http: typeof http;
-  projects: typeof projects;
   tracking: typeof tracking;
 }>;
 declare const fullApiWithMounts: typeof fullApi;

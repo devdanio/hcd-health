@@ -2,9 +2,9 @@ import { v } from 'convex/values'
 import { mutation, query } from './_generated/server'
 
 /**
- * Create a new tracking project
+ * Create a new tracking company
  */
-export const createProject = mutation({
+export const createCompany = mutation({
   args: {
     name: v.string(),
     domain: v.string(),
@@ -13,92 +13,92 @@ export const createProject = mutation({
     // Generate API key
     const apiKey = generateApiKey()
 
-    const projectId = await ctx.db.insert('projects', {
+    const companyId = await ctx.db.insert('companies', {
       name: args.name,
       domain: args.domain,
       apiKey,
     })
 
-    return { projectId, apiKey }
+    return { companyId, apiKey }
   },
 })
 
 /**
- * Get all projects
+ * Get all companies
  */
-export const getProjects = query({
+export const getCompanies = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query('projects').collect()
+    return await ctx.db.query('companies').collect()
   },
 })
 
 /**
- * Get project by ID
+ * Get company by ID
  */
-export const getProject = query({
+export const getCompany = query({
   args: {
-    projectId: v.id('projects'),
+    companyId: v.id('companies'),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.projectId)
+    return await ctx.db.get(args.companyId)
   },
 })
 
 /**
- * Get project by API key
+ * Get company by API key
  */
-export const getProjectByApiKey = query({
+export const getCompanyByApiKey = query({
   args: {
     apiKey: v.string(),
   },
   handler: async (ctx, args) => {
     return await ctx.db
-      .query('projects')
+      .query('companies')
       .withIndex('apiKey', (q) => q.eq('apiKey', args.apiKey))
       .first()
   },
 })
 
 /**
- * Update project
+ * Update company
  */
-export const updateProject = mutation({
+export const updateCompany = mutation({
   args: {
-    projectId: v.id('projects'),
+    companyId: v.id('companies'),
     name: v.optional(v.string()),
     domain: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const { projectId, ...updates } = args
-    await ctx.db.patch(projectId, updates)
-    return { projectId }
+    const { companyId, ...updates } = args
+    await ctx.db.patch(companyId, updates)
+    return { companyId }
   },
 })
 
 /**
- * Delete project
+ * Delete company
  */
-export const deleteProject = mutation({
+export const deleteCompany = mutation({
   args: {
-    projectId: v.id('projects'),
+    companyId: v.id('companies'),
   },
   handler: async (ctx, args) => {
-    await ctx.db.delete(args.projectId)
+    await ctx.db.delete(args.companyId)
     return { success: true }
   },
 })
 
 /**
- * Regenerate API key for a project
+ * Regenerate API key for a company
  */
 export const regenerateApiKey = mutation({
   args: {
-    projectId: v.id('projects'),
+    companyId: v.id('companies'),
   },
   handler: async (ctx, args) => {
     const apiKey = generateApiKey()
-    await ctx.db.patch(args.projectId, { apiKey })
+    await ctx.db.patch(args.companyId, { apiKey })
     return { apiKey }
   },
 })

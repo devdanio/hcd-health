@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuery } from 'convex/react'
-import { api } from '../../../convex/_generated/api'
-import { Id } from '../../../convex/_generated/dataModel'
+
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -25,25 +24,27 @@ import {
   Link as LinkIcon,
   MessageCircle,
 } from 'lucide-react'
+import { api } from 'convex/_generated/api'
+import { Id } from 'convex/_generated/dataModel'
 
-export const Route = createFileRoute('/projects/$projectId')({
-  component: ProjectDetailsPage,
+export const Route = createFileRoute('/companies/$companyId/')({
+  component: CompanyDetailsPage,
 })
 
-function ProjectDetailsPage() {
-  const { projectId } = Route.useParams()
+function CompanyDetailsPage() {
+  const { companyId } = Route.useParams()
   const [selectedSessionId, setSelectedSessionId] =
     useState<Id<'sessions'> | null>(null)
 
-  const project = useQuery(api.projects.getProject, {
-    projectId: projectId as Id<'projects'>,
+  const company = useQuery(api.companies.getCompany, {
+    companyId: companyId as Id<'companies'>,
   })
   const sessions = useQuery(api.tracking.getSessions, {
-    projectId: projectId as Id<'projects'>,
+    companyId: companyId as Id<'companies'>,
     limit: 50,
   })
   const conversions = useQuery(api.tracking.getConversions, {
-    projectId: projectId as Id<'projects'>,
+    companyId: companyId as Id<'companies'>,
     limit: 50,
   })
   const pageViews = useQuery(
@@ -55,7 +56,7 @@ function ProjectDetailsPage() {
       : 'skip',
   )
   const trafficSources = useQuery(api.tracking.getTrafficSources, {
-    projectId: projectId as Id<'projects'>,
+    companyId: companyId as Id<'companies'>,
   })
 
   // Find the selected session to get its client sessionId for display
@@ -171,7 +172,7 @@ function ProjectDetailsPage() {
   }
 
   if (
-    project === undefined ||
+    company === undefined ||
     sessions === undefined ||
     conversions === undefined ||
     trafficSources === undefined
@@ -179,13 +180,13 @@ function ProjectDetailsPage() {
     return <div className="container mx-auto p-8">Loading...</div>
   }
 
-  if (project === null) {
+  if (company === null) {
     return (
       <div className="container mx-auto p-8">
         <div className="text-center py-12">
-          <h1 className="text-2xl font-bold mb-4">Project Not Found</h1>
-          <Link to="/projects">
-            <Button>Back to Projects</Button>
+          <h1 className="text-2xl font-bold mb-4">Company Not Found</h1>
+          <Link to="/companies">
+            <Button>Back to Companies</Button>
           </Link>
         </div>
       </div>
@@ -204,13 +205,13 @@ function ProjectDetailsPage() {
       {/* Header */}
       <div className="mb-8">
         <Link
-          to="/projects"
+          to="/companies"
           className="text-sm text-muted-foreground hover:underline mb-2 inline-block"
         >
-          ← Back to Projects
+          ← Back to Companies
         </Link>
-        <h1 className="text-3xl font-bold">{project.name}</h1>
-        <p className="text-muted-foreground mt-1">{project.domain}</p>
+        <h1 className="text-3xl font-bold">{company.name}</h1>
+        <p className="text-muted-foreground mt-1">{company.domain}</p>
       </div>
 
       {/* Stats Cards */}
@@ -288,11 +289,11 @@ function ProjectDetailsPage() {
             <label className="block text-sm font-medium mb-2">API Key</label>
             <div className="flex gap-2">
               <code className="flex-1 bg-muted p-3 rounded text-sm overflow-x-auto">
-                {project.apiKey}
+                {company.apiKey}
               </code>
               <Button
                 variant="outline"
-                onClick={() => navigator.clipboard.writeText(project.apiKey)}
+                onClick={() => navigator.clipboard.writeText(company.apiKey)}
               >
                 Copy
               </Button>
@@ -303,7 +304,7 @@ function ProjectDetailsPage() {
               Installation Code
             </label>
             <code className="block bg-muted p-3 rounded text-sm overflow-x-auto">
-              {`<script\n  src="https://your-domain.com/tracker/tracker.js"\n  data-api-key="${project.apiKey}"\n  data-api-url="${import.meta.env.VITE_CONVEX_URL}/http"\n></script>`}
+              {`<script\n  src="https://your-domain.com/tracker/tracker.js"\n  data-api-key="${company.apiKey}"\n  data-api-url="${import.meta.env.VITE_CONVEX_URL}/http"\n></script>`}
             </code>
           </div>
         </div>

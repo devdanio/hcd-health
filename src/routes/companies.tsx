@@ -4,11 +4,11 @@ import { SiteHeader } from '@/components/site-header'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { ThemeProvider } from '@/components/theme-provider'
 
-export const Route = createFileRoute('/projects')({
-  component: ProjectsLayout,
+export const Route = createFileRoute('/companies')({
+  component: CompaniesLayout,
 })
 
-function ProjectsLayout() {
+function CompaniesLayout() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="leadalytics-ui-theme">
       <SidebarProvider>

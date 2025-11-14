@@ -35,21 +35,21 @@ export const trackSession = mutation({
     timezone: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    // Authenticate project
-    const project = await ctx.db
-      .query('projects')
+    // Authenticate company
+    const company = await ctx.db
+      .query('companies')
       .withIndex('apiKey', (q) => q.eq('apiKey', args.apiKey))
       .first()
 
-    if (!project) {
+    if (!company) {
       throw new Error('Invalid API key')
     }
 
     // Get or create visitor
     let visitor = await ctx.db
       .query('visitors')
-      .withIndex('projectId_visitorId', (q) =>
-        q.eq('projectId', project._id).eq('visitorId', args.visitorId),
+      .withIndex('companyId_visitorId', (q) =>
+        q.eq('companyId', company._id).eq('visitorId', args.visitorId),
       )
       .first()
 
@@ -57,7 +57,7 @@ export const trackSession = mutation({
 
     if (!visitor) {
       const newVisitorId = await ctx.db.insert('visitors', {
-        projectId: project._id,
+        companyId: company._id,
         visitorId: args.visitorId,
         firstSeen: now,
         lastSeen: now,
@@ -75,8 +75,8 @@ export const trackSession = mutation({
     // Get or create session
     let session = await ctx.db
       .query('sessions')
-      .withIndex('projectId_sessionId', (q) =>
-        q.eq('projectId', project._id).eq('sessionId', args.sessionId),
+      .withIndex('companyId_sessionId', (q) =>
+        q.eq('companyId', company._id).eq('sessionId', args.sessionId),
       )
       .first()
 
@@ -87,7 +87,7 @@ export const trackSession = mutation({
       const firstSessionSource = `${firstChannel.source} (${firstChannel.category})`
 
       const sessionId = await ctx.db.insert('sessions', {
-        projectId: project._id,
+        companyId: company._id,
         visitorId: visitor._id,
         sessionId: args.sessionId,
         touchPoints: [args.touchPoint],
@@ -153,21 +153,21 @@ export const trackPageView = mutation({
     timezone: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    // Authenticate project
-    const project = await ctx.db
-      .query('projects')
+    // Authenticate company
+    const company = await ctx.db
+      .query('companies')
       .withIndex('apiKey', (q) => q.eq('apiKey', args.apiKey))
       .first()
 
-    if (!project) {
+    if (!company) {
       throw new Error('Invalid API key')
     }
 
     // Get or create visitor
     let visitor = await ctx.db
       .query('visitors')
-      .withIndex('projectId_visitorId', (q) =>
-        q.eq('projectId', project._id).eq('visitorId', args.visitorId),
+      .withIndex('companyId_visitorId', (q) =>
+        q.eq('companyId', company._id).eq('visitorId', args.visitorId),
       )
       .first()
 
@@ -175,7 +175,7 @@ export const trackPageView = mutation({
 
     if (!visitor) {
       const newVisitorId = await ctx.db.insert('visitors', {
-        projectId: project._id,
+        companyId: company._id,
         visitorId: args.visitorId,
         firstSeen: now,
         lastSeen: now,
@@ -193,8 +193,8 @@ export const trackPageView = mutation({
     // Get or create session
     let session = await ctx.db
       .query('sessions')
-      .withIndex('projectId_sessionId', (q) =>
-        q.eq('projectId', project._id).eq('sessionId', args.sessionId),
+      .withIndex('companyId_sessionId', (q) =>
+        q.eq('companyId', company._id).eq('sessionId', args.sessionId),
       )
       .first()
 
@@ -211,7 +211,7 @@ export const trackPageView = mutation({
       const firstSessionSource = `${firstChannel.source} (${firstChannel.category})`
 
       const sessionId = await ctx.db.insert('sessions', {
-        projectId: project._id,
+        companyId: company._id,
         visitorId: visitor._id,
         sessionId: args.sessionId,
         touchPoints: [touchPoint],
@@ -287,7 +287,7 @@ export const trackPageView = mutation({
     if (!isDuplicate) {
       // Create the pageview event
       eventId = await ctx.db.insert('events', {
-        projectId: project._id,
+        companyId: company._id,
         visitorId: visitor._id,
         sessionId: session._id,
         type: 'pageview',
@@ -326,19 +326,19 @@ export const trackEvent = mutation({
     metadata: v.optional(v.any()),
   },
   handler: async (ctx, args) => {
-    const project = await ctx.db
-      .query('projects')
+    const company = await ctx.db
+      .query('companies')
       .withIndex('apiKey', (q) => q.eq('apiKey', args.apiKey))
       .first()
 
-    if (!project) {
+    if (!company) {
       throw new Error('Invalid API key')
     }
 
     const session = await ctx.db
       .query('sessions')
-      .withIndex('projectId_sessionId', (q) =>
-        q.eq('projectId', project._id).eq('sessionId', args.sessionId),
+      .withIndex('companyId_sessionId', (q) =>
+        q.eq('companyId', company._id).eq('sessionId', args.sessionId),
       )
       .first()
 
@@ -347,7 +347,7 @@ export const trackEvent = mutation({
     }
 
     const eventId = await ctx.db.insert('events', {
-      projectId: project._id,
+      companyId: company._id,
       visitorId: session.visitorId,
       sessionId: session._id,
       type: 'event',
@@ -371,19 +371,19 @@ export const trackConversion = mutation({
     metadata: v.optional(v.any()),
   },
   handler: async (ctx, args) => {
-    const project = await ctx.db
-      .query('projects')
+    const company = await ctx.db
+      .query('companies')
       .withIndex('apiKey', (q) => q.eq('apiKey', args.apiKey))
       .first()
 
-    if (!project) {
+    if (!company) {
       throw new Error('Invalid API key')
     }
 
     const session = await ctx.db
       .query('sessions')
-      .withIndex('projectId_sessionId', (q) =>
-        q.eq('projectId', project._id).eq('sessionId', args.sessionId),
+      .withIndex('companyId_sessionId', (q) =>
+        q.eq('companyId', company._id).eq('sessionId', args.sessionId),
       )
       .first()
 
@@ -393,7 +393,7 @@ export const trackConversion = mutation({
 
     // Create conversion event
     const eventId = await ctx.db.insert('events', {
-      projectId: project._id,
+      companyId: company._id,
       visitorId: session.visitorId,
       sessionId: session._id,
       type: 'conversion',
@@ -403,7 +403,7 @@ export const trackConversion = mutation({
 
     // Create conversion record
     const conversionId = await ctx.db.insert('conversions', {
-      projectId: project._id,
+      companyId: company._id,
       visitorId: session.visitorId,
       sessionId: session._id,
       eventId,
@@ -429,13 +429,13 @@ export const identifyVisitor = mutation({
     userId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    // Authenticate project
-    const project = await ctx.db
-      .query('projects')
+    // Authenticate company
+    const company = await ctx.db
+      .query('companies')
       .withIndex('apiKey', (q) => q.eq('apiKey', args.apiKey))
       .first()
 
-    if (!project) {
+    if (!company) {
       throw new Error('Invalid API key')
     }
 
@@ -447,8 +447,8 @@ export const identifyVisitor = mutation({
     // Find the visitor by visitorId
     let visitor = await ctx.db
       .query('visitors')
-      .withIndex('projectId_visitorId', (q) =>
-        q.eq('projectId', project._id).eq('visitorId', args.visitorId),
+      .withIndex('companyId_visitorId', (q) =>
+        q.eq('companyId', company._id).eq('visitorId', args.visitorId),
       )
       .first()
 
@@ -463,8 +463,8 @@ export const identifyVisitor = mutation({
     if (args.email) {
       existingVisitorByEmail = await ctx.db
         .query('visitors')
-        .withIndex('projectId_email', (q) =>
-          q.eq('projectId', project._id).eq('email', args.email),
+        .withIndex('companyId_email', (q) =>
+          q.eq('companyId', company._id).eq('email', args.email),
         )
         .first()
     }
@@ -472,8 +472,8 @@ export const identifyVisitor = mutation({
     if (args.phone) {
       existingVisitorByPhone = await ctx.db
         .query('visitors')
-        .withIndex('projectId_phone', (q) =>
-          q.eq('projectId', project._id).eq('phone', args.phone),
+        .withIndex('companyId_phone', (q) =>
+          q.eq('companyId', company._id).eq('phone', args.phone),
         )
         .first()
     }
@@ -525,11 +525,11 @@ export const identifyVisitor = mutation({
 })
 
 /**
- * Get sessions for a project
+ * Get sessions for a company
  */
 export const getSessions = query({
   args: {
-    projectId: v.id('projects'),
+    companyId: v.id('companies'),
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
@@ -537,7 +537,7 @@ export const getSessions = query({
 
     const sessions = await ctx.db
       .query('sessions')
-      .withIndex('projectId', (q) => q.eq('projectId', args.projectId))
+      .withIndex('companyId', (q) => q.eq('companyId', args.companyId))
       .order('desc')
       .take(limit)
 
@@ -546,11 +546,11 @@ export const getSessions = query({
 })
 
 /**
- * Get conversions for a project
+ * Get conversions for a company
  */
 export const getConversions = query({
   args: {
-    projectId: v.id('projects'),
+    companyId: v.id('companies'),
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
@@ -558,7 +558,7 @@ export const getConversions = query({
 
     const conversions = await ctx.db
       .query('conversions')
-      .withIndex('projectId', (q) => q.eq('projectId', args.projectId))
+      .withIndex('companyId', (q) => q.eq('companyId', args.companyId))
       .order('desc')
       .take(limit)
 
@@ -675,12 +675,12 @@ export const getSessionPageViews = query({
  */
 export const getTrafficSources = query({
   args: {
-    projectId: v.id('projects'),
+    companyId: v.id('companies'),
   },
   handler: async (ctx, args) => {
     const sessions = await ctx.db
       .query('sessions')
-      .withIndex('projectId', (q) => q.eq('projectId', args.projectId))
+      .withIndex('companyId', (q) => q.eq('companyId', args.companyId))
       .collect()
 
     // Map to track source + category combinations
