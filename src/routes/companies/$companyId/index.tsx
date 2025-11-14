@@ -26,6 +26,7 @@ import {
 } from 'lucide-react'
 import { api } from 'convex/_generated/api'
 import { Id } from 'convex/_generated/dataModel'
+import { ChartAreaInteractive } from '@/components/chart-area-interactive'
 
 export const Route = createFileRoute('/companies/$companyId/')({
   component: CompanyDetailsPage,
@@ -41,7 +42,7 @@ function CompanyDetailsPage() {
   })
   const sessions = useQuery(api.tracking.getSessions, {
     companyId: companyId as Id<'companies'>,
-    limit: 50,
+    limit: 500,
   })
   const conversions = useQuery(api.tracking.getConversions, {
     companyId: companyId as Id<'companies'>,
@@ -210,10 +211,9 @@ function CompanyDetailsPage() {
         >
           ← Back to Companies
         </Link>
-        <h1 className="text-3xl font-bold">{company.name}</h1>
-        <p className="text-muted-foreground mt-1">{company.domain}</p>
       </div>
 
+      <ChartAreaInteractive companyId={companyId as Id<'companies'>} />
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-3 mb-8">
         <div className="p-6 border rounded-lg bg-card">
@@ -221,18 +221,6 @@ function CompanyDetailsPage() {
             Total Sessions
           </div>
           <div className="text-3xl font-bold">{totalSessions}</div>
-        </div>
-        <div className="p-6 border rounded-lg bg-card">
-          <div className="text-sm text-muted-foreground mb-1">
-            Total Conversions
-          </div>
-          <div className="text-3xl font-bold">{totalConversions}</div>
-        </div>
-        <div className="p-6 border rounded-lg bg-card">
-          <div className="text-sm text-muted-foreground mb-1">
-            Conversion Rate
-          </div>
-          <div className="text-3xl font-bold">{conversionRate}%</div>
         </div>
       </div>
 
@@ -275,86 +263,6 @@ function CompanyDetailsPage() {
                     </td>
                   </tr>
                 ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-
-      {/* Conversions Table */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4">Recent Conversions</h2>
-        {conversions.length === 0 ? (
-          <div className="text-center py-12 border rounded-lg">
-            <p className="text-muted-foreground">No conversions yet</p>
-          </div>
-        ) : (
-          <div className="border rounded-lg overflow-hidden">
-            <table className="w-full">
-              <thead className="bg-muted">
-                <tr>
-                  <th className="text-left p-4 font-medium">Event</th>
-                  <th className="text-left p-4 font-medium">Revenue</th>
-                  <th className="text-left p-4 font-medium">
-                    First Touch Source
-                  </th>
-                  <th className="text-left p-4 font-medium">
-                    Last Touch Source
-                  </th>
-                  <th className="text-left p-4 font-medium">Time</th>
-                </tr>
-              </thead>
-              <tbody>
-                {conversions.map((conversion) => {
-                  const firstTouch = conversion.session?.touchPoints?.[0]
-                  const lastTouch =
-                    conversion.session?.touchPoints?.[
-                      conversion.session.touchPoints.length - 1
-                    ]
-
-                  return (
-                    <tr
-                      key={conversion._id}
-                      className="border-t hover:bg-muted/50"
-                    >
-                      <td className="p-4 font-medium">
-                        {conversion.eventName}
-                      </td>
-                      <td className="p-4">
-                        {conversion.revenue
-                          ? `$${conversion.revenue.toFixed(2)}`
-                          : '-'}
-                      </td>
-                      <td className="p-4">
-                        <div className="text-sm">
-                          {firstTouch?.utm_source ||
-                            firstTouch?.referrer ||
-                            'Direct'}
-                        </div>
-                        {firstTouch?.utm_campaign && (
-                          <div className="text-xs text-muted-foreground">
-                            {firstTouch.utm_campaign}
-                          </div>
-                        )}
-                      </td>
-                      <td className="p-4">
-                        <div className="text-sm">
-                          {lastTouch?.utm_source ||
-                            lastTouch?.referrer ||
-                            'Direct'}
-                        </div>
-                        {lastTouch?.utm_campaign && (
-                          <div className="text-xs text-muted-foreground">
-                            {lastTouch.utm_campaign}
-                          </div>
-                        )}
-                      </td>
-                      <td className="p-4 text-sm text-muted-foreground">
-                        {new Date(conversion._creationTime).toLocaleString()}
-                      </td>
-                    </tr>
-                  )
-                })}
               </tbody>
             </table>
           </div>

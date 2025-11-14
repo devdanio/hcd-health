@@ -546,6 +546,134 @@ export const getSessions = query({
 })
 
 /**
+ * Get visitor analytics grouped by time period and traffic source
+ */
+export const getVisitorAnalytics = query({
+  args: {
+    companyId: v.id('companies'),
+    timeRange: v.union(
+      v.literal('24h'),
+      v.literal('7d'),
+      v.literal('30d'),
+      v.literal('90d'),
+    ),
+  },
+  handler: async (ctx, args) => {
+    const now = Date.now()
+    let startTime = now
+
+    // Calculate start time based on range
+    switch (args.timeRange) {
+      case '24h':
+        startTime = now - 24 * 60 * 60 * 1000
+        break
+      case '7d':
+        startTime = now - 7 * 24 * 60 * 60 * 1000
+        break
+      case '30d':
+        startTime = now - 30 * 24 * 60 * 60 * 1000
+        break
+      case '90d':
+        startTime = now - 90 * 24 * 60 * 60 * 1000
+        break
+    }
+
+    // Get all sessions within the time range
+    const sessions = await ctx.db
+      .query('sessions')
+      .withIndex('companyId', (q) => q.eq('companyId', args.companyId))
+      .filter((q) => q.gte(q.field('startedAt'), startTime))
+      .collect()
+
+    // Group sessions by time bucket and category
+    const dataMap = new Map<string, Map<string, Set<string>>>()
+
+    // Determine bucket size based on time range
+    let bucketSize: number
+    let bucketFormat: (timestamp: number) => string
+
+    if (args.timeRange === '24h') {
+      // Hourly buckets for 24h view
+      bucketSize = 60 * 60 * 1000 // 1 hour
+      bucketFormat = (timestamp: number) => {
+        const date = new Date(timestamp)
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:00`
+      }
+    } else {
+      // Daily buckets for other views
+      bucketSize = 24 * 60 * 60 * 1000 // 1 day
+      bucketFormat = (timestamp: number) => {
+        const date = new Date(timestamp)
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+      }
+    }
+
+    // Process each session
+    for (const session of sessions) {
+      // Get the first touchpoint to determine traffic source
+      const firstTouchPoint = session.touchPoints[0]
+      if (!firstTouchPoint) continue
+
+      // Categorize the traffic source
+      const channel = resolveChannel(firstTouchPoint)
+      const category = channel.category
+
+      // Only include the specified categories
+      if (
+        category !== 'organic_search' &&
+        category !== 'paid_search' &&
+        category !== 'organic_social' &&
+        category !== 'email' &&
+        category !== 'direct'
+      ) {
+        continue
+      }
+
+      // Determine time bucket
+      const bucketKey = bucketFormat(session.startedAt)
+
+      // Initialize maps if needed
+      if (!dataMap.has(bucketKey)) {
+        dataMap.set(bucketKey, new Map())
+      }
+      const categoryMap = dataMap.get(bucketKey)!
+
+      if (!categoryMap.has(category)) {
+        categoryMap.set(category, new Set())
+      }
+
+      // Add unique visitor to this bucket/category
+      categoryMap.get(category)!.add(session.visitorId)
+    }
+
+    // Convert to array format for charting
+    const result = Array.from(dataMap.entries())
+      .map(([date, categoryMap]) => {
+        const entry: any = { date }
+        for (const [category, visitorSet] of categoryMap.entries()) {
+          entry[category] = visitorSet.size
+        }
+        // Fill in 0 for missing categories
+        for (const cat of [
+          'organic_search',
+          'paid_search',
+          'organic_social',
+          'email',
+          'direct',
+        ]) {
+          if (!(cat in entry)) {
+            entry[cat] = 0
+          }
+        }
+        return entry
+      })
+      .sort((a, b) => a.date.localeCompare(b.date))
+
+    return result
+  },
+})
+
+/**
  * Get conversions for a company
  */
 export const getConversions = query({
