@@ -799,7 +799,7 @@ export const getSessionPageViews = query({
 })
 
 /**
- * Get traffic sources grouped by source and category
+ * Get traffic sources grouped by category
  */
 export const getTrafficSources = query({
   args: {
@@ -811,10 +811,10 @@ export const getTrafficSources = query({
       .withIndex('companyId', (q) => q.eq('companyId', args.companyId))
       .collect()
 
-    // Map to track source + category combinations
-    const sourceMap = new Map<
-      string,
-      { category: TrafficCategory; icon: string; count: number }
+    // Map to track categories
+    const categoryMap = new Map<
+      TrafficCategory,
+      { icon: string; count: number }
     >()
 
     // Process each session's first touchPoint
@@ -824,15 +824,14 @@ export const getTrafficSources = query({
       const firstTouchPoint = session.touchPoints[0]
       const categorized = categorizeTrafficSource(firstTouchPoint)
 
-      // Create a unique key for source + category
-      const key = `${categorized.source}|${categorized.category}`
+      // Group by category only
+      const category = categorized.category
 
-      if (sourceMap.has(key)) {
-        const existing = sourceMap.get(key)!
+      if (categoryMap.has(category)) {
+        const existing = categoryMap.get(category)!
         existing.count += 1
       } else {
-        sourceMap.set(key, {
-          category: categorized.category,
+        categoryMap.set(category, {
           icon: categorized.icon,
           count: 1,
         })
@@ -840,12 +839,10 @@ export const getTrafficSources = query({
     }
 
     // Convert map to array and sort by count (descending)
-    const results = Array.from(sourceMap.entries())
-      .map(([key, value]) => {
-        const [source] = key.split('|')
+    const results = Array.from(categoryMap.entries())
+      .map(([category, value]) => {
         return {
-          source,
-          category: value.category,
+          category,
           icon: value.icon,
           sessionCount: value.count,
         }
@@ -853,6 +850,104 @@ export const getTrafficSources = query({
       .sort((a, b) => b.sessionCount - a.sessionCount)
 
     return results
+  },
+})
+
+/**
+ * Get traffic sources grouped by category over time
+ */
+export const getCategoryAnalytics = query({
+  args: {
+    companyId: v.id('companies'),
+    timeRange: v.optional(
+      v.union(
+        v.literal('24h'),
+        v.literal('7d'),
+        v.literal('30d'),
+        v.literal('90d'),
+      ),
+    ),
+  },
+  handler: async (ctx, args) => {
+    const now = Date.now()
+    const timeRange = args.timeRange || '30d'
+    let startTime = now
+
+    // Calculate start time based on range
+    switch (timeRange) {
+      case '24h':
+        startTime = now - 24 * 60 * 60 * 1000
+        break
+      case '7d':
+        startTime = now - 7 * 24 * 60 * 60 * 1000
+        break
+      case '30d':
+        startTime = now - 30 * 24 * 60 * 60 * 1000
+        break
+      case '90d':
+        startTime = now - 90 * 24 * 60 * 60 * 1000
+        break
+    }
+
+    // Get all sessions within the time range
+    const sessions = await ctx.db
+      .query('sessions')
+      .withIndex('companyId', (q) => q.eq('companyId', args.companyId))
+      .filter((q) => q.gte(q.field('startedAt'), startTime))
+      .collect()
+
+    // Group sessions by date and category
+    const dataMap = new Map<string, Map<TrafficCategory, number>>()
+
+    // Determine bucket size based on time range
+    let bucketFormat: (timestamp: number) => string
+
+    if (timeRange === '24h') {
+      // Hourly buckets for 24h view
+      bucketFormat = (timestamp: number) => {
+        const date = new Date(timestamp)
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:00`
+      }
+    } else {
+      // Daily buckets for other views
+      bucketFormat = (timestamp: number) => {
+        const date = new Date(timestamp)
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+      }
+    }
+
+    // Process each session
+    for (const session of sessions) {
+      if (session.touchPoints.length === 0) continue
+
+      const firstTouchPoint = session.touchPoints[0]
+      const categorized = categorizeTrafficSource(firstTouchPoint)
+      const category = categorized.category
+
+      // Determine time bucket
+      const dateKey = bucketFormat(session.startedAt)
+
+      // Initialize maps if needed
+      if (!dataMap.has(dateKey)) {
+        dataMap.set(dateKey, new Map())
+      }
+      const categoryMap = dataMap.get(dateKey)!
+
+      categoryMap.set(category, (categoryMap.get(category) || 0) + 1)
+    }
+
+    // Convert to array format for charting
+    const result = Array.from(dataMap.entries())
+      .map(([date, categoryMap]) => {
+        const entry: any = { date }
+        for (const [category, count] of categoryMap.entries()) {
+          entry[category] = count
+        }
+        return entry
+      })
+      .sort((a, b) => a.date.localeCompare(b.date))
+
+    return result
   },
 })
 

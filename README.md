@@ -79,21 +79,22 @@ All attribution data is stored in a `touchPoints` array within each session:
 ```typescript
 session.touchPoints = [
   {
-    utm_source: "facebook",
-    fbclid: "abc123",
-    url: "https://example.com",
-    timestamp: 1234567890
+    utm_source: 'facebook',
+    fbclid: 'abc123',
+    url: 'https://example.com',
+    timestamp: 1234567890,
   },
   {
-    utm_source: "google",
-    gclid: "xyz789",
-    url: "https://example.com/page2",
-    timestamp: 1234567920
-  }
+    utm_source: 'google',
+    gclid: 'xyz789',
+    url: 'https://example.com/page2',
+    timestamp: 1234567920,
+  },
 ]
 ```
 
 **Attribution:**
+
 - First touch: `touchPoints[0]`
 - Last touch: `touchPoints[touchPoints.length - 1]`
 - All touches: Full array available for multi-touch models
@@ -121,20 +122,26 @@ trackConversion('purchase', {
   revenue: 99.99,
   metadata: {
     orderId: 'ORDER-12345',
-    product: 'Premium Plan'
-  }
+    product: 'Premium Plan',
+  },
 })
 ```
 
 ### Iframe Tracking
 
 **Parent page:**
+
 ```html
-<script src="/tracker/tracker.js" data-api-key="..." data-api-url="..."></script>
+<script
+  src="/tracker/tracker.js"
+  data-api-key="..."
+  data-api-url="..."
+></script>
 <iframe src="https://forms.yoursite.com/contact"></iframe>
 ```
 
 **Iframe:**
+
 ```html
 <script src="/tracker/iframe-tracker.js"></script>
 <script>
@@ -196,6 +203,7 @@ leadalytics/
 ## Features
 
 ### Attribution Tracking
+
 - UTM parameters (source, medium, campaign, content, term)
 - Click IDs (Facebook, Google, TikTok, Twitter, LinkedIn, Snapchat, Microsoft)
 - Referrer tracking
@@ -205,18 +213,21 @@ leadalytics/
 - Custom events
 
 ### iOS/Safari Compatibility
+
 - First-party cookies (your domain)
 - 7-day session cookie (ITP compliant)
 - 1-year visitor cookie
 - Server-side session storage
 
 ### Cross-Domain & Iframes
+
 - PostMessage API for communication
 - Session ID passing via URL
 - Redundant tracking (parent + direct API)
 - Same-domain and cross-domain support
 
 ### Dashboard
+
 - Projects management
 - Real-time session tracking
 - Conversion analytics
@@ -227,6 +238,7 @@ leadalytics/
 ## Testing
 
 Test page included at `/test-page.html` with:
+
 - Session info display
 - URL parameter detection
 - Conversion tracking buttons
@@ -254,6 +266,7 @@ For iOS/Safari ITP compliance, serve tracker scripts from first-party domain (no
 ## Support
 
 For issues or questions:
+
 1. Check browser console for errors
 2. Review [QUICKSTART.md](./QUICKSTART.md) for setup steps
 3. Check [IMPLEMENTATION.md](./IMPLEMENTATION.md) for technical details
@@ -262,3 +275,7 @@ For issues or questions:
 ## License
 
 MIT
+
+## Designs
+
+https://dribbble.com/shots/23209490-E-Commerce-Analytics-SaaS-Dashboard

@@ -28,9 +28,10 @@ export function ThemeProvider({
   storageKey = 'leadalytics-ui-theme',
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
+  const [_, setTheme] = useState<Theme>(
+    () => /*(localStorage.getItem(storageKey) as Theme) ||*/ defaultTheme,
   )
+  const theme = defaultTheme
 
   const [resolvedTheme, setResolvedTheme] = useState<'dark' | 'light'>('light')
 
@@ -57,7 +58,9 @@ export function ThemeProvider({
 
   return (
     <ThemeProviderContext.Provider {...props} value={value}>
-      <div className={`${resolvedTheme === 'dark' ? 'dark' : ''} min-h-screen w-full bg-background text-foreground`}>
+      <div
+        className={`${resolvedTheme === 'dark' ? 'dark' : ''} min-h-screen w-full bg-background text-foreground`}
+      >
         {children}
       </div>
     </ThemeProviderContext.Provider>

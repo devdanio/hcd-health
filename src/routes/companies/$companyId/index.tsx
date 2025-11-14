@@ -10,23 +10,10 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { useState } from 'react'
-import {
-  Search,
-  Users,
-  MessageSquare,
-  Briefcase,
-  Video,
-  Globe,
-  Home,
-  ExternalLink,
-  Mail,
-  Monitor,
-  Link as LinkIcon,
-  MessageCircle,
-} from 'lucide-react'
 import { api } from 'convex/_generated/api'
 import { Id } from 'convex/_generated/dataModel'
 import { ChartAreaInteractive } from '@/components/chart-area-interactive'
+import { ChartCategories } from '@/components/chart-categories'
 
 export const Route = createFileRoute('/companies/$companyId/')({
   component: CompanyDetailsPage,
@@ -44,10 +31,6 @@ function CompanyDetailsPage() {
     companyId: companyId as Id<'companies'>,
     limit: 500,
   })
-  const conversions = useQuery(api.tracking.getConversions, {
-    companyId: companyId as Id<'companies'>,
-    limit: 50,
-  })
   const pageViews = useQuery(
     api.tracking.getSessionPageViews,
     selectedSessionId
@@ -56,37 +39,11 @@ function CompanyDetailsPage() {
         }
       : 'skip',
   )
-  const trafficSources = useQuery(api.tracking.getTrafficSources, {
-    companyId: companyId as Id<'companies'>,
-  })
 
   // Find the selected session to get its client sessionId for display
   const selectedSession = selectedSessionId
     ? sessions?.find((s) => s._id === selectedSessionId)
     : null
-
-  // Icon mapping function
-  const getIconComponent = (iconName: string) => {
-    const iconMap: Record<
-      string,
-      React.ComponentType<{ className?: string }>
-    > = {
-      Search,
-      Users,
-      MessageSquare,
-      Briefcase,
-      Video,
-      Globe,
-      Home,
-      ExternalLink,
-      Mail,
-      Monitor,
-      Link: LinkIcon,
-      MessageCircle,
-    }
-    const IconComponent = iconMap[iconName] || ExternalLink
-    return <IconComponent className="size-5" />
-  }
 
   // Category badge styling
   const getCategoryBadge = (category: string) => {
@@ -174,9 +131,7 @@ function CompanyDetailsPage() {
 
   if (
     company === undefined ||
-    sessions === undefined ||
-    conversions === undefined ||
-    trafficSources === undefined
+    sessions === undefined
   ) {
     return <div className="container mx-auto p-8">Loading...</div>
   }
@@ -194,13 +149,6 @@ function CompanyDetailsPage() {
     )
   }
 
-  const totalSessions = sessions.length
-  const totalConversions = conversions.length
-  const conversionRate =
-    totalSessions > 0
-      ? ((totalConversions / totalSessions) * 100).toFixed(2)
-      : '0'
-
   return (
     <div className="container mx-auto p-8">
       {/* Header */}
@@ -213,60 +161,14 @@ function CompanyDetailsPage() {
         </Link>
       </div>
 
-      <ChartAreaInteractive companyId={companyId as Id<'companies'>} />
-      {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-3 mb-8">
-        <div className="p-6 border rounded-lg bg-card">
-          <div className="text-sm text-muted-foreground mb-1">
-            Total Sessions
-          </div>
-          <div className="text-3xl font-bold">{totalSessions}</div>
+      {/* Charts Grid */}
+      <div className="grid gap-4 md:grid-cols-4 mb-8">
+        <div className="md:col-span-1">
+          <ChartCategories companyId={companyId as Id<'companies'>} />
         </div>
-      </div>
-
-      {/* Traffic Sources Table */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4">Traffic Sources</h2>
-        {trafficSources.length === 0 ? (
-          <div className="text-center py-12 border rounded-lg">
-            <p className="text-muted-foreground">No traffic sources yet</p>
-          </div>
-        ) : (
-          <div className="border rounded-lg overflow-hidden">
-            <table className="w-full">
-              <thead className="bg-muted">
-                <tr>
-                  <th className="text-left p-4 font-medium">Source</th>
-                  <th className="text-left p-4 font-medium">Category</th>
-                  <th className="text-left p-4 font-medium">Sessions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {trafficSources.map((source, index) => (
-                  <tr
-                    key={`${source.source}-${source.category}-${index}`}
-                    className="border-t hover:bg-muted/50"
-                  >
-                    <td className="p-4">
-                      <div className="flex items-center gap-3">
-                        <div className="flex-shrink-0">
-                          {getIconComponent(source.icon)}
-                        </div>
-                        <span className="font-medium">{source.source}</span>
-                      </div>
-                    </td>
-                    <td className="p-4">{getCategoryBadge(source.category)}</td>
-                    <td className="p-4">
-                      <span className="font-semibold">
-                        {source.sessionCount.toLocaleString()}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <div className="md:col-span-3">
+          <ChartAreaInteractive companyId={companyId as Id<'companies'>} />
+        </div>
       </div>
 
       {/* Sessions Table */}
