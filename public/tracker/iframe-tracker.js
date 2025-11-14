@@ -96,6 +96,31 @@
       this.trackEventDirect(eventName, metadata)
     }
 
+    // Identify visitor via parent
+    identify(options = {}) {
+      if (!this.sessionData) {
+        console.error(
+          'Leadalytics: Session data not available. Ensure parent page has Leadalytics tracker installed.'
+        )
+        return
+      }
+
+      // Send to parent window
+      window.parent.postMessage(
+        {
+          type: 'IDENTIFY',
+          leadalytics: true,
+          email: options.email,
+          phone: options.phone,
+          userId: options.userId,
+        },
+        this.parentOrigin
+      )
+
+      // Also send directly to API (redundancy)
+      this.identifyDirect(options)
+    }
+
     // Direct API call for conversion (backup method)
     async trackConversionDirect(eventName, options = {}) {
       if (!this.sessionData) return
@@ -141,6 +166,39 @@
       }
     }
 
+    // Direct API call for identify (backup method)
+    async identifyDirect(options = {}) {
+      if (!this.sessionData) return
+
+      const { email, phone, userId } = options
+
+      // Validate that at least one identifier is provided
+      if (!email && !phone && !userId) {
+        console.error(
+          'Leadalytics: identify() requires at least one of: email, phone, or userId'
+        )
+        return
+      }
+
+      try {
+        await fetch(`${this.sessionData.apiUrl}/identifyVisitor`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            apiKey: this.sessionData.apiKey,
+            visitorId: this.sessionData.visitorId,
+            email,
+            phone,
+            userId,
+          }),
+        })
+      } catch (error) {
+        console.error('Leadalytics: Error identifying visitor directly', error)
+      }
+    }
+
     // Get session info
     getSessionInfo() {
       return this.sessionData
@@ -170,11 +228,13 @@
       iframeTracker.trackEvent(eventName, metadata),
     trackConversion: (eventName, options) =>
       iframeTracker.trackConversion(eventName, options),
+    identify: (options) => iframeTracker.identify(options),
     getSessionInfo: () => iframeTracker.getSessionInfo(),
     isReady: () => iframeTracker.isReady(),
     waitForReady: (timeout) => iframeTracker.waitForReady(timeout),
   }
 
-  // Also expose simplified conversion tracking
+  // Also expose simplified methods
   window.trackConversion = window.Leadalytics.trackConversion
+  window.identify = window.Leadalytics.identify
 })()

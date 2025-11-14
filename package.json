@@ -54,6 +54,7 @@
     "nitro": "3.0.1-alpha.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-social-icons": "^6.25.0",
     "recharts": "2.15.4",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.0.2",

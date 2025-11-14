@@ -247,6 +247,42 @@
       }
     }
 
+    // Identify visitor
+    async identify(options = {}) {
+      if (!this.isInitialized) {
+        this.queue.push({ type: 'identify', options })
+        return
+      }
+
+      const { email, phone, userId } = options
+
+      // Validate that at least one identifier is provided
+      if (!email && !phone && !userId) {
+        console.error(
+          'Leadalytics: identify() requires at least one of: email, phone, or userId',
+        )
+        return
+      }
+
+      try {
+        await fetch(`${this.apiUrl}/identifyVisitor`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            apiKey: this.apiKey,
+            visitorId: this.visitorId,
+            email,
+            phone,
+            userId,
+          }),
+        })
+      } catch (error) {
+        console.error('Leadalytics: Error identifying visitor', error)
+      }
+    }
+
     // Set up event listeners
     setupListeners() {
       // Track route changes for SPAs
@@ -328,6 +364,15 @@
             // Iframe is reporting a custom event
             this.trackEvent(event.data.eventName, event.data.metadata)
             break
+
+          case 'IDENTIFY':
+            // Iframe is reporting visitor identification
+            this.identify({
+              email: event.data.email,
+              phone: event.data.phone,
+              userId: event.data.userId,
+            })
+            break
         }
       })
     }
@@ -345,6 +390,9 @@
             break
           case 'conversion':
             this.trackConversion(item.eventName, item.options)
+            break
+          case 'identify':
+            this.identify(item.options)
             break
         }
       }
@@ -403,9 +451,11 @@
     trackConversion: (eventName, options) =>
       tracker.trackConversion(eventName, options),
     trackPageView: (url) => tracker.trackPageView(url),
+    identify: (options) => tracker.identify(options),
     getSessionInfo: () => tracker.getSessionInfo(),
   }
 
-  // Also expose simplified conversion tracking
+  // Also expose simplified methods
   window.trackConversion = window.Leadalytics.trackConversion
+  window.identify = window.Leadalytics.identify
 })()

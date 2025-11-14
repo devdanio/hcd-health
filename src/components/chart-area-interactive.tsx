@@ -6,10 +6,8 @@ import { useQuery } from "convex/react"
 import { api } from "convex/_generated/api"
 import type { Id } from "convex/_generated/dataModel"
 
-import { useIsMobile } from "@/hooks/use-mobile"
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
@@ -21,17 +19,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@/components/ui/toggle-group"
 
 export const description = "An interactive area chart"
 
@@ -63,18 +50,10 @@ const chartConfig = {
 
 interface ChartAreaInteractiveProps {
   companyId: Id<"companies">
+  timeRange: "24h" | "7d" | "30d" | "90d"
 }
 
-export function ChartAreaInteractive({ companyId }: ChartAreaInteractiveProps) {
-  const isMobile = useIsMobile()
-  const [timeRange, setTimeRange] = React.useState<"24h" | "7d" | "30d" | "90d">("90d")
-
-  React.useEffect(() => {
-    if (isMobile) {
-      setTimeRange("7d")
-    }
-  }, [isMobile])
-
+export function ChartAreaInteractive({ companyId, timeRange }: ChartAreaInteractiveProps) {
   // Fetch real data from Convex
   const chartData = useQuery(api.tracking.getVisitorAnalytics, {
     companyId,
@@ -89,56 +68,8 @@ export function ChartAreaInteractive({ companyId }: ChartAreaInteractiveProps) {
       <CardHeader>
         <CardTitle>Total Visitors</CardTitle>
         <CardDescription>
-          <span className="hidden @[540px]/card:block">
-            {timeRange === "24h" ? "Total for the last 24 hours" :
-             timeRange === "7d" ? "Total for the last 7 days" :
-             timeRange === "30d" ? "Total for the last 30 days" :
-             "Total for the last 3 months"}
-          </span>
-          <span className="@[540px]/card:hidden">
-            {timeRange === "24h" ? "Last 24 hours" :
-             timeRange === "7d" ? "Last 7 days" :
-             timeRange === "30d" ? "Last 30 days" :
-             "Last 3 months"}
-          </span>
+          Unique visitors over time by traffic source
         </CardDescription>
-        <CardAction>
-          <ToggleGroup
-            type="single"
-            value={timeRange}
-            onValueChange={setTimeRange}
-            variant="outline"
-            className="hidden *:data-[slot=toggle-group-item]:!px-4 @[767px]/card:flex"
-          >
-            <ToggleGroupItem value="90d">Last 3 months</ToggleGroupItem>
-            <ToggleGroupItem value="30d">Last 30 days</ToggleGroupItem>
-            <ToggleGroupItem value="7d">Last 7 days</ToggleGroupItem>
-            <ToggleGroupItem value="24h">Last 24 hours</ToggleGroupItem>
-          </ToggleGroup>
-          <Select value={timeRange} onValueChange={setTimeRange}>
-            <SelectTrigger
-              className="flex w-40 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate @[767px]/card:hidden"
-              size="sm"
-              aria-label="Select a value"
-            >
-              <SelectValue placeholder="Last 3 months" />
-            </SelectTrigger>
-            <SelectContent className="rounded-xl">
-              <SelectItem value="90d" className="rounded-lg">
-                Last 3 months
-              </SelectItem>
-              <SelectItem value="30d" className="rounded-lg">
-                Last 30 days
-              </SelectItem>
-              <SelectItem value="7d" className="rounded-lg">
-                Last 7 days
-              </SelectItem>
-              <SelectItem value="24h" className="rounded-lg">
-                Last 24 hours
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </CardAction>
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer
