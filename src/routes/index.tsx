@@ -1,6 +1,12 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Target, Smartphone, BarChart3, Zap, Shield, Globe } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import {
+  SignedIn,
+  UserButton,
+  SignedOut,
+  SignInButton,
+} from '@clerk/tanstack-react-start'
 
 export const Route = createFileRoute('/')({ component: App })
 
@@ -59,23 +65,21 @@ function App() {
           </p>
           <p className="text-lg text-gray-400 max-w-3xl mx-auto mb-8">
             Track every touchpoint from ad click to conversion. Understand your
-            customer journey with iOS-compatible, cross-domain attribution tracking.
+            customer journey with iOS-compatible, cross-domain attribution
+            tracking.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link to="/projects">
-              <Button size="lg" className="bg-cyan-500 hover:bg-cyan-600">
-                View Projects
-              </Button>
-            </Link>
-            <a
-              href="/tracker/README.md"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button size="lg" variant="outline">
-                Documentation
-              </Button>
-            </a>
+            <SignedIn>
+              <UserButton />
+              <Link to="/companies">
+                <Button size="lg" className="bg-cyan-500 hover:bg-cyan-600">
+                  View Companies
+                </Button>
+              </Link>
+            </SignedIn>
+            <SignedOut>
+              <SignInButton />
+            </SignedOut>
           </div>
         </div>
       </section>
