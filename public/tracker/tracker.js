@@ -265,7 +265,7 @@
       }
 
       try {
-        await fetch(`${this.apiUrl}/identifyVisitor`, {
+        await fetch(`${this.apiUrl}/identifyUser`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -279,7 +279,7 @@
           }),
         })
       } catch (error) {
-        console.error('Leadalytics: Error identifying visitor', error)
+        console.error('Leadalytics: Error identifying user', error)
       }
     }
 

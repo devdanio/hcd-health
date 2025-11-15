@@ -181,7 +181,7 @@
       }
 
       try {
-        await fetch(`${this.sessionData.apiUrl}/identifyVisitor`, {
+        await fetch(`${this.sessionData.apiUrl}/identifyUser`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -195,7 +195,7 @@
           }),
         })
       } catch (error) {
-        console.error('Leadalytics: Error identifying visitor directly', error)
+        console.error('Leadalytics: Error identifying user directly', error)
       }
     }
 

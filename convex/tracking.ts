@@ -45,29 +45,29 @@ export const trackSession = mutation({
       throw new Error('Invalid API key')
     }
 
-    // Get or create visitor
-    let visitor = await ctx.db
-      .query('visitors')
-      .withIndex('companyId_visitorId', (q) =>
-        q.eq('companyId', company._id).eq('visitorId', args.visitorId),
+    // Get or create user
+    let user = await ctx.db
+      .query('user')
+      .withIndex('companyId_userId', (q) =>
+        q.eq('companyId', company._id).eq('userId', args.visitorId),
       )
       .first()
 
     const now = Date.now()
 
-    if (!visitor) {
-      const newVisitorId = await ctx.db.insert('visitors', {
+    if (!user) {
+      const newUserId = await ctx.db.insert('user', {
         companyId: company._id,
-        visitorId: args.visitorId,
+        userId: args.visitorId,
         firstSeen: now,
         lastSeen: now,
       })
-      visitor = await ctx.db.get(newVisitorId)
-      if (!visitor) {
-        throw new Error('Failed to create visitor')
+      user = await ctx.db.get(newUserId)
+      if (!user) {
+        throw new Error('Failed to create user')
       }
     } else {
-      await ctx.db.patch(visitor._id, {
+      await ctx.db.patch(user._id, {
         lastSeen: now,
       })
     }
@@ -88,7 +88,7 @@ export const trackSession = mutation({
 
       const sessionId = await ctx.db.insert('sessions', {
         companyId: company._id,
-        visitorId: visitor._id,
+        userId: user._id,
         sessionId: args.sessionId,
         touchPoints: [args.touchPoint],
         startedAt: args.touchPoint.timestamp,
@@ -100,7 +100,7 @@ export const trackSession = mutation({
         lastSessionSource: firstSessionSource, // First touchpoint is also the last initially
       })
 
-      return { sessionId, visitorId: visitor._id, isNew: true }
+      return { sessionId, userId: user._id, isNew: true }
     } else {
       // Existing session - add touchpoint if URL changed or has new attribution data
       const lastTouchPoint = session.touchPoints[session.touchPoints.length - 1]
@@ -132,7 +132,7 @@ export const trackSession = mutation({
         })
       }
 
-      return { sessionId: session._id, visitorId: visitor._id, isNew: false }
+      return { sessionId: session._id, userId: user._id, isNew: false }
     }
   },
 })
@@ -163,29 +163,29 @@ export const trackPageView = mutation({
       throw new Error('Invalid API key')
     }
 
-    // Get or create visitor
-    let visitor = await ctx.db
-      .query('visitors')
-      .withIndex('companyId_visitorId', (q) =>
-        q.eq('companyId', company._id).eq('visitorId', args.visitorId),
+    // Get or create user
+    let user = await ctx.db
+      .query('user')
+      .withIndex('companyId_userId', (q) =>
+        q.eq('companyId', company._id).eq('userId', args.visitorId),
       )
       .first()
 
     const now = Date.now()
 
-    if (!visitor) {
-      const newVisitorId = await ctx.db.insert('visitors', {
+    if (!user) {
+      const newUserId = await ctx.db.insert('user', {
         companyId: company._id,
-        visitorId: args.visitorId,
+        userId: args.visitorId,
         firstSeen: now,
         lastSeen: now,
       })
-      visitor = await ctx.db.get(newVisitorId)
-      if (!visitor) {
-        throw new Error('Failed to create visitor')
+      user = await ctx.db.get(newUserId)
+      if (!user) {
+        throw new Error('Failed to create user')
       }
     } else {
-      await ctx.db.patch(visitor._id, {
+      await ctx.db.patch(user._id, {
         lastSeen: now,
       })
     }
@@ -212,7 +212,7 @@ export const trackPageView = mutation({
 
       const sessionId = await ctx.db.insert('sessions', {
         companyId: company._id,
-        visitorId: visitor._id,
+        userId: user._id,
         sessionId: args.sessionId,
         touchPoints: [touchPoint],
         startedAt: touchPoint.timestamp,
@@ -288,7 +288,7 @@ export const trackPageView = mutation({
       // Create the pageview event
       eventId = await ctx.db.insert('events', {
         companyId: company._id,
-        visitorId: visitor._id,
+        userId: user._id,
         sessionId: session._id,
         type: 'pageview',
         url: args.url,
@@ -309,7 +309,7 @@ export const trackPageView = mutation({
     return {
       eventId,
       sessionId: session._id,
-      visitorId: visitor._id,
+      userId: user._id,
       isDuplicate: isDuplicate || false,
     }
   },
@@ -348,9 +348,9 @@ export const trackEvent = mutation({
 
     const eventId = await ctx.db.insert('events', {
       companyId: company._id,
-      visitorId: session.visitorId,
+      userId: session.userId,
       sessionId: session._id,
-      type: 'event',
+      type: 'custom_event',
       name: args.eventName,
       metadata: args.metadata,
     })
@@ -394,39 +394,43 @@ export const trackConversion = mutation({
     // Create conversion event
     const eventId = await ctx.db.insert('events', {
       companyId: company._id,
-      visitorId: session.visitorId,
+      userId: session.userId,
       sessionId: session._id,
-      type: 'conversion',
+      type: 'custom_event',
       name: args.eventName,
       metadata: args.metadata,
     })
 
-    // Create conversion record
-    const conversionId = await ctx.db.insert('conversions', {
-      companyId: company._id,
-      visitorId: session.visitorId,
-      sessionId: session._id,
-      eventId,
-      eventName: args.eventName,
-      revenue: args.revenue,
-      metadata: args.metadata,
-    })
+    // Note: conversions table may not exist in new schema
+    // Commenting out for now - conversions are tracked as events
+    // const conversionId = await ctx.db.insert('conversions', {
+    //   companyId: company._id,
+    //   userId: session.userId,
+    //   sessionId: session._id,
+    //   eventId,
+    //   eventName: args.eventName,
+    //   revenue: args.revenue,
+    //   metadata: args.metadata,
+    // })
 
-    return { conversionId, eventId }
+    return { eventId }
   },
 })
 
 /**
- * Identify a visitor by email or phone number
- * Updates the visitor record with the provided identification data
+ * Identify a user by email or phone number
+ * Updates the user record with the provided identification data
  */
-export const identifyVisitor = mutation({
+export const identifyUser = mutation({
   args: {
     apiKey: v.string(),
     visitorId: v.string(),
     email: v.optional(v.string()),
     phone: v.optional(v.string()),
     userId: v.optional(v.string()),
+    fullName: v.optional(v.string()),
+    firstName: v.optional(v.string()),
+    lastName: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     // Authenticate company
@@ -440,29 +444,29 @@ export const identifyVisitor = mutation({
     }
 
     // Validate that at least one identifier is provided
-    if (!args.email && !args.phone) {
-      throw new Error('Either email or phone must be provided')
+    if (!args.email && !args.phone && !args.userId) {
+      throw new Error('At least one of email, phone, or userId must be provided')
     }
 
-    // Find the visitor by visitorId
-    let visitor = await ctx.db
-      .query('visitors')
-      .withIndex('companyId_visitorId', (q) =>
-        q.eq('companyId', company._id).eq('visitorId', args.visitorId),
+    // Find the user by userId (browser-generated ID)
+    let user = await ctx.db
+      .query('user')
+      .withIndex('companyId_userId', (q) =>
+        q.eq('companyId', company._id).eq('userId', args.visitorId),
       )
       .first()
 
-    if (!visitor) {
-      throw new Error('Visitor not found')
+    if (!user) {
+      throw new Error('User not found')
     }
 
-    // Check if another visitor already has this email or phone
-    let existingVisitorByEmail = null
-    let existingVisitorByPhone = null
+    // Check if another user already has this email or phone
+    let existingUserByEmail = null
+    let existingUserByPhone = null
 
     if (args.email) {
-      existingVisitorByEmail = await ctx.db
-        .query('visitors')
+      existingUserByEmail = await ctx.db
+        .query('user')
         .withIndex('companyId_email', (q) =>
           q.eq('companyId', company._id).eq('email', args.email),
         )
@@ -470,39 +474,40 @@ export const identifyVisitor = mutation({
     }
 
     if (args.phone) {
-      existingVisitorByPhone = await ctx.db
-        .query('visitors')
+      existingUserByPhone = await ctx.db
+        .query('user')
         .withIndex('companyId_phone', (q) =>
           q.eq('companyId', company._id).eq('phone', args.phone),
         )
         .first()
     }
 
-    // If we found existing visitors with the same email/phone but different visitorId,
-    // we'll update the current visitor (in a production system, you might want to merge them)
+    // Build update data
     const updateData: {
       email?: string
       phone?: string
       userId?: string
+      fullName?: string
+      firstName?: string
+      lastName?: string
     } = {}
 
     if (args.email) {
-      // Only update if no other visitor has this email, or if it's the same visitor
-      if (!existingVisitorByEmail || existingVisitorByEmail._id === visitor._id) {
+      // Only update if no other user has this email, or if it's the same user
+      if (!existingUserByEmail || existingUserByEmail._id === user._id) {
         updateData.email = args.email
       } else {
-        // Another visitor already has this email - we could merge here, but for now just update
-        // In production, you might want to merge the visitors
+        // Another user already has this email - update anyway for now
         updateData.email = args.email
       }
     }
 
     if (args.phone) {
-      // Only update if no other visitor has this phone, or if it's the same visitor
-      if (!existingVisitorByPhone || existingVisitorByPhone._id === visitor._id) {
+      // Only update if no other user has this phone, or if it's the same user
+      if (!existingUserByPhone || existingUserByPhone._id === user._id) {
         updateData.phone = args.phone
       } else {
-        // Another visitor already has this phone - we could merge here, but for now just update
+        // Another user already has this phone - update anyway for now
         updateData.phone = args.phone
       }
     }
@@ -511,15 +516,29 @@ export const identifyVisitor = mutation({
       updateData.userId = args.userId
     }
 
-    // Update the visitor with identification data
-    await ctx.db.patch(visitor._id, updateData)
+    if (args.fullName) {
+      updateData.fullName = args.fullName
+    }
+
+    if (args.firstName) {
+      updateData.firstName = args.firstName
+    }
+
+    if (args.lastName) {
+      updateData.lastName = args.lastName
+    }
+
+    // Update the user with identification data
+    await ctx.db.patch(user._id, updateData)
 
     return {
-      visitorId: visitor._id,
+      userId: user._id,
       identified: true,
-      email: updateData.email || visitor.email,
-      phone: updateData.phone || visitor.phone,
-      userId: updateData.userId || visitor.userId,
+      email: updateData.email || user.email,
+      phone: updateData.phone || user.phone,
+      fullName: updateData.fullName || user.fullName,
+      firstName: updateData.firstName || user.firstName,
+      lastName: updateData.lastName || user.lastName,
     }
   },
 })
@@ -541,20 +560,19 @@ export const getSessions = query({
       .order('desc')
       .take(limit)
 
-    // Enrich sessions with visitor identity data
+    // Enrich sessions with user identity data
     const enrichedSessions = await Promise.all(
       sessions.map(async (session) => {
-        const visitor = await ctx.db.get(session.visitorId)
+        const user = await ctx.db.get(session.userId)
         return {
           ...session,
-          visitor: visitor
+          user: user
             ? {
-                email: visitor.email,
-                phone: visitor.phone,
-                fullName: visitor.fullName,
-                firstName: visitor.firstName,
-                lastName: visitor.lastName,
-                userId: visitor.userId,
+                email: user.email,
+                phone: user.phone,
+                fullName: user.fullName,
+                firstName: user.firstName,
+                lastName: user.lastName,
               }
             : null,
         }
@@ -662,8 +680,8 @@ export const getVisitorAnalytics = query({
         categoryMap.set(category, new Set())
       }
 
-      // Add unique visitor to this bucket/category
-      categoryMap.get(category)!.add(session.visitorId)
+      // Add unique user to this bucket/category
+      categoryMap.get(category)!.add(session.userId)
     }
 
     // Convert to array format for charting
@@ -695,6 +713,8 @@ export const getVisitorAnalytics = query({
 
 /**
  * Get conversions for a company
+ * Note: Conversions are now tracked as events with type 'custom_event'
+ * This query filters events to find conversion-like events
  */
 export const getConversions = query({
   args: {
@@ -704,18 +724,21 @@ export const getConversions = query({
   handler: async (ctx, args) => {
     const limit = args.limit ?? 100
 
-    const conversions = await ctx.db
-      .query('conversions')
-      .withIndex('companyId', (q) => q.eq('companyId', args.companyId))
+    // Get custom events (which include conversions)
+    const events = await ctx.db
+      .query('events')
+      .withIndex('companyId_type', (q) =>
+        q.eq('companyId', args.companyId).eq('type', 'custom_event')
+      )
       .order('desc')
       .take(limit)
 
     // Enrich with session data for attribution
-    const enrichedConversions = await Promise.all(
-      conversions.map(async (conversion) => {
-        const session = await ctx.db.get(conversion.sessionId)
+    const enrichedEvents = await Promise.all(
+      events.map(async (event) => {
+        const session = await ctx.db.get(event.sessionId)
         return {
-          ...conversion,
+          ...event,
           session: session
             ? {
                 touchPoints: session.touchPoints,
@@ -727,7 +750,7 @@ export const getConversions = query({
       }),
     )
 
-    return enrichedConversions
+    return enrichedEvents
   },
 })
 
@@ -749,10 +772,8 @@ export const getSessionDetails = query({
       .withIndex('sessionId', (q) => q.eq('sessionId', args.sessionId))
       .collect()
 
-    const conversions = await ctx.db
-      .query('conversions')
-      .withIndex('sessionId', (q) => q.eq('sessionId', args.sessionId))
-      .collect()
+    // Conversions are now tracked as custom_event type events
+    const conversions = events.filter(e => e.type === 'custom_event')
 
     return {
       ...session,

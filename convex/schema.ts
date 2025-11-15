@@ -33,9 +33,9 @@ export default defineSchema({
     apiKey: v.string(), // For authenticating tracking requests
   }).index('apiKey', ['apiKey']),
 
-  visitors: defineTable({
-    companyId: v.optional(v.id('companies')),
-    visitorId: v.string(), // Client-generated UUID
+  user: defineTable({
+    companyId: v.id('companies'),
+    userId: v.string(), // Browser-generated anonymous ID
     firstSeen: v.number(),
     lastSeen: v.number(),
     // Optional identified data
@@ -44,22 +44,21 @@ export default defineSchema({
     fullName: v.optional(v.string()),
     firstName: v.optional(v.string()),
     lastName: v.optional(v.string()),
-    userId: v.optional(v.string()),
   })
-    .index('companyId_visitorId', ['companyId', 'visitorId'])
+    .index('companyId_userId', ['companyId', 'userId'])
     .index('companyId_email', ['companyId', 'email'])
     .index('companyId_phone', ['companyId', 'phone'])
     .index('companyId', ['companyId']),
 
   sessions: defineTable({
-    companyId: v.optional(v.id('companies')),
-    visitorId: v.id('visitors'),
-    sessionId: v.string(), // Client-generated session ID
+    companyId: v.id('companies'),
+    userId: v.id('user'),
+    sessionId: v.string(), // Browser-generated session ID
     touchPoints: v.array(touchPointSchema),
     startedAt: v.number(),
     endedAt: v.optional(v.number()),
+    duration: v.optional(v.number()),
     pageViews: v.number(),
-    duration: v.optional(v.number()), // in seconds
     userAgent: v.optional(v.string()),
     ipAddress: v.optional(v.string()),
     screenResolution: v.optional(v.string()),
@@ -68,18 +67,15 @@ export default defineSchema({
     lastSessionSource: v.optional(v.string()), // Channel source from last touchpoint
   })
     .index('companyId_sessionId', ['companyId', 'sessionId'])
-    .index('visitorId', ['visitorId'])
-    .index('companyId', ['companyId']),
+    .index('companyId_userId', ['companyId', 'userId'])
+    .index('companyId', ['companyId'])
+    .index('userId', ['userId']),
 
   events: defineTable({
-    companyId: v.optional(v.id('companies')),
-    visitorId: v.id('visitors'),
+    companyId: v.id('companies'),
+    userId: v.id('user'),
     sessionId: v.id('sessions'),
-    type: v.union(
-      v.literal('pageview'),
-      v.literal('event'),
-      v.literal('conversion'),
-    ),
+    type: v.union(v.literal('pageview'), v.literal('custom_event')),
     name: v.optional(v.string()), // Event name for custom events
     url: v.optional(v.string()), // URL for pageviews
     metadata: v.optional(v.any()), // Custom event data
@@ -87,28 +83,4 @@ export default defineSchema({
     .index('sessionId', ['sessionId'])
     .index('companyId_type', ['companyId', 'type'])
     .index('companyId', ['companyId']),
-
-  conversions: defineTable({
-    companyId: v.id('companies'),
-    visitorId: v.id('visitors'),
-    sessionId: v.id('sessions'),
-    eventId: v.id('events'),
-    eventName: v.string(),
-
-    // Simplified: Attribution is derived from session.touchPoints
-    // First touch = touchPoints[0]
-    // Last touch = touchPoints[touchPoints.length - 1]
-
-    revenue: v.optional(v.number()),
-    metadata: v.optional(v.any()),
-  })
-    .index('sessionId', ['sessionId'])
-    .index('companyId', ['companyId']),
-
-  // Demo tables (can be removed later)
-  products: defineTable({
-    title: v.string(),
-    imageId: v.string(),
-    price: v.number(),
-  }),
 })

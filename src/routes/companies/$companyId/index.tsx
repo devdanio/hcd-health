@@ -359,16 +359,15 @@ function CompanyDetailsPage() {
 
                   // Determine user identity display
                   const getUserIdentity = () => {
-                    console.log('session', session.visitor)
-                    if (!session.visitor) return 'Anonymous'
-                    const { email, fullName, firstName, lastName, userId } =
-                      session.visitor
+                    console.log('session', session.user)
+                    if (!session.user) return 'Anonymous'
+                    const { email, fullName, firstName, lastName } =
+                      session.user
                     if (email) return email
                     if (fullName) return fullName
                     if (firstName || lastName) {
                       return [firstName, lastName].filter(Boolean).join(' ')
                     }
-                    if (userId) return userId
                     return 'Anonymous'
                   }
 
