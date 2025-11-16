@@ -1,8 +1,41 @@
 import { defineSchema, defineTable } from 'convex/server'
 import { v } from 'convex/values'
 
+export const ghlContactSchema = defineTable({
+  id: v.string(),
+  locationId: v.string(),
+  contactName: v.union(v.null(), v.string()),
+  firstName: v.union(v.null(), v.string()),
+  lastName: v.union(v.null(), v.string()),
+  companyName: v.union(v.null(), v.string()),
+  email: v.union(v.null(), v.string()),
+  phone: v.union(v.null(), v.string()),
+  dnd: v.boolean(),
+  type: v.union(v.null(), v.string()),
+  source: v.union(v.null(), v.string()),
+  assignedTo: v.union(v.null(), v.string()),
+  city: v.union(v.null(), v.string()),
+  state: v.union(v.null(), v.string()),
+  postalCode: v.union(v.null(), v.string()),
+  address1: v.union(v.null(), v.string()),
+  dateAdded: v.number(),
+  dateUpdated: v.number(),
+  dateOfBirth: v.any(),
+  tags: v.array(v.string()),
+  country: v.union(v.null(), v.string()),
+  website: v.union(v.null(), v.string()),
+  timezone: v.union(v.null(), v.string()),
+  lastActivity: v.optional(v.number()),
+  customField: v.array(
+    v.object({
+      id: v.string(),
+      value: v.any(),
+    }),
+  ),
+})
+
 // Attribution tracking data structure
-const touchPointSchema = v.object({
+const attributionSchema = v.object({
   // UTM parameters
   utm_source: v.optional(v.string()),
   utm_medium: v.optional(v.string()),
@@ -25,62 +58,76 @@ const touchPointSchema = v.object({
   timestamp: v.number(),
 })
 
+export const contactSchema = defineTable({
+  companyId: v.optional(v.id('companies')),
+  // Optional identified data
+  email: v.optional(v.string()),
+  phone: v.optional(v.string()),
+  fullName: v.optional(v.string()),
+  firstName: v.optional(v.string()),
+  lastName: v.optional(v.string()),
+  ghlContactId: v.optional(v.id('ghlContacts')),
+})
+
+export const appointmentsSchema = defineTable({
+  companyId: v.optional(v.id('companies')),
+  patientName: v.string(),
+
+  // Todo: attempt to find the contct, will need a separate report from the unified practice api for this
+  // contactId: v.optional(v.id('contacts')),
+  dateOfService: v.optional(v.string()),
+  service: v.union(v.literal('acupuncture'), v.literal('consultation')),
+})
+  // This is the unique index for the appointments table
+  .index('companyId_patientName_dateOfService_appointmentType', [
+    'companyId',
+    'patientName',
+    'dateOfService',
+    'service',
+  ])
+
 export default defineSchema({
   // Attribution Tracking Tables
   companies: defineTable({
     name: v.string(),
     domain: v.string(),
     apiKey: v.string(), // For authenticating tracking requests
+    ehr: v.optional(v.union(v.literal('unified-practice'), v.literal('ghl'))),
   }).index('apiKey', ['apiKey']),
 
-  user: defineTable({
-    companyId: v.id('companies'),
-    userId: v.string(), // Browser-generated anonymous ID
-    firstSeen: v.number(),
-    lastSeen: v.number(),
-    // Optional identified data
-    email: v.optional(v.string()),
-    phone: v.optional(v.string()),
-    fullName: v.optional(v.string()),
-    firstName: v.optional(v.string()),
-    lastName: v.optional(v.string()),
-  })
-    .index('companyId_userId', ['companyId', 'userId'])
+  ghlContacts: ghlContactSchema,
+  contacts: contactSchema
     .index('companyId_email', ['companyId', 'email'])
     .index('companyId_phone', ['companyId', 'phone'])
-    .index('companyId', ['companyId']),
+    .index('companyId_ghlContactId', ['companyId', 'ghlContactId'])
+    .index('companyId', ['companyId'])
+    .index('ghlContactId', ['ghlContactId']),
 
   sessions: defineTable({
-    companyId: v.id('companies'),
-    userId: v.id('user'),
-    sessionId: v.string(), // Browser-generated session ID
-    touchPoints: v.array(touchPointSchema),
-    startedAt: v.number(),
-    endedAt: v.optional(v.number()),
-    duration: v.optional(v.number()),
-    pageViews: v.number(),
+    browserSessionId: v.string(),
+    companyId: v.optional(v.id('companies')),
+    contactId: v.id('contacts'),
     userAgent: v.optional(v.string()),
     ipAddress: v.optional(v.string()),
     screenResolution: v.optional(v.string()),
     timezone: v.optional(v.string()),
-    firstSessionSource: v.optional(v.string()), // Channel source from first touchpoint
-    lastSessionSource: v.optional(v.string()), // Channel source from last touchpoint
+    events: v.array(v.id('events')),
+    firstSessionAttribution: attributionSchema,
+    lastSessionAttribution: attributionSchema,
   })
-    .index('companyId_sessionId', ['companyId', 'sessionId'])
-    .index('companyId_userId', ['companyId', 'userId'])
-    .index('companyId', ['companyId'])
-    .index('userId', ['userId']),
+    .index('companyId_contactId', ['companyId', 'contactId'])
+    .index('companyId', ['companyId']),
 
   events: defineTable({
-    companyId: v.id('companies'),
-    userId: v.id('user'),
+    companyId: v.optional(v.id('companies')),
+    contactId: v.id('contacts'),
     sessionId: v.id('sessions'),
     type: v.union(v.literal('pageview'), v.literal('custom_event')),
-    name: v.optional(v.string()), // Event name for custom events
-    url: v.optional(v.string()), // URL for pageviews
-    metadata: v.optional(v.any()), // Custom event data
+    // If the event type is page view, the metadata will be attributionSchema.
+    metadata: v.union(attributionSchema, v.any()),
   })
     .index('sessionId', ['sessionId'])
     .index('companyId_type', ['companyId', 'type'])
     .index('companyId', ['companyId']),
+  appointments: appointmentsSchema,
 })

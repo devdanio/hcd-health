@@ -6,7 +6,10 @@
       "mcp__ide__getDiagnostics",
       "Bash(pnpm exec tsr:*)",
       "Bash(pnpm dev --help:*)",
-      "Bash(pnpm build:*)"
+      "Bash(pnpm build:*)",
+      "Bash(cat:*)",
+      "Bash(pnpm add:*)",
+      "Bash(npx tsx:*)"
     ],
     "deny": [],
     "ask": []

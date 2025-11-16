@@ -39,48 +39,34 @@ import {
 } from '@/components/ui/select'
 import { ArrowUpDown } from 'lucide-react'
 
-export const Route = createFileRoute('/companies/$companyId/contacts/')({
-  component: ContactsPage,
-})
+export const Route = createFileRoute('/companies/$companyId/appointments/')(
+  {
+    component: AppointmentsPage,
+  },
+)
 
 // Chart configuration
 const chartConfig = {
-  contacts: {
-    label: 'Contacts',
+  acupuncture: {
+    label: 'Acupuncture',
     color: 'oklch(90.5% 0.093 164.15)',
+  },
+  consultation: {
+    label: 'Consultation',
+    color: '#fde68a', // amber-200
   },
 } satisfies ChartConfig
 
-type GHLContact = {
-  _id: Id<'ghlContacts'>
+type Appointment = {
+  _id: Id<'appointments'>
   _creationTime: number
-  id: string
-  locationId: string
-  contactName: string | null
-  firstName: string | null
-  lastName: string | null
-  companyName: string | null
-  email: string | null
-  phone: string | null
-  dateAdded: number
-  dateUpdated: number
-  [key: string]: any
-}
-
-type Contact = {
-  _id: Id<'contacts'>
-  _creationTime: number
-  email?: string
-  phone?: string
-  fullName?: string
-  firstName?: string
-  lastName?: string
   companyId?: Id<'companies'>
-  ghlContactId?: Id<'ghlContacts'>
-  ghlContact: GHLContact | null
+  patientName: string
+  dateOfService?: string
+  service: 'acupuncture' | 'consultation'
 }
 
-function ContactsPage() {
+function AppointmentsPage() {
   const { companyId } = Route.useParams()
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d' | 'all'>(
     '30d',
@@ -89,22 +75,21 @@ function ContactsPage() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [globalFilter, setGlobalFilter] = useState('')
 
-  // Fetch contacts and analytics data
-  const contacts = useQuery(api.contacts.getContacts, {
+  // Fetch appointments and analytics data
+  const appointments = useQuery(api.appointments.getAppointments, {
     companyId: companyId as Id<'companies'>,
   })
 
-  const analyticsData = useQuery(api.contacts.getContactsAnalytics, {
+  const analyticsData = useQuery(api.appointments.getAppointmentsAnalytics, {
     companyId: companyId as Id<'companies'>,
     timeRange,
   })
 
-  // Define table columns using GHL data
-  const columns = useMemo<ColumnDef<Contact>[]>(
+  // Define table columns
+  const columns = useMemo<ColumnDef<Appointment>[]>(
     () => [
       {
-        accessorFn: (row) => row.ghlContact?.firstName,
-        id: 'firstName',
+        accessorKey: 'patientName',
         header: ({ column }) => {
           return (
             <Button
@@ -113,20 +98,17 @@ function ContactsPage() {
                 column.toggleSorting(column.getIsSorted() === 'asc')
               }
             >
-              First Name
+              Patient Name
               <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
           )
         },
         cell: ({ row }) => (
-          <div className="capitalize">
-            {row.original.ghlContact?.firstName || '-'}
-          </div>
+          <div className="capitalize">{row.getValue('patientName')}</div>
         ),
       },
       {
-        accessorFn: (row) => row.ghlContact?.lastName,
-        id: 'lastName',
+        accessorKey: 'dateOfService',
         header: ({ column }) => {
           return (
             <Button
@@ -135,67 +117,25 @@ function ContactsPage() {
                 column.toggleSorting(column.getIsSorted() === 'asc')
               }
             >
-              Last Name
-              <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-          )
-        },
-        cell: ({ row }) => (
-          <div className="capitalize">
-            {row.original.ghlContact?.lastName || '-'}
-          </div>
-        ),
-      },
-      {
-        accessorFn: (row) => row.ghlContact?.email,
-        id: 'email',
-        header: ({ column }) => {
-          return (
-            <Button
-              variant="ghost"
-              onClick={() =>
-                column.toggleSorting(column.getIsSorted() === 'asc')
-              }
-            >
-              Email
-              <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-          )
-        },
-        cell: ({ row }) => (
-          <div className="lowercase">
-            {row.original.ghlContact?.email || '-'}
-          </div>
-        ),
-      },
-      {
-        accessorFn: (row) => row.ghlContact?.phone,
-        id: 'phone',
-        header: 'Phone',
-        cell: ({ row }) => <div>{row.original.ghlContact?.phone || '-'}</div>,
-      },
-      {
-        accessorFn: (row) => row.ghlContact?.dateAdded,
-        id: 'dateAdded',
-        header: ({ column }) => {
-          return (
-            <Button
-              variant="ghost"
-              onClick={() =>
-                column.toggleSorting(column.getIsSorted() === 'asc')
-              }
-            >
-              Date Added
+              Date of Service
               <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
           )
         },
         cell: ({ row }) => {
-          const dateAdded = row.original.ghlContact?.dateAdded
-          if (!dateAdded) return <div>-</div>
-          const date = new Date(dateAdded)
-          return <div>{date.toLocaleDateString()}</div>
+          const dateOfService = row.getValue('dateOfService') as
+            | string
+            | undefined
+          if (!dateOfService) return <div>-</div>
+          return <div>{dateOfService}</div>
         },
+      },
+      {
+        accessorKey: 'service',
+        header: 'Service',
+        cell: ({ row }) => (
+          <div className="capitalize">{row.getValue('service')}</div>
+        ),
       },
     ],
     [],
@@ -203,7 +143,7 @@ function ContactsPage() {
 
   // Initialize table
   const table = useReactTable({
-    data: contacts ?? [],
+    data: appointments ?? [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -219,7 +159,7 @@ function ContactsPage() {
     },
   })
 
-  if (contacts === undefined || analyticsData === undefined) {
+  if (appointments === undefined || analyticsData === undefined) {
     return (
       <div className="container mx-auto p-8">
         <div>Loading...</div>
@@ -238,9 +178,9 @@ function ContactsPage() {
         >
           ← Back to Dashboard
         </Link>
-        <h1 className="text-3xl font-bold">Contacts</h1>
+        <h1 className="text-3xl font-bold">Appointments</h1>
         <p className="text-muted-foreground">
-          Manage and view all contacts for this company
+          Manage and view all appointments for this company
         </p>
       </div>
 
@@ -248,8 +188,8 @@ function ContactsPage() {
       <Card className="mb-6">
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Contacts Over Time</CardTitle>
-            <CardDescription>New contacts added by day</CardDescription>
+            <CardTitle>Appointments Over Time</CardTitle>
+            <CardDescription>Appointments by day</CardDescription>
           </div>
           <Select
             value={timeRange}
@@ -269,7 +209,7 @@ function ContactsPage() {
         <CardContent>
           {analyticsData.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              No contacts data available for this time range
+              No appointments data available for this time range
             </div>
           ) : (
             <ChartContainer config={chartConfig} className="h-[180px] w-full">
@@ -290,12 +230,19 @@ function ContactsPage() {
                 />
                 <ChartTooltip
                   cursor={false}
-                  content={<ChartTooltipContent hideLabel />}
+                  content={<ChartTooltipContent />}
                 />
                 <Bar
-                  dataKey="contacts"
-                  fill="var(--color-contacts)"
-                  radius={8}
+                  dataKey="consultation"
+                  fill="var(--color-consultation)"
+                  stackId="a"
+                  radius={[0, 0, 0, 0]}
+                />
+                <Bar
+                  dataKey="acupuncture"
+                  fill="var(--color-acupuncture)"
+                  stackId="a"
+                  radius={[8, 8, 0, 0]}
                 />
               </BarChart>
             </ChartContainer>
@@ -303,13 +250,13 @@ function ContactsPage() {
         </CardContent>
       </Card>
 
-      {/* Contacts Table */}
+      {/* Appointments Table */}
       <Card>
         <CardHeader>
-          <CardTitle>All Contacts ({contacts.length})</CardTitle>
+          <CardTitle>All Appointments ({appointments.length})</CardTitle>
           <div className="flex items-center gap-4 mt-4">
             <Input
-              placeholder="Search contacts..."
+              placeholder="Search appointments..."
               value={globalFilter ?? ''}
               onChange={(event) => setGlobalFilter(event.target.value)}
               className="max-w-sm"
@@ -358,7 +305,7 @@ function ContactsPage() {
                 ) : (
                   <tr>
                     <td colSpan={columns.length} className="h-24 text-center">
-                      No contacts found.
+                      No appointments found.
                     </td>
                   </tr>
                 )}
@@ -369,7 +316,7 @@ function ContactsPage() {
           {/* Pagination */}
           <div className="flex items-center justify-between space-x-2 py-4">
             <div className="flex-1 text-sm text-muted-foreground">
-              {table.getFilteredRowModel().rows.length} contact(s) total
+              {table.getFilteredRowModel().rows.length} appointment(s) total
             </div>
             <div className="flex items-center space-x-2">
               <Button

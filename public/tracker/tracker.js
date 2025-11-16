@@ -265,7 +265,7 @@
       }
 
       try {
-        await fetch(`${this.apiUrl}/identifyUser`, {
+        await fetch(`${this.apiUrl}/identifyContact`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -279,7 +279,7 @@
           }),
         })
       } catch (error) {
-        console.error('Leadalytics: Error identifying user', error)
+        console.error('Leadalytics: Error identifying contact', error)
       }
     }
 

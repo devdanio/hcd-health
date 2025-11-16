@@ -53,7 +53,7 @@ http.route({
 })
 
 http.route({
-  path: '/identifyUser',
+  path: '/identifyContact',
   method: 'OPTIONS',
   handler: httpAction(async (_, request) => {
     return new Response(null, {
@@ -220,11 +220,11 @@ http.route({
 })
 
 /**
- * Identify User Endpoint
+ * Identify Contact Endpoint
  * Identifies a user by email or phone number
  */
 http.route({
-  path: '/identifyUser',
+  path: '/identifyContact',
   method: 'POST',
   handler: httpAction(async (ctx, request) => {
     const origin = request.headers.get('origin') || undefined
@@ -232,7 +232,7 @@ http.route({
     try {
       const body = await request.json()
 
-      const result = await ctx.runMutation(api.tracking.identifyUser, {
+      const result = await ctx.runMutation(api.tracking.identifyContact, {
         apiKey: body.apiKey,
         visitorId: body.visitorId,
         email: body.email,
@@ -251,7 +251,7 @@ http.route({
         },
       })
     } catch (error: any) {
-      console.error('Error identifying user:', error)
+      console.error('Error identifying contact:', error)
       return new Response(
         JSON.stringify({ error: error.message || 'Internal server error' }),
         {

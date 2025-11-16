@@ -2,8 +2,8 @@ import { v } from 'convex/values'
 import { mutation, query } from './_generated/server'
 import { resolveChannel, type TrafficCategory } from './channelResolver'
 
-// Touch point validator for mutations
-const touchPointValidator = v.object({
+// Attribution schema validator for mutations (matches schema.ts)
+const attributionValidator = v.object({
   utm_source: v.optional(v.string()),
   utm_medium: v.optional(v.string()),
   utm_campaign: v.optional(v.string()),
@@ -22,132 +22,16 @@ const touchPointValidator = v.object({
 })
 
 /**
- * Initialize or update a session with attribution data
- */
-export const trackSession = mutation({
-  args: {
-    apiKey: v.string(),
-    visitorId: v.string(),
-    sessionId: v.string(),
-    touchPoint: touchPointValidator,
-    userAgent: v.optional(v.string()),
-    screenResolution: v.optional(v.string()),
-    timezone: v.optional(v.string()),
-  },
-  handler: async (ctx, args) => {
-    // Authenticate company
-    const company = await ctx.db
-      .query('companies')
-      .withIndex('apiKey', (q) => q.eq('apiKey', args.apiKey))
-      .first()
-
-    if (!company) {
-      throw new Error('Invalid API key')
-    }
-
-    // Get or create user
-    let user = await ctx.db
-      .query('user')
-      .withIndex('companyId_userId', (q) =>
-        q.eq('companyId', company._id).eq('userId', args.visitorId),
-      )
-      .first()
-
-    const now = Date.now()
-
-    if (!user) {
-      const newUserId = await ctx.db.insert('user', {
-        companyId: company._id,
-        userId: args.visitorId,
-        firstSeen: now,
-        lastSeen: now,
-      })
-      user = await ctx.db.get(newUserId)
-      if (!user) {
-        throw new Error('Failed to create user')
-      }
-    } else {
-      await ctx.db.patch(user._id, {
-        lastSeen: now,
-      })
-    }
-
-    // Get or create session
-    let session = await ctx.db
-      .query('sessions')
-      .withIndex('companyId_sessionId', (q) =>
-        q.eq('companyId', company._id).eq('sessionId', args.sessionId),
-      )
-      .first()
-
-    if (!session) {
-      // New session - create with first touchpoint
-      // Compute channel source for first touchpoint
-      const firstChannel = resolveChannel(args.touchPoint)
-      const firstSessionSource = `${firstChannel.source} (${firstChannel.category})`
-
-      const sessionId = await ctx.db.insert('sessions', {
-        companyId: company._id,
-        userId: user._id,
-        sessionId: args.sessionId,
-        touchPoints: [args.touchPoint],
-        startedAt: args.touchPoint.timestamp,
-        pageViews: 0, // Will be incremented by trackPageView
-        userAgent: args.userAgent,
-        screenResolution: args.screenResolution,
-        timezone: args.timezone,
-        firstSessionSource,
-        lastSessionSource: firstSessionSource, // First touchpoint is also the last initially
-      })
-
-      return { sessionId, userId: user._id, isNew: true }
-    } else {
-      // Existing session - add touchpoint if URL changed or has new attribution data
-      const lastTouchPoint = session.touchPoints[session.touchPoints.length - 1]
-      const shouldAddTouchPoint =
-        lastTouchPoint.url !== args.touchPoint.url ||
-        hasNewAttributionData(lastTouchPoint, args.touchPoint)
-
-      if (shouldAddTouchPoint) {
-        // Compute channel source for the new (last) touchpoint
-        const lastChannel = resolveChannel(args.touchPoint)
-        const lastSessionSource = `${lastChannel.source} (${lastChannel.category})`
-
-        await ctx.db.patch(session._id, {
-          touchPoints: [...session.touchPoints, args.touchPoint],
-          // pageViews is now incremented by trackPageView, not here
-          endedAt: args.touchPoint.timestamp,
-          duration: Math.floor(
-            (args.touchPoint.timestamp - session.startedAt) / 1000,
-          ),
-          lastSessionSource, // Update last session source
-        })
-      } else {
-        // Just update session activity
-        await ctx.db.patch(session._id, {
-          endedAt: args.touchPoint.timestamp,
-          duration: Math.floor(
-            (args.touchPoint.timestamp - session.startedAt) / 1000,
-          ),
-        })
-      }
-
-      return { sessionId: session._id, userId: user._id, isNew: false }
-    }
-  },
-})
-
-/**
  * Track a page view event
- * Creates session if it doesn't exist (consolidates trackSession functionality)
+ * Creates contact and session if they don't exist
  */
 export const trackPageView = mutation({
   args: {
     apiKey: v.string(),
-    visitorId: v.string(),
-    sessionId: v.string(),
+    visitorId: v.string(), // Browser-generated visitor ID
+    sessionId: v.string(), // Browser-generated session ID
     url: v.string(),
-    touchPoint: v.optional(touchPointValidator), // Only needed for first pageview or when attribution changes
+    touchPoint: v.optional(attributionValidator),
     userAgent: v.optional(v.string()),
     screenResolution: v.optional(v.string()),
     timezone: v.optional(v.string()),
@@ -163,154 +47,82 @@ export const trackPageView = mutation({
       throw new Error('Invalid API key')
     }
 
-    // Get or create user
-    let user = await ctx.db
-      .query('user')
-      .withIndex('companyId_userId', (q) =>
-        q.eq('companyId', company._id).eq('userId', args.visitorId),
-      )
-      .first()
-
     const now = Date.now()
 
-    if (!user) {
-      const newUserId = await ctx.db.insert('user', {
-        companyId: company._id,
-        userId: args.visitorId,
-        firstSeen: now,
-        lastSeen: now,
-      })
-      user = await ctx.db.get(newUserId)
-      if (!user) {
-        throw new Error('Failed to create user')
-      }
-    } else {
-      await ctx.db.patch(user._id, {
-        lastSeen: now,
-      })
-    }
-
-    // Get or create session
-    let session = await ctx.db
-      .query('sessions')
-      .withIndex('companyId_sessionId', (q) =>
-        q.eq('companyId', company._id).eq('sessionId', args.sessionId),
-      )
+    // Get or create contact
+    let contact = await ctx.db
+      .query('contacts')
+      .withIndex('companyId', (q) => q.eq('companyId', company._id))
+      .filter((q) => q.eq(q.field('email'), args.visitorId)) // TODO: Need better way to find contact
       .first()
 
-    if (!session) {
-      // Create new session with first touchpoint
-      // If no touchpoint provided, create a minimal one from the URL
-      const touchPoint = args.touchPoint || {
-        url: args.url,
-        timestamp: now,
-      }
-
-      // Compute channel source for first touchpoint
-      const firstChannel = resolveChannel(touchPoint)
-      const firstSessionSource = `${firstChannel.source} (${firstChannel.category})`
-
-      const sessionId = await ctx.db.insert('sessions', {
+    if (!contact) {
+      const contactId = await ctx.db.insert('contacts', {
         companyId: company._id,
-        userId: user._id,
-        sessionId: args.sessionId,
-        touchPoints: [touchPoint],
-        startedAt: touchPoint.timestamp,
-        pageViews: 0, // Will be incremented after creating the event
+      })
+      contact = await ctx.db.get(contactId)
+      if (!contact) {
+        throw new Error('Failed to create contact')
+      }
+    }
+
+    // Prepare attribution data
+    const attribution = args.touchPoint || {
+      url: args.url,
+      referrer: undefined,
+      timestamp: now,
+    }
+
+    // Get or create session by browserSessionId
+    let session = await ctx.db
+      .query('sessions')
+      .withIndex('companyId', (q) => q.eq('companyId', company._id))
+      .filter((q) => q.eq(q.field('browserSessionId'), args.sessionId))
+      .first()
+
+    let isNewSession = false
+
+    if (!session) {
+      // Create new session
+      isNewSession = true
+      const sessionDbId = await ctx.db.insert('sessions', {
+        browserSessionId: args.sessionId,
+        companyId: company._id,
+        contactId: contact._id,
         userAgent: args.userAgent,
         screenResolution: args.screenResolution,
         timezone: args.timezone,
-        firstSessionSource,
-        lastSessionSource: firstSessionSource, // First touchpoint is also the last initially
+        events: [], // Will be updated when we add the event
+        firstSessionAttribution: attribution,
+        lastSessionAttribution: attribution,
       })
 
-      session = await ctx.db.get(sessionId)
+      session = await ctx.db.get(sessionDbId)
       if (!session) {
         throw new Error('Failed to create session')
       }
-    } else {
-      // Existing session - update touchpoint if URL changed or has new attribution data
-      if (args.touchPoint) {
-        const lastTouchPoint = session.touchPoints[session.touchPoints.length - 1]
-        const shouldAddTouchPoint =
-          lastTouchPoint.url !== args.touchPoint.url ||
-          hasNewAttributionData(lastTouchPoint, args.touchPoint)
-
-        if (shouldAddTouchPoint) {
-          // Compute channel source for the new (last) touchpoint
-          const lastChannel = resolveChannel(args.touchPoint)
-          const lastSessionSource = `${lastChannel.source} (${lastChannel.category})`
-
-          await ctx.db.patch(session._id, {
-            touchPoints: [...session.touchPoints, args.touchPoint],
-            endedAt: args.touchPoint.timestamp,
-            duration: Math.floor(
-              (args.touchPoint.timestamp - session.startedAt) / 1000,
-            ),
-            lastSessionSource, // Update last session source
-          })
-        } else {
-          // Just update session activity
-          await ctx.db.patch(session._id, {
-            endedAt: args.touchPoint.timestamp,
-            duration: Math.floor(
-              (args.touchPoint.timestamp - session.startedAt) / 1000,
-            ),
-          })
-        }
-      } else {
-        // No touchpoint provided, just update session activity
-        await ctx.db.patch(session._id, {
-          endedAt: now,
-          duration: Math.floor((now - session.startedAt) / 1000),
-        })
-      }
     }
 
-    // Check if the most recent pageview has the same URL (prevent duplicate on refresh)
-    const recentPageViews = await ctx.db
-      .query('events')
-      .withIndex('sessionId', (q) => q.eq('sessionId', session._id))
-      .filter((q) => q.eq(q.field('type'), 'pageview'))
-      .order('desc')
-      .take(1)
+    // Create the pageview event
+    const eventId = await ctx.db.insert('events', {
+      companyId: company._id,
+      contactId: contact._id,
+      sessionId: session._id,
+      type: 'pageview',
+      metadata: attribution,
+    })
 
-    const mostRecentPageView = recentPageViews[0]
-    const isDuplicate =
-      mostRecentPageView &&
-      mostRecentPageView.url === args.url &&
-      // Only consider it a duplicate if it's within the last 5 seconds (refresh scenario)
-      now - mostRecentPageView._creationTime < 5000
-
-    let eventId = null
-
-    if (!isDuplicate) {
-      // Create the pageview event
-      eventId = await ctx.db.insert('events', {
-        companyId: company._id,
-        userId: user._id,
-        sessionId: session._id,
-        type: 'pageview',
-        url: args.url,
-      })
-
-      // Increment pageViews count
-      await ctx.db.patch(session._id, {
-        pageViews: session.pageViews + 1,
-      })
-    }
-
-    // Always update session activity (endedAt and duration) even for duplicates
+    // Update session: add event to events array and update lastSessionAttribution
     await ctx.db.patch(session._id, {
-      endedAt: now,
-      duration: Math.floor((now - session.startedAt) / 1000),
+      events: [...session.events, eventId],
+      lastSessionAttribution: attribution,
     })
 
     return {
       eventId,
       sessionId: session._id,
-      userId: user._id,
-      isDuplicate: isDuplicate || false,
+      contactId: contact._id,
+      isNewSession,
     }
   },
 })
@@ -321,7 +133,7 @@ export const trackPageView = mutation({
 export const trackEvent = mutation({
   args: {
     apiKey: v.string(),
-    sessionId: v.string(),
+    sessionId: v.string(), // Browser-generated session ID
     eventName: v.string(),
     metadata: v.optional(v.any()),
   },
@@ -335,24 +147,34 @@ export const trackEvent = mutation({
       throw new Error('Invalid API key')
     }
 
+    // Find session by browserSessionId
     const session = await ctx.db
       .query('sessions')
-      .withIndex('companyId_sessionId', (q) =>
-        q.eq('companyId', company._id).eq('sessionId', args.sessionId),
-      )
+      .withIndex('companyId', (q) => q.eq('companyId', company._id))
+      .filter((q) => q.eq(q.field('browserSessionId'), args.sessionId))
       .first()
 
     if (!session) {
       throw new Error('Session not found')
     }
 
+    // Create custom event with metadata including event name
+    const eventMetadata = {
+      eventName: args.eventName,
+      ...args.metadata,
+    }
+
     const eventId = await ctx.db.insert('events', {
       companyId: company._id,
-      userId: session.userId,
+      contactId: session.contactId,
       sessionId: session._id,
       type: 'custom_event',
-      name: args.eventName,
-      metadata: args.metadata,
+      metadata: eventMetadata,
+    })
+
+    // Add event to session's events array
+    await ctx.db.patch(session._id, {
+      events: [...session.events, eventId],
     })
 
     return { eventId }
@@ -365,7 +187,7 @@ export const trackEvent = mutation({
 export const trackConversion = mutation({
   args: {
     apiKey: v.string(),
-    sessionId: v.string(),
+    sessionId: v.string(), // Browser-generated session ID
     eventName: v.string(),
     revenue: v.optional(v.number()),
     metadata: v.optional(v.any()),
@@ -380,51 +202,49 @@ export const trackConversion = mutation({
       throw new Error('Invalid API key')
     }
 
+    // Find session by browserSessionId
     const session = await ctx.db
       .query('sessions')
-      .withIndex('companyId_sessionId', (q) =>
-        q.eq('companyId', company._id).eq('sessionId', args.sessionId),
-      )
+      .withIndex('companyId', (q) => q.eq('companyId', company._id))
+      .filter((q) => q.eq(q.field('browserSessionId'), args.sessionId))
       .first()
 
     if (!session) {
       throw new Error('Session not found')
     }
 
-    // Create conversion event
+    // Create conversion event with metadata
+    const eventMetadata = {
+      eventName: args.eventName,
+      revenue: args.revenue,
+      ...args.metadata,
+    }
+
     const eventId = await ctx.db.insert('events', {
       companyId: company._id,
-      userId: session.userId,
+      contactId: session.contactId,
       sessionId: session._id,
       type: 'custom_event',
-      name: args.eventName,
-      metadata: args.metadata,
+      metadata: eventMetadata,
     })
 
-    // Note: conversions table may not exist in new schema
-    // Commenting out for now - conversions are tracked as events
-    // const conversionId = await ctx.db.insert('conversions', {
-    //   companyId: company._id,
-    //   userId: session.userId,
-    //   sessionId: session._id,
-    //   eventId,
-    //   eventName: args.eventName,
-    //   revenue: args.revenue,
-    //   metadata: args.metadata,
-    // })
+    // Add event to session's events array
+    await ctx.db.patch(session._id, {
+      events: [...session.events, eventId],
+    })
 
     return { eventId }
   },
 })
 
 /**
- * Identify a user by email or phone number
- * Updates the user record with the provided identification data
+ * Identify a contact by email or phone number
+ * Updates the contact record with the provided identification data
  */
-export const identifyUser = mutation({
+export const identifyContact = mutation({
   args: {
     apiKey: v.string(),
-    visitorId: v.string(),
+    visitorId: v.string(), // Not used in new schema, but kept for API compatibility
     email: v.optional(v.string()),
     phone: v.optional(v.string()),
     userId: v.optional(v.string()),
@@ -448,97 +268,68 @@ export const identifyUser = mutation({
       throw new Error('At least one of email, phone, or userId must be provided')
     }
 
-    // Find the user by userId (browser-generated ID)
-    let user = await ctx.db
-      .query('user')
-      .withIndex('companyId_userId', (q) =>
-        q.eq('companyId', company._id).eq('userId', args.visitorId),
-      )
-      .first()
-
-    if (!user) {
-      throw new Error('User not found')
-    }
-
-    // Check if another user already has this email or phone
-    let existingUserByEmail = null
-    let existingUserByPhone = null
+    // Try to find existing contact by email or phone
+    let contact = null
 
     if (args.email) {
-      existingUserByEmail = await ctx.db
-        .query('user')
+      contact = await ctx.db
+        .query('contacts')
         .withIndex('companyId_email', (q) =>
           q.eq('companyId', company._id).eq('email', args.email),
         )
         .first()
     }
 
-    if (args.phone) {
-      existingUserByPhone = await ctx.db
-        .query('user')
+    if (!contact && args.phone) {
+      contact = await ctx.db
+        .query('contacts')
         .withIndex('companyId_phone', (q) =>
           q.eq('companyId', company._id).eq('phone', args.phone),
         )
         .first()
     }
 
-    // Build update data
-    const updateData: {
-      email?: string
-      phone?: string
-      userId?: string
-      fullName?: string
-      firstName?: string
-      lastName?: string
-    } = {}
-
-    if (args.email) {
-      // Only update if no other user has this email, or if it's the same user
-      if (!existingUserByEmail || existingUserByEmail._id === user._id) {
-        updateData.email = args.email
-      } else {
-        // Another user already has this email - update anyway for now
-        updateData.email = args.email
+    // If no existing contact found, create a new one
+    if (!contact) {
+      const contactId = await ctx.db.insert('contacts', {
+        companyId: company._id,
+        email: args.email,
+        phone: args.phone,
+        fullName: args.fullName,
+        firstName: args.firstName,
+        lastName: args.lastName,
+      })
+      contact = await ctx.db.get(contactId)
+      if (!contact) {
+        throw new Error('Failed to create contact')
       }
-    }
+    } else {
+      // Update existing contact with new information
+      const updateData: {
+        email?: string
+        phone?: string
+        fullName?: string
+        firstName?: string
+        lastName?: string
+      } = {}
 
-    if (args.phone) {
-      // Only update if no other user has this phone, or if it's the same user
-      if (!existingUserByPhone || existingUserByPhone._id === user._id) {
-        updateData.phone = args.phone
-      } else {
-        // Another user already has this phone - update anyway for now
-        updateData.phone = args.phone
-      }
-    }
+      if (args.email) updateData.email = args.email
+      if (args.phone) updateData.phone = args.phone
+      if (args.fullName) updateData.fullName = args.fullName
+      if (args.firstName) updateData.firstName = args.firstName
+      if (args.lastName) updateData.lastName = args.lastName
 
-    if (args.userId) {
-      updateData.userId = args.userId
+      await ctx.db.patch(contact._id, updateData)
     }
-
-    if (args.fullName) {
-      updateData.fullName = args.fullName
-    }
-
-    if (args.firstName) {
-      updateData.firstName = args.firstName
-    }
-
-    if (args.lastName) {
-      updateData.lastName = args.lastName
-    }
-
-    // Update the user with identification data
-    await ctx.db.patch(user._id, updateData)
 
     return {
-      userId: user._id,
+      contactId: contact._id,
       identified: true,
-      email: updateData.email || user.email,
-      phone: updateData.phone || user.phone,
-      fullName: updateData.fullName || user.fullName,
-      firstName: updateData.firstName || user.firstName,
-      lastName: updateData.lastName || user.lastName,
+      email: contact.email,
+      phone: contact.phone,
+      fullName: contact.fullName,
+      firstName: contact.firstName,
+      lastName: contact.lastName,
     }
   },
 })
@@ -560,21 +351,31 @@ export const getSessions = query({
       .order('desc')
       .take(limit)
 
-    // Enrich sessions with user identity data
+    // Enrich sessions with contact identity data and event count
     const enrichedSessions = await Promise.all(
       sessions.map(async (session) => {
-        const user = await ctx.db.get(session.userId)
+        const contact = await ctx.db.get(session.contactId)
+
+        // Get the latest event for this session to determine last activity
+        const latestEvent = await ctx.db
+          .query('events')
+          .withIndex('sessionId', (q) => q.eq('sessionId', session._id))
+          .order('desc')
+          .first()
+
         return {
           ...session,
-          user: user
+          contact: contact
             ? {
-                email: user.email,
-                phone: user.phone,
-                fullName: user.fullName,
-                firstName: user.firstName,
-                lastName: user.lastName,
+                email: contact.email,
+                phone: contact.phone,
+                fullName: contact.fullName,
+                firstName: contact.firstName,
+                lastName: contact.lastName,
               }
             : null,
+          eventsCount: session.events.length,
+          lastActivity: latestEvent?._creationTime || session._creationTime,
         }
       }),
     )
@@ -584,7 +385,48 @@ export const getSessions = query({
 })
 
 /**
- * Get visitor analytics grouped by time period and traffic source
+ * Get session page views by session ID
+ */
+export const getSessionPageViews = query({
+  args: {
+    sessionId: v.id('sessions'),
+  },
+  handler: async (ctx, args) => {
+    const session = await ctx.db.get(args.sessionId)
+    if (!session) {
+      return []
+    }
+
+    const events = await ctx.db
+      .query('events')
+      .withIndex('sessionId', (q) => q.eq('sessionId', args.sessionId))
+      .filter((q) => q.eq(q.field('type'), 'pageview'))
+      .collect()
+
+    // Sort by creation time
+    const sortedEvents = events.sort((a, b) => a._creationTime - b._creationTime)
+
+    // Enrich with channel information from metadata
+    const enrichedEvents = sortedEvents.map((event) => {
+      const metadata = event.metadata as any
+      const channel = resolveChannel(metadata)
+
+      return {
+        ...event,
+        url: metadata.url,
+        channel: {
+          source: channel.source,
+          category: channel.category,
+        },
+      }
+    })
+
+    return enrichedEvents
+  },
+})
+
+/**
+ * Get visitor analytics grouped by time period
  */
 export const getVisitorAnalytics = query({
   args: {
@@ -620,26 +462,23 @@ export const getVisitorAnalytics = query({
     const sessions = await ctx.db
       .query('sessions')
       .withIndex('companyId', (q) => q.eq('companyId', args.companyId))
-      .filter((q) => q.gte(q.field('startedAt'), startTime))
+      .filter((q) => q.gte(q.field('_creationTime'), startTime))
       .collect()
 
     // Group sessions by time bucket and category
     const dataMap = new Map<string, Map<string, Set<string>>>()
 
-    // Determine bucket size based on time range
-    let bucketSize: number
+    // Determine bucket format based on time range
     let bucketFormat: (timestamp: number) => string
 
     if (args.timeRange === '24h') {
       // Hourly buckets for 24h view
-      bucketSize = 60 * 60 * 1000 // 1 hour
       bucketFormat = (timestamp: number) => {
         const date = new Date(timestamp)
         return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:00`
       }
     } else {
       // Daily buckets for other views
-      bucketSize = 24 * 60 * 60 * 1000 // 1 day
       bucketFormat = (timestamp: number) => {
         const date = new Date(timestamp)
         return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
@@ -648,15 +487,11 @@ export const getVisitorAnalytics = query({
 
     // Process each session
     for (const session of sessions) {
-      // Get the first touchpoint to determine traffic source
-      const firstTouchPoint = session.touchPoints[0]
-      if (!firstTouchPoint) continue
-
-      // Categorize the traffic source
-      const channel = resolveChannel(firstTouchPoint)
+      // Get the first session attribution to determine traffic source
+      const channel = resolveChannel(session.firstSessionAttribution)
       const category = channel.category
 
-      // Only include the specified categories
+      // Only include specified categories
       if (
         category !== 'organic_search' &&
         category !== 'paid_search' &&
@@ -668,7 +503,7 @@ export const getVisitorAnalytics = query({
       }
 
       // Determine time bucket
-      const bucketKey = bucketFormat(session.startedAt)
+      const bucketKey = bucketFormat(session._creationTime)
 
       // Initialize maps if needed
       if (!dataMap.has(bucketKey)) {
@@ -680,8 +515,8 @@ export const getVisitorAnalytics = query({
         categoryMap.set(category, new Set())
       }
 
-      // Add unique user to this bucket/category
-      categoryMap.get(category)!.add(session.userId)
+      // Add unique contact to this bucket/category
+      categoryMap.get(category)!.add(session.contactId)
     }
 
     // Convert to array format for charting
@@ -708,189 +543,6 @@ export const getVisitorAnalytics = query({
       .sort((a, b) => a.date.localeCompare(b.date))
 
     return result
-  },
-})
-
-/**
- * Get conversions for a company
- * Note: Conversions are now tracked as events with type 'custom_event'
- * This query filters events to find conversion-like events
- */
-export const getConversions = query({
-  args: {
-    companyId: v.id('companies'),
-    limit: v.optional(v.number()),
-  },
-  handler: async (ctx, args) => {
-    const limit = args.limit ?? 100
-
-    // Get custom events (which include conversions)
-    const events = await ctx.db
-      .query('events')
-      .withIndex('companyId_type', (q) =>
-        q.eq('companyId', args.companyId).eq('type', 'custom_event')
-      )
-      .order('desc')
-      .take(limit)
-
-    // Enrich with session data for attribution
-    const enrichedEvents = await Promise.all(
-      events.map(async (event) => {
-        const session = await ctx.db.get(event.sessionId)
-        return {
-          ...event,
-          session: session
-            ? {
-                touchPoints: session.touchPoints,
-                startedAt: session.startedAt,
-                pageViews: session.pageViews,
-              }
-            : null,
-        }
-      }),
-    )
-
-    return enrichedEvents
-  },
-})
-
-/**
- * Get session details with all events
- */
-export const getSessionDetails = query({
-  args: {
-    sessionId: v.id('sessions'),
-  },
-  handler: async (ctx, args) => {
-    const session = await ctx.db.get(args.sessionId)
-    if (!session) {
-      return null
-    }
-
-    const events = await ctx.db
-      .query('events')
-      .withIndex('sessionId', (q) => q.eq('sessionId', args.sessionId))
-      .collect()
-
-    // Conversions are now tracked as custom_event type events
-    const conversions = events.filter(e => e.type === 'custom_event')
-
-    return {
-      ...session,
-      events,
-      conversions,
-    }
-  },
-})
-
-/**
- * Get all pageview events for a session by Convex session ID
- * Includes channel information for each pageview
- */
-export const getSessionPageViews = query({
-  args: {
-    sessionId: v.id('sessions'),
-  },
-  handler: async (ctx, args) => {
-    const session = await ctx.db.get(args.sessionId)
-    if (!session) {
-      return []
-    }
-
-    const allEvents = await ctx.db
-      .query('events')
-      .withIndex('sessionId', (q) => q.eq('sessionId', args.sessionId))
-      .collect()
-
-    // Filter to only pageview events and sort by creation time
-    const pageViews = allEvents
-      .filter((event) => event.type === 'pageview')
-      .sort((a, b) => a._creationTime - b._creationTime)
-
-    // Enrich pageviews with channel information
-    // Match each pageview to the most recent touchpoint before it
-    const enrichedPageViews = pageViews.map((pageView) => {
-      // Find the touchpoint that was active when this pageview occurred
-      // Use the most recent touchpoint before or at the pageview time
-      let matchingTouchPoint = session.touchPoints[0] // Default to first
-
-      for (let i = session.touchPoints.length - 1; i >= 0; i--) {
-        const touchPoint = session.touchPoints[i]
-        if (touchPoint.timestamp <= pageView._creationTime) {
-          matchingTouchPoint = touchPoint
-          break
-        }
-      }
-
-      // Resolve channel for this touchpoint
-      const channel = resolveChannel(matchingTouchPoint)
-
-      return {
-        ...pageView,
-        channel: {
-          source: channel.source,
-          category: channel.category,
-          icon: channel.icon,
-        },
-      }
-    })
-
-    return enrichedPageViews
-  },
-})
-
-/**
- * Get traffic sources grouped by category
- */
-export const getTrafficSources = query({
-  args: {
-    companyId: v.id('companies'),
-  },
-  handler: async (ctx, args) => {
-    const sessions = await ctx.db
-      .query('sessions')
-      .withIndex('companyId', (q) => q.eq('companyId', args.companyId))
-      .collect()
-
-    // Map to track categories
-    const categoryMap = new Map<
-      TrafficCategory,
-      { icon: string; count: number }
-    >()
-
-    // Process each session's first touchPoint
-    for (const session of sessions) {
-      if (session.touchPoints.length === 0) continue
-
-      const firstTouchPoint = session.touchPoints[0]
-      const categorized = categorizeTrafficSource(firstTouchPoint)
-
-      // Group by category only
-      const category = categorized.category
-
-      if (categoryMap.has(category)) {
-        const existing = categoryMap.get(category)!
-        existing.count += 1
-      } else {
-        categoryMap.set(category, {
-          icon: categorized.icon,
-          count: 1,
-        })
-      }
-    }
-
-    // Convert map to array and sort by count (descending)
-    const results = Array.from(categoryMap.entries())
-      .map(([category, value]) => {
-        return {
-          category,
-          icon: value.icon,
-          sessionCount: value.count,
-        }
-      })
-      .sort((a, b) => b.sessionCount - a.sessionCount)
-
-    return results
   },
 })
 
@@ -934,104 +586,99 @@ export const getCategoryAnalytics = query({
     const sessions = await ctx.db
       .query('sessions')
       .withIndex('companyId', (q) => q.eq('companyId', args.companyId))
-      .filter((q) => q.gte(q.field('startedAt'), startTime))
+      .filter((q) => q.gte(q.field('_creationTime'), startTime))
       .collect()
 
-    // Group sessions by date and category
-    const dataMap = new Map<string, Map<TrafficCategory, number>>()
-
-    // Determine bucket size based on time range
-    let bucketFormat: (timestamp: number) => string
-
-    if (timeRange === '24h') {
-      // Hourly buckets for 24h view
-      bucketFormat = (timestamp: number) => {
-        const date = new Date(timestamp)
-        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:00`
-      }
-    } else {
-      // Daily buckets for other views
-      bucketFormat = (timestamp: number) => {
-        const date = new Date(timestamp)
-        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-      }
-    }
+    // Group sessions by category
+    const categoryMap = new Map<TrafficCategory, number>()
 
     // Process each session
     for (const session of sessions) {
-      if (session.touchPoints.length === 0) continue
-
-      const firstTouchPoint = session.touchPoints[0]
-      const categorized = categorizeTrafficSource(firstTouchPoint)
-      const category = categorized.category
-
-      // Determine time bucket
-      const dateKey = bucketFormat(session.startedAt)
-
-      // Initialize maps if needed
-      if (!dataMap.has(dateKey)) {
-        dataMap.set(dateKey, new Map())
-      }
-      const categoryMap = dataMap.get(dateKey)!
+      const channel = resolveChannel(session.firstSessionAttribution)
+      const category = channel.category
 
       categoryMap.set(category, (categoryMap.get(category) || 0) + 1)
     }
 
-    // Convert to array format for charting
-    const result = Array.from(dataMap.entries())
-      .map(([date, categoryMap]) => {
-        const entry: any = { date }
-        for (const [category, count] of categoryMap.entries()) {
-          entry[category] = count
-        }
-        return entry
-      })
-      .sort((a, b) => a.date.localeCompare(b.date))
+    // Convert to array format
+    const result = Array.from(categoryMap.entries()).map(([category, count]) => ({
+      category,
+      sessions: count,
+    }))
 
     return result
   },
 })
 
-// Traffic source categorization types (imported from channelResolver)
-type TrafficSourceInfo = {
-  source: string
-  category: TrafficCategory
-  icon: string
-}
+/**
+ * Get conversions for a company
+ * Conversions are tracked as custom_event type events
+ */
+export const getConversions = query({
+  args: {
+    companyId: v.id('companies'),
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const limit = args.limit ?? 100
 
-// Main categorization function using PostHog-style channel definitions
-function categorizeTrafficSource(touchPoint: any): TrafficSourceInfo {
-  const resolution = resolveChannel(touchPoint)
-  return {
-    source: resolution.source,
-    category: resolution.category,
-    icon: resolution.icon,
-  }
-}
+    // Get custom events (which include conversions)
+    const events = await ctx.db
+      .query('events')
+      .withIndex('companyId_type', (q) =>
+        q.eq('companyId', args.companyId).eq('type', 'custom_event'),
+      )
+      .order('desc')
+      .take(limit)
 
-// Helper function to check if touchpoint has new attribution data
-function hasNewAttributionData(
-  oldTouchPoint: any,
-  newTouchPoint: any,
-): boolean {
-  const attributionFields = [
-    'utm_source',
-    'utm_medium',
-    'utm_campaign',
-    'utm_content',
-    'utm_term',
-    'fbclid',
-    'gclid',
-    'msclkid',
-    'ttclid',
-    'twclid',
-    'li_fat_id',
-    'ScCid',
-  ]
+    // Enrich with session data for attribution
+    const enrichedEvents = await Promise.all(
+      events.map(async (event) => {
+        const session = await ctx.db.get(event.sessionId)
+        return {
+          ...event,
+          session: session
+            ? {
+                firstSessionAttribution: session.firstSessionAttribution,
+                lastSessionAttribution: session.lastSessionAttribution,
+                eventsCount: session.events.length,
+              }
+            : null,
+        }
+      }),
+    )
 
-  return attributionFields.some((field) => {
-    const oldValue = oldTouchPoint[field]
-    const newValue = newTouchPoint[field]
-    return newValue && newValue !== oldValue
-  })
-}
+    return enrichedEvents
+  },
+})
+
+/**
+ * Get session details with all events
+ */
+export const getSessionDetails = query({
+  args: {
+    sessionId: v.id('sessions'),
+  },
+  handler: async (ctx, args) => {
+    const session = await ctx.db.get(args.sessionId)
+    if (!session) {
+      return null
+    }
+
+    const events = await ctx.db
+      .query('events')
+      .withIndex('sessionId', (q) => q.eq('sessionId', args.sessionId))
+      .collect()
+
+    // Separate pageviews and conversions
+    const pageviews = events.filter((e) => e.type === 'pageview')
+    const conversions = events.filter((e) => e.type === 'custom_event')
+
+    return {
+      ...session,
+      events,
+      pageviews,
+      conversions,
+    }
+  },
+})

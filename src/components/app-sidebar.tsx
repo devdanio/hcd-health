@@ -59,6 +59,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         url: `/companies/${companyId}/contacts`,
         icon: IconListDetails,
       },
+      {
+        title: 'Appointments',
+        url: `/companies/${companyId}/appointments`,
+        icon: IconListDetails,
+      },
     ],
     navClouds: [
       {

@@ -181,7 +181,7 @@
       }
 
       try {
-        await fetch(`${this.sessionData.apiUrl}/identifyUser`, {
+        await fetch(`${this.sessionData.apiUrl}/identifyContact`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -195,7 +195,7 @@
           }),
         })
       } catch (error) {
-        console.error('Leadalytics: Error identifying user directly', error)
+        console.error('Leadalytics: Error identifying contact directly', error)
       }
     }
 

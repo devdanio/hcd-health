@@ -8,9 +8,11 @@
  * @module
  */
 
+import type * as appointments from "../appointments.js";
 import type * as channelDefinitions from "../channelDefinitions.js";
 import type * as channelResolver from "../channelResolver.js";
 import type * as companies from "../companies.js";
+import type * as contacts from "../contacts.js";
 import type * as http from "../http.js";
 import type * as tracking from "../tracking.js";
 
@@ -29,9 +31,11 @@ import type {
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  appointments: typeof appointments;
   channelDefinitions: typeof channelDefinitions;
   channelResolver: typeof channelResolver;
   companies: typeof companies;
+  contacts: typeof contacts;
   http: typeof http;
   tracking: typeof tracking;
 }>;

@@ -52,22 +52,53 @@ export const Route = createFileRoute('/companies/$companyId/')({
   component: CompanyDetailsPage,
 })
 
-// Helper to extract source and category from lastSessionSource string
-// e.g., "Facebook (paid_social)" → { source: "Facebook", category: "paid_social" }
+// Helper to extract source and category from session attribution object
 const extractSourceInfo = (
-  lastSessionSource: string | undefined,
+  attribution: any,
 ): { source: string; category: string } => {
-  if (!lastSessionSource) return { source: 'Direct', category: 'direct' }
+  if (!attribution) return { source: 'Direct', category: 'direct' }
 
-  const match = lastSessionSource.match(/^(.+?)\s*\(([^)]+)\)/)
-  if (match) {
-    return {
-      source: match[1].trim(),
-      category: match[2].trim(),
+  // Determine the source based on UTM parameters or click IDs
+  let source = 'Direct'
+  let medium = ''
+
+  if (attribution.utm_source) {
+    source = attribution.utm_source
+    medium = attribution.utm_medium || ''
+  } else if (attribution.gclid) {
+    source = 'Google'
+    medium = 'cpc'
+  } else if (attribution.fbclid) {
+    source = 'Facebook'
+    medium = 'cpc'
+  } else if (attribution.referrer) {
+    try {
+      const referrerUrl = new URL(attribution.referrer)
+      source = referrerUrl.hostname.replace('www.', '')
+    } catch {
+      source = attribution.referrer
     }
   }
 
-  return { source: lastSessionSource, category: 'direct' }
+  // Determine category based on source and medium
+  const sourceLower = source.toLowerCase()
+  const mediumLower = medium.toLowerCase()
+
+  let category = 'direct'
+
+  if (mediumLower.includes('cpc') || mediumLower.includes('ppc')) {
+    category = 'paid_search'
+  } else if (mediumLower.includes('organic') || sourceLower.includes('google')) {
+    category = 'organic_search'
+  } else if (mediumLower.includes('social')) {
+    category = mediumLower.includes('paid') ? 'paid_social' : 'organic_social'
+  } else if (mediumLower.includes('email')) {
+    category = 'email'
+  } else if (attribution.referrer) {
+    category = 'referral'
+  }
+
+  return { source, category }
 }
 
 const style = { width: '20px', height: '20px' }
@@ -158,13 +189,11 @@ function CompanyDetailsPage() {
       : 'skip',
   )
 
-  // Sort sessions by last activity (endedAt or startedAt)
+  // Sort sessions by last activity
   const sortedSessions = useMemo(() => {
     if (!sessions) return []
     return [...sessions].sort((a, b) => {
-      const aTime = a.endedAt || a.startedAt
-      const bTime = b.endedAt || b.startedAt
-      return bTime - aTime
+      return b.lastActivity - a.lastActivity
     })
   }, [sessions])
 
@@ -349,20 +378,16 @@ function CompanyDetailsPage() {
               </thead>
               <tbody>
                 {sortedSessions.map((session) => {
-                  const lastTouch =
-                    session.touchPoints[session.touchPoints.length - 1]
-                  const { source, category } = extractSourceInfo(
-                    session.lastSessionSource,
+                  const { source, category} = extractSourceInfo(
+                    session.lastSessionAttribution,
                   )
                   const IconComponent = getIconForSource(source, category)
-                  const lastActivity = session.endedAt || session.startedAt
 
                   // Determine user identity display
-                  const getUserIdentity = () => {
-                    console.log('session', session.user)
-                    if (!session.user) return 'Anonymous'
+                  const getContactIdentity = () => {
+                    if (!session.contact) return 'Anonymous'
                     const { email, fullName, firstName, lastName } =
-                      session.user
+                      session.contact
                     if (email) return email
                     if (fullName) return fullName
                     if (firstName || lastName) {
@@ -384,31 +409,27 @@ function CompanyDetailsPage() {
                           onClick={() => setSelectedSessionId(session._id)}
                           className="text-xs text-primary hover:underline cursor-pointer font-mono"
                         >
-                          {session.sessionId.slice(0, 8)}...
+                          {session.browserSessionId.slice(0, 8)}...
                         </button>
                       </td>
                       <td className="p-4 text-sm">
                         <span
                           className={
-                            getUserIdentity() === 'Anonymous'
+                            getContactIdentity() === 'Anonymous'
                               ? 'text-muted-foreground italic'
                               : ''
                           }
                         >
-                          {getUserIdentity()}
+                          {getContactIdentity()}
                         </span>
                       </td>
                       <td className="p-4 text-sm max-w-xs truncate">
-                        {extractPathname(lastTouch?.url)}
+                        {extractPathname(session.lastSessionAttribution?.url)}
                       </td>
-                      <td className="p-4 text-center">{session.pageViews}</td>
-                      <td className="p-4 text-sm">
-                        {session.duration
-                          ? `${Math.floor(session.duration / 60)}m ${session.duration % 60}s`
-                          : '-'}
-                      </td>
+                      <td className="p-4 text-center">{session.eventsCount}</td>
+                      <td className="p-4 text-sm">-</td>
                       <td className="p-4 text-sm text-muted-foreground">
-                        {new Date(lastActivity).toLocaleString()}
+                        {new Date(session.lastActivity).toLocaleString()}
                       </td>
                     </tr>
                   )
@@ -428,7 +449,7 @@ function CompanyDetailsPage() {
           <DialogHeader>
             <DialogTitle>Pages Visited</DialogTitle>
             <DialogDescription>
-              Session ID: {selectedSession?.sessionId.slice(0, 8)}...
+              Session ID: {selectedSession?.browserSessionId.slice(0, 8)}...
               {pageViews !== undefined && (
                 <span className="ml-2">
                   ({pageViews?.length || 0} page views)
