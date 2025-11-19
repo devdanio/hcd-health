@@ -45,8 +45,12 @@ export const getAppointmentsAnalytics = query({
         v.literal('all'),
       ),
     ),
+    groupBy: v.optional(
+      v.union(v.literal('day'), v.literal('week'), v.literal('month')),
+    ),
   },
   handler: async (ctx, args) => {
+    const groupBy = args.groupBy || 'day'
     const timeRange = args.timeRange || '30d'
     const now = Date.now()
     let startTime = 0
@@ -84,11 +88,31 @@ export const getAppointmentsAnalytics = query({
       return aptDate >= startTime
     })
 
-    // Format date as YYYY-MM-DD
+    // Format date based on groupBy parameter
     const formatDate = (dateStr: string | undefined) => {
       if (!dateStr) return ''
       const [month, day, year] = dateStr.split('/').map(Number)
-      return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+      const date = new Date(year, month - 1, day)
+
+      if (groupBy === 'day') {
+        return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+      } else if (groupBy === 'week') {
+        // Get ISO week number
+        const tempDate = new Date(date)
+        tempDate.setHours(0, 0, 0, 0)
+        tempDate.setDate(tempDate.getDate() + 3 - ((tempDate.getDay() + 6) % 7))
+        const week1 = new Date(tempDate.getFullYear(), 0, 4)
+        const weekNum = Math.round(
+          ((tempDate.getTime() - week1.getTime()) / 86400000 -
+            3 +
+            ((week1.getDay() + 6) % 7)) /
+            7,
+        )
+        return `${year}-W${String(weekNum + 1).padStart(2, '0')}`
+      } else {
+        // month
+        return `${year}-${String(month).padStart(2, '0')}`
+      }
     }
 
     // Group appointments by day with proper typing

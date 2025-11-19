@@ -5,3 +5,13 @@
 - Appointments
 - Revenue
 - Adspend
+
+## EHRS
+
+### UNIFIED PRACTICE
+
+1. Export from here https://ehr.unifiedpractice.com/Public/app/#/reports/clinic-activity-details-report
+2. Select "Practicioner details"
+3. Select the provider
+4. Export
+5. Upload: $ node data-scripts/integrations/unified-practice/upload-apts-from-xlsx.ts

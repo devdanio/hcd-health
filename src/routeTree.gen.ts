@@ -15,6 +15,7 @@ import { Route as CompaniesIndexRouteImport } from './routes/companies/index'
 import { Route as CompaniesCompanyIdIndexRouteImport } from './routes/companies/$companyId/index'
 import { Route as CompaniesCompanyIdVisitorsIndexRouteImport } from './routes/companies/$companyId/visitors/index'
 import { Route as CompaniesCompanyIdTrackingIndexRouteImport } from './routes/companies/$companyId/tracking/index'
+import { Route as CompaniesCompanyIdKpisIndexRouteImport } from './routes/companies/$companyId/kpis/index'
 import { Route as CompaniesCompanyIdContactsIndexRouteImport } from './routes/companies/$companyId/contacts/index'
 import { Route as CompaniesCompanyIdAppointmentsIndexRouteImport } from './routes/companies/$companyId/appointments/index'
 
@@ -50,6 +51,12 @@ const CompaniesCompanyIdTrackingIndexRoute =
     path: '/$companyId/tracking/',
     getParentRoute: () => CompaniesRoute,
   } as any)
+const CompaniesCompanyIdKpisIndexRoute =
+  CompaniesCompanyIdKpisIndexRouteImport.update({
+    id: '/$companyId/kpis/',
+    path: '/$companyId/kpis/',
+    getParentRoute: () => CompaniesRoute,
+  } as any)
 const CompaniesCompanyIdContactsIndexRoute =
   CompaniesCompanyIdContactsIndexRouteImport.update({
     id: '/$companyId/contacts/',
@@ -70,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/companies/$companyId': typeof CompaniesCompanyIdIndexRoute
   '/companies/$companyId/appointments': typeof CompaniesCompanyIdAppointmentsIndexRoute
   '/companies/$companyId/contacts': typeof CompaniesCompanyIdContactsIndexRoute
+  '/companies/$companyId/kpis': typeof CompaniesCompanyIdKpisIndexRoute
   '/companies/$companyId/tracking': typeof CompaniesCompanyIdTrackingIndexRoute
   '/companies/$companyId/visitors': typeof CompaniesCompanyIdVisitorsIndexRoute
 }
@@ -79,6 +87,7 @@ export interface FileRoutesByTo {
   '/companies/$companyId': typeof CompaniesCompanyIdIndexRoute
   '/companies/$companyId/appointments': typeof CompaniesCompanyIdAppointmentsIndexRoute
   '/companies/$companyId/contacts': typeof CompaniesCompanyIdContactsIndexRoute
+  '/companies/$companyId/kpis': typeof CompaniesCompanyIdKpisIndexRoute
   '/companies/$companyId/tracking': typeof CompaniesCompanyIdTrackingIndexRoute
   '/companies/$companyId/visitors': typeof CompaniesCompanyIdVisitorsIndexRoute
 }
@@ -90,6 +99,7 @@ export interface FileRoutesById {
   '/companies/$companyId/': typeof CompaniesCompanyIdIndexRoute
   '/companies/$companyId/appointments/': typeof CompaniesCompanyIdAppointmentsIndexRoute
   '/companies/$companyId/contacts/': typeof CompaniesCompanyIdContactsIndexRoute
+  '/companies/$companyId/kpis/': typeof CompaniesCompanyIdKpisIndexRoute
   '/companies/$companyId/tracking/': typeof CompaniesCompanyIdTrackingIndexRoute
   '/companies/$companyId/visitors/': typeof CompaniesCompanyIdVisitorsIndexRoute
 }
@@ -102,6 +112,7 @@ export interface FileRouteTypes {
     | '/companies/$companyId'
     | '/companies/$companyId/appointments'
     | '/companies/$companyId/contacts'
+    | '/companies/$companyId/kpis'
     | '/companies/$companyId/tracking'
     | '/companies/$companyId/visitors'
   fileRoutesByTo: FileRoutesByTo
@@ -111,6 +122,7 @@ export interface FileRouteTypes {
     | '/companies/$companyId'
     | '/companies/$companyId/appointments'
     | '/companies/$companyId/contacts'
+    | '/companies/$companyId/kpis'
     | '/companies/$companyId/tracking'
     | '/companies/$companyId/visitors'
   id:
@@ -121,6 +133,7 @@ export interface FileRouteTypes {
     | '/companies/$companyId/'
     | '/companies/$companyId/appointments/'
     | '/companies/$companyId/contacts/'
+    | '/companies/$companyId/kpis/'
     | '/companies/$companyId/tracking/'
     | '/companies/$companyId/visitors/'
   fileRoutesById: FileRoutesById
@@ -174,6 +187,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompaniesCompanyIdTrackingIndexRouteImport
       parentRoute: typeof CompaniesRoute
     }
+    '/companies/$companyId/kpis/': {
+      id: '/companies/$companyId/kpis/'
+      path: '/$companyId/kpis'
+      fullPath: '/companies/$companyId/kpis'
+      preLoaderRoute: typeof CompaniesCompanyIdKpisIndexRouteImport
+      parentRoute: typeof CompaniesRoute
+    }
     '/companies/$companyId/contacts/': {
       id: '/companies/$companyId/contacts/'
       path: '/$companyId/contacts'
@@ -196,6 +216,7 @@ interface CompaniesRouteChildren {
   CompaniesCompanyIdIndexRoute: typeof CompaniesCompanyIdIndexRoute
   CompaniesCompanyIdAppointmentsIndexRoute: typeof CompaniesCompanyIdAppointmentsIndexRoute
   CompaniesCompanyIdContactsIndexRoute: typeof CompaniesCompanyIdContactsIndexRoute
+  CompaniesCompanyIdKpisIndexRoute: typeof CompaniesCompanyIdKpisIndexRoute
   CompaniesCompanyIdTrackingIndexRoute: typeof CompaniesCompanyIdTrackingIndexRoute
   CompaniesCompanyIdVisitorsIndexRoute: typeof CompaniesCompanyIdVisitorsIndexRoute
 }
@@ -206,6 +227,7 @@ const CompaniesRouteChildren: CompaniesRouteChildren = {
   CompaniesCompanyIdAppointmentsIndexRoute:
     CompaniesCompanyIdAppointmentsIndexRoute,
   CompaniesCompanyIdContactsIndexRoute: CompaniesCompanyIdContactsIndexRoute,
+  CompaniesCompanyIdKpisIndexRoute: CompaniesCompanyIdKpisIndexRoute,
   CompaniesCompanyIdTrackingIndexRoute: CompaniesCompanyIdTrackingIndexRoute,
   CompaniesCompanyIdVisitorsIndexRoute: CompaniesCompanyIdVisitorsIndexRoute,
 }

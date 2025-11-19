@@ -71,6 +71,7 @@ function AppointmentsPage() {
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d' | 'all'>(
     '30d',
   )
+  const [groupBy, setGroupBy] = useState<'day' | 'week' | 'month'>('day')
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [globalFilter, setGlobalFilter] = useState('')
@@ -83,6 +84,7 @@ function AppointmentsPage() {
   const analyticsData = useQuery(api.appointments.getAppointmentsAnalytics, {
     companyId: companyId as Id<'companies'>,
     timeRange,
+    groupBy,
   })
 
   // Define table columns
@@ -189,22 +191,44 @@ function AppointmentsPage() {
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <CardTitle>Appointments Over Time</CardTitle>
-            <CardDescription>Appointments by day</CardDescription>
+            <CardDescription>
+              Appointments by{' '}
+              {groupBy === 'day'
+                ? 'day'
+                : groupBy === 'week'
+                  ? 'week'
+                  : 'month'}
+            </CardDescription>
           </div>
-          <Select
-            value={timeRange}
-            onValueChange={(value: any) => setTimeRange(value)}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="7d">Last 7 days</SelectItem>
-              <SelectItem value="30d">Last 30 days</SelectItem>
-              <SelectItem value="90d">Last 90 days</SelectItem>
-              <SelectItem value="all">All time</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="flex gap-2">
+            <Select
+              value={groupBy}
+              onValueChange={(value: any) => setGroupBy(value)}
+            >
+              <SelectTrigger className="w-[140px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="day">Group by Day</SelectItem>
+                <SelectItem value="week">Group by Week</SelectItem>
+                <SelectItem value="month">Group by Month</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select
+              value={timeRange}
+              onValueChange={(value: any) => setTimeRange(value)}
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="7d">Last 7 days</SelectItem>
+                <SelectItem value="30d">Last 30 days</SelectItem>
+                <SelectItem value="90d">Last 90 days</SelectItem>
+                <SelectItem value="all">All time</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </CardHeader>
         <CardContent>
           {analyticsData.length === 0 ? (
@@ -221,11 +245,24 @@ function AppointmentsPage() {
                   tickMargin={10}
                   axisLine={false}
                   tickFormatter={(value) => {
-                    const date = new Date(value)
-                    return date.toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                    })
+                    if (groupBy === 'day') {
+                      const date = new Date(value)
+                      return date.toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                      })
+                    } else if (groupBy === 'week') {
+                      // Format: 2025-W05 -> Week 5
+                      const weekNum = value.split('-W')[1]
+                      return `Week ${weekNum}`
+                    } else {
+                      // Format: 2025-03 -> Mar
+                      const [year, month] = value.split('-')
+                      const date = new Date(parseInt(year), parseInt(month) - 1)
+                      return date.toLocaleDateString('en-US', {
+                        month: 'short',
+                      })
+                    }
                   }}
                 />
                 <ChartTooltip
