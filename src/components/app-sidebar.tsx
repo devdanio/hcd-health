@@ -135,7 +135,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         icon: IconSearch,
       },
     ],
+    
     documents: [
+      {
+        name: 'Patients',
+        url: `/companies/${companyId}/patients`,
+        icon: IconDatabase,
+      },
       {
         name: 'Tracking',
         url: `/companies/${companyId}/tracking`,

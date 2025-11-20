@@ -69,6 +69,21 @@ export const contactSchema = defineTable({
   ghlContactId: v.optional(v.id('ghlContacts')),
 })
 
+export const patientFields = {
+  contactId: v.optional(v.id('contacts')),
+  dateOfBirth: v.optional(v.string()),
+  gender: v.optional(v.string()),
+  payerName: v.optional(v.string()),
+  memberId: v.optional(v.string()),
+  groupId: v.optional(v.string()),
+  emergencyContactName: v.optional(v.string()),
+  emergencyContactPhone: v.optional(v.string()),
+  emergencyContactRelation: v.optional(v.string()),
+}
+
+export const patientProfileSchema = defineTable(patientFields)
+
+// This is for the reporting version of the app not the EHR
 export const appointmentsSchema = defineTable({
   companyId: v.optional(v.id('companies')),
   patientName: v.string(),
@@ -85,6 +100,15 @@ export const appointmentsSchema = defineTable({
     'dateOfService',
     'service',
   ])
+
+export const patientAppointments = defineTable({
+  companyId: v.optional(v.id('companies')),
+  patientId: v.id('patients'),
+  dateTime: v.number(),
+  service: v.string()
+})
+.index('comanyId_patientId', ['companyId', 'patientId'])
+  // This is the unique index for the appointments table
 
 export default defineSchema({
   // Attribution Tracking Tables
@@ -130,4 +154,7 @@ export default defineSchema({
     .index('companyId_type', ['companyId', 'type'])
     .index('companyId', ['companyId']),
   appointments: appointmentsSchema,
+patientAppointments,
+  patients: patientProfileSchema
+    .index('contactId', ['contactId']),
 })

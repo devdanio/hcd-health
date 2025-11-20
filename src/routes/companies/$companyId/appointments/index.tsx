@@ -39,11 +39,9 @@ import {
 } from '@/components/ui/select'
 import { ArrowUpDown } from 'lucide-react'
 
-export const Route = createFileRoute('/companies/$companyId/appointments/')(
-  {
-    component: AppointmentsPage,
-  },
-)
+export const Route = createFileRoute('/companies/$companyId/appointments/')({
+  component: AppointmentsPage,
+})
 
 // Chart configuration
 const chartConfig = {
@@ -106,7 +104,14 @@ function AppointmentsPage() {
           )
         },
         cell: ({ row }) => (
-          <div className="capitalize">{row.getValue('patientName')}</div>
+          <div className="capitalize">
+            <Link
+              to="/companies/$companyId/contacts/$contactId/"
+              params={{ companyId, contactId: row.original._id }}
+            >
+              {row.getValue('patientName')}
+            </Link>
+          </div>
         ),
       },
       {
