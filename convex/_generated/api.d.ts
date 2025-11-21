@@ -15,6 +15,7 @@ import type * as companies from "../companies.js";
 import type * as contacts from "../contacts.js";
 import type * as http from "../http.js";
 import type * as patients from "../patients.js";
+import type * as seed from "../seed.js";
 import type * as tracking from "../tracking.js";
 import type * as verifyLastName from "../verifyLastName.js";
 
@@ -40,6 +41,7 @@ declare const fullApi: ApiFromModules<{
   contacts: typeof contacts;
   http: typeof http;
   patients: typeof patients;
+  seed: typeof seed;
   tracking: typeof tracking;
   verifyLastName: typeof verifyLastName;
 }>;

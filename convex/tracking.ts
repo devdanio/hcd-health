@@ -375,7 +375,7 @@ export const getSessions = query({
               }
             : null,
           eventsCount: session.events.length,
-          lastActivity: latestEvent?._creationTime || session._creationTime,
+          lastActivity: latestEvent?.metadata?.timestamp || session.lastSessionAttribution?.timestamp || session._creationTime,
         }
       }),
     )
@@ -462,7 +462,7 @@ export const getVisitorAnalytics = query({
     const sessions = await ctx.db
       .query('sessions')
       .withIndex('companyId', (q) => q.eq('companyId', args.companyId))
-      .filter((q) => q.gte(q.field('_creationTime'), startTime))
+      .filter((q) => q.gte(q.field('firstSessionAttribution.timestamp'), startTime))
       .collect()
 
     // Group sessions by time bucket and category
@@ -503,7 +503,7 @@ export const getVisitorAnalytics = query({
       }
 
       // Determine time bucket
-      const bucketKey = bucketFormat(session._creationTime)
+      const bucketKey = bucketFormat(session.firstSessionAttribution.timestamp)
 
       // Initialize maps if needed
       if (!dataMap.has(bucketKey)) {
@@ -586,7 +586,7 @@ export const getCategoryAnalytics = query({
     const sessions = await ctx.db
       .query('sessions')
       .withIndex('companyId', (q) => q.eq('companyId', args.companyId))
-      .filter((q) => q.gte(q.field('_creationTime'), startTime))
+      .filter((q) => q.gte(q.field('firstSessionAttribution.timestamp'), startTime))
       .collect()
 
     // Group sessions by category
