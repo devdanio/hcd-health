@@ -1,11 +1,9 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useQuery, useMutation } from 'convex/react'
+import { useQuery } from 'convex/react'
 import { api } from '../../../../../convex/_generated/api'
 import { Id } from '../../../../../convex/_generated/dataModel'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import {
   Card,
   CardContent,
@@ -13,18 +11,15 @@ import {
   CardTitle,
   CardDescription,
 } from '@/components/ui/card'
-import { toast } from 'sonner'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Edit, ArrowLeft } from 'lucide-react'
+import { Edit, ArrowLeft, CalendarArrowDown } from 'lucide-react'
+import { Calendar } from '@/components/Calendar'
+import { PatientForm } from '@/components/PatientForm'
 
 export const Route = createFileRoute(
   '/companies/$companyId/patients/$patientId',
@@ -38,69 +33,8 @@ function PatientDetailPage() {
   const patient = useQuery(api.patients.getPatient, {
     id: patientId as Id<'patients'>,
   })
-  const updatePatient = useMutation(api.patients.updatePatient)
 
   const [isEditOpen, setIsEditOpen] = useState(false)
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    phone: '',
-    email: '',
-    payerName: '',
-    dateOfBirth: '',
-    memberId: '',
-    groupId: '',
-    emergencyContactName: '',
-    emergencyContactPhone: '',
-    emergencyContactRelation: '',
-  })
-
-  useEffect(() => {
-    if (patient) {
-      setFormData({
-        firstName: patient.contact?.firstName || '',
-        lastName: patient.contact?.lastName || '',
-        phone: patient.contact?.phone || '',
-        email: patient.contact?.email || '',
-        payerName: patient.payerName || '',
-        dateOfBirth: patient.dateOfBirth || '',
-        memberId: patient.memberId || '',
-        groupId: patient.groupId || '',
-        emergencyContactName: patient.emergencyContactName || '',
-        emergencyContactPhone: patient.emergencyContactPhone || '',
-        emergencyContactRelation: patient.emergencyContactRelation || '',
-      })
-    }
-  }, [patient])
-
-  const handleUpdate = async () => {
-    if (!formData.firstName || !formData.phone) {
-      toast.error('First Name and Phone are required')
-      return
-    }
-
-    try {
-      await updatePatient({
-        id: patientId as Id<'patients'>,
-        firstName: formData.firstName,
-        lastName: formData.lastName || undefined,
-        phone: formData.phone,
-        email: formData.email || undefined,
-        payerName: formData.payerName || undefined,
-        dateOfBirth: formData.dateOfBirth || undefined,
-        memberId: formData.memberId || undefined,
-        groupId: formData.groupId || undefined,
-        emergencyContactName: formData.emergencyContactName || undefined,
-        emergencyContactPhone: formData.emergencyContactPhone || undefined,
-        emergencyContactRelation: formData.emergencyContactRelation || undefined,
-      })
-      toast.success('Patient updated successfully')
-      setIsEditOpen(false)
-    } catch (error) {
-      toast.error('Failed to update patient')
-      console.error(error)
-    }
-  }
 
   if (patient === undefined) {
     return (
@@ -142,137 +76,24 @@ function PatientDetailPage() {
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-2xl">
-                  <DialogHeader>
-                    <DialogTitle>Edit Patient Information</DialogTitle>
-                    <DialogDescription>
-                      Update the patient's personal, insurance, and emergency contact information.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="grid gap-2">
-                        <Label htmlFor="firstName">First Name *</Label>
-                        <Input
-                          id="firstName"
-                          value={formData.firstName}
-                          onChange={(e) =>
-                            setFormData({ ...formData, firstName: e.target.value })
-                          }
-                        />
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor="lastName">Last Name</Label>
-                        <Input
-                          id="lastName"
-                          value={formData.lastName}
-                          onChange={(e) =>
-                            setFormData({ ...formData, lastName: e.target.value })
-                          }
-                        />
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor="phone">Phone *</Label>
-                        <Input
-                          id="phone"
-                          value={formData.phone}
-                          onChange={(e) =>
-                            setFormData({ ...formData, phone: e.target.value })
-                          }
-                        />
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) =>
-                            setFormData({ ...formData, email: e.target.value })
-                          }
-                        />
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor="dob">Date of Birth</Label>
-                        <Input
-                          id="dob"
-                          type="date"
-                          value={formData.dateOfBirth}
-                          onChange={(e) =>
-                            setFormData({ ...formData, dateOfBirth: e.target.value })
-                          }
-                        />
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor="payerName">Payer Name</Label>
-                        <Input
-                          id="payerName"
-                          value={formData.payerName}
-                          onChange={(e) =>
-                            setFormData({ ...formData, payerName: e.target.value })
-                          }
-                        />
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor="memberId">Member ID</Label>
-                        <Input
-                          id="memberId"
-                          value={formData.memberId}
-                          onChange={(e) =>
-                            setFormData({ ...formData, memberId: e.target.value })
-                          }
-                        />
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor="groupId">Group ID</Label>
-                        <Input
-                          id="groupId"
-                          value={formData.groupId}
-                          onChange={(e) =>
-                            setFormData({ ...formData, groupId: e.target.value })
-                          }
-                        />
-                      </div>
-                      <div className="col-span-2 border-t pt-4 mt-2">
-                          <h4 className="font-medium mb-2">Emergency Contact</h4>
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor="ecName">Name</Label>
-                        <Input
-                          id="ecName"
-                          value={formData.emergencyContactName}
-                          onChange={(e) =>
-                            setFormData({ ...formData, emergencyContactName: e.target.value })
-                          }
-                        />
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor="ecPhone">Phone</Label>
-                        <Input
-                          id="ecPhone"
-                          value={formData.emergencyContactPhone}
-                          onChange={(e) =>
-                            setFormData({ ...formData, emergencyContactPhone: e.target.value })
-                          }
-                        />
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor="ecRelation">Relation</Label>
-                        <Input
-                          id="ecRelation"
-                          value={formData.emergencyContactRelation}
-                          onChange={(e) =>
-                            setFormData({ ...formData, emergencyContactRelation: e.target.value })
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button variant="outline" onClick={() => setIsEditOpen(false)}>
-                      Cancel
-                    </Button>
-                    <Button onClick={handleUpdate}>Save Changes</Button>
-                  </DialogFooter>
+                  <PatientForm
+                    patientId={patientId as Id<'patients'>}
+                    patientData={{
+                      firstName: patient.contact?.firstName || '',
+                      lastName: patient.contact?.lastName || '',
+                      phone: patient.contact?.phone || '',
+                      email: patient.contact?.email || '',
+                      dateOfBirth: patient.dateOfBirth || '',
+                      payerName: patient.payerName || '',
+                      memberId: patient.memberId || '',
+                      groupId: patient.groupId || '',
+                      emergencyContactName: patient.emergencyContactName || '',
+                      emergencyContactPhone: patient.emergencyContactPhone || '',
+                      emergencyContactRelation: patient.emergencyContactRelation || '',
+                    }}
+                    onSuccess={() => setIsEditOpen(false)}
+                    onCancel={() => setIsEditOpen(false)}
+                  />
                 </DialogContent>
               </Dialog>
             </div>
@@ -323,7 +144,7 @@ function PatientDetailPage() {
             </CardHeader>
             <CardContent>
               <div className="text-sm text-muted-foreground">
-                No appointments found.
+                          <Calendar />
               </div>
             </CardContent>
           </Card>

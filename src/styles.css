@@ -1,7 +1,8 @@
 @import 'tailwindcss';
 
 @import 'tw-animate-css';
-
+@import 'react-big-calendar/lib/css/react-big-calendar.css';
+@import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'; 
 @custom-variant dark (&:is(.dark *));
 
 body {
@@ -25,7 +26,7 @@ code {
   --card-foreground: oklch(0.3211 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.3211 0 0);
-  --primary: oklch(0.6231 0.188 259.8145);
+  --primary: oklch(59.565% 0.14565 153.657);
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.967 0.0029 264.5419);
   --secondary-foreground: oklch(0.4461 0.0263 256.8018);
@@ -88,7 +89,7 @@ code {
   --card-foreground: oklch(0.9219 0 0);
   --popover: oklch(0.2686 0 0);
   --popover-foreground: oklch(0.9219 0 0);
-  --primary: oklch(0.6231 0.188 259.8145);
+  --primary: oklch(58.767% 0.10781 177.609);
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.2686 0 0);
   --secondary-foreground: oklch(0.9219 0 0);

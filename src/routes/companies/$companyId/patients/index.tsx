@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import { useQuery, useMutation } from 'convex/react'
+import { useQuery } from 'convex/react'
 import { api } from '../../../../../convex/_generated/api'
 import { Id } from '../../../../../convex/_generated/dataModel'
 import {
@@ -25,15 +25,10 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Label } from '@/components/ui/label'
 import { ArrowUpDown, Plus } from 'lucide-react'
-import { toast } from 'sonner'
+import { PatientForm } from '@/components/PatientForm'
 
 export const Route = createFileRoute('/companies/$companyId/patients/')({
   component: PatientsPage,
@@ -63,56 +58,9 @@ function PatientsPage() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [globalFilter, setGlobalFilter] = useState('')
   const [isAddOpen, setIsAddOpen] = useState(false)
-  const [newPatient, setNewPatient] = useState({
-    firstName: '',
-    lastName: '',
-    phone: '',
-    email: '',
-    payerName: '',
-    dateOfBirth: '',
-    memberId: '',
-    groupId: '',
-  })
 
   // Fetch patients
   const patients = useQuery(api.patients.getPatients, {})
-  const createPatient = useMutation(api.patients.createPatient)
-
-  const handleCreatePatient = async () => {
-    if (!newPatient.firstName || !newPatient.phone) {
-      toast.error('First Name and Phone are required')
-      return
-    }
-
-    try {
-      await createPatient({
-        companyId: companyId as Id<'companies'>,
-        firstName: newPatient.firstName,
-        lastName: newPatient.lastName || undefined,
-        phone: newPatient.phone,
-        email: newPatient.email || undefined,
-        payerName: newPatient.payerName || undefined,
-        dateOfBirth: newPatient.dateOfBirth || undefined,
-        memberId: newPatient.memberId || undefined,
-        groupId: newPatient.groupId || undefined,
-      })
-      toast.success('Patient created successfully')
-      setIsAddOpen(false)
-      setNewPatient({
-        firstName: '',
-        lastName: '',
-        phone: '',
-        email: '',
-        payerName: '',
-        dateOfBirth: '',
-        memberId: '',
-        groupId: '',
-      })
-    } catch (error) {
-      toast.error('Failed to create patient')
-      console.error(error)
-    }
-  }
 
   const columns = useMemo<ColumnDef<Patient>[]>(
     () => [
@@ -277,104 +225,11 @@ function PatientsPage() {
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Add New Patient</DialogTitle>
-              <DialogDescription>
-                Enter the details for the new patient. First Name and Phone are required.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="firstName">First Name *</Label>
-                  <Input
-                    id="firstName"
-                    value={newPatient.firstName}
-                    onChange={(e) =>
-                      setNewPatient({ ...newPatient, firstName: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="lastName">Last Name</Label>
-                  <Input
-                    id="lastName"
-                    value={newPatient.lastName}
-                    onChange={(e) =>
-                      setNewPatient({ ...newPatient, lastName: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="phone">Phone *</Label>
-                  <Input
-                    id="phone"
-                    value={newPatient.phone}
-                    onChange={(e) =>
-                      setNewPatient({ ...newPatient, phone: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={newPatient.email}
-                    onChange={(e) =>
-                      setNewPatient({ ...newPatient, email: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="dob">Date of Birth</Label>
-                  <Input
-                    id="dob"
-                    type="date"
-                    value={newPatient.dateOfBirth}
-                    onChange={(e) =>
-                      setNewPatient({ ...newPatient, dateOfBirth: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="payerName">Payer Name</Label>
-                  <Input
-                    id="payerName"
-                    value={newPatient.payerName}
-                    onChange={(e) =>
-                      setNewPatient({ ...newPatient, payerName: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="memberId">Member ID</Label>
-                  <Input
-                    id="memberId"
-                    value={newPatient.memberId}
-                    onChange={(e) =>
-                      setNewPatient({ ...newPatient, memberId: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="groupId">Group ID</Label>
-                  <Input
-                    id="groupId"
-                    value={newPatient.groupId}
-                    onChange={(e) =>
-                      setNewPatient({ ...newPatient, groupId: e.target.value })
-                    }
-                  />
-                </div>
-              </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setIsAddOpen(false)}>
-                Cancel
-              </Button>
-              <Button onClick={handleCreatePatient}>Save Patient</Button>
-            </DialogFooter>
+            <PatientForm
+              companyId={companyId as Id<'companies'>}
+              onSuccess={() => setIsAddOpen(false)}
+              onCancel={() => setIsAddOpen(false)}
+            />
           </DialogContent>
         </Dialog>
       </div>

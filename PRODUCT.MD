@@ -6,6 +6,9 @@
 - Revenue
 - Adspend
 
+
+## LLM
+Good convo: https://claude.ai/chat/f0693212-6f56-430b-89d3-7fcd817e54ef
 ## EHRS
 
 ### UNIFIED PRACTICE
@@ -15,3 +18,6 @@
 3. Select the provider
 4. Export
 5. Upload: $ node data-scripts/integrations/unified-practice/upload-apts-from-xlsx.ts
+
+
+

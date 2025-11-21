@@ -154,7 +154,7 @@ export default defineSchema({
     .index('companyId_type', ['companyId', 'type'])
     .index('companyId', ['companyId']),
   appointments: appointmentsSchema,
-patientAppointments,
+  patientAppointments,
   patients: patientProfileSchema
     .index('contactId', ['contactId']),
 })
