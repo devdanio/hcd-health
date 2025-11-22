@@ -24,37 +24,33 @@ const chartConfig = {
   sessions: {
     label: "Sessions",
   },
-  organic_search: {
-    label: "Organic Search",
-    color: "hsl(var(--chart-1))",
+  "Organic Google": {
+    label: "Organic Google",
+    color: "hsl(24.6 95% 53.1%)", // Orange
   },
-  paid_search: {
-    label: "Paid Search",
-    color: "hsl(var(--chart-2))",
+  "Paid Google": {
+    label: "Paid Google",
+    color: "hsl(24.6 95% 40%)", // Darker Orange
   },
-  organic_social: {
-    label: "Organic Social",
-    color: "hsl(var(--chart-3))",
+  "Organic Facebook": {
+    label: "Organic Facebook",
+    color: "hsl(221.2 83.2% 53.3%)", // Blue
   },
-  paid_social: {
-    label: "Paid Social",
-    color: "hsl(var(--chart-4))",
+  "Paid Facebook": {
+    label: "Paid Facebook",
+    color: "hsl(221.2 83.2% 40%)", // Darker Blue
   },
-  email: {
+  Email: {
     label: "Email",
-    color: "hsl(var(--chart-5))",
+    color: "hsl(262.1 83.3% 57.8%)", // Purple
   },
-  direct: {
+  Direct: {
     label: "Direct",
-    color: "hsl(142.1 76.2% 36.3%)",
+    color: "hsl(142.1 76.2% 36.3%)", // Green
   },
-  referral: {
-    label: "Referral",
-    color: "hsl(262.1 83.3% 57.8%)",
-  },
-  display: {
-    label: "Display",
-    color: "hsl(24.6 95% 53.1%)",
+  Other: {
+    label: "Other",
+    color: "hsl(var(--muted-foreground))",
   },
 } satisfies ChartConfig
 

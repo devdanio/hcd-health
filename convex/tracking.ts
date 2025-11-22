@@ -589,15 +589,28 @@ export const getCategoryAnalytics = query({
       .filter((q) => q.gte(q.field('firstSessionAttribution.timestamp'), startTime))
       .collect()
 
-    // Group sessions by category
-    const categoryMap = new Map<TrafficCategory, number>()
+    // Group sessions by granular category
+    const categoryMap = new Map<string, number>()
 
     // Process each session
     for (const session of sessions) {
       const channel = resolveChannel(session.firstSessionAttribution)
-      const category = channel.category
+      let label = 'Other'
 
-      categoryMap.set(category, (categoryMap.get(category) || 0) + 1)
+      if (channel.source === 'Google') {
+        label = channel.category === 'paid_search' ? 'Paid Google' : 'Organic Google'
+      } else if (channel.source === 'Facebook') {
+        label = channel.category === 'paid_social' ? 'Paid Facebook' : 'Organic Facebook'
+      } else if (channel.category === 'email') {
+        label = 'Email'
+      } else if (channel.category === 'direct') {
+        label = 'Direct'
+      } else {
+        // Fallback for other sources
+        label = channel.source || 'Other'
+      }
+
+      categoryMap.set(label, (categoryMap.get(label) || 0) + 1)
     }
 
     // Convert to array format

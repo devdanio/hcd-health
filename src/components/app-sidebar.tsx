@@ -147,6 +147,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         url: `/companies/${companyId}/tracking`,
         icon: IconDatabase,
       },
+      {
+        name: 'ROI',
+        url: `/companies/${companyId}/roi`,
+        icon: IconDatabase,
+      },
     ],
   }
   return (

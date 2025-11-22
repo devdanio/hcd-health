@@ -13,6 +13,7 @@ import type * as channelDefinitions from "../channelDefinitions.js";
 import type * as channelResolver from "../channelResolver.js";
 import type * as companies from "../companies.js";
 import type * as contacts from "../contacts.js";
+import type * as facebook from "../facebook.js";
 import type * as http from "../http.js";
 import type * as patients from "../patients.js";
 import type * as seed from "../seed.js";
@@ -39,6 +40,7 @@ declare const fullApi: ApiFromModules<{
   channelResolver: typeof channelResolver;
   companies: typeof companies;
   contacts: typeof contacts;
+  facebook: typeof facebook;
   http: typeof http;
   patients: typeof patients;
   seed: typeof seed;
