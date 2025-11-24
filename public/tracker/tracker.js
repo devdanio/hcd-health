@@ -1,6 +1,6 @@
 /**
  * Leadalytics Attribution Tracker
- * Lightweight, iOS-compatible attribution tracking script
+ * Lightweight attribution tracking with automatic pageview tracking
  */
 ;(function () {
   'use strict'
@@ -10,11 +10,11 @@
     VISITOR_ID: '_la_vid',
     SESSION_ID: '_la_sid',
     SESSION_START: '_la_sst',
+    LAST_URL: '_la_last_url',
+    LAST_SESSION_ID: '_la_last_session_id',
   }
 
   const SESSION_TIMEOUT = 30 * 60 * 1000 // 30 minutes in milliseconds
-  const COOKIE_EXPIRY_DAYS = 365 // 1 year for visitor ID
-  const SESSION_COOKIE_EXPIRY_DAYS = 7 // 7 days for iOS ITP compliance
 
   // Initialize tracker
   class LeadalyticsTracker {
@@ -24,9 +24,8 @@
       this.visitorId = null
       this.sessionId = null
       this.sessionStart = null
-      this.isInitialized = false
-      this.queue = []
-      this.initialPageViewSent = false // Prevent duplicate initial pageview
+      this.isNewSession = false
+      this.initialPageViewSent = false
 
       // Get config from script tag
       this.loadConfig()
@@ -60,43 +59,38 @@
       return null
     }
 
-    init() {
+    async init() {
       // Get or create visitor ID
       this.visitorId = this.getOrCreateVisitorId()
 
-      // Get or create session ID
+      // Get or create session ID (sets this.isNewSession)
       this.sessionId = this.getOrCreateSessionId()
 
-      // Capture initial attribution data
-      this.captureAttribution()
+      // Track initial page view
+      await this.trackInitialPageView()
 
-      // Set up event listeners
+      // Set up SPA listeners AFTER initial pageview completes
       this.setupListeners()
 
-      // Listen for iframe messages
-      this.setupIframeListener()
-
-      this.isInitialized = true
-
-      // Process queued events
-      this.processQueue()
+      // Set up activity tracking to extend session
+      this.setupActivityTracking()
     }
 
-    // Visitor ID management (long-lived, 1 year)
+    // Visitor ID management (persists forever in localStorage)
     getOrCreateVisitorId() {
-      let visitorId = this.getCookie(STORAGE_KEYS.VISITOR_ID)
+      let visitorId = localStorage.getItem(STORAGE_KEYS.VISITOR_ID)
       if (!visitorId) {
         visitorId = this.generateUUID()
-        this.setCookie(STORAGE_KEYS.VISITOR_ID, visitorId, COOKIE_EXPIRY_DAYS)
+        localStorage.setItem(STORAGE_KEYS.VISITOR_ID, visitorId)
       }
       return visitorId
     }
 
     // Session ID management (30 min timeout)
     getOrCreateSessionId() {
-      const existingSessionId = this.getCookie(STORAGE_KEYS.SESSION_ID)
+      const existingSessionId = localStorage.getItem(STORAGE_KEYS.SESSION_ID)
       const sessionStart = parseInt(
-        this.getCookie(STORAGE_KEYS.SESSION_START) || '0',
+        localStorage.getItem(STORAGE_KEYS.SESSION_START) || '0',
       )
       const now = Date.now()
 
@@ -107,41 +101,28 @@
         now - sessionStart < SESSION_TIMEOUT
       ) {
         this.sessionStart = sessionStart
+        this.isNewSession = false
         return existingSessionId
       }
 
       // Create new session
       const newSessionId = this.generateUUID()
       this.sessionStart = now
-      this.setCookie(
-        STORAGE_KEYS.SESSION_ID,
-        newSessionId,
-        SESSION_COOKIE_EXPIRY_DAYS,
-      )
-      this.setCookie(
-        STORAGE_KEYS.SESSION_START,
-        String(now),
-        SESSION_COOKIE_EXPIRY_DAYS,
-      )
+      this.isNewSession = true
+      localStorage.setItem(STORAGE_KEYS.SESSION_ID, newSessionId)
+      localStorage.setItem(STORAGE_KEYS.SESSION_START, String(now))
       return newSessionId
     }
 
-    // Capture attribution data from URL and referrer
-    captureAttribution() {
-      // Track initial page view with attribution data
-      // This will create the session if it doesn't exist
-      // Only send once per page load
-      if (!this.initialPageViewSent) {
-        this.initialPageViewSent = true
-        this.trackPageView(window.location.href, true)
-      }
-    }
+    // Track initial page view with attribution data
+    async trackInitialPageView() {
+      if (this.initialPageViewSent) return
 
-    // Track page view
-    // isInitialPage: true for the first pageview (includes attribution data)
-    async trackPageView(url = window.location.href, isInitialPage = false) {
-      if (!this.isInitialized) {
-        this.queue.push({ type: 'pageview', url, isInitialPage })
+      this.initialPageViewSent = true
+      const url = window.location.href
+
+      // Check deduplication
+      if (!this.shouldTrackPageView(url)) {
         return
       }
 
@@ -150,12 +131,16 @@
           apiKey: this.apiKey,
           visitorId: this.visitorId,
           sessionId: this.sessionId,
-          url,
+          type: 'pageview',
+          metadata: {
+            url: url,
+            timestamp: Date.now(),
+          },
         }
 
-        // Include attribution data for initial pageview or when URL changes
-        if (isInitialPage) {
-          body.touchPoint = {
+        // Include attribution data ONLY for new sessions
+        if (this.isNewSession) {
+          body.metadata = {
             // UTM parameters
             utm_source: this.getUrlParam('utm_source'),
             utm_medium: this.getUrlParam('utm_medium'),
@@ -178,140 +163,117 @@
             timestamp: Date.now(),
           }
 
-          // Include device/browser info for initial pageview
+          // Include device/browser info for new sessions
           body.userAgent = navigator.userAgent
           body.screenResolution = `${screen.width}x${screen.height}`
           body.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
         }
 
-        await fetch(`${this.apiUrl}/trackPageView`, {
+        await fetch(`${this.apiUrl}/trackEvent`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(body),
         })
+
+        // Update deduplication tracking
+        this.updateLastTrackedUrl(url)
       } catch (error) {
         console.error('Leadalytics: Error tracking page view', error)
       }
     }
 
-    // Track custom event
-    async trackEvent(eventName, metadata = {}) {
-      if (!this.isInitialized) {
-        this.queue.push({ type: 'event', eventName, metadata })
+    // Track subsequent page views (SPA navigation)
+    async trackPageView(url = window.location.href) {
+      // Check deduplication
+      if (!this.shouldTrackPageView(url)) {
         return
       }
 
       try {
+        const body = {
+          apiKey: this.apiKey,
+          visitorId: this.visitorId,
+          sessionId: this.sessionId,
+          type: 'pageview',
+          metadata: {
+            url: url,
+            timestamp: Date.now(),
+          },
+        }
+
         await fetch(`${this.apiUrl}/trackEvent`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            apiKey: this.apiKey,
-            sessionId: this.sessionId,
-            eventName,
-            metadata,
-          }),
+          body: JSON.stringify(body),
         })
+
+        // Update deduplication tracking
+        this.updateLastTrackedUrl(url)
+
+        // Update session timestamp
+        this.updateSessionTimestamp()
       } catch (error) {
-        console.error('Leadalytics: Error tracking event', error)
+        console.error('Leadalytics: Error tracking page view', error)
       }
     }
 
-    // Track conversion
-    async trackConversion(eventName, options = {}) {
-      if (!this.isInitialized) {
-        this.queue.push({ type: 'conversion', eventName, options })
-        return
+    // Deduplication: prevent tracking same URL back-to-back
+    shouldTrackPageView(url) {
+      const lastUrl = localStorage.getItem(STORAGE_KEYS.LAST_URL)
+      const lastSessionId = localStorage.getItem(STORAGE_KEYS.LAST_SESSION_ID)
+
+      // Different session? Always track (new visit)
+      if (this.sessionId !== lastSessionId) {
+        return true
       }
 
-      try {
-        await fetch(`${this.apiUrl}/trackConversion`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            apiKey: this.apiKey,
-            sessionId: this.sessionId,
-            eventName,
-            revenue: options.revenue,
-            metadata: options.metadata,
-          }),
-        })
-      } catch (error) {
-        console.error('Leadalytics: Error tracking conversion', error)
+      // Same URL as last tracked? Skip (prevents refresh duplicates)
+      if (url === lastUrl) {
+        return false
       }
+
+      // Different URL in same session? Track it
+      return true
     }
 
-    // Identify visitor
-    async identify(options = {}) {
-      if (!this.isInitialized) {
-        this.queue.push({ type: 'identify', options })
-        return
-      }
-
-      const { email, phone, userId } = options
-
-      // Validate that at least one identifier is provided
-      if (!email && !phone && !userId) {
-        console.error(
-          'Leadalytics: identify() requires at least one of: email, phone, or userId',
-        )
-        return
-      }
-
-      try {
-        await fetch(`${this.apiUrl}/identifyContact`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            apiKey: this.apiKey,
-            visitorId: this.visitorId,
-            email,
-            phone,
-            userId,
-          }),
-        })
-      } catch (error) {
-        console.error('Leadalytics: Error identifying contact', error)
-      }
+    // Update last tracked URL for deduplication
+    updateLastTrackedUrl(url) {
+      localStorage.setItem(STORAGE_KEYS.LAST_URL, url)
+      localStorage.setItem(STORAGE_KEYS.LAST_SESSION_ID, this.sessionId)
     }
 
-    // Set up event listeners
+    // Set up SPA route change listeners
     setupListeners() {
-      // Track route changes for SPAs
       const originalPushState = history.pushState
       const originalReplaceState = history.replaceState
       const self = this
 
+      // Override pushState for SPA navigation
       history.pushState = function () {
         originalPushState.apply(this, arguments)
         self.trackPageView(window.location.href)
       }
 
+      // Override replaceState for SPA navigation
       history.replaceState = function () {
         originalReplaceState.apply(this, arguments)
         self.trackPageView(window.location.href)
       }
 
+      // Handle back/forward button
       window.addEventListener('popstate', () => {
         self.trackPageView(window.location.href)
       })
+    }
 
-      // Update session timestamp on activity
+    // Set up activity tracking to extend session lifetime
+    setupActivityTracking() {
       const updateSession = () => {
-        const now = Date.now()
-        this.setCookie(
-          STORAGE_KEYS.SESSION_START,
-          String(now),
-          SESSION_COOKIE_EXPIRY_DAYS,
-        )
+        this.updateSessionTimestamp()
       }
 
       // Debounced session update
@@ -327,75 +289,10 @@
       })
     }
 
-    // Set up iframe listener for cross-domain tracking
-    setupIframeListener() {
-      window.addEventListener('message', (event) => {
-        // Validate message format
-        if (!event.data || typeof event.data !== 'object') return
-
-        const { type, leadalytics } = event.data
-        if (!leadalytics) return // Not a leadalytics message
-
-        switch (type) {
-          case 'REQUEST_SESSION':
-            // Iframe is requesting session data
-            event.source.postMessage(
-              {
-                type: 'SESSION_DATA',
-                leadalytics: true,
-                sessionId: this.sessionId,
-                visitorId: this.visitorId,
-                apiKey: this.apiKey,
-                apiUrl: this.apiUrl,
-              },
-              event.origin,
-            )
-            break
-
-          case 'CONVERSION':
-            // Iframe is reporting a conversion
-            this.trackConversion(event.data.eventName, {
-              revenue: event.data.revenue,
-              metadata: event.data.metadata,
-            })
-            break
-
-          case 'EVENT':
-            // Iframe is reporting a custom event
-            this.trackEvent(event.data.eventName, event.data.metadata)
-            break
-
-          case 'IDENTIFY':
-            // Iframe is reporting visitor identification
-            this.identify({
-              email: event.data.email,
-              phone: event.data.phone,
-              userId: event.data.userId,
-            })
-            break
-        }
-      })
-    }
-
-    // Process queued events
-    processQueue() {
-      while (this.queue.length > 0) {
-        const item = this.queue.shift()
-        switch (item.type) {
-          case 'pageview':
-            this.trackPageView(item.url, item.isInitialPage || false)
-            break
-          case 'event':
-            this.trackEvent(item.eventName, item.metadata)
-            break
-          case 'conversion':
-            this.trackConversion(item.eventName, item.options)
-            break
-          case 'identify':
-            this.identify(item.options)
-            break
-        }
-      }
+    // Update session timestamp to extend session
+    updateSessionTimestamp() {
+      const now = Date.now()
+      localStorage.setItem(STORAGE_KEYS.SESSION_START, String(now))
     }
 
     // Utility: Get URL parameter
@@ -416,27 +313,13 @@
       )
     }
 
-    // Utility: Get cookie
-    getCookie(name) {
-      const value = `; ${document.cookie}`
-      const parts = value.split(`; ${name}=`)
-      if (parts.length === 2) return parts.pop().split(';').shift()
-      return null
-    }
-
-    // Utility: Set cookie
-    setCookie(name, value, days) {
-      const expires = new Date()
-      expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000)
-      document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax`
-    }
-
-    // Public API: Get session info
+    // Public API: Get session info (read-only)
     getSessionInfo() {
       return {
         visitorId: this.visitorId,
         sessionId: this.sessionId,
         sessionStart: this.sessionStart,
+        isNewSession: this.isNewSession,
       }
     }
   }
@@ -444,18 +327,8 @@
   // Initialize tracker
   const tracker = new LeadalyticsTracker()
 
-  // Expose global API
+  // Expose minimal read-only API
   window.Leadalytics = {
-    trackEvent: (eventName, metadata) =>
-      tracker.trackEvent(eventName, metadata),
-    trackConversion: (eventName, options) =>
-      tracker.trackConversion(eventName, options),
-    trackPageView: (url) => tracker.trackPageView(url),
-    identify: (options) => tracker.identify(options),
     getSessionInfo: () => tracker.getSessionInfo(),
   }
-
-  // Also expose simplified methods
-  window.trackConversion = window.Leadalytics.trackConversion
-  window.identify = window.Leadalytics.identify
 })()

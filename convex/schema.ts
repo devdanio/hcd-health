@@ -106,10 +106,9 @@ export const patientAppointments = defineTable({
   companyId: v.optional(v.id('companies')),
   patientId: v.id('patients'),
   dateTime: v.number(),
-  serviceId: v.id('services')
-})
-.index('comanyId_patientId', ['companyId', 'patientId'])
-  // This is the unique index for the appointments table
+  serviceId: v.id('services'),
+}).index('comanyId_patientId', ['companyId', 'patientId'])
+// This is the unique index for the appointments table
 
 export const servicesSchema = defineTable({
   companyId: v.optional(v.id('companies')),
@@ -119,7 +118,7 @@ export const servicesSchema = defineTable({
 export const providersSchema = defineTable({
   companyId: v.optional(v.id('companies')),
   name: v.string(),
-  service: v.id('services')
+  service: v.id('services'),
 })
 export default defineSchema({
   // Attribution Tracking Tables
@@ -168,6 +167,5 @@ export default defineSchema({
   patientAppointments,
   providers: providersSchema,
   services: servicesSchema,
-  patients: patientProfileSchema
-    .index('contactId', ['contactId']),
+  patients: patientProfileSchema.index('contactId', ['contactId']),
 })

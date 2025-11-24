@@ -20,17 +20,6 @@ function corsHeaders(origin?: string) {
  * Handle CORS preflight requests
  */
 http.route({
-  path: '/trackPageView',
-  method: 'OPTIONS',
-  handler: httpAction(async (_, request) => {
-    return new Response(null, {
-      status: 204,
-      headers: corsHeaders(request.headers.get('origin') || undefined),
-    })
-  }),
-})
-
-http.route({
   path: '/trackEvent',
   method: 'OPTIONS',
   handler: httpAction(async (_, request) => {
@@ -41,43 +30,16 @@ http.route({
   }),
 })
 
-http.route({
-  path: '/trackConversion',
-  method: 'OPTIONS',
-  handler: httpAction(async (_, request) => {
-    return new Response(null, {
-      status: 204,
-      headers: corsHeaders(request.headers.get('origin') || undefined),
-    })
-  }),
-})
-
-http.route({
-  path: '/identifyContact',
-  method: 'OPTIONS',
-  handler: httpAction(async (_, request) => {
-    return new Response(null, {
-      status: 204,
-      headers: corsHeaders(request.headers.get('origin') || undefined),
-    })
-  }),
-})
-
 /**
- * Track Page View Endpoint
- * Consolidates session creation and page view tracking
+ * Track Event Endpoint
+ * Handles pageview events with session creation and attribution tracking
  */
 http.route({
-  path: '/trackPageView',
+  path: '/trackEvent',
   method: 'POST',
   handler: httpAction(async (ctx, request) => {
     const origin = request.headers.get('origin') || undefined
 
-    // Currenently this defaults to the domain of the page, which is not what we want.
-    // const refererHeader =
-    //   request.headers.get('referer') ||
-    //   request.headers.get('Referer') ||
-    //   undefined
     const userAgentHeader =
       request.headers.get('user-agent') ||
       request.headers.get('User-Agent') ||
@@ -86,15 +48,18 @@ http.route({
     try {
       const body = await request.json()
 
-      // If touchPoint is provided, use document.referrer as primary source
-      // with HTTP referer header as fallback
-      let touchPoint = body.touchPoint
-      if (touchPoint) {
-        touchPoint = {
-          ...touchPoint,
-          // referrer: touchPoint.referrer || refererHeader || undefined,
-          referrer: touchPoint.referrer || undefined,
-        }
+      // Validate event type
+      if (body.type !== 'pageview') {
+        return new Response(
+          JSON.stringify({ error: 'Only pageview events are supported' }),
+          {
+            status: 400,
+            headers: {
+              'Content-Type': 'application/json',
+              ...corsHeaders(origin),
+            },
+          },
+        )
       }
 
       // Use HTTP User-Agent header if available, fallback to client-provided
@@ -104,8 +69,7 @@ http.route({
         apiKey: body.apiKey,
         visitorId: body.visitorId,
         sessionId: body.sessionId,
-        url: body.url,
-        touchPoint,
+        metadata: body.metadata,
         userAgent,
         screenResolution: body.screenResolution,
         timezone: body.timezone,
@@ -119,139 +83,7 @@ http.route({
         },
       })
     } catch (error: any) {
-      console.error('Error tracking page view:', error)
-      return new Response(
-        JSON.stringify({ error: error.message || 'Internal server error' }),
-        {
-          status: error.message === 'Invalid API key' ? 401 : 500,
-          headers: {
-            'Content-Type': 'application/json',
-            ...corsHeaders(origin),
-          },
-        },
-      )
-    }
-  }),
-})
-
-/**
- * Track Event Endpoint
- */
-http.route({
-  path: '/trackEvent',
-  method: 'POST',
-  handler: httpAction(async (ctx, request) => {
-    const origin = request.headers.get('origin') || undefined
-
-    try {
-      const body = await request.json()
-
-      const result = await ctx.runMutation(api.tracking.trackEvent, {
-        apiKey: body.apiKey,
-        sessionId: body.sessionId,
-        eventName: body.eventName,
-        metadata: body.metadata,
-      })
-
-      return new Response(JSON.stringify(result), {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          ...corsHeaders(origin),
-        },
-      })
-    } catch (error: any) {
       console.error('Error tracking event:', error)
-      return new Response(
-        JSON.stringify({ error: error.message || 'Internal server error' }),
-        {
-          status: error.message === 'Invalid API key' ? 401 : 500,
-          headers: {
-            'Content-Type': 'application/json',
-            ...corsHeaders(origin),
-          },
-        },
-      )
-    }
-  }),
-})
-
-/**
- * Track Conversion Endpoint
- */
-http.route({
-  path: '/trackConversion',
-  method: 'POST',
-  handler: httpAction(async (ctx, request) => {
-    const origin = request.headers.get('origin') || undefined
-
-    try {
-      const body = await request.json()
-
-      const result = await ctx.runMutation(api.tracking.trackConversion, {
-        apiKey: body.apiKey,
-        sessionId: body.sessionId,
-        eventName: body.eventName,
-        revenue: body.revenue,
-        metadata: body.metadata,
-      })
-
-      return new Response(JSON.stringify(result), {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          ...corsHeaders(origin),
-        },
-      })
-    } catch (error: any) {
-      console.error('Error tracking conversion:', error)
-      return new Response(
-        JSON.stringify({ error: error.message || 'Internal server error' }),
-        {
-          status: error.message === 'Invalid API key' ? 401 : 500,
-          headers: {
-            'Content-Type': 'application/json',
-            ...corsHeaders(origin),
-          },
-        },
-      )
-    }
-  }),
-})
-
-/**
- * Identify Contact Endpoint
- * Identifies a user by email or phone number
- */
-http.route({
-  path: '/identifyContact',
-  method: 'POST',
-  handler: httpAction(async (ctx, request) => {
-    const origin = request.headers.get('origin') || undefined
-
-    try {
-      const body = await request.json()
-
-      const result = await ctx.runMutation(api.tracking.identifyContact, {
-        apiKey: body.apiKey,
-        visitorId: body.visitorId,
-        email: body.email,
-        phone: body.phone,
-        userId: body.userId,
-        fullName: body.fullName,
-        firstName: body.firstName,
-        lastName: body.lastName,
-      })
-
-      return new Response(JSON.stringify(result), {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          ...corsHeaders(origin),
-        },
-      })
-    } catch (error: any) {
-      console.error('Error identifying contact:', error)
       return new Response(
         JSON.stringify({ error: error.message || 'Internal server error' }),
         {

@@ -2,8 +2,8 @@ import { v } from 'convex/values'
 import { mutation, query } from './_generated/server'
 import { resolveChannel, type TrafficCategory } from './channelResolver'
 
-// Attribution schema validator for mutations (matches schema.ts)
-const attributionValidator = v.object({
+// Metadata schema validator for pageview events
+const metadataValidator = v.object({
   utm_source: v.optional(v.string()),
   utm_medium: v.optional(v.string()),
   utm_campaign: v.optional(v.string()),
@@ -18,7 +18,7 @@ const attributionValidator = v.object({
   ScCid: v.optional(v.string()),
   url: v.string(),
   referrer: v.optional(v.string()),
-  timestamp: v.number(),
+  timestamp: v.optional(v.number()),
 })
 
 /**
@@ -30,8 +30,7 @@ export const trackPageView = mutation({
     apiKey: v.string(),
     visitorId: v.string(), // Browser-generated visitor ID
     sessionId: v.string(), // Browser-generated session ID
-    url: v.string(),
-    touchPoint: v.optional(attributionValidator),
+    metadata: metadataValidator,
     userAgent: v.optional(v.string()),
     screenResolution: v.optional(v.string()),
     timezone: v.optional(v.string()),
@@ -66,11 +65,10 @@ export const trackPageView = mutation({
       }
     }
 
-    // Prepare attribution data
-    const attribution = args.touchPoint || {
-      url: args.url,
-      referrer: undefined,
-      timestamp: now,
+    // Use metadata as attribution data, ensuring timestamp is present
+    const attribution = {
+      ...args.metadata,
+      timestamp: args.metadata.timestamp || now,
     }
 
     // Get or create session by browserSessionId
@@ -123,213 +121,6 @@ export const trackPageView = mutation({
       sessionId: session._id,
       contactId: contact._id,
       isNewSession,
-    }
-  },
-})
-
-/**
- * Track a custom event
- */
-export const trackEvent = mutation({
-  args: {
-    apiKey: v.string(),
-    sessionId: v.string(), // Browser-generated session ID
-    eventName: v.string(),
-    metadata: v.optional(v.any()),
-  },
-  handler: async (ctx, args) => {
-    const company = await ctx.db
-      .query('companies')
-      .withIndex('apiKey', (q) => q.eq('apiKey', args.apiKey))
-      .first()
-
-    if (!company) {
-      throw new Error('Invalid API key')
-    }
-
-    // Find session by browserSessionId
-    const session = await ctx.db
-      .query('sessions')
-      .withIndex('companyId', (q) => q.eq('companyId', company._id))
-      .filter((q) => q.eq(q.field('browserSessionId'), args.sessionId))
-      .first()
-
-    if (!session) {
-      throw new Error('Session not found')
-    }
-
-    // Create custom event with metadata including event name
-    const eventMetadata = {
-      eventName: args.eventName,
-      ...args.metadata,
-    }
-
-    const eventId = await ctx.db.insert('events', {
-      companyId: company._id,
-      contactId: session.contactId,
-      sessionId: session._id,
-      type: 'custom_event',
-      metadata: eventMetadata,
-    })
-
-    // Add event to session's events array
-    await ctx.db.patch(session._id, {
-      events: [...session.events, eventId],
-    })
-
-    return { eventId }
-  },
-})
-
-/**
- * Track a conversion event
- */
-export const trackConversion = mutation({
-  args: {
-    apiKey: v.string(),
-    sessionId: v.string(), // Browser-generated session ID
-    eventName: v.string(),
-    revenue: v.optional(v.number()),
-    metadata: v.optional(v.any()),
-  },
-  handler: async (ctx, args) => {
-    const company = await ctx.db
-      .query('companies')
-      .withIndex('apiKey', (q) => q.eq('apiKey', args.apiKey))
-      .first()
-
-    if (!company) {
-      throw new Error('Invalid API key')
-    }
-
-    // Find session by browserSessionId
-    const session = await ctx.db
-      .query('sessions')
-      .withIndex('companyId', (q) => q.eq('companyId', company._id))
-      .filter((q) => q.eq(q.field('browserSessionId'), args.sessionId))
-      .first()
-
-    if (!session) {
-      throw new Error('Session not found')
-    }
-
-    // Create conversion event with metadata
-    const eventMetadata = {
-      eventName: args.eventName,
-      revenue: args.revenue,
-      ...args.metadata,
-    }
-
-    const eventId = await ctx.db.insert('events', {
-      companyId: company._id,
-      contactId: session.contactId,
-      sessionId: session._id,
-      type: 'custom_event',
-      metadata: eventMetadata,
-    })
-
-    // Add event to session's events array
-    await ctx.db.patch(session._id, {
-      events: [...session.events, eventId],
-    })
-
-    return { eventId }
-  },
-})
-
-/**
- * Identify a contact by email or phone number
- * Updates the contact record with the provided identification data
- */
-export const identifyContact = mutation({
-  args: {
-    apiKey: v.string(),
-    visitorId: v.string(), // Not used in new schema, but kept for API compatibility
-    email: v.optional(v.string()),
-    phone: v.optional(v.string()),
-    userId: v.optional(v.string()),
-    fullName: v.optional(v.string()),
-    firstName: v.optional(v.string()),
-    lastName: v.optional(v.string()),
-  },
-  handler: async (ctx, args) => {
-    // Authenticate company
-    const company = await ctx.db
-      .query('companies')
-      .withIndex('apiKey', (q) => q.eq('apiKey', args.apiKey))
-      .first()
-
-    if (!company) {
-      throw new Error('Invalid API key')
-    }
-
-    // Validate that at least one identifier is provided
-    if (!args.email && !args.phone && !args.userId) {
-      throw new Error('At least one of email, phone, or userId must be provided')
-    }
-
-    // Try to find existing contact by email or phone
-    let contact = null
-
-    if (args.email) {
-      contact = await ctx.db
-        .query('contacts')
-        .withIndex('companyId_email', (q) =>
-          q.eq('companyId', company._id).eq('email', args.email),
-        )
-        .first()
-    }
-
-    if (!contact && args.phone) {
-      contact = await ctx.db
-        .query('contacts')
-        .withIndex('companyId_phone', (q) =>
-          q.eq('companyId', company._id).eq('phone', args.phone),
-        )
-        .first()
-    }
-
-    // If no existing contact found, create a new one
-    if (!contact) {
-      const contactId = await ctx.db.insert('contacts', {
-        companyId: company._id,
-        email: args.email,
-        phone: args.phone,
-        fullName: args.fullName,
-        firstName: args.firstName,
-        lastName: args.lastName,
-      })
-      contact = await ctx.db.get(contactId)
-      if (!contact) {
-        throw new Error('Failed to create contact')
-      }
-    } else {
-      // Update existing contact with new information
-      const updateData: {
-        email?: string
-        phone?: string
-        fullName?: string
-        firstName?: string
-        lastName?: string
-      } = {}
-
-      if (args.email) updateData.email = args.email
-      if (args.phone) updateData.phone = args.phone
-      if (args.fullName) updateData.fullName = args.fullName
-      if (args.firstName) updateData.firstName = args.firstName
-      if (args.lastName) updateData.lastName = args.lastName
-
-      await ctx.db.patch(contact._id, updateData)
-    }
-
-    return {
-      contactId: contact._id,
-      identified: true,
-      email: contact.email,
-      phone: contact.phone,
-      fullName: contact.fullName,
-      firstName: contact.firstName,
-      lastName: contact.lastName,
     }
   },
 })
@@ -624,48 +415,6 @@ export const getCategoryAnalytics = query({
 })
 
 /**
- * Get conversions for a company
- * Conversions are tracked as custom_event type events
- */
-export const getConversions = query({
-  args: {
-    companyId: v.id('companies'),
-    limit: v.optional(v.number()),
-  },
-  handler: async (ctx, args) => {
-    const limit = args.limit ?? 100
-
-    // Get custom events (which include conversions)
-    const events = await ctx.db
-      .query('events')
-      .withIndex('companyId_type', (q) =>
-        q.eq('companyId', args.companyId).eq('type', 'custom_event'),
-      )
-      .order('desc')
-      .take(limit)
-
-    // Enrich with session data for attribution
-    const enrichedEvents = await Promise.all(
-      events.map(async (event) => {
-        const session = await ctx.db.get(event.sessionId)
-        return {
-          ...event,
-          session: session
-            ? {
-                firstSessionAttribution: session.firstSessionAttribution,
-                lastSessionAttribution: session.lastSessionAttribution,
-                eventsCount: session.events.length,
-              }
-            : null,
-        }
-      }),
-    )
-
-    return enrichedEvents
-  },
-})
-
-/**
  * Get session details with all events
  */
 export const getSessionDetails = query({
@@ -683,15 +432,13 @@ export const getSessionDetails = query({
       .withIndex('sessionId', (q) => q.eq('sessionId', args.sessionId))
       .collect()
 
-    // Separate pageviews and conversions
+    // Get only pageviews
     const pageviews = events.filter((e) => e.type === 'pageview')
-    const conversions = events.filter((e) => e.type === 'custom_event')
 
     return {
       ...session,
       events,
       pageviews,
-      conversions,
     }
   },
 })
