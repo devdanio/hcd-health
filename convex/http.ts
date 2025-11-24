@@ -45,6 +45,31 @@ http.route({
       request.headers.get('User-Agent') ||
       undefined
 
+    // Extract IP address from request headers
+    // Check common proxy headers in order of preference
+    const getClientIp = () => {
+      // Cloudflare
+      const cfIp = request.headers.get('cf-connecting-ip')
+      if (cfIp) return cfIp
+
+      // X-Forwarded-For (may contain multiple IPs, take the first one)
+      const xForwardedFor = request.headers.get('x-forwarded-for')
+      if (xForwardedFor) {
+        // X-Forwarded-For can contain multiple IPs separated by commas
+        // The first one is usually the original client IP
+        return xForwardedFor.split(',')[0].trim()
+      }
+
+      // X-Real-IP
+      const xRealIp = request.headers.get('x-real-ip')
+      if (xRealIp) return xRealIp
+
+      // Fallback: try to get from request (may not work in all environments)
+      return undefined
+    }
+
+    const ipAddress = getClientIp()
+
     try {
       const body = await request.json()
 
@@ -71,6 +96,7 @@ http.route({
         sessionId: body.sessionId,
         metadata: body.metadata,
         userAgent,
+        ipAddress,
         screenResolution: body.screenResolution,
         timezone: body.timezone,
       })

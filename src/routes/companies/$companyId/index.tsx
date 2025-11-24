@@ -188,6 +188,9 @@ function CompanyDetailsPage() {
         }
       : 'skip',
   )
+  const last24HoursVisitors = useQuery(api.tracking.getLast24HoursVisitors, {
+    companyId: companyId as Id<'companies'>,
+  })
 
   // Sort sessions by last activity
   const sortedSessions = useMemo(() => {
@@ -313,6 +316,19 @@ function CompanyDetailsPage() {
         >
           ← Back to Companies
         </Link>
+      </div>
+
+      {/* Visitors in Last 24 Hours */}
+      <div className="mb-6">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-muted rounded-lg">
+          <Users className="h-4 w-4 text-muted-foreground" />
+          <span className="text-sm text-muted-foreground">Visitors (24h):</span>
+          <span className="text-2xl font-semibold">
+            {last24HoursVisitors === undefined
+              ? '...'
+              : last24HoursVisitors}
+          </span>
+        </div>
       </div>
 
       {/* Time Range Selector */}

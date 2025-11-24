@@ -32,6 +32,7 @@ export const trackPageView = mutation({
     sessionId: v.string(), // Browser-generated session ID
     metadata: metadataValidator,
     userAgent: v.optional(v.string()),
+    ipAddress: v.optional(v.string()),
     screenResolution: v.optional(v.string()),
     timezone: v.optional(v.string()),
   },
@@ -88,6 +89,7 @@ export const trackPageView = mutation({
         companyId: company._id,
         contactId: contact._id,
         userAgent: args.userAgent,
+        ipAddress: args.ipAddress,
         screenResolution: args.screenResolution,
         timezone: args.timezone,
         events: [], // Will be updated when we add the event
@@ -99,6 +101,11 @@ export const trackPageView = mutation({
       if (!session) {
         throw new Error('Failed to create session')
       }
+    } else if (!session.ipAddress && args.ipAddress) {
+      // Update existing session with IP address if it doesn't have one
+      await ctx.db.patch(session._id, {
+        ipAddress: args.ipAddress,
+      })
     }
 
     // Create the pageview event
@@ -166,12 +173,39 @@ export const getSessions = query({
               }
             : null,
           eventsCount: session.events.length,
-          lastActivity: latestEvent?.metadata?.timestamp || session.lastSessionAttribution?.timestamp || session._creationTime,
+          lastActivity:
+            latestEvent?.metadata?.timestamp ||
+            session.lastSessionAttribution?.timestamp ||
+            session._creationTime,
         }
       }),
     )
 
     return enrichedSessions
+  },
+})
+
+/**
+ * Get visitor count (sessions) for the last 24 hours
+ */
+export const getLast24HoursVisitors = query({
+  args: {
+    companyId: v.id('companies'),
+  },
+  handler: async (ctx, args) => {
+    const now = Date.now()
+    const startTime = now - 24 * 60 * 60 * 1000 // 24 hours ago
+
+    // Get all sessions within the last 24 hours
+    const sessions = await ctx.db
+      .query('sessions')
+      .withIndex('companyId', (q) => q.eq('companyId', args.companyId))
+      .filter((q) =>
+        q.gte(q.field('firstSessionAttribution.timestamp'), startTime),
+      )
+      .collect()
+
+    return sessions.length
   },
 })
 
@@ -195,7 +229,9 @@ export const getSessionPageViews = query({
       .collect()
 
     // Sort by creation time
-    const sortedEvents = events.sort((a, b) => a._creationTime - b._creationTime)
+    const sortedEvents = events.sort(
+      (a, b) => a._creationTime - b._creationTime,
+    )
 
     // Enrich with channel information from metadata
     const enrichedEvents = sortedEvents.map((event) => {
@@ -253,7 +289,9 @@ export const getVisitorAnalytics = query({
     const sessions = await ctx.db
       .query('sessions')
       .withIndex('companyId', (q) => q.eq('companyId', args.companyId))
-      .filter((q) => q.gte(q.field('firstSessionAttribution.timestamp'), startTime))
+      .filter((q) =>
+        q.gte(q.field('firstSessionAttribution.timestamp'), startTime),
+      )
       .collect()
 
     // Group sessions by time bucket and category
@@ -377,7 +415,9 @@ export const getCategoryAnalytics = query({
     const sessions = await ctx.db
       .query('sessions')
       .withIndex('companyId', (q) => q.eq('companyId', args.companyId))
-      .filter((q) => q.gte(q.field('firstSessionAttribution.timestamp'), startTime))
+      .filter((q) =>
+        q.gte(q.field('firstSessionAttribution.timestamp'), startTime),
+      )
       .collect()
 
     // Group sessions by granular category
@@ -389,9 +429,13 @@ export const getCategoryAnalytics = query({
       let label = 'Other'
 
       if (channel.source === 'Google') {
-        label = channel.category === 'paid_search' ? 'Paid Google' : 'Organic Google'
+        label =
+          channel.category === 'paid_search' ? 'Paid Google' : 'Organic Google'
       } else if (channel.source === 'Facebook') {
-        label = channel.category === 'paid_social' ? 'Paid Facebook' : 'Organic Facebook'
+        label =
+          channel.category === 'paid_social'
+            ? 'Paid Facebook'
+            : 'Organic Facebook'
       } else if (channel.category === 'email') {
         label = 'Email'
       } else if (channel.category === 'direct') {
@@ -405,10 +449,12 @@ export const getCategoryAnalytics = query({
     }
 
     // Convert to array format
-    const result = Array.from(categoryMap.entries()).map(([category, count]) => ({
-      category,
-      sessions: count,
-    }))
+    const result = Array.from(categoryMap.entries()).map(
+      ([category, count]) => ({
+        category,
+        sessions: count,
+      }),
+    )
 
     return result
   },

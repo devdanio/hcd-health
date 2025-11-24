@@ -35,7 +35,7 @@ function RouteComponent() {
               Installation Code
             </label>
             <code className="block bg-muted p-3 rounded text-sm overflow-x-auto">
-              {`<script\n  src="https://your-domain.com/tracker/tracker.js"\n  
+              {`<script\n  src="https://app.leadalytics.ai/tracker/tracker.js"\n  
               data-api-key="${company?.apiKey}"
               data-api-url="${import.meta.env.VITE_CONVEX_URL}/http"\n></script>`}
             </code>

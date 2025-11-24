@@ -3,10 +3,27 @@ import { useMutation, useQuery } from 'convex/react'
 import { api } from '../../../convex/_generated/api'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
+import { Users } from 'lucide-react'
+import { Id } from 'convex/_generated/dataModel'
 
 export const Route = createFileRoute('/companies/')({
   component: CompaniesPage,
 })
+
+function CompanyVisitorCount({ companyId }: { companyId: Id<'companies'> }) {
+  const visitorCount = useQuery(api.tracking.getLast24HoursVisitors, {
+    companyId,
+  })
+
+  return (
+    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+      <Users className="h-4 w-4" />
+      <span>
+        {visitorCount === undefined ? '...' : visitorCount} visitors (24h)
+      </span>
+    </div>
+  )
+}
 
 function CompaniesPage() {
   const companies = useQuery(api.companies.getCompanies)
@@ -104,9 +121,12 @@ function CompaniesPage() {
             >
               <div className="p-6 border rounded-lg bg-card text-card-foreground hover:border-primary transition-colors cursor-pointer">
                 <h3 className="text-xl font-semibold mb-2">{company.name}</h3>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-sm text-muted-foreground mb-2">
                   {company.domain}
                 </p>
+                <div className="mb-4">
+                  <CompanyVisitorCount companyId={company._id} />
+                </div>
                 <div className="text-xs font-mono bg-muted p-2 rounded overflow-x-auto">
                   {company.apiKey}
                 </div>
