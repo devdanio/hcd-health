@@ -13,6 +13,54 @@ export const createAppointment = mutation({
   },
 })
 
+export const bulkCreate = mutation({
+  args: {
+    appointments: v.array(
+      v.object({
+        companyId: v.optional(v.id('companies')),
+        patientName: v.string(),
+        dateOfService: v.optional(v.string()),
+        service: v.string(),
+        providerId: v.optional(v.id('providers')),
+      })
+    ),
+  },
+  handler: async (ctx, args) => {
+    for (const apt of args.appointments) {
+      await ctx.db.insert('appointments', apt)
+    }
+  },
+})
+
+export const deleteRecentAppointments = mutation({
+  args: {
+    companyId: v.id('companies'),
+    minutes: v.number(),
+  },
+  handler: async (ctx, args) => {
+    const { companyId, minutes } = args
+    const cutoffTime = Date.now() - minutes * 60 * 1000
+
+    const appointments = await ctx.db
+      .query('appointments')
+      .filter((q) => 
+        q.and(
+          q.eq(q.field('companyId'), companyId),
+          q.gte(q.field('_creationTime'), cutoffTime)
+        )
+      )
+      .take(1000)
+
+    console.log(`Found ${appointments.length} appointments to delete (batch).`)
+
+    for (const apt of appointments) {
+      await ctx.db.delete(apt._id)
+    }
+
+    return appointments.length
+  },
+})
+
 export const getAppointments = query({
   args: {
     companyId: v.id('companies'),
@@ -116,25 +164,16 @@ export const getAppointmentsAnalytics = query({
     }
 
     // Group appointments by day with proper typing
-    const dataMap = new Map<
-      string,
-      { acupuncture: number; consultation: number }
-    >()
+    const dataMap = new Map<string, Record<string, number>>()
 
     // Count appointments by day and type
     for (const apt of filteredAppointments) {
       if (!apt.dateOfService) continue
       const dateKey = formatDate(apt.dateOfService)
       if (dateKey) {
-        const current = dataMap.get(dateKey) || {
-          acupuncture: 0,
-          consultation: 0,
-        }
-        if (apt.service === 'consultation') {
-          current.consultation += 1
-        } else {
-          current.acupuncture += 1
-        }
+        const current = dataMap.get(dateKey) || {}
+        const service = apt.service || 'Unknown'
+        current[service] = (current[service] || 0) + 1
         dataMap.set(dateKey, current)
       }
     }
@@ -143,8 +182,7 @@ export const getAppointmentsAnalytics = query({
     const result = Array.from(dataMap.entries())
       .map(([date, counts]) => ({
         date,
-        acupuncture: counts.acupuncture,
-        consultation: counts.consultation,
+        ...counts,
       }))
       .sort((a, b) => a.date.localeCompare(b.date))
 

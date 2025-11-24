@@ -51,6 +51,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "convex": "^1.27.3",
+    "csv-parser": "^3.2.0",
     "dayjs": "^1.11.19",
     "dotenv": "^17.2.3",
     "lucide-react": "^0.544.0",

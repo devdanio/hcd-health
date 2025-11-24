@@ -21,3 +21,5 @@ Good convo: https://claude.ai/chat/f0693212-6f56-430b-89d3-7fcd817e54ef
 
 
 
+## FACEBOOK 
+To get access token: https://developers.facebook.com/tools/explorer/839548005120095/

@@ -152,3 +152,83 @@ export const generateSeedData = internalMutation({
     console.log('Seed data generation complete!')
   },
 })
+
+export const seedProvidersAndServices = internalMutation({
+  args: {
+    companyId: v.id('companies'),
+  },
+  handler: async (ctx, args) => {
+    const { companyId } = args
+    console.log(`Seeding services and providers for company ${companyId}...`)
+
+    const servicesList = ['Acu', 'Chiro', 'PT', 'OT']
+    const serviceIds: Record<string, any> = {}
+
+    // 1. Create Services
+    for (const serviceName of servicesList) {
+      const existingService = await ctx.db
+        .query('services')
+        // Schema doesn't have index on name/companyId, so we have to scan or just insert if we don't care about dupes.
+        // But let's try to avoid dupes if possible.
+        // Since there is no index on name, we'll just query all services for the company and filter in memory.
+        .filter((q) => q.eq(q.field('companyId'), companyId))
+        .collect()
+      
+      const found = existingService.find(s => s.name === serviceName)
+      
+      if (found) {
+        serviceIds[serviceName] = found._id
+      } else {
+        const id = await ctx.db.insert('services', {
+          companyId,
+          name: serviceName,
+        })
+        serviceIds[serviceName] = id
+      }
+    }
+
+    // 2. Create Providers
+    const providersList = [
+      { name: 'Arthur Adamczyk', service: 'Acu' },
+      { name: 'Brian Matfus', service: 'Chiro' },
+      { name: 'Clint J Price', service: 'Acu' },
+      { name: 'Daniel Van Clef', service: 'OT' },
+      { name: 'Edward J. Kinsella', service: 'PT' },
+      { name: 'Elizabeth Dziuba', service: 'OT' },
+      { name: 'Joseph Marchitelli', service: 'Chiro' },
+      { name: 'Ryan Ribeiro', service: 'PT' },
+      { name: 'Shannon Moloughney', service: 'PT' },
+      { name: 'Stephen Bruno', service: 'Chiro' },
+      { name: 'Thomas Abrams', service: 'Chiro' },
+      { name: 'Thomas Corbisiero', service: 'PT' },
+      { name: 'Tyler DiGiovanni', service: 'Chiro' },
+      { name: 'Vincent Zappola', service: 'Chiro' },
+    ]
+
+    for (const provider of providersList) {
+      const serviceId = serviceIds[provider.service]
+      if (!serviceId) {
+        console.error(`Service ID not found for ${provider.service}`)
+        continue
+      }
+
+      // Check if provider exists
+      const existingProviders = await ctx.db
+        .query('providers')
+        .filter((q) => q.eq(q.field('companyId'), companyId))
+        .collect()
+      
+      const found = existingProviders.find(p => p.name === provider.name)
+
+      if (!found) {
+        await ctx.db.insert('providers', {
+          companyId,
+          name: provider.name,
+          service: serviceId,
+        })
+      }
+    }
+
+    console.log('Services and providers seeded successfully.')
+  },
+})

@@ -44,16 +44,7 @@ export const Route = createFileRoute('/companies/$companyId/appointments/')({
 })
 
 // Chart configuration
-const chartConfig = {
-  acupuncture: {
-    label: 'Acupuncture',
-    color: 'oklch(90.5% 0.093 164.15)',
-  },
-  consultation: {
-    label: 'Consultation',
-    color: '#fde68a', // amber-200
-  },
-} satisfies ChartConfig
+
 
 type Appointment = {
   _id: Id<'appointments'>
@@ -61,7 +52,7 @@ type Appointment = {
   companyId?: Id<'companies'>
   patientName: string
   dateOfService?: string
-  service: 'acupuncture' | 'consultation'
+  service: string
 }
 
 function AppointmentsPage() {
@@ -79,11 +70,34 @@ function AppointmentsPage() {
     companyId: companyId as Id<'companies'>,
   })
 
+  console.log("appointments", appointments)
+
   const analyticsData = useQuery(api.appointments.getAppointmentsAnalytics, {
     companyId: companyId as Id<'companies'>,
     timeRange,
     groupBy,
   })
+
+  // Fetch services for dynamic chart config
+  const services = useQuery(api.services.list, {
+    companyId: companyId as Id<'companies'>,
+  })
+
+  // Generate dynamic chart config
+  const chartConfig = useMemo(() => {
+    if (!services) return {}
+    
+    const config: ChartConfig = {}
+    services.forEach((service, index) => {
+      // Cycle through chart colors 1-5
+      const colorIndex = (index % 5) + 1
+      config[service.name] = {
+        label: service.name,
+        color: `var(--chart-${colorIndex})`,
+      }
+    })
+    return config
+  }, [services])
 
   // Define table columns
   const columns = useMemo<ColumnDef<Appointment>[]>(
@@ -166,7 +180,7 @@ function AppointmentsPage() {
     },
   })
 
-  if (appointments === undefined || analyticsData === undefined) {
+  if (appointments === undefined || analyticsData === undefined || services === undefined) {
     return (
       <div className="container mx-auto p-8">
         <div>Loading...</div>
@@ -274,18 +288,15 @@ function AppointmentsPage() {
                   cursor={false}
                   content={<ChartTooltipContent />}
                 />
-                <Bar
-                  dataKey="consultation"
-                  fill="var(--color-consultation)"
-                  stackId="a"
-                  radius={[0, 0, 0, 0]}
-                />
-                <Bar
-                  dataKey="acupuncture"
-                  fill="var(--color-acupuncture)"
-                  stackId="a"
-                  radius={[8, 8, 0, 0]}
-                />
+                {services.map((service) => (
+                  <Bar
+                    key={service._id}
+                    dataKey={service.name}
+                    fill={chartConfig[service.name]?.color}
+                    stackId="a"
+                    radius={[4, 4, 0, 0]}
+                  />
+                ))}
               </BarChart>
             </ChartContainer>
           )}

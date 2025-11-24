@@ -16,7 +16,9 @@ import type * as contacts from "../contacts.js";
 import type * as facebook from "../facebook.js";
 import type * as http from "../http.js";
 import type * as patients from "../patients.js";
+import type * as providers from "../providers.js";
 import type * as seed from "../seed.js";
+import type * as services from "../services.js";
 import type * as tracking from "../tracking.js";
 import type * as verifyLastName from "../verifyLastName.js";
 
@@ -43,7 +45,9 @@ declare const fullApi: ApiFromModules<{
   facebook: typeof facebook;
   http: typeof http;
   patients: typeof patients;
+  providers: typeof providers;
   seed: typeof seed;
+  services: typeof services;
   tracking: typeof tracking;
   verifyLastName: typeof verifyLastName;
 }>;

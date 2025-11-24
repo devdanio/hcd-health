@@ -91,7 +91,8 @@ export const appointmentsSchema = defineTable({
   // Todo: attempt to find the contct, will need a separate report from the unified practice api for this
   // contactId: v.optional(v.id('contacts')),
   dateOfService: v.optional(v.string()),
-  service: v.union(v.literal('acupuncture'), v.literal('consultation')),
+  service: v.string(),
+  providerId: v.optional(v.id('providers')),
 })
   // This is the unique index for the appointments table
   .index('companyId_patientName_dateOfService_appointmentType', [
@@ -105,11 +106,21 @@ export const patientAppointments = defineTable({
   companyId: v.optional(v.id('companies')),
   patientId: v.id('patients'),
   dateTime: v.number(),
-  service: v.string()
+  serviceId: v.id('services')
 })
 .index('comanyId_patientId', ['companyId', 'patientId'])
   // This is the unique index for the appointments table
 
+export const servicesSchema = defineTable({
+  companyId: v.optional(v.id('companies')),
+  name: v.string(),
+})
+
+export const providersSchema = defineTable({
+  companyId: v.optional(v.id('companies')),
+  name: v.string(),
+  service: v.id('services')
+})
 export default defineSchema({
   // Attribution Tracking Tables
   companies: defineTable({
@@ -155,6 +166,8 @@ export default defineSchema({
     .index('companyId', ['companyId']),
   appointments: appointmentsSchema,
   patientAppointments,
+  providers: providersSchema,
+  services: servicesSchema,
   patients: patientProfileSchema
     .index('contactId', ['contactId']),
 })

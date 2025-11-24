@@ -16,6 +16,7 @@ import { Route as CompaniesCompanyIdRouteRouteImport } from './routes/companies/
 import { Route as CompaniesCompanyIdIndexRouteImport } from './routes/companies/$companyId/index'
 import { Route as CompaniesCompanyIdVisitorsIndexRouteImport } from './routes/companies/$companyId/visitors/index'
 import { Route as CompaniesCompanyIdTrackingIndexRouteImport } from './routes/companies/$companyId/tracking/index'
+import { Route as CompaniesCompanyIdSettingsIndexRouteImport } from './routes/companies/$companyId/settings/index'
 import { Route as CompaniesCompanyIdRoiIndexRouteImport } from './routes/companies/$companyId/roi/index'
 import { Route as CompaniesCompanyIdPatientsIndexRouteImport } from './routes/companies/$companyId/patients/index'
 import { Route as CompaniesCompanyIdKpisIndexRouteImport } from './routes/companies/$companyId/kpis/index'
@@ -59,6 +60,12 @@ const CompaniesCompanyIdTrackingIndexRoute =
   CompaniesCompanyIdTrackingIndexRouteImport.update({
     id: '/tracking/',
     path: '/tracking/',
+    getParentRoute: () => CompaniesCompanyIdRouteRoute,
+  } as any)
+const CompaniesCompanyIdSettingsIndexRoute =
+  CompaniesCompanyIdSettingsIndexRouteImport.update({
+    id: '/settings/',
+    path: '/settings/',
     getParentRoute: () => CompaniesCompanyIdRouteRoute,
   } as any)
 const CompaniesCompanyIdRoiIndexRoute =
@@ -116,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/companies/$companyId/kpis': typeof CompaniesCompanyIdKpisIndexRoute
   '/companies/$companyId/patients': typeof CompaniesCompanyIdPatientsIndexRoute
   '/companies/$companyId/roi': typeof CompaniesCompanyIdRoiIndexRoute
+  '/companies/$companyId/settings': typeof CompaniesCompanyIdSettingsIndexRoute
   '/companies/$companyId/tracking': typeof CompaniesCompanyIdTrackingIndexRoute
   '/companies/$companyId/visitors': typeof CompaniesCompanyIdVisitorsIndexRoute
   '/companies/$companyId/contacts/$contactId': typeof CompaniesCompanyIdContactsContactIdIndexRoute
@@ -130,6 +138,7 @@ export interface FileRoutesByTo {
   '/companies/$companyId/kpis': typeof CompaniesCompanyIdKpisIndexRoute
   '/companies/$companyId/patients': typeof CompaniesCompanyIdPatientsIndexRoute
   '/companies/$companyId/roi': typeof CompaniesCompanyIdRoiIndexRoute
+  '/companies/$companyId/settings': typeof CompaniesCompanyIdSettingsIndexRoute
   '/companies/$companyId/tracking': typeof CompaniesCompanyIdTrackingIndexRoute
   '/companies/$companyId/visitors': typeof CompaniesCompanyIdVisitorsIndexRoute
   '/companies/$companyId/contacts/$contactId': typeof CompaniesCompanyIdContactsContactIdIndexRoute
@@ -147,6 +156,7 @@ export interface FileRoutesById {
   '/companies/$companyId/kpis/': typeof CompaniesCompanyIdKpisIndexRoute
   '/companies/$companyId/patients/': typeof CompaniesCompanyIdPatientsIndexRoute
   '/companies/$companyId/roi/': typeof CompaniesCompanyIdRoiIndexRoute
+  '/companies/$companyId/settings/': typeof CompaniesCompanyIdSettingsIndexRoute
   '/companies/$companyId/tracking/': typeof CompaniesCompanyIdTrackingIndexRoute
   '/companies/$companyId/visitors/': typeof CompaniesCompanyIdVisitorsIndexRoute
   '/companies/$companyId/contacts/$contactId/': typeof CompaniesCompanyIdContactsContactIdIndexRoute
@@ -165,6 +175,7 @@ export interface FileRouteTypes {
     | '/companies/$companyId/kpis'
     | '/companies/$companyId/patients'
     | '/companies/$companyId/roi'
+    | '/companies/$companyId/settings'
     | '/companies/$companyId/tracking'
     | '/companies/$companyId/visitors'
     | '/companies/$companyId/contacts/$contactId'
@@ -179,6 +190,7 @@ export interface FileRouteTypes {
     | '/companies/$companyId/kpis'
     | '/companies/$companyId/patients'
     | '/companies/$companyId/roi'
+    | '/companies/$companyId/settings'
     | '/companies/$companyId/tracking'
     | '/companies/$companyId/visitors'
     | '/companies/$companyId/contacts/$contactId'
@@ -195,6 +207,7 @@ export interface FileRouteTypes {
     | '/companies/$companyId/kpis/'
     | '/companies/$companyId/patients/'
     | '/companies/$companyId/roi/'
+    | '/companies/$companyId/settings/'
     | '/companies/$companyId/tracking/'
     | '/companies/$companyId/visitors/'
     | '/companies/$companyId/contacts/$contactId/'
@@ -254,6 +267,13 @@ declare module '@tanstack/react-router' {
       path: '/tracking'
       fullPath: '/companies/$companyId/tracking'
       preLoaderRoute: typeof CompaniesCompanyIdTrackingIndexRouteImport
+      parentRoute: typeof CompaniesCompanyIdRouteRoute
+    }
+    '/companies/$companyId/settings/': {
+      id: '/companies/$companyId/settings/'
+      path: '/settings'
+      fullPath: '/companies/$companyId/settings'
+      preLoaderRoute: typeof CompaniesCompanyIdSettingsIndexRouteImport
       parentRoute: typeof CompaniesCompanyIdRouteRoute
     }
     '/companies/$companyId/roi/': {
@@ -316,6 +336,7 @@ interface CompaniesCompanyIdRouteRouteChildren {
   CompaniesCompanyIdKpisIndexRoute: typeof CompaniesCompanyIdKpisIndexRoute
   CompaniesCompanyIdPatientsIndexRoute: typeof CompaniesCompanyIdPatientsIndexRoute
   CompaniesCompanyIdRoiIndexRoute: typeof CompaniesCompanyIdRoiIndexRoute
+  CompaniesCompanyIdSettingsIndexRoute: typeof CompaniesCompanyIdSettingsIndexRoute
   CompaniesCompanyIdTrackingIndexRoute: typeof CompaniesCompanyIdTrackingIndexRoute
   CompaniesCompanyIdVisitorsIndexRoute: typeof CompaniesCompanyIdVisitorsIndexRoute
   CompaniesCompanyIdContactsContactIdIndexRoute: typeof CompaniesCompanyIdContactsContactIdIndexRoute
@@ -332,6 +353,7 @@ const CompaniesCompanyIdRouteRouteChildren: CompaniesCompanyIdRouteRouteChildren
     CompaniesCompanyIdKpisIndexRoute: CompaniesCompanyIdKpisIndexRoute,
     CompaniesCompanyIdPatientsIndexRoute: CompaniesCompanyIdPatientsIndexRoute,
     CompaniesCompanyIdRoiIndexRoute: CompaniesCompanyIdRoiIndexRoute,
+    CompaniesCompanyIdSettingsIndexRoute: CompaniesCompanyIdSettingsIndexRoute,
     CompaniesCompanyIdTrackingIndexRoute: CompaniesCompanyIdTrackingIndexRoute,
     CompaniesCompanyIdVisitorsIndexRoute: CompaniesCompanyIdVisitorsIndexRoute,
     CompaniesCompanyIdContactsContactIdIndexRoute:
