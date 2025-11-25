@@ -152,6 +152,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         url: `/companies/${companyId}/roi`,
         icon: IconDatabase,
       },
+      {
+        name: 'CMS Pages',
+        url: `/companies/${companyId}/cms-pages`,
+        icon: IconFileDescription,
+      },
     ],
   }
   return (

@@ -8,9 +8,11 @@
  * @module
  */
 
+import type * as actions from "../actions.js";
 import type * as appointments from "../appointments.js";
 import type * as channelDefinitions from "../channelDefinitions.js";
 import type * as channelResolver from "../channelResolver.js";
+import type * as cmsPages from "../cmsPages.js";
 import type * as companies from "../companies.js";
 import type * as contacts from "../contacts.js";
 import type * as facebook from "../facebook.js";
@@ -40,9 +42,11 @@ import type {
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  actions: typeof actions;
   appointments: typeof appointments;
   channelDefinitions: typeof channelDefinitions;
   channelResolver: typeof channelResolver;
+  cmsPages: typeof cmsPages;
   companies: typeof companies;
   contacts: typeof contacts;
   facebook: typeof facebook;

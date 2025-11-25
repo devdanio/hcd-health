@@ -133,30 +133,33 @@ export const oauthStates = defineTable({
 export const companies = defineTable({
   name: v.string(),
   domain: v.string(),
+  companyBrief: v.optional(v.string()),
   apiKey: v.string(), // For authenticating tracking requests
   ehr: v.optional(v.union(v.literal('unified-practice'), v.literal('ghl'))),
   // Google Ads OAuth integration
-  googleAds: v.optional(v.object({
-    // OAuth tokens (encrypted)
-    accessToken: v.string(),
-    refreshToken: v.string(),
-    tokenExpiresAt: v.number(), // Unix timestamp (ms)
+  googleAds: v.optional(
+    v.object({
+      // OAuth tokens (encrypted)
+      accessToken: v.string(),
+      refreshToken: v.string(),
+      tokenExpiresAt: v.number(), // Unix timestamp (ms)
 
-    // Account identifiers (set after user selects account)
-    customerId: v.optional(v.string()), // Google Ads Customer ID (no hyphens)
+      // Account identifiers (set after user selects account)
+      customerId: v.optional(v.string()), // Google Ads Customer ID (no hyphens)
 
-    // Account metadata
-    accountName: v.optional(v.string()),
-    currencyCode: v.optional(v.string()),
-    timeZone: v.optional(v.string()),
+      // Account metadata
+      accountName: v.optional(v.string()),
+      currencyCode: v.optional(v.string()),
+      timeZone: v.optional(v.string()),
 
-    // Status tracking
-    connectedAt: v.number(),
-    accountSelectedAt: v.optional(v.number()), // When user selected account
-    lastSyncedAt: v.optional(v.number()),
-    lastError: v.optional(v.string()),
-    lastErrorAt: v.optional(v.number()),
-  })),
+      // Status tracking
+      connectedAt: v.number(),
+      accountSelectedAt: v.optional(v.number()), // When user selected account
+      lastSyncedAt: v.optional(v.number()),
+      lastError: v.optional(v.string()),
+      lastErrorAt: v.optional(v.number()),
+    }),
+  ),
 }).index('apiKey', ['apiKey'])
 
 export const sessions = defineTable({
@@ -196,6 +199,17 @@ export const events = defineTable({
 //   sessionId: v.id('sessions'),
 //   message: v.any,
 // })
+export const cmsPages = defineTable({
+  companyId: v.id('companies'),
+  h1: v.string(),
+  pageTitle: v.string(),
+  pageDescription: v.string(),
+  jsonSchema: v.optional(v.any()),
+  slug: v.string(),
+  markdownContent: v.string(),
+})
+  .index('companyId', ['companyId'])
+  .index('slugId_slug', ['companyId', 'slug'])
 
 export default defineSchema({
   // Attribution Tracking Tables
@@ -214,4 +228,5 @@ export default defineSchema({
 
   // OAuth state management
   oauthStates: oauthStates,
+  cmsPages,
 })

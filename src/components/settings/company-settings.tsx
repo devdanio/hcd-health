@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Textarea } from "@/components/ui/textarea"
 import { toast } from "sonner"
 
 interface CompanySettingsProps {
@@ -18,17 +19,19 @@ export function CompanySettings({ companyId }: CompanySettingsProps) {
   const company = useQuery(api.companies.getCompany, { companyId })
   const updateCompany = useMutation(api.companies.updateCompany)
   const [name, setName] = useState("")
+  const [companyBrief, setCompanyBrief] = useState("")
 
   useEffect(() => {
     if (company) {
       setName(company.name)
+      setCompanyBrief(company.companyBrief || "")
     }
   }, [company])
 
   const handleSave = async () => {
     try {
-      await updateCompany({ companyId, name })
-      toast.success("Company name updated")
+      await updateCompany({ companyId, name, companyBrief })
+      toast.success("Company settings updated")
     } catch (error) {
       toast.error("Failed to update company name")
     }
@@ -49,6 +52,16 @@ export function CompanySettings({ companyId }: CompanySettingsProps) {
             id="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="companyBrief">Company Brief</Label>
+          <Textarea
+            id="companyBrief"
+            value={companyBrief}
+            onChange={(e) => setCompanyBrief(e.target.value)}
+            placeholder="A brief description of your company..."
+            className="min-h-[100px]"
           />
         </div>
         <Button onClick={handleSave}>Save Changes</Button>

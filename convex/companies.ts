@@ -68,6 +68,7 @@ export const updateCompany = mutation({
     companyId: v.id('companies'),
     name: v.optional(v.string()),
     domain: v.optional(v.string()),
+    companyBrief: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const { companyId, ...updates } = args
