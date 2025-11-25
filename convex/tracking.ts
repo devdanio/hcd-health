@@ -488,3 +488,80 @@ export const getSessionDetails = query({
     }
   },
 })
+
+/**
+ * Get top 3 pages by session count
+ */
+export const getTopPages = query({
+  args: {
+    companyId: v.id('companies'),
+    timeRange: v.union(
+      v.literal('24h'),
+      v.literal('7d'),
+      v.literal('30d'),
+      v.literal('90d'),
+    ),
+  },
+  handler: async (ctx, args) => {
+    const now = Date.now()
+    let startTime = now
+
+    // Calculate start time based on range
+    switch (args.timeRange) {
+      case '24h':
+        startTime = now - 24 * 60 * 60 * 1000
+        break
+      case '7d':
+        startTime = now - 7 * 24 * 60 * 60 * 1000
+        break
+      case '30d':
+        startTime = now - 30 * 24 * 60 * 60 * 1000
+        break
+      case '90d':
+        startTime = now - 90 * 24 * 60 * 60 * 1000
+        break
+    }
+
+    // Get all pageview events within the time range
+    // We use _creationTime as a proxy for the event timestamp for efficient filtering
+    const events = await ctx.db
+      .query('events')
+      .withIndex('companyId_type', (q) =>
+        q.eq('companyId', args.companyId).eq('type', 'pageview'),
+      )
+      .filter((q) => q.gte(q.field('_creationTime'), startTime))
+      .collect()
+
+    // Aggregate sessions by pathname
+    const pageMap = new Map<string, Set<string>>()
+
+    for (const event of events) {
+      const metadata = event.metadata as any
+      if (!metadata.url) continue
+
+      try {
+        const urlObj = new URL(metadata.url)
+        const pathname = urlObj.pathname
+
+        if (!pageMap.has(pathname)) {
+          pageMap.set(pathname, new Set())
+        }
+        pageMap.get(pathname)!.add(event.sessionId)
+      } catch (e) {
+        // Ignore invalid URLs
+        continue
+      }
+    }
+
+    // Convert to array and sort
+    const result = Array.from(pageMap.entries())
+      .map(([pathname, sessionSet]) => ({
+        pathname,
+        sessions: sessionSet.size,
+      }))
+      .sort((a, b) => b.sessions - a.sessions)
+      .slice(0, 3)
+
+    return result
+  },
+})

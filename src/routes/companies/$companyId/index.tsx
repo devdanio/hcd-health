@@ -18,6 +18,7 @@ import {
   Instagram,
   Youtube,
   Github,
+  FileText,
 } from 'lucide-react'
 
 import { SocialIcon } from 'react-social-icons'
@@ -42,6 +43,12 @@ import { api } from 'convex/_generated/api'
 import { Id } from 'convex/_generated/dataModel'
 import { ChartAreaInteractive } from '@/components/chart-area-interactive'
 import { ChartCategories } from '@/components/chart-categories'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 
 const searchParamsSchema = z.object({
   timeRange: z.enum(['24h', '7d', '30d', '90d']).optional().default('30d'),
@@ -190,6 +197,10 @@ function CompanyDetailsPage() {
   )
   const last24HoursVisitors = useQuery(api.tracking.getLast24HoursVisitors, {
     companyId: companyId as Id<'companies'>,
+  })
+  const topPages = useQuery(api.tracking.getTopPages, {
+    companyId: companyId as Id<'companies'>,
+    timeRange: timeRange as '24h' | '7d' | '30d' | '90d',
   })
 
   // Sort sessions by last activity
@@ -353,6 +364,50 @@ function CompanyDetailsPage() {
             </SelectItem>
           </SelectContent>
         </Select>
+      </div>
+
+      {/* Top 3 Pages */}
+      <div className="grid gap-4 md:grid-cols-3 mb-8">
+        {topPages === undefined ? (
+          // Loading state
+          Array(3)
+            .fill(0)
+            .map((_, i) => (
+              <Card key={i} className="animate-pulse">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <div className="h-4 w-24 bg-muted rounded" />
+                </CardHeader>
+                <CardContent>
+                  <div className="h-8 w-16 bg-muted rounded mb-2" />
+                  <div className="h-3 w-32 bg-muted rounded" />
+                </CardContent>
+              </Card>
+            ))
+        ) : topPages.length === 0 ? (
+          <div className="col-span-3 text-center py-8 text-muted-foreground border rounded-xl bg-card">
+            No page views recorded in this time range
+          </div>
+        ) : (
+          topPages.map((page, index) => (
+            <Card key={page.pathname}>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Top Page #{index + 1}
+                </CardTitle>
+                <FileText className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{page.sessions}</div>
+                <p
+                  className="text-xs text-muted-foreground truncate"
+                  title={page.pathname}
+                >
+                  {page.pathname}
+                </p>
+              </CardContent>
+            </Card>
+          ))
+        )}
       </div>
 
       {/* Charts Grid */}
