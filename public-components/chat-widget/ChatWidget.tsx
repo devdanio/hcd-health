@@ -18,6 +18,17 @@ function getCookie(name: string) {
   }, '')
 }
 
+// Configuration interface
+interface ChatWidgetConfig {
+  avatarUrl?: string
+}
+
+declare global {
+  interface Window {
+    chatWidgetConfig?: ChatWidgetConfig
+  }
+}
+
 export const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false)
   const openChat = () => setIsOpen(true)
@@ -32,6 +43,11 @@ export const ChatWidget = () => {
     message: '',
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  // Get avatar URL from config or default
+  const defaultAvatar =
+    'https://images.leadconnectorhq.com/image/f_webp/q_100/r_180/u_https://assets.cdn.filesafe.space/wJVrTbSAivxHv8BabSZZ/media/683734474eb4a1521d0c2f72.png'
+  const avatarUrl = window.chatWidgetConfig?.avatarUrl || defaultAvatar
 
   // On mount, check for dismissal cookie
   useEffect(() => {
@@ -128,7 +144,7 @@ export const ChatWidget = () => {
       {showBubble && !isOpen && !dismissed && (
         <div className="fixed bottom-21 right-4 bg-white rounded-2xl shadow-lg p-4 pr-5 pl-3 flex items-center z-[1001] max-w-80">
           <img
-            src="https://images.leadconnectorhq.com/image/f_webp/q_100/r_180/u_https://assets.cdn.filesafe.space/wJVrTbSAivxHv8BabSZZ/media/683734474eb4a1521d0c2f72.png"
+            src={avatarUrl}
             alt="Gianna"
             className="w-10 h-10 rounded-full mr-3"
           />
@@ -151,8 +167,8 @@ export const ChatWidget = () => {
         <div className="fixed bottom-19 right-10 w-75 h-[410px] rounded-2xl shadow-2xl z-[1002] flex flex-col overflow-hidden bg-black">
           <div className="bg-white flex gap-2 p-2 text-sm text-black">
             <img
-              src="https://images.leadconnectorhq.com/image/f_webp/q_100/r_180/u_https://assets.cdn.filesafe.space/wJVrTbSAivxHv8BabSZZ/media/683734474eb4a1521d0c2f72.png"
-              alt="Gianna"
+              src={avatarUrl}
+              alt="Front desk avatar"
               className="w-10 h-10 rounded-full mr-3"
             />
             <span className="text-sm">
