@@ -127,8 +127,93 @@ http.route({
 http.route({
   path: '/test',
   method: 'GET',
-  handler: httpAction(async (ctx, request) => {
+  handler: httpAction(async () => {
     return new Response('Hello, world!', { status: 200 })
   }),
 })
+
+/**
+ * OAuth callback endpoint for Google Ads integration
+ * Handles redirect from Google OAuth consent screen
+ */
+http.route({
+  path: '/oauth/google-ads/callback',
+  method: 'GET',
+  handler: httpAction(async (ctx, request) => {
+    const url = new URL(request.url)
+    const code = url.searchParams.get('code')
+    const state = url.searchParams.get('state')
+    const error = url.searchParams.get('error')
+
+    // Handle user denial or errors from Google
+    if (error) {
+      console.error('OAuth error:', error)
+      // Extract companyId from state if possible for better redirect
+      let companyId = 'unknown'
+      if (state) {
+        try {
+          const decoded = atob(state)
+          companyId = decoded.split(':')[0]
+        } catch (e) {
+          // Ignore decode errors
+        }
+      }
+
+      return new Response(null, {
+        status: 302,
+        headers: {
+          Location: `/companies/${companyId}/settings?google_ads=denied&error=${encodeURIComponent(error)}`,
+        },
+      })
+    }
+
+    // Validate required params
+    if (!code || !state) {
+      return new Response(
+        JSON.stringify({ error: 'Missing required parameters' }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
+    }
+
+    try {
+      // Exchange code for tokens and store in database
+      const result = await ctx.runAction(api.googleAds.handleOAuthCallback, {
+        code,
+        state,
+      })
+
+      // Redirect to settings page for account selection
+      return new Response(null, {
+        status: 302,
+        headers: {
+          Location: `/companies/${result.companyId}/settings?google_ads=select_account&tab=integrations`,
+        },
+      })
+    } catch (callbackError: any) {
+      console.error('OAuth callback error:', callbackError)
+
+      // Try to extract companyId for better redirect
+      let companyId = 'unknown'
+      if (state) {
+        try {
+          const decoded = atob(state)
+          companyId = decoded.split(':')[0]
+        } catch (e) {
+          // Ignore decode errors
+        }
+      }
+
+      return new Response(null, {
+        status: 302,
+        headers: {
+          Location: `/companies/${companyId}/settings?google_ads=error&message=${encodeURIComponent(callbackError.message || 'Unknown error')}`,
+        },
+      })
+    }
+  }),
+})
+
 export default http

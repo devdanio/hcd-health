@@ -9,7 +9,8 @@
       "Bash(pnpm build:*)",
       "Bash(cat:*)",
       "Bash(pnpm add:*)",
-      "Bash(npx tsx:*)"
+      "Bash(npx tsx:*)",
+      "Bash(openssl rand:*)"
     ],
     "deny": [],
     "ask": []

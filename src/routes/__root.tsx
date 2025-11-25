@@ -98,13 +98,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             config={{
               position: 'bottom-right',
             }}
-            plugins={[
-              {
-                name: 'Tanstack Router',
-                render: <TanStackRouterDevtoolsPanel />,
-              },
-              TanStackQueryDevtools,
-            ]}
+            // plugins={[
+            //   {
+            //     name: 'Tanstack Router',
+            //     render: <TanStackRouterDevtoolsPanel />,
+            //   },
+            //   TanStackQueryDevtools,
+            // ]}
           />
         </ConvexProvider>
         <Scripts />

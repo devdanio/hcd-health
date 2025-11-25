@@ -123,11 +123,40 @@ export const providers = defineTable({
   service: v.id('services'),
 })
 
+// OAuth state management for Google Ads
+export const oauthStates = defineTable({
+  state: v.string(), // Cryptographic state parameter for CSRF protection
+  companyId: v.id('companies'),
+  expiresAt: v.number(), // Cleanup after 10 minutes
+}).index('state', ['state'])
+
 export const companies = defineTable({
   name: v.string(),
   domain: v.string(),
   apiKey: v.string(), // For authenticating tracking requests
   ehr: v.optional(v.union(v.literal('unified-practice'), v.literal('ghl'))),
+  // Google Ads OAuth integration
+  googleAds: v.optional(v.object({
+    // OAuth tokens (encrypted)
+    accessToken: v.string(),
+    refreshToken: v.string(),
+    tokenExpiresAt: v.number(), // Unix timestamp (ms)
+
+    // Account identifiers (set after user selects account)
+    customerId: v.optional(v.string()), // Google Ads Customer ID (no hyphens)
+
+    // Account metadata
+    accountName: v.optional(v.string()),
+    currencyCode: v.optional(v.string()),
+    timeZone: v.optional(v.string()),
+
+    // Status tracking
+    connectedAt: v.number(),
+    accountSelectedAt: v.optional(v.number()), // When user selected account
+    lastSyncedAt: v.optional(v.number()),
+    lastError: v.optional(v.string()),
+    lastErrorAt: v.optional(v.number()),
+  })),
 }).index('apiKey', ['apiKey'])
 
 export const sessions = defineTable({
@@ -149,12 +178,24 @@ export const events = defineTable({
   companyId: v.optional(v.id('companies')),
   contactId: v.id('contacts'),
   sessionId: v.id('sessions'),
-  type: v.union(v.literal('pageview'), v.literal('custom_event')),
+  type: v.union(
+    v.literal('pageview'),
+    v.literal('conversion'),
+    v.literal('custom_event'),
+  ),
+  // Attribution if type === 'pageview
   metadata: v.union(attribution, v.any()),
 })
   .index('sessionId', ['sessionId'])
   .index('companyId_type', ['companyId', 'type'])
   .index('companyId', ['companyId'])
+
+// export const messages = defineTable({
+//   companyId: v.id('companies'),
+//   contactId: v.id('contacts'),
+//   sessionId: v.id('sessions'),
+//   message: v.any,
+// })
 
 export default defineSchema({
   // Attribution Tracking Tables
@@ -170,4 +211,7 @@ export default defineSchema({
   providers: providers,
   services: services,
   patients: patientProfile.index('contactId', ['contactId']),
+
+  // OAuth state management
+  oauthStates: oauthStates,
 })
