@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 import { useQuery } from "convex/react"
 import { api } from "convex/_generated/api"
 import type { Id } from "convex/_generated/dataModel"
@@ -20,7 +20,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 
-export const description = "An interactive area chart"
+export const description = "An interactive bar chart"
 
 const chartConfig = {
   visitors: {
@@ -28,23 +28,23 @@ const chartConfig = {
   },
   organic_search: {
     label: "Organic Search",
-    color: "hsl(var(--chart-1))",
+    color: "#10b981", // Emerald green
   },
   paid_search: {
     label: "Paid Search",
-    color: "hsl(var(--chart-2))",
+    color: "#3b82f6", // Blue
   },
   organic_social: {
     label: "Organic Social",
-    color: "hsl(var(--chart-3))",
+    color: "#8b5cf6", // Purple
   },
   email: {
     label: "Email",
-    color: "hsl(var(--chart-4))",
+    color: "#f59e0b", // Amber
   },
   direct: {
     label: "Direct",
-    color: "hsl(var(--chart-5))",
+    color: "#ef4444", // Red
   },
 } satisfies ChartConfig
 
@@ -76,69 +76,7 @@ export function ChartAreaInteractive({ companyId, timeRange }: ChartAreaInteract
           config={chartConfig}
           className="aspect-auto h-[250px] w-full"
         >
-          <AreaChart data={filteredData}>
-            <defs>
-              <linearGradient id="fillOrganicSearch" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-organic_search)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-organic_search)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-              <linearGradient id="fillPaidSearch" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-paid_search)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-paid_search)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-              <linearGradient id="fillOrganicSocial" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-organic_social)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-organic_social)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-              <linearGradient id="fillEmail" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-email)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-email)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-              <linearGradient id="fillDirect" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-direct)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-direct)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-            </defs>
+          <BarChart data={filteredData}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="date"
@@ -178,46 +116,40 @@ export function ChartAreaInteractive({ companyId, timeRange }: ChartAreaInteract
                       day: "numeric",
                     })
                   }}
-                  indicator="dot"
                 />
               }
             />
-            <Area
+            <Bar
               dataKey="direct"
-              type="natural"
-              fill="url(#fillDirect)"
-              stroke="var(--color-direct)"
+              fill={chartConfig.direct.color}
               stackId="a"
+              radius={[4, 4, 0, 0]}
             />
-            <Area
+            <Bar
               dataKey="email"
-              type="natural"
-              fill="url(#fillEmail)"
-              stroke="var(--color-email)"
+              fill={chartConfig.email.color}
               stackId="a"
+              radius={[4, 4, 0, 0]}
             />
-            <Area
+            <Bar
               dataKey="organic_social"
-              type="natural"
-              fill="url(#fillOrganicSocial)"
-              stroke="var(--color-organic_social)"
+              fill={chartConfig.organic_social.color}
               stackId="a"
+              radius={[4, 4, 0, 0]}
             />
-            <Area
+            <Bar
               dataKey="paid_search"
-              type="natural"
-              fill="url(#fillPaidSearch)"
-              stroke="var(--color-paid_search)"
+              fill={chartConfig.paid_search.color}
               stackId="a"
+              radius={[4, 4, 0, 0]}
             />
-            <Area
+            <Bar
               dataKey="organic_search"
-              type="natural"
-              fill="url(#fillOrganicSearch)"
-              stroke="var(--color-organic_search)"
+              fill={chartConfig.organic_search.color}
               stackId="a"
+              radius={[4, 4, 0, 0]}
             />
-          </AreaChart>
+          </BarChart>
         </ChartContainer>
       </CardContent>
     </Card>
