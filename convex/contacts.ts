@@ -1,6 +1,6 @@
 import { v } from 'convex/values'
 import { mutation, query } from './_generated/server'
-import { contactSchema, ghlContactSchema } from './schema'
+import { contact, ghlContact } from './schema'
 import { Id } from './_generated/dataModel'
 
 export const getMostRecentContact = query({
@@ -23,8 +23,8 @@ export const getMostRecentContact = query({
 
 export const createContact = mutation({
   args: {
-    contact: contactSchema.validator,
-    ghlContact: v.optional(ghlContactSchema.validator),
+    contact: contact.validator,
+    ghlContact: v.optional(ghlContact.validator),
   },
   handler: async (ctx, args) => {
     let ghlContactId: Id<'ghlContacts'> | undefined

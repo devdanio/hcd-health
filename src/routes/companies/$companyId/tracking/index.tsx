@@ -9,11 +9,31 @@ export const Route = createFileRoute('/companies/$companyId/tracking/')({
 })
 
 const AVATARS = [
-  { id: 'avatar-1', src: '/images/chat-widget/avatar-1.png', label: 'Avatar 1' },
-  { id: 'avatar-2', src: '/images/chat-widget/avatar-2.png', label: 'Avatar 2' },
-  { id: 'avatar-3', src: '/images/chat-widget/avatar-3.png', label: 'Avatar 3' },
-  { id: 'avatar-4', src: '/images/chat-widget/avatar-4.png', label: 'Avatar 4' },
-  { id: 'avatar-5', src: '/images/chat-widget/avatar-5.png', label: 'Avatar 5' },
+  {
+    id: 'avatar-1',
+    src: '/images/chat-widget/avatar-1.png',
+    label: 'Avatar 1',
+  },
+  {
+    id: 'avatar-2',
+    src: '/images/chat-widget/avatar-2.png',
+    label: 'Avatar 2',
+  },
+  {
+    id: 'avatar-3',
+    src: '/images/chat-widget/avatar-3.png',
+    label: 'Avatar 3',
+  },
+  {
+    id: 'avatar-4',
+    src: '/images/chat-widget/avatar-4.png',
+    label: 'Avatar 4',
+  },
+  {
+    id: 'avatar-5',
+    src: '/images/chat-widget/avatar-5.png',
+    label: 'Avatar 5',
+  },
 ]
 
 function RouteComponent() {
@@ -50,7 +70,7 @@ function RouteComponent() {
   return (
     <div className="container mx-auto p-8 max-w-5xl">
       <h1 className="text-3xl font-bold mb-8">Tracking & Chat Widget</h1>
-      
+
       <div className="grid gap-8 lg:grid-cols-2">
         <div className="space-y-8">
           {/* API Key Section */}
@@ -58,7 +78,9 @@ function RouteComponent() {
             <h2 className="text-lg font-semibold mb-4">Tracking Setup</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-2">API Key</label>
+                <label className="block text-sm font-medium mb-2">
+                  API Key
+                </label>
                 <div className="flex gap-2">
                   <code className="flex-1 bg-muted p-3 rounded text-sm overflow-x-auto font-mono">
                     {company?.apiKey}
@@ -78,10 +100,14 @@ function RouteComponent() {
 
           {/* Chat Widget Configuration */}
           <div className="p-6 border rounded-lg bg-card">
-            <h2 className="text-lg font-semibold mb-4">Chat Widget Customization</h2>
-            
+            <h2 className="text-lg font-semibold mb-4">
+              Chat Widget Customization
+            </h2>
+
             <div className="mb-6">
-              <label className="block text-sm font-medium mb-3">Select Avatar</label>
+              <label className="block text-sm font-medium mb-3">
+                Select Avatar
+              </label>
               <div className="flex flex-wrap gap-4">
                 {AVATARS.map((avatar) => (
                   <button
@@ -114,7 +140,7 @@ function RouteComponent() {
               </label>
               <div className="relative">
                 <code className="block bg-muted p-4 rounded-lg text-sm overflow-x-auto font-mono whitespace-pre text-wrap break-all">
-{`<!-- Chat Widget Configuration -->
+                  {`<!-- Chat Widget Configuration -->
 <script>
   window.chatWidgetConfig = {
     avatarUrl: "https://app.leadalytics.ai${selectedAvatar.src}"
@@ -122,7 +148,7 @@ function RouteComponent() {
 </script>
 
 <!-- Leadalytics Tracker & Chat Widget -->
-<link rel="stylesheet" href="https://app.leadalytics.ai/chat-widget.css">
+<!-- Note: CSS is embedded in chat-widget.js and injected into Shadow DOM -->
 <script src="https://app.leadalytics.ai/chat-widget.js"></script>
 <script
   src="https://app.leadalytics.ai/tracker/tracker.js"
@@ -143,7 +169,7 @@ function RouteComponent() {
 </script>
 
 <!-- Leadalytics Tracker & Chat Widget -->
-<link rel="stylesheet" href="https://app.leadalytics.ai/chat-widget.css">
+<!-- Note: CSS is embedded in chat-widget.js and injected into Shadow DOM -->
 <script src="https://app.leadalytics.ai/chat-widget.js"></script>
 <script
   src="https://app.leadalytics.ai/tracker/tracker.js"
