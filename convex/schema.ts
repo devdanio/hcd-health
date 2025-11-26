@@ -67,13 +67,14 @@ export const contact = defineTable({
   firstName: v.optional(v.string()),
   lastName: v.optional(v.string()),
   ghlContactId: v.optional(v.id('ghlContacts')),
+  chirotouchAccountId: v.optional(v.string()),
 })
   .index('companyId_email', ['companyId', 'email'])
   .index('companyId_phone', ['companyId', 'phone'])
   .index('companyId_ghlContactId', ['companyId', 'ghlContactId'])
   .index('companyId', ['companyId'])
   .index('ghlContactId', ['ghlContactId'])
-
+  .index('chirotouchAccountId', ['chirotouchAccountId'])
 export const patientFields = {
   contactId: v.optional(v.id('contacts')),
   dateOfBirth: v.optional(v.string()),
@@ -88,14 +89,15 @@ export const patientFields = {
 
 export const patientProfile = defineTable(patientFields)
 
-// This is for the reporting version of the app not the EHR
 export const appointments = defineTable({
   companyId: v.optional(v.id('companies')),
-  patientName: v.string(),
+  contactId: v.id('contacts'),
+  patientName: v.optional(v.string()),
   // Todo: attempt to find the contct, will need a separate report from the unified practice api for this
   // contactId: v.optional(v.id('contacts')),
   dateOfService: v.optional(v.string()),
-  service: v.string(),
+  service: v.optional(v.string()),
+  serviceId: v.optional(v.id('services')),
   providerId: v.optional(v.id('providers')),
 }).index('companyId_patientName_dateOfService_appointmentType', [
   'companyId',
@@ -103,6 +105,14 @@ export const appointments = defineTable({
   'dateOfService',
   'service',
 ])
+
+export const appointmentProcedures = defineTable({
+  appointmentId: v.id('appointments'),
+  procedureCode: v.string(),
+  chargeAmount: v.number(),
+})
+  .index('appointmentId', ['appointmentId'])
+  .index('appointmentId_procedureCode', ['appointmentId', 'procedureCode'])
 
 export const patientAppointments = defineTable({
   companyId: v.optional(v.id('companies')),
@@ -221,6 +231,7 @@ export default defineSchema({
 
   events: events,
   appointments: appointments,
+  appointmentProcedures: appointmentProcedures,
   patientAppointments,
   providers: providers,
   services: services,

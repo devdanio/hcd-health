@@ -50,9 +50,12 @@ type Appointment = {
   _id: Id<'appointments'>
   _creationTime: number
   companyId?: Id<'companies'>
-  patientName: string
+  contactId: Id<'contacts'>
+  patientName?: string
   dateOfService?: string
-  service: string
+  service?: string
+  serviceId?: Id<'services'>
+  providerId?: Id<'providers'>
 }
 
 function AppointmentsPage() {
@@ -70,7 +73,10 @@ function AppointmentsPage() {
     companyId: companyId as Id<'companies'>,
   })
 
-  console.log("appointments", appointments)
+  // Fetch services for dynamic chart config
+  const services = useQuery(api.services.list, {
+    companyId: companyId as Id<'companies'>,
+  })
 
   const analyticsData = useQuery(api.appointments.getAppointmentsAnalytics, {
     companyId: companyId as Id<'companies'>,
@@ -78,26 +84,47 @@ function AppointmentsPage() {
     groupBy,
   })
 
-  // Fetch services for dynamic chart config
-  const services = useQuery(api.services.list, {
+  const revenueByService = useQuery(api.appointments.getRevenueByService, {
     companyId: companyId as Id<'companies'>,
+    timeRange,
   })
 
-  // Generate dynamic chart config
-  const chartConfig = useMemo(() => {
-    if (!services) return {}
-    
+  console.log("appointments", appointments)
+  console.log("analyticsData", analyticsData)
+  console.log("services", services)
+  console.log("revenueByService", revenueByService)
+
+  // Generate dynamic chart config and service keys from actual data
+  const { chartConfig, serviceKeys } = useMemo(() => {
+    if (!analyticsData || analyticsData.length === 0) {
+      return { chartConfig: {}, serviceKeys: [] }
+    }
+
+    // Extract all unique service keys from the data
+    const keys = new Set<string>()
+    analyticsData.forEach(dataPoint => {
+      Object.keys(dataPoint).forEach(key => {
+        if (key !== 'date') {
+          keys.add(key)
+        }
+      })
+    })
+
+    const serviceKeysArray = Array.from(keys)
+
+    // Generate chart config for each service
     const config: ChartConfig = {}
-    services.forEach((service, index) => {
+    serviceKeysArray.forEach((serviceName, index) => {
       // Cycle through chart colors 1-5
       const colorIndex = (index % 5) + 1
-      config[service.name] = {
-        label: service.name,
+      config[serviceName] = {
+        label: serviceName,
         color: `var(--chart-${colorIndex})`,
       }
     })
-    return config
-  }, [services])
+
+    return { chartConfig: config, serviceKeys: serviceKeysArray }
+  }, [analyticsData])
 
   // Define table columns
   const columns = useMemo<ColumnDef<Appointment>[]>(
@@ -117,16 +144,19 @@ function AppointmentsPage() {
             </Button>
           )
         },
-        cell: ({ row }) => (
-          <div className="capitalize">
-            <Link
-              to="/companies/$companyId/contacts/$contactId/"
-              params={{ companyId, contactId: row.original._id }}
-            >
-              {row.getValue('patientName')}
-            </Link>
-          </div>
-        ),
+        cell: ({ row }) => {
+          const patientName = row.getValue('patientName') as string | undefined
+          return (
+            <div className="capitalize">
+              <Link
+                to="/companies/$companyId/contacts/$contactId/"
+                params={{ companyId, contactId: row.original.contactId }}
+              >
+                {patientName || 'Unknown Patient'}
+              </Link>
+            </div>
+          )
+        },
       },
       {
         accessorKey: 'dateOfService',
@@ -154,9 +184,10 @@ function AppointmentsPage() {
       {
         accessorKey: 'service',
         header: 'Service',
-        cell: ({ row }) => (
-          <div className="capitalize">{row.getValue('service')}</div>
-        ),
+        cell: ({ row }) => {
+          const service = row.getValue('service') as string | undefined
+          return <div className="capitalize">{service || '-'}</div>
+        },
       },
     ],
     [],
@@ -180,7 +211,7 @@ function AppointmentsPage() {
     },
   })
 
-  if (appointments === undefined || analyticsData === undefined || services === undefined) {
+  if (appointments === undefined || analyticsData === undefined || revenueByService === undefined) {
     return (
       <div className="container mx-auto p-8">
         <div>Loading...</div>
@@ -204,6 +235,32 @@ function AppointmentsPage() {
           Manage and view all appointments for this company
         </p>
       </div>
+
+      {/* Revenue by Service Cards */}
+      {revenueByService.length > 0 && (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mb-6">
+          {revenueByService.map((service) => (
+            <Card key={service.serviceId}>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  {service.serviceName}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  ${service.revenue.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Total charge amount
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
 
       {/* Chart Card */}
       <Card className="mb-6">
@@ -288,11 +345,11 @@ function AppointmentsPage() {
                   cursor={false}
                   content={<ChartTooltipContent />}
                 />
-                {services.map((service) => (
+                {serviceKeys.map((serviceName) => (
                   <Bar
-                    key={service._id}
-                    dataKey={service.name}
-                    fill={chartConfig[service.name]?.color}
+                    key={serviceName}
+                    dataKey={serviceName}
+                    fill={chartConfig[serviceName]?.color}
                     stackId="a"
                     radius={[4, 4, 0, 0]}
                   />

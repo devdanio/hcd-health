@@ -175,3 +175,36 @@ export const getContactsAnalytics = query({
     return result
   },
 })
+
+export const upsertContactByChirotouchAccountId = mutation({
+  args: {
+    companyId: v.id('companies'),
+    chirotouchAccountId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    // Check if contact exists by chirotouchAccountId
+    const existingContact = await ctx.db
+      .query('contacts')
+      .withIndex('chirotouchAccountId', (q) =>
+        q.eq('chirotouchAccountId', args.chirotouchAccountId),
+      )
+      .first()
+
+    if (existingContact) {
+      // Update companyId if needed
+      if (existingContact.companyId !== args.companyId) {
+        await ctx.db.patch(existingContact._id, {
+          companyId: args.companyId,
+        })
+      }
+      return existingContact._id
+    }
+
+    // Create new contact
+    const contactId = await ctx.db.insert('contacts', {
+      companyId: args.companyId,
+      chirotouchAccountId: args.chirotouchAccountId,
+    })
+    return contactId
+  },
+})
