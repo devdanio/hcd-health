@@ -57,12 +57,14 @@ interface Provider {
   providerId?: Id<'providers'>
 }
 
-// Parse date from "11/20/2025 16:00:00" format to "MM/DD/YYYY" format
-function parseChargeDate(dateStr: string): string {
-  if (!dateStr) return ''
+// Parse date from "11/20/2025 16:00:00" format to Unix timestamp
+function parseChargeDate(dateStr: string): number {
+  if (!dateStr) return 0
   // Extract just the date part (before the space)
   const datePart = dateStr.split(' ')[0]
-  return datePart
+  // Parse MM/DD/YYYY to timestamp
+  const [month, day, year] = datePart.split('/').map(Number)
+  return new Date(year, month - 1, day).getTime()
 }
 
 async function main() {
@@ -121,7 +123,7 @@ async function main() {
           convex.mutation(api.contacts.upsertContactByChirotouchAccountId, {
             companyId,
             chirotouchAccountId: accountId,
-          })
+          }),
         )
       }
     })
@@ -149,7 +151,8 @@ async function main() {
         return
       }
 
-      const appointmentKey = `${accountId}|${parseChargeDate(chargeDate)}`
+      const dateTimestamp = parseChargeDate(chargeDate)
+      const appointmentKey = `${accountId}|${dateTimestamp}`
 
       if (!seenAppointments.has(appointmentKey)) {
         seenAppointments.add(appointmentKey)
@@ -158,7 +161,7 @@ async function main() {
 
         if (!provider && providerName) {
           console.warn(
-            `⚠️  Row ${index + 1}: Provider "${providerName}" not found in providers list`
+            `⚠️  Row ${index + 1}: Provider "${providerName}" not found in providers list`,
           )
         }
 
@@ -168,11 +171,11 @@ async function main() {
             companyId,
             contactId,
             patientName: undefined,
-            dateOfService: parseChargeDate(chargeDate),
+            dateOfService: dateTimestamp,
             service: undefined,
             serviceId: provider?.serviceId,
             providerId: provider?.providerId,
-          })
+          }),
         )
       }
     })
@@ -198,7 +201,8 @@ async function main() {
         return
       }
 
-      const appointmentKey = `${accountId}|${parseChargeDate(chargeDate)}`
+      const dateTimestamp = parseChargeDate(chargeDate)
+      const appointmentKey = `${accountId}|${dateTimestamp}`
       const appointmentId = appointmentMap.get(appointmentKey)
 
       if (appointmentId && procedureCode && chargeAmount > 0) {
@@ -207,7 +211,7 @@ async function main() {
             appointmentId,
             procedureCode,
             chargeAmount,
-          })
+          }),
         )
       }
     })

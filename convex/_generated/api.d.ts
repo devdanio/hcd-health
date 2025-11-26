@@ -20,6 +20,7 @@ import type * as googleAds from "../googleAds.js";
 import type * as googleAdsApi from "../googleAdsApi.js";
 import type * as http from "../http.js";
 import type * as lib_encryption from "../lib/encryption.js";
+import type * as migrations from "../migrations.js";
 import type * as patients from "../patients.js";
 import type * as providers from "../providers.js";
 import type * as seed from "../seed.js";
@@ -54,6 +55,7 @@ declare const fullApi: ApiFromModules<{
   googleAdsApi: typeof googleAdsApi;
   http: typeof http;
   "lib/encryption": typeof lib_encryption;
+  migrations: typeof migrations;
   patients: typeof patients;
   providers: typeof providers;
   seed: typeof seed;

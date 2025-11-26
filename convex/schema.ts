@@ -87,6 +87,12 @@ export const patientFields = {
   emergencyContactRelation: v.optional(v.string()),
 }
 
+export const revenueByDayByService = defineTable({
+  serviceId: v.id('services'),
+  revenue: v.number(),
+  date: v.number(),
+}).index('serviceId', ['serviceId'])
+
 export const patientProfile = defineTable(patientFields)
 
 export const appointments = defineTable({
@@ -95,16 +101,20 @@ export const appointments = defineTable({
   patientName: v.optional(v.string()),
   // Todo: attempt to find the contct, will need a separate report from the unified practice api for this
   // contactId: v.optional(v.id('contacts')),
-  dateOfService: v.optional(v.string()),
+  dateOfService: v.number(),
   service: v.optional(v.string()),
   serviceId: v.optional(v.id('services')),
   providerId: v.optional(v.id('providers')),
-}).index('companyId_patientName_dateOfService_appointmentType', [
-  'companyId',
-  'patientName',
-  'dateOfService',
-  'service',
-])
+})
+  // .index('companyId_patientName_dateOfService_appointmentType', [
+  //   'companyId',
+  //   'patientName',
+  //   'dateOfService',
+  //   'service',
+  // ])
+  .index('companyId_dateOfService', ['companyId', 'dateOfService'])
+  .index('contactId', ['contactId'])
+  .index('serviceId', ['serviceId'])
 
 export const appointmentProcedures = defineTable({
   appointmentId: v.id('appointments'),

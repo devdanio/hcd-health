@@ -52,7 +52,7 @@ type Appointment = {
   companyId?: Id<'companies'>
   contactId: Id<'contacts'>
   patientName?: string
-  dateOfService?: string
+  dateOfServiceNumber?: number // Unix timestamp
   service?: string
   serviceId?: Id<'services'>
   providerId?: Id<'providers'>
@@ -159,7 +159,7 @@ function AppointmentsPage() {
         },
       },
       {
-        accessorKey: 'dateOfService',
+        accessorKey: 'dateOfServiceNumber',
         header: ({ column }) => {
           return (
             <Button
@@ -174,11 +174,18 @@ function AppointmentsPage() {
           )
         },
         cell: ({ row }) => {
-          const dateOfService = row.getValue('dateOfService') as
-            | string
-            | undefined
-          if (!dateOfService) return <div>-</div>
-          return <div>{dateOfService}</div>
+          const dateOfServiceNumber = row.getValue('dateOfServiceNumber') as number | undefined
+          if (!dateOfServiceNumber) return <div>-</div>
+          const date = new Date(dateOfServiceNumber)
+          return (
+            <div>
+              {date.toLocaleDateString('en-US', {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric',
+              })}
+            </div>
+          )
         },
       },
       {

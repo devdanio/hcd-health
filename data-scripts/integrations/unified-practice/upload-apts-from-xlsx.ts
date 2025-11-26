@@ -151,7 +151,9 @@ async function main() {
     }
 
     // Upload appointments to Convex
-    console.log(`\n\nUploading ${appointments.length} appointments to Convex...`)
+    console.log(
+      `\n\nUploading ${appointments.length} appointments to Convex...`,
+    )
 
     let successCount = 0
     let errorCount = 0
@@ -160,12 +162,20 @@ async function main() {
       const apt = appointments[i]
 
       try {
-        await convex.mutation(api.appointments.createAppointment, {
+        // TODO: This script needs to be updated to create/find contacts first
+        // Skip for now - use chirotouch import instead
+        throw new Error(
+          'This script is deprecated - use chirotouch import script instead',
+        )
+
+        /* await convex.mutation(api.appointments.createAppointment, {
           companyId: paomConvexId,
+          contactId: '' as any, // TODO: Need to create/find contact first
           patientName: apt.Patient || 'Unknown',
           dateOfService: apt['Date of Service'] || undefined,
+          dateOfService: undefined, // TODO: Parse date to timestamp
           service: normalizeService(apt.Service),
-        })
+        }) */
 
         successCount++
 
