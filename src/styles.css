@@ -219,3 +219,71 @@ code {
     letter-spacing: var(--tracking-normal);
   }
 }
+
+@keyframes rotate-border {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Subtle gradient border animation on hover */
+@keyframes gradient-border {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient-border-hover {
+  position: relative;
+  isolation: isolate;
+}
+
+.gradient-border-hover::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(
+    135deg,
+    oklch(0.6231 0.188 259.8145 / 0.2),
+    oklch(0.704 0.14 182.503 / 0.18),
+    oklch(0.623 0.188 259.815 / 0.2),
+    oklch(0.6231 0.188 259.8145 / 0.2)
+  );
+  background-size: 300% 300%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.gradient-border-hover:hover::before {
+  opacity: 1;
+  animation: gradient-border 10s ease infinite;
+}
+
+/* Dark mode variant - slightly more visible */
+.dark .gradient-border-hover::before {
+  background: linear-gradient(
+    135deg,
+    oklch(0.6231 0.188 259.8145 / 0.3),
+    oklch(0.704 0.14 182.503 / 0.28),
+    oklch(0.623 0.188 259.815 / 0.3),
+    oklch(0.6231 0.188 259.8145 / 0.3)
+  );
+  background-size: 300% 300%;
+}

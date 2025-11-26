@@ -2,19 +2,8 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuery } from 'convex/react'
 import { api } from 'convex/_generated/api'
 import { Id } from 'convex/_generated/dataModel'
-import {
-  useReactTable,
-  getCoreRowModel,
-  getSortedRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  type ColumnDef,
-  type SortingState,
-  type ColumnFiltersState,
-} from '@tanstack/react-table'
 import { useState, useMemo } from 'react'
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
-import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -35,26 +24,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { ArrowUpDown } from 'lucide-react'
 import dayjs from 'dayjs'
 
 export const Route = createFileRoute('/companies/$companyId/appointments/')({
   component: AppointmentsPage,
 })
-
-// Chart configuration
-
-type Appointment = {
-  _id: Id<'appointments'>
-  _creationTime: number
-  companyId?: Id<'companies'>
-  contactId: Id<'contacts'>
-  patientName?: string
-  dateOfServiceNumber?: number // Unix timestamp
-  service?: string
-  serviceId?: Id<'services'>
-  providerId?: Id<'providers'>
-}
 
 function AppointmentsPage() {
   const { companyId } = Route.useParams()
@@ -153,24 +127,33 @@ function AppointmentsPage() {
       {revenueByService.length > 0 && (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mb-6">
           {revenueByService.map((service) => (
-            <Card key={service.serviceId}>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  {service.serviceName}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  $
-                  {service.revenue.toLocaleString('en-US', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Total charge amount
-                </p>
-              </CardContent>
+            <Card key={service.serviceId} className="gradient-border-hover">
+              <Link
+                to="/companies/$companyId/kpis/services/$serviceId"
+                viewTransition={{ types: ['slide-left'] }}
+                params={{
+                  companyId,
+                  serviceId: service.serviceId,
+                }}
+              >
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">
+                    {service.serviceName}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    $
+                    {service.revenue.toLocaleString('en-US', {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Total charge amount
+                  </p>
+                </CardContent>
+              </Link>
             </Card>
           ))}
         </div>
