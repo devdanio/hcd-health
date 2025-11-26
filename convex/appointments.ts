@@ -2,6 +2,10 @@
 import { v } from 'convex/values'
 import { mutation, query } from './_generated/server'
 import { Id } from './_generated/dataModel'
+import dayjs from 'dayjs'
+import weekOfYear from 'dayjs/plugin/weekOfYear'
+
+dayjs.extend(weekOfYear)
 
 export const createAppointment = mutation({
   args: {
@@ -123,7 +127,7 @@ export const getAppointments = query({
 })
 
 /**
- * Get appointments analytics - count by day using dateOfService
+ * Get appointments analytics - uses agg_chargAmountByServiceAndDate for revenue data
  */
 export const getAppointmentsAnalytics = query({
   args: {
@@ -143,93 +147,85 @@ export const getAppointmentsAnalytics = query({
   handler: async (ctx, args) => {
     const groupBy = args.groupBy || 'day'
     const timeRange = args.timeRange || '30d'
-    const now = Date.now()
-    let startTime = 0
+    const now = dayjs()
+    let startDate = dayjs(0) // Unix epoch for 'all'
 
-    // Calculate start time based on range
+    // Calculate start time based on range using dayjs
     if (timeRange !== 'all') {
       switch (timeRange) {
         case '7d':
-          startTime = now - 7 * 24 * 60 * 60 * 1000
+          startDate = now.subtract(7, 'day').startOf('day')
           break
         case '30d':
-          startTime = now - 30 * 24 * 60 * 60 * 1000
+          startDate = now.subtract(30, 'day').startOf('day')
           break
         case '90d':
-          startTime = now - 90 * 24 * 60 * 60 * 1000
+          startDate = now.subtract(90, 'day').startOf('day')
           break
       }
     }
 
-    // Get all appointments for the company within time range
-    const appointments = await ctx.db
-      .query('appointments')
-      .filter((q) =>
-        q.and(
-          q.eq(q.field('companyId'), args.companyId),
-          q.gte(q.field('dateOfService'), startTime),
-        ),
-      )
+    const startTime = startDate.valueOf()
+
+    // Get all aggregated data for the company within time range
+    const aggregatedData = await ctx.db
+      .query('agg_chargAmountByServiceAndDate')
+      .withIndex('date_serviceId', (q) => q.gte('date', startTime))
       .collect()
 
+    // Get all services for this company to filter the aggregated data
+    const services = await ctx.db
+      .query('services')
+      .filter((q) => q.eq(q.field('companyId'), args.companyId))
+      .collect()
+
+    const serviceIdToName = new Map<Id<'services'>, string>()
+    const companyServiceIds = new Set<Id<'services'>>()
+
+    for (const service of services) {
+      serviceIdToName.set(service._id, service.name)
+      companyServiceIds.add(service._id)
+    }
+
+    // Filter aggregated data to only include this company's services
+    const companyAggregatedData = aggregatedData.filter((agg) =>
+      companyServiceIds.has(agg.serviceId),
+    )
+
     // Format date based on groupBy parameter (timestamp -> string key)
-    const formatDate = (timestamp: number | undefined) => {
-      if (!timestamp) return ''
-      const date = new Date(timestamp)
-      const year = date.getFullYear()
-      const month = date.getMonth() + 1
-      const day = date.getDate()
+    const formatDate = (timestamp: number) => {
+      const date = dayjs(timestamp)
 
       if (groupBy === 'day') {
-        return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+        return date.format('YYYY-MM-DD')
       } else if (groupBy === 'week') {
         // Get ISO week number
-        const tempDate = new Date(date)
-        tempDate.setHours(0, 0, 0, 0)
-        tempDate.setDate(tempDate.getDate() + 3 - ((tempDate.getDay() + 6) % 7))
-        const week1 = new Date(tempDate.getFullYear(), 0, 4)
-        const weekNum = Math.round(
-          ((tempDate.getTime() - week1.getTime()) / 86400000 -
-            3 +
-            ((week1.getDay() + 6) % 7)) /
-            7,
-        )
-        return `${year}-W${String(weekNum + 1).padStart(2, '0')}`
+        const year = date.year()
+        const week = date.week()
+        return `${year}-W${String(week).padStart(2, '0')}`
       } else {
         // month
-        return `${year}-${String(month).padStart(2, '0')}`
+        return date.format('YYYY-MM')
       }
     }
 
-    // Group appointments by day with proper typing
+    // Group revenue by date and service
     const dataMap = new Map<string, Record<string, number>>()
 
-    // Count appointments by day and serviceId
-    for (const apt of appointments) {
-      if (!apt.dateOfService) continue
-      const dateKey = formatDate(apt.dateOfService)
-      if (dateKey) {
-        const current = dataMap.get(dateKey) || {}
+    for (const agg of companyAggregatedData) {
+      const dateKey = formatDate(agg.date)
+      const serviceName = serviceIdToName.get(agg.serviceId) || 'Unknown'
+      const current = dataMap.get(dateKey) || {}
 
-        // Look up service name by serviceId
-        let serviceName = 'Unknown'
-        if (apt.serviceId) {
-          const service = await ctx.db.get(apt.serviceId)
-          if (service) {
-            serviceName = service.name
-          }
-        }
-
-        current[serviceName] = (current[serviceName] || 0) + 1
-        dataMap.set(dateKey, current)
-      }
+      current[serviceName] = (current[serviceName] || 0) + agg.chargeAmount
+      dataMap.set(dateKey, current)
     }
 
     // Convert to array format for charting and sort by date
     const result = Array.from(dataMap.entries())
-      .map(([date, counts]) => ({
+      .map(([date, revenue]) => ({
         date,
-        ...counts,
+        ...revenue,
       }))
       .sort((a, b) => a.date.localeCompare(b.date))
 
@@ -238,7 +234,7 @@ export const getAppointmentsAnalytics = query({
 })
 
 /**
- * Get revenue by service - sum of charge amounts per service
+ * Get revenue by service - uses agg_chargAmountByServiceAndDate for efficient aggregation
  */
 export const getRevenueByService = query({
   args: {
@@ -254,83 +250,52 @@ export const getRevenueByService = query({
   },
   handler: async (ctx, args) => {
     const timeRange = args.timeRange || '30d'
-    const now = Date.now()
-    let startTime = 0
+    const now = dayjs()
+    let startDate = dayjs(0) // Unix epoch for 'all'
 
-    // Calculate start time based on range
+    // Calculate start time based on range using dayjs
     if (timeRange !== 'all') {
       switch (timeRange) {
         case '7d':
-          startTime = now - 7 * 24 * 60 * 60 * 1000
+          startDate = now.subtract(7, 'day').startOf('day')
           break
         case '30d':
-          startTime = now - 30 * 24 * 60 * 60 * 1000
+          startDate = now.subtract(30, 'day').startOf('day')
           break
         case '90d':
-          startTime = now - 90 * 24 * 60 * 60 * 1000
+          startDate = now.subtract(90, 'day').startOf('day')
           break
       }
     }
 
-    // Get all appointments for the company within time range
-    const appointments = await ctx.db
-      .query('appointments')
-      .filter((q) =>
-        q.and(
-          q.eq(q.field('companyId'), args.companyId),
-          q.gte(q.field('dateOfService'), startTime),
-        ),
-      )
+    const startTime = startDate.valueOf()
+
+    // Get all aggregated data within time range
+    const aggregatedData = await ctx.db
+      .query('agg_chargAmountByServiceAndDate')
+      .withIndex('date_serviceId', (q) => q.gte('date', startTime))
       .collect()
 
-    // Get all procedures for these appointments
-    const appointmentIds = appointments.map((apt) => apt._id)
-    const allProcedures = await ctx.db.query('appointmentProcedures').collect()
-    const procedures = allProcedures.filter((proc) =>
-      appointmentIds.includes(proc.appointmentId),
-    )
+    // Get all services for this company
+    const services = await ctx.db
+      .query('services')
+      .filter((q) => q.eq(q.field('companyId'), args.companyId))
+      .collect()
 
-    // Sum charges by serviceId
+    const companyServiceIds = new Set(services.map((s) => s._id))
+    const serviceIdToName = new Map(services.map((s) => [s._id, s.name]))
+
+    // Sum charges by serviceId (only for this company's services)
     const revenueByServiceId = new Map<Id<'services'>, number>()
 
-    // Split appointments into 10 batches
-    const batchSize = Math.ceil(appointments.length / 10)
-    const batches: (typeof appointments)[] = []
+    for (const agg of aggregatedData) {
+      if (!companyServiceIds.has(agg.serviceId)) continue
 
-    for (let i = 0; i < appointments.length; i += batchSize) {
-      batches.push(appointments.slice(i, i + batchSize))
+      const currentTotal = revenueByServiceId.get(agg.serviceId) || 0
+      revenueByServiceId.set(agg.serviceId, currentTotal + agg.chargeAmount)
     }
 
-    // Process each batch with a delay
-    for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
-      const batch = batches[batchIndex]
-
-      for (const apt of batch) {
-        if (!apt.serviceId) continue
-
-        // Get all procedures for this appointment
-        const aptProcedures = procedures.filter(
-          (proc) => proc.appointmentId === apt._id,
-        )
-
-        // Sum charge amounts for this appointment
-        const totalCharge = aptProcedures.reduce(
-          (sum, proc) => sum + proc.chargeAmount,
-          0,
-        )
-
-        // Add to service total
-        const currentTotal = revenueByServiceId.get(apt.serviceId) || 0
-        revenueByServiceId.set(apt.serviceId, currentTotal + totalCharge)
-      }
-
-      // Add delay between batches (except for the last batch)
-      if (batchIndex < batches.length - 1) {
-        await new Promise((resolve) => setTimeout(resolve, 100))
-      }
-    }
-
-    // Fetch service names and build result
+    // Build result array
     const result: Array<{
       serviceId: Id<'services'>
       serviceName: string
@@ -338,11 +303,11 @@ export const getRevenueByService = query({
     }> = []
 
     for (const [serviceId, revenue] of revenueByServiceId.entries()) {
-      const service = await ctx.db.get(serviceId)
-      if (service) {
+      const serviceName = serviceIdToName.get(serviceId)
+      if (serviceName) {
         result.push({
           serviceId,
-          serviceName: service.name,
+          serviceName,
           revenue,
         })
       }

@@ -87,11 +87,11 @@ export const patientFields = {
   emergencyContactRelation: v.optional(v.string()),
 }
 
-export const revenueByDayByService = defineTable({
+export const agg_chargAmountByServiceAndDate = defineTable({
   serviceId: v.id('services'),
-  revenue: v.number(),
+  chargeAmount: v.number(),
   date: v.number(),
-}).index('serviceId', ['serviceId'])
+}).index('date_serviceId', ['date', 'serviceId'])
 
 export const patientProfile = defineTable(patientFields)
 
@@ -106,12 +106,6 @@ export const appointments = defineTable({
   serviceId: v.optional(v.id('services')),
   providerId: v.optional(v.id('providers')),
 })
-  // .index('companyId_patientName_dateOfService_appointmentType', [
-  //   'companyId',
-  //   'patientName',
-  //   'dateOfService',
-  //   'service',
-  // ])
   .index('companyId_dateOfService', ['companyId', 'dateOfService'])
   .index('contactId', ['contactId'])
   .index('serviceId', ['serviceId'])
@@ -246,6 +240,9 @@ export default defineSchema({
   providers: providers,
   services: services,
   patients: patientProfile.index('contactId', ['contactId']),
+
+  // Aggregations
+  agg_chargAmountByServiceAndDate: agg_chargAmountByServiceAndDate,
 
   // OAuth state management
   oauthStates: oauthStates,

@@ -8,7 +8,6 @@ import {
   getSortedRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
-  flexRender,
   type ColumnDef,
   type SortingState,
   type ColumnFiltersState,
@@ -16,7 +15,6 @@ import {
 import { useState, useMemo } from 'react'
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import {
   Card,
   CardContent,
@@ -38,13 +36,13 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { ArrowUpDown } from 'lucide-react'
+import dayjs from 'dayjs'
 
 export const Route = createFileRoute('/companies/$companyId/appointments/')({
   component: AppointmentsPage,
 })
 
 // Chart configuration
-
 
 type Appointment = {
   _id: Id<'appointments'>
@@ -64,9 +62,6 @@ function AppointmentsPage() {
     '30d',
   )
   const [groupBy, setGroupBy] = useState<'day' | 'week' | 'month'>('day')
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [globalFilter, setGlobalFilter] = useState('')
 
   // Fetch appointments and analytics data
   const appointments = useQuery(api.appointments.getAppointments, {
@@ -89,10 +84,9 @@ function AppointmentsPage() {
     timeRange,
   })
 
-  console.log("appointments", appointments)
-  console.log("analyticsData", analyticsData)
-  console.log("services", services)
-  console.log("revenueByService", revenueByService)
+  console.log('appointments', appointments)
+  console.log('analyticsData', analyticsData)
+  console.log('services', services)
 
   // Generate dynamic chart config and service keys from actual data
   const { chartConfig, serviceKeys } = useMemo(() => {
@@ -102,8 +96,8 @@ function AppointmentsPage() {
 
     // Extract all unique service keys from the data
     const keys = new Set<string>()
-    analyticsData.forEach(dataPoint => {
-      Object.keys(dataPoint).forEach(key => {
+    analyticsData.forEach((dataPoint) => {
+      Object.keys(dataPoint).forEach((key) => {
         if (key !== 'date') {
           keys.add(key)
         }
@@ -126,99 +120,11 @@ function AppointmentsPage() {
     return { chartConfig: config, serviceKeys: serviceKeysArray }
   }, [analyticsData])
 
-  // Define table columns
-  const columns = useMemo<ColumnDef<Appointment>[]>(
-    () => [
-      {
-        accessorKey: 'patientName',
-        header: ({ column }) => {
-          return (
-            <Button
-              variant="ghost"
-              onClick={() =>
-                column.toggleSorting(column.getIsSorted() === 'asc')
-              }
-            >
-              Patient Name
-              <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-          )
-        },
-        cell: ({ row }) => {
-          const patientName = row.getValue('patientName') as string | undefined
-          return (
-            <div className="capitalize">
-              <Link
-                to="/companies/$companyId/contacts/$contactId/"
-                params={{ companyId, contactId: row.original.contactId }}
-              >
-                {patientName || 'Unknown Patient'}
-              </Link>
-            </div>
-          )
-        },
-      },
-      {
-        accessorKey: 'dateOfServiceNumber',
-        header: ({ column }) => {
-          return (
-            <Button
-              variant="ghost"
-              onClick={() =>
-                column.toggleSorting(column.getIsSorted() === 'asc')
-              }
-            >
-              Date of Service
-              <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-          )
-        },
-        cell: ({ row }) => {
-          const dateOfServiceNumber = row.getValue('dateOfServiceNumber') as number | undefined
-          if (!dateOfServiceNumber) return <div>-</div>
-          const date = new Date(dateOfServiceNumber)
-          return (
-            <div>
-              {date.toLocaleDateString('en-US', {
-                month: '2-digit',
-                day: '2-digit',
-                year: 'numeric',
-              })}
-            </div>
-          )
-        },
-      },
-      {
-        accessorKey: 'service',
-        header: 'Service',
-        cell: ({ row }) => {
-          const service = row.getValue('service') as string | undefined
-          return <div className="capitalize">{service || '-'}</div>
-        },
-      },
-    ],
-    [],
-  )
-
-  // Initialize table
-  const table = useReactTable({
-    data: appointments ?? [],
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setGlobalFilter,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    state: {
-      sorting,
-      columnFilters,
-      globalFilter,
-    },
-  })
-
-  if (appointments === undefined || analyticsData === undefined || revenueByService === undefined) {
+  if (
+    appointments === undefined ||
+    analyticsData === undefined ||
+    revenueByService === undefined
+  ) {
     return (
       <div className="container mx-auto p-8">
         <div>Loading...</div>
@@ -255,7 +161,8 @@ function AppointmentsPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  ${service.revenue.toLocaleString('en-US', {
+                  $
+                  {service.revenue.toLocaleString('en-US', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}
@@ -273,9 +180,9 @@ function AppointmentsPage() {
       <Card className="mb-6">
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Appointments Over Time</CardTitle>
+            <CardTitle>Revenue Over Time</CardTitle>
             <CardDescription>
-              Appointments by{' '}
+              Revenue by service grouped by{' '}
               {groupBy === 'day'
                 ? 'day'
                 : groupBy === 'week'
@@ -329,22 +236,14 @@ function AppointmentsPage() {
                   axisLine={false}
                   tickFormatter={(value) => {
                     if (groupBy === 'day') {
-                      const date = new Date(value)
-                      return date.toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                      })
+                      return dayjs(value).format('MMM D')
                     } else if (groupBy === 'week') {
                       // Format: 2025-W05 -> Week 5
                       const weekNum = value.split('-W')[1]
                       return `Week ${weekNum}`
                     } else {
                       // Format: 2025-03 -> Mar
-                      const [year, month] = value.split('-')
-                      const date = new Date(parseInt(year), parseInt(month) - 1)
-                      return date.toLocaleDateString('en-US', {
-                        month: 'short',
-                      })
+                      return dayjs(value).format('MMM')
                     }
                   }}
                 />
@@ -364,100 +263,6 @@ function AppointmentsPage() {
               </BarChart>
             </ChartContainer>
           )}
-        </CardContent>
-      </Card>
-
-      {/* Appointments Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>All Appointments ({appointments.length})</CardTitle>
-          <div className="flex items-center gap-4 mt-4">
-            <Input
-              placeholder="Search appointments..."
-              value={globalFilter ?? ''}
-              onChange={(event) => setGlobalFilter(event.target.value)}
-              className="max-w-sm"
-            />
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="rounded-md border">
-            <table className="w-full">
-              <thead>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id} className="border-b bg-muted/50">
-                    {headerGroup.headers.map((header) => (
-                      <th
-                        key={header.id}
-                        className="h-12 px-4 text-left align-middle font-medium"
-                      >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody>
-                {table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map((row) => (
-                    <tr
-                      key={row.id}
-                      className="border-b transition-colors hover:bg-muted/50"
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <td key={cell.id} className="p-4 align-middle">
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </td>
-                      ))}
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={columns.length} className="h-24 text-center">
-                      No appointments found.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Pagination */}
-          <div className="flex items-center justify-between space-x-2 py-4">
-            <div className="flex-1 text-sm text-muted-foreground">
-              {table.getFilteredRowModel().rows.length} appointment(s) total
-            </div>
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-              >
-                Previous
-              </Button>
-              <div className="text-sm">
-                Page {table.getState().pagination.pageIndex + 1} of{' '}
-                {table.getPageCount()}
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-              >
-                Next
-              </Button>
-            </div>
-          </div>
         </CardContent>
       </Card>
     </div>
