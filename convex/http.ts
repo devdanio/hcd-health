@@ -216,4 +216,54 @@ http.route({
   }),
 })
 
+/**
+ * Get CMS Pages by Company ID
+ * Returns all CMS pages for a given company
+ */
+http.route({
+  path: '/:companyId/pages',
+  method: 'GET',
+  handler: httpAction(async (ctx, request) => {
+    const url = new URL(request.url)
+    const pathParts = url.pathname.split('/').filter(Boolean)
+    const companyId = pathParts[0]
+
+    // Validate companyId format (Convex IDs start with the table name)
+    if (!companyId || !companyId.startsWith('companies|')) {
+      return new Response(
+        JSON.stringify({ 
+          error: 'Invalid company ID format. Expected format: companies|<id>' 
+        }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
+    }
+
+    try {
+      // Query CMS pages for this company
+      const pages = await ctx.runQuery(api.cmsPages.getPages, {
+        companyId: companyId as any,
+      })
+
+      return new Response(JSON.stringify(pages), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    } catch (error: any) {
+      console.error('Error fetching CMS pages:', error)
+      return new Response(
+        JSON.stringify({ 
+          error: error.message || 'Failed to fetch CMS pages' 
+        }),
+        {
+          status: 500,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
+    }
+  }),
+})
+
 export default http

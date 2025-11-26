@@ -72,6 +72,14 @@ Never skip heading levels. Maintain logical nesting.
       ${companyContext}
       </brief>
       </context>
+      <restrictions>
+      Under no circumstances ever do the follwing:
+      * Make up quotes from ${company?.name} or ${company?.domain}
+      * Give medical advice
+      * Talk about treatment details.  BAD: Rehab can take 3-6 sessions, GOOD: We can help you rehab
+      * Never provide at home treatment solutions
+
+      </restrictions>
       <output>
       
 **Required JSON Structure:**
