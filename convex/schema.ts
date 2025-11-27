@@ -226,7 +226,6 @@ export const cmsPages = defineTable({
   .index('slugId_slug', ['companyId', 'slug'])
 
 export default defineSchema({
-  // Attribution Tracking Tables
   companies: companies,
   ghlContacts: ghlContact,
   contacts: contact,
