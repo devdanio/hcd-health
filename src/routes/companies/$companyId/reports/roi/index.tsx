@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { AdSpendChart } from '@/components/ad-spend-chart'
 import { CampaignSpendCards } from '@/components/campaign-spend-cards'
 
-export const Route = createFileRoute('/companies/$companyId/roi/')({
+export const Route = createFileRoute('/companies/$companyId/reports/roi/')({
   component: RouteComponent,
 })
 

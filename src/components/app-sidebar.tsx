@@ -19,6 +19,7 @@ import {
 
 import { NavDocuments } from '@/components/nav-documents'
 import { NavMain } from '@/components/nav-main'
+import { NavReports } from '@/components/nav-reports'
 import { NavSecondary } from '@/components/nav-secondary'
 import { NavUser } from '@/components/nav-user'
 import {
@@ -57,16 +58,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       {
         title: 'Contacts',
         url: `/companies/${companyId}/contacts`,
-        icon: IconListDetails,
-      },
-      {
-        title: 'Appointments',
-        url: `/companies/${companyId}/appointments`,
-        icon: IconListDetails,
-      },
-      {
-        title: 'KPIs',
-        url: `/companies/${companyId}/kpis`,
         icon: IconListDetails,
       },
     ],
@@ -135,7 +126,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         icon: IconSearch,
       },
     ],
-    
+
+    reports: [
+      {
+        name: 'KPIs',
+        url: `/companies/${companyId}/reports/kpis`,
+        icon: IconChartBar,
+      },
+      {
+        name: 'Appointments',
+        url: `/companies/${companyId}/reports/appointments`,
+        icon: IconReport,
+      },
+      {
+        name: 'ROI',
+        url: `/companies/${companyId}/reports/roi`,
+        icon: IconDatabase,
+      },
+    ],
+
     documents: [
       {
         name: 'Patients',
@@ -145,11 +154,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       {
         name: 'Tracking',
         url: `/companies/${companyId}/tracking`,
-        icon: IconDatabase,
-      },
-      {
-        name: 'ROI',
-        url: `/companies/${companyId}/roi`,
         icon: IconDatabase,
       },
       {
@@ -178,6 +182,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
+        <NavReports items={data.reports} />
         <NavDocuments items={data.documents} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>

@@ -2,6 +2,7 @@ import { v } from 'convex/values'
 import { mutation, query } from './_generated/server'
 import { contact, ghlContact } from './schema'
 import { Id } from './_generated/dataModel'
+import dayjs from 'dayjs'
 
 export const getMostRecentContact = query({
   args: {
@@ -206,5 +207,95 @@ export const upsertContactByChirotouchAccountId = mutation({
       chirotouchAccountId: args.chirotouchAccountId,
     })
     return contactId
+  },
+})
+
+/**
+ * Get contact counts by first service ID within a date range
+ */
+export const getContactCountsByFirstService = query({
+  args: {
+    companyId: v.id('companies'),
+    timeRange: v.optional(
+      v.union(
+        v.literal('7d'),
+        v.literal('30d'),
+        v.literal('90d'),
+        v.literal('all'),
+      ),
+    ),
+  },
+  handler: async (ctx, args) => {
+    const timeRange = args.timeRange || '30d'
+    const now = dayjs()
+    let startDate = dayjs(0) // Unix epoch for 'all'
+
+    // Calculate start time based on range using dayjs
+    if (timeRange !== 'all') {
+      switch (timeRange) {
+        case '7d':
+          startDate = now.subtract(7, 'day').startOf('day')
+          break
+        case '30d':
+          startDate = now.subtract(30, 'day').startOf('day')
+          break
+        case '90d':
+          startDate = now.subtract(90, 'day').startOf('day')
+          break
+      }
+    }
+
+    const startTime = startDate.valueOf()
+
+    // Get all contacts for the company
+    const contacts = await ctx.db
+      .query('contacts')
+      .withIndex('companyId', (q) => q.eq('companyId', args.companyId))
+      .collect()
+
+    // Filter contacts by date range using GHL dateAdded
+    const contactsInRange = []
+    for (const contact of contacts) {
+      if (!contact.ghlContactId) continue
+
+      const ghlContact = await ctx.db.get(contact.ghlContactId)
+      if (!ghlContact) continue
+
+      // Check if contact is within date range
+      if (ghlContact.dateAdded >= startTime) {
+        contactsInRange.push(contact)
+      }
+    }
+
+    // Count contacts by firstServiceId
+    const countsByService = new Map<Id<'services'>, number>()
+
+    for (const contact of contactsInRange) {
+      if (!contact.firstServiceId) continue
+
+      const currentCount = countsByService.get(contact.firstServiceId) || 0
+      countsByService.set(contact.firstServiceId, currentCount + 1)
+    }
+
+    // Get service names and build result
+    const result: Array<{
+      serviceId: Id<'services'>
+      serviceName: string
+      count: number
+    }> = []
+
+    for (const [serviceId, count] of countsByService.entries()) {
+      const service = await ctx.db.get(serviceId)
+      if (service) {
+        result.push({
+          serviceId,
+          serviceName: service.name,
+          count,
+        })
+      }
+    }
+
+    // Sort by count descending
+    return result.sort((a, b) => b.count - a.count)
   },
 })

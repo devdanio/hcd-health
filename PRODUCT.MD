@@ -6,9 +6,10 @@
 - Revenue
 - Adspend
 
-
 ## LLM
+
 Good convo: https://claude.ai/chat/f0693212-6f56-430b-89d3-7fcd817e54ef
+
 ## EHRS
 
 ### UNIFIED PRACTICE
@@ -19,7 +20,10 @@ Good convo: https://claude.ai/chat/f0693212-6f56-430b-89d3-7fcd817e54ef
 4. Export
 5. Upload: $ node data-scripts/integrations/unified-practice/upload-apts-from-xlsx.ts
 
+## FACEBOOK
 
-
-## FACEBOOK 
 To get access token: https://developers.facebook.com/tools/explorer/839548005120095/
+
+## TODOS
+
+For all agg\_ tables we are going to run cron jobs that periodically update the database. We can eventually add manual interaction to regernnate the data

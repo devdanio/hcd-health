@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
-import { CheckCircle2, XCircle, ExternalLink, Loader2 } from 'lucide-react'
+import { CheckCircle2, XCircle, ExternalLink, Loader2, List } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
 interface IntegrationsSettingsProps {
@@ -26,17 +26,34 @@ export function IntegrationsSettings({ companyId }: IntegrationsSettingsProps) {
   const disconnect = useAction(api.googleAds.disconnectGoogleAds)
   const listAccounts = useAction(api.googleAds.listAccessibleAccounts)
   const selectAccount = useAction(api.googleAds.selectAccount)
+  const getCampaigns = useAction(api.googleAds.getCampaigns)
 
   const [isConnecting, setIsConnecting] = useState(false)
   const [isDisconnecting, setIsDisconnecting] = useState(false)
   const [isLoadingAccounts, setIsLoadingAccounts] = useState(false)
   const [isSelectingAccount, setIsSelectingAccount] = useState(false)
+  const [isLoadingCampaigns, setIsLoadingCampaigns] = useState(false)
   const [accounts, setAccounts] = useState<Array<{
     customerId: string
     accountName: string
     currencyCode: string
     timeZone: string
     isManager: boolean
+  }> | null>(null)
+  const [campaigns, setCampaigns] = useState<Array<{
+    id: string
+    name: string
+    status: string
+    advertisingChannelType: string
+    biddingStrategyType: string
+    budget: {
+      id: string
+      name: string
+      amountMicros: number
+      deliveryMethod: string
+    } | null
+    startDate: string
+    endDate: string | null
   }> | null>(null)
   const [manualCustomerId, setManualCustomerId] = useState('')
   const [showManualInput, setShowManualInput] = useState(false)
@@ -122,11 +139,26 @@ export function IntegrationsSettings({ companyId }: IntegrationsSettingsProps) {
       setIsDisconnecting(true)
       await disconnect({ companyId })
       setAccounts(null) // Clear account list
+      setCampaigns(null) // Clear campaigns
       toast.success('Google Ads disconnected successfully')
     } catch (error: any) {
       toast.error(error.message || 'Failed to disconnect Google Ads')
     } finally {
       setIsDisconnecting(false)
+    }
+  }
+
+  const handleLoadCampaigns = async () => {
+    try {
+      setIsLoadingCampaigns(true)
+      const campaignList = await getCampaigns({ companyId })
+      setCampaigns(campaignList)
+      toast.success(`Loaded ${campaignList.length} campaigns`)
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to load campaigns')
+      setCampaigns([])
+    } finally {
+      setIsLoadingCampaigns(false)
     }
   }
 
@@ -330,7 +362,54 @@ export function IntegrationsSettings({ companyId }: IntegrationsSettingsProps) {
                 </div>
               )}
 
-              <div className="flex gap-2 pt-2">
+              {/* Campaigns Section */}
+              <div className="border-t pt-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-semibold">Campaigns</h3>
+                  <Button
+                    size="sm"
+                    onClick={handleLoadCampaigns}
+                    disabled={isLoadingCampaigns}
+                  >
+                    <List className="mr-2 h-4 w-4" />
+                    {isLoadingCampaigns ? 'Loading...' : 'Load Campaigns'}
+                  </Button>
+                </div>
+
+                {campaigns && campaigns.length > 0 && (
+                  <div className="space-y-2">
+                    {campaigns.map((campaign) => (
+                      <div
+                        key={campaign.id}
+                        className="border rounded p-3 text-sm"
+                      >
+                        <div className="font-medium">{campaign.name}</div>
+                        <div className="text-gray-600 text-xs mt-1">
+                          <span className="mr-3">
+                            Status: <span className="font-medium">{campaign.status}</span>
+                          </span>
+                          <span className="mr-3">
+                            Type: {campaign.advertisingChannelType}
+                          </span>
+                          {campaign.budget && (
+                            <span>
+                              Budget: ${(campaign.budget.amountMicros / 1000000).toFixed(2)}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {campaigns && campaigns.length === 0 && (
+                  <div className="text-sm text-gray-600 text-center py-4">
+                    No campaigns found
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-2 pt-2 border-t">
                 <Button
                   variant="destructive"
                   onClick={handleDisconnect}

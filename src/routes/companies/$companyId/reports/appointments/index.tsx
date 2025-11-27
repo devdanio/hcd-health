@@ -26,7 +26,9 @@ import {
 } from '@/components/ui/select'
 import dayjs from 'dayjs'
 
-export const Route = createFileRoute('/companies/$companyId/appointments/')({
+export const Route = createFileRoute(
+  '/companies/$companyId/reports/appointments/',
+)({
   component: AppointmentsPage,
 })
 
@@ -129,7 +131,7 @@ function AppointmentsPage() {
           {revenueByService.map((service) => (
             <Card key={service.serviceId} className="gradient-border-hover">
               <Link
-                to="/companies/$companyId/kpis/services/$serviceId"
+                to="/companies/$companyId/reports/kpis/services/$serviceId"
                 viewTransition={{ types: ['slide-left'] }}
                 params={{
                   companyId,

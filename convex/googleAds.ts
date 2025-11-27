@@ -928,3 +928,123 @@ export const removeGoogleAdsConnection = mutation({
     })
   },
 })
+
+/**
+ * Get list of Google Ads campaigns
+ */
+export const getCampaigns = action({
+  args: {
+    companyId: v.id('companies'),
+  },
+  handler: async (ctx, args): Promise<Array<{
+    id: string
+    name: string
+    status: string
+    advertisingChannelType: string
+    biddingStrategyType: string
+    budget: {
+      id: string
+      name: string
+      amountMicros: number
+      deliveryMethod: string
+    } | null
+    startDate: string
+    endDate: string | null
+  }>> => {
+    // Ensure valid token (refresh if needed)
+    const company = await ctx.runAction(api.googleAds.ensureValidToken, {
+      companyId: args.companyId,
+    })
+
+    if (!company?.googleAds) {
+      throw new Error('Google Ads not connected. Please connect your Google Ads account first.')
+    }
+
+    if (!company.googleAds.customerId) {
+      throw new Error('No Google Ads account selected. Please select an account in settings.')
+    }
+
+    // Decrypt access token
+    const accessToken = await decryptToken(company.googleAds.accessToken)
+    const developerToken = process.env.GOOGLE_ADS_DEVELOPER_TOKEN
+
+    if (!developerToken) {
+      throw new Error('Missing GOOGLE_ADS_DEVELOPER_TOKEN')
+    }
+
+    const customerId = company.googleAds.customerId
+
+    // GAQL query to fetch campaigns with relevant fields
+    const query = `
+      SELECT
+        campaign.id,
+        campaign.name,
+        campaign.status,
+        campaign.advertising_channel_type,
+        campaign.bidding_strategy_type,
+        campaign.start_date,
+        campaign.end_date,
+        campaign_budget.id,
+        campaign_budget.name,
+        campaign_budget.amount_micros,
+        campaign_budget.delivery_method
+      FROM campaign
+      ORDER BY campaign.name
+    `
+
+    try {
+      const response = await fetch(
+        `https://googleads.googleapis.com/v18/customers/${customerId}/googleAds:search`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+            'developer-token': developerToken,
+            'login-customer-id': customerId,
+          },
+          body: JSON.stringify({ query }),
+        }
+      )
+
+      if (!response.ok) {
+        const error = await response.json()
+
+        // Handle test token limitations
+        if (error.error?.code === 501 || error.error?.status === 'UNIMPLEMENTED') {
+          throw new Error(
+            'Cannot fetch campaigns with test developer token. ' +
+            'Please apply for a production Google Ads developer token at ads.google.com (Tools > API Center).'
+          )
+        }
+
+        throw new Error(`Failed to fetch campaigns: ${JSON.stringify(error)}`)
+      }
+
+      const data = await response.json()
+      const results = data.results || []
+
+      // Transform the results into a cleaner format
+      const campaigns = results.map((result: any) => ({
+        id: result.campaign.id,
+        name: result.campaign.name,
+        status: result.campaign.status,
+        advertisingChannelType: result.campaign.advertisingChannelType,
+        biddingStrategyType: result.campaign.biddingStrategyType,
+        budget: result.campaignBudget ? {
+          id: result.campaignBudget.id,
+          name: result.campaignBudget.name,
+          amountMicros: parseInt(result.campaignBudget.amountMicros),
+          deliveryMethod: result.campaignBudget.deliveryMethod,
+        } : null,
+        startDate: result.campaign.startDate,
+        endDate: result.campaign.endDate || null,
+      }))
+
+      return campaigns
+    } catch (error: any) {
+      console.error('Error fetching campaigns:', error)
+      throw error
+    }
+  },
+})

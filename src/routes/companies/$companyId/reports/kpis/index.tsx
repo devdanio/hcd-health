@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/companies/$companyId/kpis/')({
+export const Route = createFileRoute('/companies/$companyId/reports/kpis/')({
   component: RouteComponent,
 })
 

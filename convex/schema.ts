@@ -66,6 +66,7 @@ export const contact = defineTable({
   fullName: v.optional(v.string()),
   firstName: v.optional(v.string()),
   lastName: v.optional(v.string()),
+  firstServiceId: v.optional(v.id('services')),
   ghlContactId: v.optional(v.id('ghlContacts')),
   chirotouchAccountId: v.optional(v.string()),
 })
@@ -75,6 +76,8 @@ export const contact = defineTable({
   .index('companyId', ['companyId'])
   .index('ghlContactId', ['ghlContactId'])
   .index('chirotouchAccountId', ['chirotouchAccountId'])
+  .index('firstServiceId', ['firstServiceId'])
+
 export const patientFields = {
   contactId: v.optional(v.id('contacts')),
   dateOfBirth: v.optional(v.string()),

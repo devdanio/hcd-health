@@ -17,17 +17,17 @@ import { Route as CompaniesCompanyIdIndexRouteImport } from './routes/companies/
 import { Route as CompaniesCompanyIdVisitorsIndexRouteImport } from './routes/companies/$companyId/visitors/index'
 import { Route as CompaniesCompanyIdTrackingIndexRouteImport } from './routes/companies/$companyId/tracking/index'
 import { Route as CompaniesCompanyIdSettingsIndexRouteImport } from './routes/companies/$companyId/settings/index'
-import { Route as CompaniesCompanyIdRoiIndexRouteImport } from './routes/companies/$companyId/roi/index'
 import { Route as CompaniesCompanyIdPatientsIndexRouteImport } from './routes/companies/$companyId/patients/index'
-import { Route as CompaniesCompanyIdKpisIndexRouteImport } from './routes/companies/$companyId/kpis/index'
 import { Route as CompaniesCompanyIdContactsIndexRouteImport } from './routes/companies/$companyId/contacts/index'
 import { Route as CompaniesCompanyIdCmsPagesIndexRouteImport } from './routes/companies/$companyId/cms-pages/index'
-import { Route as CompaniesCompanyIdAppointmentsIndexRouteImport } from './routes/companies/$companyId/appointments/index'
 import { Route as CompaniesCompanyIdPatientsPatientIdRouteImport } from './routes/companies/$companyId/patients/$patientId'
 import { Route as CompaniesCompanyIdCmsPagesCreateRouteImport } from './routes/companies/$companyId/cms-pages/create'
 import { Route as CompaniesCompanyIdCmsPagesPageIdRouteImport } from './routes/companies/$companyId/cms-pages/$pageId'
+import { Route as CompaniesCompanyIdReportsRoiIndexRouteImport } from './routes/companies/$companyId/reports/roi/index'
+import { Route as CompaniesCompanyIdReportsKpisIndexRouteImport } from './routes/companies/$companyId/reports/kpis/index'
+import { Route as CompaniesCompanyIdReportsAppointmentsIndexRouteImport } from './routes/companies/$companyId/reports/appointments/index'
 import { Route as CompaniesCompanyIdContactsContactIdIndexRouteImport } from './routes/companies/$companyId/contacts/$contactId/index'
-import { Route as CompaniesCompanyIdKpisServicesServiceIdRouteImport } from './routes/companies/$companyId/kpis/services/$serviceId'
+import { Route as CompaniesCompanyIdReportsKpisServicesServiceIdRouteImport } from './routes/companies/$companyId/reports/kpis/services/$serviceId'
 
 const CompaniesRoute = CompaniesRouteImport.update({
   id: '/companies',
@@ -72,22 +72,10 @@ const CompaniesCompanyIdSettingsIndexRoute =
     path: '/settings/',
     getParentRoute: () => CompaniesCompanyIdRouteRoute,
   } as any)
-const CompaniesCompanyIdRoiIndexRoute =
-  CompaniesCompanyIdRoiIndexRouteImport.update({
-    id: '/roi/',
-    path: '/roi/',
-    getParentRoute: () => CompaniesCompanyIdRouteRoute,
-  } as any)
 const CompaniesCompanyIdPatientsIndexRoute =
   CompaniesCompanyIdPatientsIndexRouteImport.update({
     id: '/patients/',
     path: '/patients/',
-    getParentRoute: () => CompaniesCompanyIdRouteRoute,
-  } as any)
-const CompaniesCompanyIdKpisIndexRoute =
-  CompaniesCompanyIdKpisIndexRouteImport.update({
-    id: '/kpis/',
-    path: '/kpis/',
     getParentRoute: () => CompaniesCompanyIdRouteRoute,
   } as any)
 const CompaniesCompanyIdContactsIndexRoute =
@@ -100,12 +88,6 @@ const CompaniesCompanyIdCmsPagesIndexRoute =
   CompaniesCompanyIdCmsPagesIndexRouteImport.update({
     id: '/cms-pages/',
     path: '/cms-pages/',
-    getParentRoute: () => CompaniesCompanyIdRouteRoute,
-  } as any)
-const CompaniesCompanyIdAppointmentsIndexRoute =
-  CompaniesCompanyIdAppointmentsIndexRouteImport.update({
-    id: '/appointments/',
-    path: '/appointments/',
     getParentRoute: () => CompaniesCompanyIdRouteRoute,
   } as any)
 const CompaniesCompanyIdPatientsPatientIdRoute =
@@ -126,16 +108,34 @@ const CompaniesCompanyIdCmsPagesPageIdRoute =
     path: '/cms-pages/$pageId',
     getParentRoute: () => CompaniesCompanyIdRouteRoute,
   } as any)
+const CompaniesCompanyIdReportsRoiIndexRoute =
+  CompaniesCompanyIdReportsRoiIndexRouteImport.update({
+    id: '/reports/roi/',
+    path: '/reports/roi/',
+    getParentRoute: () => CompaniesCompanyIdRouteRoute,
+  } as any)
+const CompaniesCompanyIdReportsKpisIndexRoute =
+  CompaniesCompanyIdReportsKpisIndexRouteImport.update({
+    id: '/reports/kpis/',
+    path: '/reports/kpis/',
+    getParentRoute: () => CompaniesCompanyIdRouteRoute,
+  } as any)
+const CompaniesCompanyIdReportsAppointmentsIndexRoute =
+  CompaniesCompanyIdReportsAppointmentsIndexRouteImport.update({
+    id: '/reports/appointments/',
+    path: '/reports/appointments/',
+    getParentRoute: () => CompaniesCompanyIdRouteRoute,
+  } as any)
 const CompaniesCompanyIdContactsContactIdIndexRoute =
   CompaniesCompanyIdContactsContactIdIndexRouteImport.update({
     id: '/contacts/$contactId/',
     path: '/contacts/$contactId/',
     getParentRoute: () => CompaniesCompanyIdRouteRoute,
   } as any)
-const CompaniesCompanyIdKpisServicesServiceIdRoute =
-  CompaniesCompanyIdKpisServicesServiceIdRouteImport.update({
-    id: '/kpis/services/$serviceId',
-    path: '/kpis/services/$serviceId',
+const CompaniesCompanyIdReportsKpisServicesServiceIdRoute =
+  CompaniesCompanyIdReportsKpisServicesServiceIdRouteImport.update({
+    id: '/reports/kpis/services/$serviceId',
+    path: '/reports/kpis/services/$serviceId',
     getParentRoute: () => CompaniesCompanyIdRouteRoute,
   } as any)
 
@@ -148,17 +148,17 @@ export interface FileRoutesByFullPath {
   '/companies/$companyId/cms-pages/$pageId': typeof CompaniesCompanyIdCmsPagesPageIdRoute
   '/companies/$companyId/cms-pages/create': typeof CompaniesCompanyIdCmsPagesCreateRoute
   '/companies/$companyId/patients/$patientId': typeof CompaniesCompanyIdPatientsPatientIdRoute
-  '/companies/$companyId/appointments': typeof CompaniesCompanyIdAppointmentsIndexRoute
   '/companies/$companyId/cms-pages': typeof CompaniesCompanyIdCmsPagesIndexRoute
   '/companies/$companyId/contacts': typeof CompaniesCompanyIdContactsIndexRoute
-  '/companies/$companyId/kpis': typeof CompaniesCompanyIdKpisIndexRoute
   '/companies/$companyId/patients': typeof CompaniesCompanyIdPatientsIndexRoute
-  '/companies/$companyId/roi': typeof CompaniesCompanyIdRoiIndexRoute
   '/companies/$companyId/settings': typeof CompaniesCompanyIdSettingsIndexRoute
   '/companies/$companyId/tracking': typeof CompaniesCompanyIdTrackingIndexRoute
   '/companies/$companyId/visitors': typeof CompaniesCompanyIdVisitorsIndexRoute
-  '/companies/$companyId/kpis/services/$serviceId': typeof CompaniesCompanyIdKpisServicesServiceIdRoute
   '/companies/$companyId/contacts/$contactId': typeof CompaniesCompanyIdContactsContactIdIndexRoute
+  '/companies/$companyId/reports/appointments': typeof CompaniesCompanyIdReportsAppointmentsIndexRoute
+  '/companies/$companyId/reports/kpis': typeof CompaniesCompanyIdReportsKpisIndexRoute
+  '/companies/$companyId/reports/roi': typeof CompaniesCompanyIdReportsRoiIndexRoute
+  '/companies/$companyId/reports/kpis/services/$serviceId': typeof CompaniesCompanyIdReportsKpisServicesServiceIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -167,17 +167,17 @@ export interface FileRoutesByTo {
   '/companies/$companyId/cms-pages/$pageId': typeof CompaniesCompanyIdCmsPagesPageIdRoute
   '/companies/$companyId/cms-pages/create': typeof CompaniesCompanyIdCmsPagesCreateRoute
   '/companies/$companyId/patients/$patientId': typeof CompaniesCompanyIdPatientsPatientIdRoute
-  '/companies/$companyId/appointments': typeof CompaniesCompanyIdAppointmentsIndexRoute
   '/companies/$companyId/cms-pages': typeof CompaniesCompanyIdCmsPagesIndexRoute
   '/companies/$companyId/contacts': typeof CompaniesCompanyIdContactsIndexRoute
-  '/companies/$companyId/kpis': typeof CompaniesCompanyIdKpisIndexRoute
   '/companies/$companyId/patients': typeof CompaniesCompanyIdPatientsIndexRoute
-  '/companies/$companyId/roi': typeof CompaniesCompanyIdRoiIndexRoute
   '/companies/$companyId/settings': typeof CompaniesCompanyIdSettingsIndexRoute
   '/companies/$companyId/tracking': typeof CompaniesCompanyIdTrackingIndexRoute
   '/companies/$companyId/visitors': typeof CompaniesCompanyIdVisitorsIndexRoute
-  '/companies/$companyId/kpis/services/$serviceId': typeof CompaniesCompanyIdKpisServicesServiceIdRoute
   '/companies/$companyId/contacts/$contactId': typeof CompaniesCompanyIdContactsContactIdIndexRoute
+  '/companies/$companyId/reports/appointments': typeof CompaniesCompanyIdReportsAppointmentsIndexRoute
+  '/companies/$companyId/reports/kpis': typeof CompaniesCompanyIdReportsKpisIndexRoute
+  '/companies/$companyId/reports/roi': typeof CompaniesCompanyIdReportsRoiIndexRoute
+  '/companies/$companyId/reports/kpis/services/$serviceId': typeof CompaniesCompanyIdReportsKpisServicesServiceIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -189,17 +189,17 @@ export interface FileRoutesById {
   '/companies/$companyId/cms-pages/$pageId': typeof CompaniesCompanyIdCmsPagesPageIdRoute
   '/companies/$companyId/cms-pages/create': typeof CompaniesCompanyIdCmsPagesCreateRoute
   '/companies/$companyId/patients/$patientId': typeof CompaniesCompanyIdPatientsPatientIdRoute
-  '/companies/$companyId/appointments/': typeof CompaniesCompanyIdAppointmentsIndexRoute
   '/companies/$companyId/cms-pages/': typeof CompaniesCompanyIdCmsPagesIndexRoute
   '/companies/$companyId/contacts/': typeof CompaniesCompanyIdContactsIndexRoute
-  '/companies/$companyId/kpis/': typeof CompaniesCompanyIdKpisIndexRoute
   '/companies/$companyId/patients/': typeof CompaniesCompanyIdPatientsIndexRoute
-  '/companies/$companyId/roi/': typeof CompaniesCompanyIdRoiIndexRoute
   '/companies/$companyId/settings/': typeof CompaniesCompanyIdSettingsIndexRoute
   '/companies/$companyId/tracking/': typeof CompaniesCompanyIdTrackingIndexRoute
   '/companies/$companyId/visitors/': typeof CompaniesCompanyIdVisitorsIndexRoute
-  '/companies/$companyId/kpis/services/$serviceId': typeof CompaniesCompanyIdKpisServicesServiceIdRoute
   '/companies/$companyId/contacts/$contactId/': typeof CompaniesCompanyIdContactsContactIdIndexRoute
+  '/companies/$companyId/reports/appointments/': typeof CompaniesCompanyIdReportsAppointmentsIndexRoute
+  '/companies/$companyId/reports/kpis/': typeof CompaniesCompanyIdReportsKpisIndexRoute
+  '/companies/$companyId/reports/roi/': typeof CompaniesCompanyIdReportsRoiIndexRoute
+  '/companies/$companyId/reports/kpis/services/$serviceId': typeof CompaniesCompanyIdReportsKpisServicesServiceIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -212,17 +212,17 @@ export interface FileRouteTypes {
     | '/companies/$companyId/cms-pages/$pageId'
     | '/companies/$companyId/cms-pages/create'
     | '/companies/$companyId/patients/$patientId'
-    | '/companies/$companyId/appointments'
     | '/companies/$companyId/cms-pages'
     | '/companies/$companyId/contacts'
-    | '/companies/$companyId/kpis'
     | '/companies/$companyId/patients'
-    | '/companies/$companyId/roi'
     | '/companies/$companyId/settings'
     | '/companies/$companyId/tracking'
     | '/companies/$companyId/visitors'
-    | '/companies/$companyId/kpis/services/$serviceId'
     | '/companies/$companyId/contacts/$contactId'
+    | '/companies/$companyId/reports/appointments'
+    | '/companies/$companyId/reports/kpis'
+    | '/companies/$companyId/reports/roi'
+    | '/companies/$companyId/reports/kpis/services/$serviceId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -231,17 +231,17 @@ export interface FileRouteTypes {
     | '/companies/$companyId/cms-pages/$pageId'
     | '/companies/$companyId/cms-pages/create'
     | '/companies/$companyId/patients/$patientId'
-    | '/companies/$companyId/appointments'
     | '/companies/$companyId/cms-pages'
     | '/companies/$companyId/contacts'
-    | '/companies/$companyId/kpis'
     | '/companies/$companyId/patients'
-    | '/companies/$companyId/roi'
     | '/companies/$companyId/settings'
     | '/companies/$companyId/tracking'
     | '/companies/$companyId/visitors'
-    | '/companies/$companyId/kpis/services/$serviceId'
     | '/companies/$companyId/contacts/$contactId'
+    | '/companies/$companyId/reports/appointments'
+    | '/companies/$companyId/reports/kpis'
+    | '/companies/$companyId/reports/roi'
+    | '/companies/$companyId/reports/kpis/services/$serviceId'
   id:
     | '__root__'
     | '/'
@@ -252,17 +252,17 @@ export interface FileRouteTypes {
     | '/companies/$companyId/cms-pages/$pageId'
     | '/companies/$companyId/cms-pages/create'
     | '/companies/$companyId/patients/$patientId'
-    | '/companies/$companyId/appointments/'
     | '/companies/$companyId/cms-pages/'
     | '/companies/$companyId/contacts/'
-    | '/companies/$companyId/kpis/'
     | '/companies/$companyId/patients/'
-    | '/companies/$companyId/roi/'
     | '/companies/$companyId/settings/'
     | '/companies/$companyId/tracking/'
     | '/companies/$companyId/visitors/'
-    | '/companies/$companyId/kpis/services/$serviceId'
     | '/companies/$companyId/contacts/$contactId/'
+    | '/companies/$companyId/reports/appointments/'
+    | '/companies/$companyId/reports/kpis/'
+    | '/companies/$companyId/reports/roi/'
+    | '/companies/$companyId/reports/kpis/services/$serviceId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -328,25 +328,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompaniesCompanyIdSettingsIndexRouteImport
       parentRoute: typeof CompaniesCompanyIdRouteRoute
     }
-    '/companies/$companyId/roi/': {
-      id: '/companies/$companyId/roi/'
-      path: '/roi'
-      fullPath: '/companies/$companyId/roi'
-      preLoaderRoute: typeof CompaniesCompanyIdRoiIndexRouteImport
-      parentRoute: typeof CompaniesCompanyIdRouteRoute
-    }
     '/companies/$companyId/patients/': {
       id: '/companies/$companyId/patients/'
       path: '/patients'
       fullPath: '/companies/$companyId/patients'
       preLoaderRoute: typeof CompaniesCompanyIdPatientsIndexRouteImport
-      parentRoute: typeof CompaniesCompanyIdRouteRoute
-    }
-    '/companies/$companyId/kpis/': {
-      id: '/companies/$companyId/kpis/'
-      path: '/kpis'
-      fullPath: '/companies/$companyId/kpis'
-      preLoaderRoute: typeof CompaniesCompanyIdKpisIndexRouteImport
       parentRoute: typeof CompaniesCompanyIdRouteRoute
     }
     '/companies/$companyId/contacts/': {
@@ -361,13 +347,6 @@ declare module '@tanstack/react-router' {
       path: '/cms-pages'
       fullPath: '/companies/$companyId/cms-pages'
       preLoaderRoute: typeof CompaniesCompanyIdCmsPagesIndexRouteImport
-      parentRoute: typeof CompaniesCompanyIdRouteRoute
-    }
-    '/companies/$companyId/appointments/': {
-      id: '/companies/$companyId/appointments/'
-      path: '/appointments'
-      fullPath: '/companies/$companyId/appointments'
-      preLoaderRoute: typeof CompaniesCompanyIdAppointmentsIndexRouteImport
       parentRoute: typeof CompaniesCompanyIdRouteRoute
     }
     '/companies/$companyId/patients/$patientId': {
@@ -391,6 +370,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompaniesCompanyIdCmsPagesPageIdRouteImport
       parentRoute: typeof CompaniesCompanyIdRouteRoute
     }
+    '/companies/$companyId/reports/roi/': {
+      id: '/companies/$companyId/reports/roi/'
+      path: '/reports/roi'
+      fullPath: '/companies/$companyId/reports/roi'
+      preLoaderRoute: typeof CompaniesCompanyIdReportsRoiIndexRouteImport
+      parentRoute: typeof CompaniesCompanyIdRouteRoute
+    }
+    '/companies/$companyId/reports/kpis/': {
+      id: '/companies/$companyId/reports/kpis/'
+      path: '/reports/kpis'
+      fullPath: '/companies/$companyId/reports/kpis'
+      preLoaderRoute: typeof CompaniesCompanyIdReportsKpisIndexRouteImport
+      parentRoute: typeof CompaniesCompanyIdRouteRoute
+    }
+    '/companies/$companyId/reports/appointments/': {
+      id: '/companies/$companyId/reports/appointments/'
+      path: '/reports/appointments'
+      fullPath: '/companies/$companyId/reports/appointments'
+      preLoaderRoute: typeof CompaniesCompanyIdReportsAppointmentsIndexRouteImport
+      parentRoute: typeof CompaniesCompanyIdRouteRoute
+    }
     '/companies/$companyId/contacts/$contactId/': {
       id: '/companies/$companyId/contacts/$contactId/'
       path: '/contacts/$contactId'
@@ -398,11 +398,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompaniesCompanyIdContactsContactIdIndexRouteImport
       parentRoute: typeof CompaniesCompanyIdRouteRoute
     }
-    '/companies/$companyId/kpis/services/$serviceId': {
-      id: '/companies/$companyId/kpis/services/$serviceId'
-      path: '/kpis/services/$serviceId'
-      fullPath: '/companies/$companyId/kpis/services/$serviceId'
-      preLoaderRoute: typeof CompaniesCompanyIdKpisServicesServiceIdRouteImport
+    '/companies/$companyId/reports/kpis/services/$serviceId': {
+      id: '/companies/$companyId/reports/kpis/services/$serviceId'
+      path: '/reports/kpis/services/$serviceId'
+      fullPath: '/companies/$companyId/reports/kpis/services/$serviceId'
+      preLoaderRoute: typeof CompaniesCompanyIdReportsKpisServicesServiceIdRouteImport
       parentRoute: typeof CompaniesCompanyIdRouteRoute
     }
   }
@@ -413,17 +413,17 @@ interface CompaniesCompanyIdRouteRouteChildren {
   CompaniesCompanyIdCmsPagesPageIdRoute: typeof CompaniesCompanyIdCmsPagesPageIdRoute
   CompaniesCompanyIdCmsPagesCreateRoute: typeof CompaniesCompanyIdCmsPagesCreateRoute
   CompaniesCompanyIdPatientsPatientIdRoute: typeof CompaniesCompanyIdPatientsPatientIdRoute
-  CompaniesCompanyIdAppointmentsIndexRoute: typeof CompaniesCompanyIdAppointmentsIndexRoute
   CompaniesCompanyIdCmsPagesIndexRoute: typeof CompaniesCompanyIdCmsPagesIndexRoute
   CompaniesCompanyIdContactsIndexRoute: typeof CompaniesCompanyIdContactsIndexRoute
-  CompaniesCompanyIdKpisIndexRoute: typeof CompaniesCompanyIdKpisIndexRoute
   CompaniesCompanyIdPatientsIndexRoute: typeof CompaniesCompanyIdPatientsIndexRoute
-  CompaniesCompanyIdRoiIndexRoute: typeof CompaniesCompanyIdRoiIndexRoute
   CompaniesCompanyIdSettingsIndexRoute: typeof CompaniesCompanyIdSettingsIndexRoute
   CompaniesCompanyIdTrackingIndexRoute: typeof CompaniesCompanyIdTrackingIndexRoute
   CompaniesCompanyIdVisitorsIndexRoute: typeof CompaniesCompanyIdVisitorsIndexRoute
-  CompaniesCompanyIdKpisServicesServiceIdRoute: typeof CompaniesCompanyIdKpisServicesServiceIdRoute
   CompaniesCompanyIdContactsContactIdIndexRoute: typeof CompaniesCompanyIdContactsContactIdIndexRoute
+  CompaniesCompanyIdReportsAppointmentsIndexRoute: typeof CompaniesCompanyIdReportsAppointmentsIndexRoute
+  CompaniesCompanyIdReportsKpisIndexRoute: typeof CompaniesCompanyIdReportsKpisIndexRoute
+  CompaniesCompanyIdReportsRoiIndexRoute: typeof CompaniesCompanyIdReportsRoiIndexRoute
+  CompaniesCompanyIdReportsKpisServicesServiceIdRoute: typeof CompaniesCompanyIdReportsKpisServicesServiceIdRoute
 }
 
 const CompaniesCompanyIdRouteRouteChildren: CompaniesCompanyIdRouteRouteChildren =
@@ -435,20 +435,22 @@ const CompaniesCompanyIdRouteRouteChildren: CompaniesCompanyIdRouteRouteChildren
       CompaniesCompanyIdCmsPagesCreateRoute,
     CompaniesCompanyIdPatientsPatientIdRoute:
       CompaniesCompanyIdPatientsPatientIdRoute,
-    CompaniesCompanyIdAppointmentsIndexRoute:
-      CompaniesCompanyIdAppointmentsIndexRoute,
     CompaniesCompanyIdCmsPagesIndexRoute: CompaniesCompanyIdCmsPagesIndexRoute,
     CompaniesCompanyIdContactsIndexRoute: CompaniesCompanyIdContactsIndexRoute,
-    CompaniesCompanyIdKpisIndexRoute: CompaniesCompanyIdKpisIndexRoute,
     CompaniesCompanyIdPatientsIndexRoute: CompaniesCompanyIdPatientsIndexRoute,
-    CompaniesCompanyIdRoiIndexRoute: CompaniesCompanyIdRoiIndexRoute,
     CompaniesCompanyIdSettingsIndexRoute: CompaniesCompanyIdSettingsIndexRoute,
     CompaniesCompanyIdTrackingIndexRoute: CompaniesCompanyIdTrackingIndexRoute,
     CompaniesCompanyIdVisitorsIndexRoute: CompaniesCompanyIdVisitorsIndexRoute,
-    CompaniesCompanyIdKpisServicesServiceIdRoute:
-      CompaniesCompanyIdKpisServicesServiceIdRoute,
     CompaniesCompanyIdContactsContactIdIndexRoute:
       CompaniesCompanyIdContactsContactIdIndexRoute,
+    CompaniesCompanyIdReportsAppointmentsIndexRoute:
+      CompaniesCompanyIdReportsAppointmentsIndexRoute,
+    CompaniesCompanyIdReportsKpisIndexRoute:
+      CompaniesCompanyIdReportsKpisIndexRoute,
+    CompaniesCompanyIdReportsRoiIndexRoute:
+      CompaniesCompanyIdReportsRoiIndexRoute,
+    CompaniesCompanyIdReportsKpisServicesServiceIdRoute:
+      CompaniesCompanyIdReportsKpisServicesServiceIdRoute,
   }
 
 const CompaniesCompanyIdRouteRouteWithChildren =
