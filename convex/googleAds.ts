@@ -395,98 +395,145 @@ export const listAccessibleAccounts = action({
       throw new Error('Google Ads not connected. Please connect first.')
     }
 
-    // Decrypt access token
-    const accessToken = await decryptToken(company.googleAds.accessToken)
-    const developerToken = process.env.GOOGLE_ADS_DEVELOPER_TOKEN
+    // Check if access token is expired and refresh if needed
+    const now = Date.now()
+    const tokenExpiresAt = company.googleAds.tokenExpiresAt
 
-    if (!developerToken) {
-      throw new Error('Missing GOOGLE_ADS_DEVELOPER_TOKEN')
-    }
-
-    // Get accessible customers
-    const customersResponse = await fetch(
-      'https://googleads.googleapis.com/v18/customers:listAccessibleCustomers',
-      {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'developer-token': developerToken,
-        },
-      }
-    )
-
-    if (!customersResponse.ok) {
-      const error = await customersResponse.json()
-
-      // If we get 501/UNIMPLEMENTED, return empty array to trigger manual input UI
-      if (error.error?.code === 501 || error.error?.status === 'UNIMPLEMENTED') {
-        console.log('listAccessibleCustomers not supported with test token, returning empty array')
-        return []
-      }
-
-      throw new Error(`Failed to list accounts: ${JSON.stringify(error)}`)
-    }
-
-    const customersData = await customersResponse.json()
-    const customerResourceNames = customersData.resourceNames || []
-
-    if (customerResourceNames.length === 0) {
-      throw new Error('No Google Ads accounts found')
-    }
-
-    // Fetch details for each account
-    const accounts = []
-    for (const resourceName of customerResourceNames) {
-      const customerId = resourceName.split('/')[1]
-
+    // Refresh token if it's expired or will expire in the next 5 minutes
+    if (tokenExpiresAt < now + 5 * 60 * 1000) {
+      console.log('Access token expired or expiring soon, refreshing...')
       try {
-        const query = `
-          SELECT
-            customer.id,
-            customer.descriptive_name,
-            customer.currency_code,
-            customer.time_zone,
-            customer.manager
-          FROM customer
-          WHERE customer.id = ${customerId}
-        `
+        await ctx.runAction(api.googleAds.refreshAccessToken, {
+          companyId: args.companyId,
+        })
 
-        const response = await fetch(
-          `https://googleads.googleapis.com/v18/customers/${customerId}/googleAds:search`,
-          {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${accessToken}`,
-              'Content-Type': 'application/json',
-              'developer-token': developerToken,
-              'login-customer-id': customerId,
-            },
-            body: JSON.stringify({ query }),
-          }
-        )
+        // Re-fetch company to get the new access token
+        const updatedCompany = await ctx.runQuery(api.companies.getCompany, {
+          companyId: args.companyId,
+        })
 
-        if (response.ok) {
-          const data = await response.json()
-          const result = data.results?.[0]
-
-          if (result) {
-            accounts.push({
-              customerId,
-              accountName: result.customer.descriptiveName || `Account ${customerId}`,
-              currencyCode: result.customer.currencyCode || 'USD',
-              timeZone: result.customer.timeZone || 'America/Los_Angeles',
-              isManager: result.customer.manager || false,
-            })
-          }
+        if (!updatedCompany?.googleAds) {
+          throw new Error('Failed to refresh token')
         }
-      } catch (error) {
-        console.error(`Failed to fetch details for ${customerId}:`, error)
-        // Continue with other accounts
+
+        // Decrypt the refreshed access token
+        const accessToken = await decryptToken(updatedCompany.googleAds.accessToken)
+        return await listAccountsWithToken(ctx, args.companyId, accessToken)
+      } catch (error: any) {
+        console.error('Token refresh failed:', error)
+        throw new Error(`Token refresh failed: ${error.message}`)
       }
     }
 
-    return accounts
+    // Token is still valid, use it
+    const accessToken = await decryptToken(company.googleAds.accessToken)
+    return await listAccountsWithToken(ctx, args.companyId, accessToken)
   },
 })
+
+/**
+ * Helper function to list accounts with a given access token
+ */
+async function listAccountsWithToken(
+  ctx: any,
+  companyId: Id<'companies'>,
+  accessToken: string
+): Promise<Array<{
+  customerId: string
+  accountName: string
+  currencyCode: string
+  timeZone: string
+  isManager: boolean
+}>> {
+  const developerToken = process.env.GOOGLE_ADS_DEVELOPER_TOKEN
+
+  if (!developerToken) {
+    throw new Error('Missing GOOGLE_ADS_DEVELOPER_TOKEN')
+  }
+
+  // Get accessible customers
+  const customersResponse = await fetch(
+    'https://googleads.googleapis.com/v18/customers:listAccessibleCustomers',
+    {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'developer-token': developerToken,
+      },
+    }
+  )
+
+  if (!customersResponse.ok) {
+    const error = await customersResponse.json()
+
+    // If we get 501/UNIMPLEMENTED, return empty array to trigger manual input UI
+    if (error.error?.code === 501 || error.error?.status === 'UNIMPLEMENTED') {
+      console.log('listAccessibleCustomers not supported with test token, returning empty array')
+      return []
+    }
+
+    throw new Error(`Failed to list accounts: ${JSON.stringify(error)}`)
+  }
+
+  const customersData = await customersResponse.json()
+  const customerResourceNames = customersData.resourceNames || []
+
+  if (customerResourceNames.length === 0) {
+    throw new Error('No Google Ads accounts found')
+  }
+
+  // Fetch details for each account
+  const accounts = []
+  for (const resourceName of customerResourceNames) {
+    const customerId = resourceName.split('/')[1]
+
+    try {
+      const query = `
+        SELECT
+          customer.id,
+          customer.descriptive_name,
+          customer.currency_code,
+          customer.time_zone,
+          customer.manager
+        FROM customer
+        WHERE customer.id = ${customerId}
+      `
+
+      const response = await fetch(
+        `https://googleads.googleapis.com/v18/customers/${customerId}/googleAds:search`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+            'developer-token': developerToken,
+            'login-customer-id': customerId,
+          },
+          body: JSON.stringify({ query }),
+        }
+      )
+
+      if (response.ok) {
+        const data = await response.json()
+        const result = data.results?.[0]
+
+        if (result) {
+          accounts.push({
+            customerId,
+            accountName: result.customer.descriptiveName || `Account ${customerId}`,
+            currencyCode: result.customer.currencyCode || 'USD',
+            timeZone: result.customer.timeZone || 'America/Los_Angeles',
+            isManager: result.customer.manager || false,
+          })
+        }
+      }
+    } catch (error) {
+      console.error(`Failed to fetch details for ${customerId}:`, error)
+      // Continue with other accounts
+    }
+  }
+
+  return accounts
+}
 
 /**
  * Select a Google Ads account
@@ -505,15 +552,46 @@ export const selectAccount = action({
       throw new Error('Google Ads not connected')
     }
 
-    // Decrypt access token to fetch account details
-    const accessToken = await decryptToken(company.googleAds.accessToken)
+    // Check if access token is expired and refresh if needed
+    const now = Date.now()
+    const tokenExpiresAt = company.googleAds.tokenExpiresAt
+
+    let accessToken: string
+
+    // Refresh token if it's expired or will expire in the next 5 minutes
+    if (tokenExpiresAt < now + 5 * 60 * 1000) {
+      console.log('Access token expired or expiring soon, refreshing...')
+      try {
+        await ctx.runAction(api.googleAds.refreshAccessToken, {
+          companyId: args.companyId,
+        })
+
+        // Re-fetch company to get the new access token
+        const updatedCompany = await ctx.runQuery(api.companies.getCompany, {
+          companyId: args.companyId,
+        })
+
+        if (!updatedCompany?.googleAds) {
+          throw new Error('Failed to refresh token')
+        }
+
+        accessToken = await decryptToken(updatedCompany.googleAds.accessToken)
+      } catch (error: any) {
+        console.error('Token refresh failed:', error)
+        throw new Error(`Token refresh failed: ${error.message}`)
+      }
+    } else {
+      // Token is still valid, use it
+      accessToken = await decryptToken(company.googleAds.accessToken)
+    }
+
     const developerToken = process.env.GOOGLE_ADS_DEVELOPER_TOKEN
 
     if (!developerToken) {
       throw new Error('Missing GOOGLE_ADS_DEVELOPER_TOKEN')
     }
 
-    // Fetch account details
+    // Try to fetch account details
     const query = `
       SELECT
         customer.id,
@@ -524,39 +602,62 @@ export const selectAccount = action({
       WHERE customer.id = ${args.customerId}
     `
 
-    const response = await fetch(
-      `https://googleads.googleapis.com/v18/customers/${args.customerId}/googleAds:search`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-          'developer-token': developerToken,
-          'login-customer-id': args.customerId,
-        },
-        body: JSON.stringify({ query }),
+    let accountName = `Account ${args.customerId}`
+    let currencyCode = 'USD'
+    let timeZone = 'America/Los_Angeles'
+
+    try {
+      const response = await fetch(
+        `https://googleads.googleapis.com/v18/customers/${args.customerId}/googleAds:search`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+            'developer-token': developerToken,
+            'login-customer-id': args.customerId,
+          },
+          body: JSON.stringify({ query }),
+        }
+      )
+
+      if (response.ok) {
+        const data = await response.json()
+        const result = data.results?.[0]
+
+        if (result) {
+          accountName = result.customer.descriptiveName || accountName
+          currencyCode = result.customer.currencyCode || currencyCode
+          timeZone = result.customer.timeZone || timeZone
+        }
+      } else {
+        const error = await response.json()
+
+        // If we get 501/UNIMPLEMENTED (test token), use defaults
+        if (error.error?.code === 501 || error.error?.status === 'UNIMPLEMENTED') {
+          console.log('Cannot fetch account details with test token, using defaults')
+          // Continue with default values
+        } else {
+          // For other errors, throw
+          throw new Error(`Failed to fetch account details: ${JSON.stringify(error)}`)
+        }
       }
-    )
-
-    if (!response.ok) {
-      const error = await response.json()
-      throw new Error(`Failed to fetch account details: ${JSON.stringify(error)}`)
+    } catch (error: any) {
+      // If it's our own thrown error, re-throw it
+      if (error.message?.includes('Failed to fetch account details')) {
+        throw error
+      }
+      // For network errors or other issues with test tokens, use defaults
+      console.log('Error fetching account details, using defaults:', error)
     }
 
-    const data = await response.json()
-    const result = data.results?.[0]
-
-    if (!result) {
-      throw new Error('Account not found')
-    }
-
-    // Update company with selected account
+    // Update company with selected account (using fetched details or defaults)
     await ctx.runMutation(api.googleAds.updateSelectedAccount, {
       companyId: args.companyId,
       customerId: args.customerId,
-      accountName: result.customer.descriptiveName || 'Unknown Account',
-      currencyCode: result.customer.currencyCode || 'USD',
-      timeZone: result.customer.timeZone || 'America/Los_Angeles',
+      accountName,
+      currencyCode,
+      timeZone,
     })
 
     return { success: true }
