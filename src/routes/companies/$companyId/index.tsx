@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useQuery } from 'convex/react'
+import { useQuery } from '@tanstack/react-query'
 import { z } from 'zod'
 import {
   Search,
@@ -39,8 +39,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useState, useMemo } from 'react'
-import { api } from 'convex/_generated/api'
-import { Id } from 'convex/_generated/dataModel'
+import { getCompany } from '@/server/functions/companies'
+import { getSessions, getSessionPageViews, getLast24HoursVisitors, getTopPages } from '@/server/functions/tracking'
 import { ChartAreaInteractive } from '@/components/chart-area-interactive'
 import { ChartCategories } from '@/components/chart-categories'
 import {
@@ -168,8 +168,7 @@ function CompanyDetailsPage() {
   const navigate = Route.useNavigate()
   const searchParams = Route.useSearch()
   const timeRange = searchParams.timeRange
-  const [selectedSessionId, setSelectedSessionId] =
-    useState<Id<'sessions'> | null>(null)
+  const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null)
 
   const handleTimeRangeChange = (value: string) => {
     navigate({
@@ -180,27 +179,30 @@ function CompanyDetailsPage() {
     })
   }
 
-  const company = useQuery(api.companies.getCompany, {
-    companyId: companyId as Id<'companies'>,
+  const { data: company } = useQuery({
+    queryKey: ['company', companyId],
+    queryFn: () => getCompany({ data: { companyId } }),
   })
-  const sessions = useQuery(api.tracking.getSessions, {
-    companyId: companyId as Id<'companies'>,
-    limit: 500,
+
+  const { data: sessions } = useQuery({
+    queryKey: ['sessions', companyId],
+    queryFn: () => getSessions({ data: { companyId, limit: 500 } }),
   })
-  const pageViews = useQuery(
-    api.tracking.getSessionPageViews,
-    selectedSessionId
-      ? {
-          sessionId: selectedSessionId,
-        }
-      : 'skip',
-  )
-  const last24HoursVisitors = useQuery(api.tracking.getLast24HoursVisitors, {
-    companyId: companyId as Id<'companies'>,
+
+  const { data: pageViews } = useQuery({
+    queryKey: ['pageViews', selectedSessionId],
+    queryFn: () => getSessionPageViews({ data: { sessionId: selectedSessionId! } }),
+    enabled: !!selectedSessionId,
   })
-  const topPages = useQuery(api.tracking.getTopPages, {
-    companyId: companyId as Id<'companies'>,
-    timeRange: timeRange as '24h' | '7d' | '30d' | '90d',
+
+  const { data: last24HoursVisitors } = useQuery({
+    queryKey: ['visitors24h', companyId],
+    queryFn: () => getLast24HoursVisitors({ data: { companyId } }),
+  })
+
+  const { data: topPages } = useQuery({
+    queryKey: ['topPages', companyId, timeRange],
+    queryFn: () => getTopPages({ data: { companyId, timeRange } }),
   })
 
   // Sort sessions by last activity
@@ -469,7 +471,7 @@ function CompanyDetailsPage() {
 
                   return (
                     <tr
-                      key={session._id}
+                      key={session.id}
                       className="border-t hover:bg-muted/50"
                     >
                       <td className="p-4">
@@ -477,7 +479,7 @@ function CompanyDetailsPage() {
                       </td>
                       <td className="p-4">
                         <button
-                          onClick={() => setSelectedSessionId(session._id)}
+                          onClick={() => setSelectedSessionId(session.id)}
                           className="text-xs text-primary hover:underline cursor-pointer font-mono"
                         >
                           {session.browserSessionId.slice(0, 8)}...
@@ -549,7 +551,7 @@ function CompanyDetailsPage() {
 
                   return (
                     <div
-                      key={pageView._id}
+                      key={pageView.id}
                       className="p-4 border rounded-lg hover:bg-muted/50"
                     >
                       <div className="flex items-start justify-between gap-4">
@@ -560,7 +562,7 @@ function CompanyDetailsPage() {
                             </span>
                             <span className="text-xs text-muted-foreground">
                               {new Date(
-                                pageView._creationTime,
+                                pageView.createdAt,
                               ).toLocaleString()}
                             </span>
                             {pageView.channel && (

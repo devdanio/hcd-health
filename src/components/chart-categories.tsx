@@ -2,9 +2,8 @@
 
 import * as React from "react"
 import { Pie, PieChart, Cell, Label } from "recharts"
-import { useQuery } from "convex/react"
-import { api } from "convex/_generated/api"
-import type { Id } from "convex/_generated/dataModel"
+import { useQuery } from "@tanstack/react-query"
+import { getCategoryAnalytics } from "@/server/functions/tracking"
 
 import {
   Card,
@@ -55,15 +54,14 @@ const chartConfig = {
 } satisfies ChartConfig
 
 interface ChartCategoriesProps {
-  companyId: Id<"companies">
+  companyId: string
   timeRange: "24h" | "7d" | "30d" | "90d"
 }
 
 export function ChartCategories({ companyId, timeRange }: ChartCategoriesProps) {
-  // Fetch real data from Convex
-  const chartData = useQuery(api.tracking.getCategoryAnalytics, {
-    companyId,
-    timeRange,
+  const { data: chartData } = useQuery({
+    queryKey: ['categoryAnalytics', companyId, timeRange],
+    queryFn: () => getCategoryAnalytics({ data: { companyId, timeRange } }),
   })
 
   // Use real data or empty array while loading

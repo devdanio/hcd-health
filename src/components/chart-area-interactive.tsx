@@ -2,9 +2,8 @@
 
 import * as React from "react"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
-import { useQuery } from "convex/react"
-import { api } from "convex/_generated/api"
-import type { Id } from "convex/_generated/dataModel"
+import { useQuery } from "@tanstack/react-query"
+import { getVisitorAnalytics } from "@/server/functions/tracking"
 
 import {
   Card,
@@ -49,15 +48,14 @@ const chartConfig = {
 } satisfies ChartConfig
 
 interface ChartAreaInteractiveProps {
-  companyId: Id<"companies">
+  companyId: string
   timeRange: "24h" | "7d" | "30d" | "90d"
 }
 
 export function ChartAreaInteractive({ companyId, timeRange }: ChartAreaInteractiveProps) {
-  // Fetch real data from Convex
-  const chartData = useQuery(api.tracking.getVisitorAnalytics, {
-    companyId,
-    timeRange,
+  const { data: chartData } = useQuery({
+    queryKey: ['visitorAnalytics', companyId, timeRange],
+    queryFn: () => getVisitorAnalytics({ data: { companyId, timeRange } }),
   })
 
   // Use real data or empty array while loading

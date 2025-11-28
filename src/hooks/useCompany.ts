@@ -1,8 +1,6 @@
-import { convexQuery } from '@convex-dev/react-query'
 import { useParams } from '@tanstack/react-router'
-import { api } from 'convex/_generated/api'
-import { Id } from 'convex/_generated/dataModel'
-import { useQuery } from 'convex/react'
+import { useQuery } from '@tanstack/react-query'
+import { getCompany } from '@/server/functions/companies'
 
 export const useCompany = () => {
   const companyId = useParams({
@@ -10,8 +8,10 @@ export const useCompany = () => {
     select: (params) => params.companyId,
   })
 
-  const company = useQuery(api.companies.getCompany, {
-    companyId: companyId as Id<'companies'>,
+  const { data: company } = useQuery({
+    queryKey: ['company', companyId],
+    queryFn: () => getCompany({ data: { companyId: companyId! } }),
+    enabled: !!companyId,
   })
 
   return company

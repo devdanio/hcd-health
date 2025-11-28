@@ -10,7 +10,13 @@
       "Bash(cat:*)",
       "Bash(pnpm add:*)",
       "Bash(npx tsx:*)",
-      "Bash(openssl rand:*)"
+      "Bash(openssl rand:*)",
+      "WebFetch(domain:tanstack.com)",
+      "Bash(find:*)",
+      "Bash(npx prisma init:*)",
+      "Bash(npx prisma migrate:*)",
+      "Bash(PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION=\"you can continue\" npx prisma migrate reset:*)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []

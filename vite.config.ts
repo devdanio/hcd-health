@@ -7,7 +7,15 @@ import { nitro } from 'nitro/vite'
 
 const config = defineConfig(({ mode }) => ({
   optimizeDeps: {
-    include: ['@clerk/tanstack-react-start', 'cookie'],
+    include: ['@clerk/tanstack-react-start'],
+  },
+  resolve: {
+    alias: {
+      cookie: 'cookie-es',
+    },
+  },
+  ssr: {
+    external: ['@clerk/backend'],
   },
   plugins: [
     // this is the plugin that enables path aliases

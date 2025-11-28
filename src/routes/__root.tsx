@@ -16,15 +16,37 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 
 import Header from '../components/Header'
 
-import ConvexProvider from '../integrations/convex/provider'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { createContext, useContext, useMemo } from 'react'
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
+import { createCollections, type Collections } from '../lib/collections'
 
 import appCss from '../styles.css?url'
-
-import type { QueryClient } from '@tanstack/react-query'
 import { auth } from '@clerk/tanstack-react-start/server'
 import { createServerFn } from '@tanstack/react-start'
+
+// Create QueryClient instance
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60 * 1000, // 1 minute
+      refetchOnWindowFocus: false,
+    },
+  },
+})
+
+// Collections Context
+const CollectionsContext = createContext<Collections | null>(null)
+
+export const useCollections = () => {
+  const collections = useContext(CollectionsContext)
+  if (!collections) {
+    throw new Error('useCollections must be used within CollectionsProvider')
+  }
+  return collections
+}
+
 const fetchClerkAuth = createServerFn({ method: 'GET' }).handler(async () => {
   const { userId } = await auth()
 
@@ -33,7 +55,7 @@ const fetchClerkAuth = createServerFn({ method: 'GET' }).handler(async () => {
   }
 })
 interface MyRouterContext {
-  queryClient: QueryClient
+  queryClient: typeof queryClient
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
@@ -86,27 +108,32 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  // Create collections once
+  const collections = useMemo(() => createCollections(queryClient), [])
+
   return (
     <html lang="en">
       <head>
         <HeadContent />
       </head>
       <body>
-        <ConvexProvider>
-          {children}
-          {/* <TanStackDevtools
-            config={{
-              position: 'bottom-right',
-            }}
-            plugins={[
-              {
-                name: 'Tanstack Router',
-                render: <TanStackRouterDevtoolsPanel />,
-              },
-              TanStackQueryDevtools,
-            ]}
-          /> */}
-        </ConvexProvider>
+        <QueryClientProvider client={queryClient}>
+          <CollectionsContext.Provider value={collections}>
+            {children}
+            <TanStackDevtools
+              config={{
+                position: 'bottom-right',
+              }}
+              plugins={[
+                {
+                  name: 'Tanstack Router',
+                  render: <TanStackRouterDevtoolsPanel />,
+                },
+                TanStackQueryDevtools,
+              ]}
+            />
+          </CollectionsContext.Provider>
+        </QueryClientProvider>
         <Scripts />
       </body>
     </html>

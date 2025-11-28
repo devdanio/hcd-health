@@ -1,0 +1,307 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Companies - Multi-tenant root
+model Company {
+  id            String    @id @default(cuid())
+  name          String
+  domain        String
+  companyBrief  String?
+  apiKey        String    @unique
+  ehr           EhrType?
+
+  // Google Ads OAuth (encrypted tokens stored directly)
+  googleAdsAccessToken      String?
+  googleAdsRefreshToken     String?
+  googleAdsTokenExpiresAt   DateTime?
+  googleAdsCustomerId       String?
+  googleAdsAccountName      String?
+  googleAdsCurrencyCode     String?
+  googleAdsTimeZone         String?
+  googleAdsConnectedAt      DateTime?
+  googleAdsAccountSelectedAt DateTime?
+  googleAdsLastSyncedAt     DateTime?
+  googleAdsLastError        String?
+  googleAdsLastErrorAt      DateTime?
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  contacts      Contact[]
+  sessions      Session[]
+  events        Event[]
+  services      Service[]
+  providers     Provider[]
+  appointments  Appointment[]
+  oauthStates   OAuthState[]
+  cmsPages      CmsPage[]
+  ghlContacts   GhlContact[]
+
+  @@index([apiKey])
+}
+
+enum EhrType {
+  unified_practice
+  ghl
+}
+
+// Contacts - Unified visitor/patient identity
+model Contact {
+  id                    String    @id @default(cuid())
+  companyId             String
+  company               Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  email                 String?
+  phone                 String?
+  fullName              String?
+  firstName             String?
+  lastName              String?
+  ghlContactId          String?   @unique
+  ghlContact            GhlContact? @relation(fields: [ghlContactId], references: [id])
+  chirotouchAccountId   String?   @unique
+  firstServiceId        String?
+  firstService          Service?  @relation("FirstService", fields: [firstServiceId], references: [id])
+
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  sessions              Session[]
+  events                Event[]
+  appointments          Appointment[]
+  patient               Patient?
+
+  @@index([companyId, email])
+  @@index([companyId, phone])
+  @@index([companyId, ghlContactId])
+  @@index([companyId])
+  @@index([ghlContactId])
+  @@index([chirotouchAccountId])
+  @@index([firstServiceId])
+}
+
+// GHL Contacts - External CRM sync
+model GhlContact {
+  id              String    @id
+  locationId      String
+  contactName     String?
+  firstName       String?
+  lastName        String?
+  companyName     String?
+  email           String?
+  phone           String?
+  dnd             Boolean   @default(false)
+  type            String?
+  source          String?
+  assignedTo      String?
+  city            String?
+  state           String?
+  postalCode      String?
+  address1        String?
+  dateAdded       DateTime
+  dateUpdated     DateTime
+  dateOfBirth     Json?
+  tags            String[]
+  country         String?
+  website         String?
+  timezone        String?
+  lastActivity    DateTime?
+  customField     Json[]
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  companyId       String
+  company         Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  contact         Contact?
+}
+
+// Sessions - Browser sessions with attribution
+model Session {
+  id                      String    @id @default(cuid())
+  browserSessionId        String    @unique
+  companyId               String
+  company                 Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  contactId               String
+  contact                 Contact   @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  userAgent               String?
+  ipAddress               String?
+  screenResolution        String?
+  timezone                String?
+
+  // Attribution stored as JSON (UTM params + click IDs)
+  firstSessionAttribution Json
+  lastSessionAttribution  Json
+
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+
+  events                  Event[]
+
+  @@index([companyId, contactId])
+  @@index([companyId])
+  @@index([browserSessionId])
+}
+
+// Events - Tracking events (pageviews, conversions)
+model Event {
+  id          String      @id @default(cuid())
+  companyId   String
+  company     Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  contactId   String
+  contact     Contact     @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  sessionId   String
+  session     Session     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  type        EventType
+  metadata    Json
+
+  createdAt   DateTime    @default(now())
+
+  @@index([sessionId])
+  @@index([companyId, type])
+  @@index([companyId])
+  @@index([createdAt])
+}
+
+enum EventType {
+  pageview
+  conversion
+  custom_event
+}
+
+// Services
+model Service {
+  id              String        @id @default(cuid())
+  companyId       String
+  company         Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  name            String
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  providers       Provider[]
+  appointments    Appointment[]
+  firstContacts   Contact[]     @relation("FirstService")
+
+  @@index([companyId])
+}
+
+// Providers
+model Provider {
+  id          String        @id @default(cuid())
+  companyId   String
+  company     Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  name        String
+  serviceId   String
+  service     Service       @relation(fields: [serviceId], references: [id])
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  appointments Appointment[]
+
+  @@index([companyId])
+  @@index([serviceId])
+}
+
+// Appointments
+model Appointment {
+  id              String              @id @default(cuid())
+  companyId       String
+  company         Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  contactId       String
+  contact         Contact             @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  patientName     String?
+  dateOfService   DateTime
+  service         String?
+  serviceId       String?
+  serviceRel      Service?            @relation(fields: [serviceId], references: [id])
+  providerId      String?
+  provider        Provider?           @relation(fields: [providerId], references: [id])
+
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  procedures      AppointmentProcedure[]
+
+  @@index([companyId, dateOfService])
+  @@index([contactId])
+  @@index([serviceId])
+}
+
+// Appointment Procedures - Revenue tracking
+model AppointmentProcedure {
+  id              String      @id @default(cuid())
+  appointmentId   String
+  appointment     Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  procedureCode   String
+  chargeAmount    Float
+
+  createdAt       DateTime    @default(now())
+
+  @@index([appointmentId])
+  @@index([appointmentId, procedureCode])
+}
+
+// Patients
+model Patient {
+  id                      String    @id @default(cuid())
+  contactId               String    @unique
+  contact                 Contact   @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  dateOfBirth             String?
+  gender                  String?
+  payerName               String?
+  memberId                String?
+  groupId                 String?
+  emergencyContactName    String?
+  emergencyContactPhone   String?
+  emergencyContactRelation String?
+
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+
+  @@index([contactId])
+}
+
+// OAuth States - CSRF protection
+model OAuthState {
+  id          String    @id @default(cuid())
+  state       String    @unique
+  companyId   String
+  company     Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  expiresAt   DateTime
+
+  createdAt   DateTime  @default(now())
+
+  @@index([state])
+  @@index([expiresAt])
+}
+
+// CMS Pages
+model CmsPage {
+  id                String    @id @default(cuid())
+  companyId         String
+  company           Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  h1                String
+  pageTitle         String
+  pageDescription   String
+  jsonSchema        Json?
+  slug              String
+  markdownContent   String    @db.Text
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([companyId])
+  @@unique([companyId, slug])
+}
