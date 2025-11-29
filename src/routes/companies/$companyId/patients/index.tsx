@@ -163,7 +163,7 @@ function PatientsPage() {
         cell: ({ row }) => <div>{row.getValue('groupId') || '-'}</div>,
       },
       {
-        accessorKey: '_creationTime',
+        accessorKey: 'createdAt',
         header: ({ column }) => {
           return (
             <Button
@@ -180,7 +180,7 @@ function PatientsPage() {
         cell: ({ row }) => {
           return (
             <div>
-              {new Date(row.getValue('_creationTime')).toLocaleDateString()}
+              {new Date(row.getValue('createdAt')).toLocaleDateString()}
             </div>
           )
         },

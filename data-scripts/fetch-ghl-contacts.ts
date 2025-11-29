@@ -72,7 +72,7 @@ async function fetchContactsUntilOld() {
     },
   )
   const mostRecentDate = mostRecentContact
-    ? dayjs(mostRecentContact._creationTime)
+    ? dayjs(mostRecentContact.createdAt)
     : dayjs().subtract(90, 'days')
 
   console.log(

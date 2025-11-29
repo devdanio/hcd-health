@@ -196,7 +196,7 @@ function ContactsPage() {
         cell: ({ row }) => <div>{row.original.ghlContact?.phone || '-'}</div>,
       },
       {
-        accessorFn: (row) => row.ghlContact?.dateAdded,
+        accessorFn: (row) => row.createdAt,
         id: 'dateAdded',
         header: ({ column }) => {
           return (
