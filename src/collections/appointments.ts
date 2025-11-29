@@ -63,7 +63,7 @@ export const bulkCreateAppointmentsSchema = z.object({
       serviceId: z.string().optional(),
       providerId: z.string().optional(),
       patientName: z.string().optional(),
-    })
+    }),
   ),
 })
 
@@ -85,17 +85,7 @@ export const getAppointments = createServerFn({ method: 'GET' })
     return await prisma.appointment.findMany({
       where: { companyId: data.companyId },
       include: {
-        contact: {
-          select: {
-            email: true,
-            fullName: true,
-            firstName: true,
-            lastName: true,
-          },
-        },
-        serviceRel: {
-          select: { name: true },
-        },
+        patient: true,
         provider: {
           select: { name: true },
         },
@@ -123,27 +113,28 @@ export const getAppointmentsAnalytics = createServerFn({ method: 'GET' })
     }
 
     // Use raw SQL with CTEs for aggregation
+    // Note: Column names are camelCase as per Prisma schema (serviceId, dateOfService, etc.)
     const results = await prisma.$queryRaw<
       Array<{ date: string; service_name: string; revenue: number }>
     >`
       WITH revenue_by_date AS (
         SELECT
-          a.service_id,
+          a."serviceId",
           s.name as service_name,
-          a.date_of_service,
-          SUM(ap.charge_amount) as total_charge
+          a."dateOfService",
+          SUM(ap."chargeAmount") as total_charge
         FROM "AppointmentProcedure" ap
-        JOIN "Appointment" a ON ap.appointment_id = a.id
-        LEFT JOIN "Service" s ON a.service_id = s.id
-        WHERE a.company_id = ${companyId}
-          AND a.date_of_service >= ${startDate}
-        GROUP BY a.service_id, s.name, a.date_of_service
+        JOIN "Appointment" a ON ap."appointmentId" = a.id
+        LEFT JOIN "Service" s ON a."serviceId" = s.id
+        WHERE a."companyId" = ${companyId}
+          AND a."dateOfService" >= ${startDate}
+        GROUP BY a."serviceId", s.name, a."dateOfService"
       )
       SELECT
         CASE
-          WHEN ${groupBy} = 'day' THEN TO_CHAR(date_of_service, 'YYYY-MM-DD')
-          WHEN ${groupBy} = 'week' THEN TO_CHAR(date_of_service, 'IYYY-"W"IW')
-          WHEN ${groupBy} = 'month' THEN TO_CHAR(date_of_service, 'YYYY-MM')
+          WHEN ${groupBy} = 'day' THEN TO_CHAR("dateOfService", 'YYYY-MM-DD')
+          WHEN ${groupBy} = 'week' THEN TO_CHAR("dateOfService", 'IYYY-"W"IW')
+          WHEN ${groupBy} = 'month' THEN TO_CHAR("dateOfService", 'YYYY-MM')
         END as date,
         COALESCE(service_name, 'Unknown') as service_name,
         SUM(total_charge)::float as revenue

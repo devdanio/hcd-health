@@ -47,6 +47,7 @@ type Patient = {
     email: string | null
     phone: string | null
     fullName: string | null
+    dateOfBirth: Date | null
   }
 }
 
@@ -150,7 +151,9 @@ function PatientsPage() {
       {
         accessorKey: 'dateOfBirth',
         header: 'Date of Birth',
-        cell: ({ row }) => <div>{row.getValue('dateOfBirth') || '-'}</div>,
+        cell: ({ row }) => (
+          <div>{row.getValue('contact.dateOfBirth') || '-'}</div>
+        ),
       },
       {
         accessorKey: 'memberId',

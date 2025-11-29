@@ -230,7 +230,6 @@ export const AppointmentScalarFieldEnum = {
   id: 'id',
   companyId: 'companyId',
   patientId: 'patientId',
-  patientName: 'patientName',
   dateOfService: 'dateOfService',
   service: 'service',
   serviceId: 'serviceId',

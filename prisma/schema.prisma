@@ -226,9 +226,8 @@ model Appointment {
   company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
   patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
-  patientId String  @unique
+  patientId String  
 
-  patientName   String?
   dateOfService DateTime
   service       String?
   serviceId     String?
@@ -241,9 +240,8 @@ model Appointment {
 
   procedures AppointmentProcedure[]
 
-  @@index([patientId, dateOfService])
-  @@index([patientId])
-  @@index([serviceId])
+
+  @@unique([patientId, dateOfService, serviceId])
 }
 
 // Appointment Procedures - Revenue tracking

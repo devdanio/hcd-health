@@ -72,9 +72,15 @@ export function ProvidersSettings({ companyId }: ProvidersSettingsProps) {
     }
     try {
       await providersCollection.insert({
+        id: crypto.randomUUID(),
         companyId,
         name: newProviderName,
         serviceId: newProviderService,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        service: {
+          name: services.find((s) => s.id === newProviderService)?.name || '',
+        },
       })
       setNewProviderName('')
       setNewProviderService('')
