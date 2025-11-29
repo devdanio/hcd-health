@@ -65,6 +65,8 @@ model Contact {
   fullName  String?
   firstName String?
   lastName  String?
+  gender    String?
+  dateOfBirth DateTime?
 
   ghlContactId String?     @unique
   ghlContact   GhlContact? @relation(fields: [ghlContactId], references: [id])
@@ -253,8 +255,11 @@ model Patient {
   contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
   contactId String  @unique
 
-  // dateOfBirth              String?
-  // gender                   String?
+  address1 String?
+  address2 String?
+  zip String?
+  city String?
+  state String?
   // payerName                String?
   // memberId                 String?
   // groupId                  String?

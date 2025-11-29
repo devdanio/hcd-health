@@ -1,5 +1,4 @@
 import { createFileRoute, Link, Outlet } from '@tanstack/react-router'
-import { cn } from '@/lib/utils'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export const Route = createFileRoute('/companies/$companyId/settings')({

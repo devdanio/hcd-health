@@ -1,21 +1,28 @@
-"use client"
+'use client'
 
-import { useLiveQuery } from "@tanstack/react-db"
-import { useCollections } from "@/routes/__root"
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Textarea } from "@/components/ui/textarea"
+import { useLiveQuery } from '@tanstack/react-db'
+import { useCollections } from '@/routes/__root'
+import { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Textarea } from '@/components/ui/textarea'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { toast } from "sonner"
+} from '@/components/ui/select'
+import { toast } from 'sonner'
+import { EhrType } from '@/generated/prisma/enums'
 
 interface CompanySettingsProps {
   companyId: string
@@ -24,32 +31,31 @@ interface CompanySettingsProps {
 export function CompanySettings({ companyId }: CompanySettingsProps) {
   const { companiesCollection } = useCollections()
   const { data: companies } = useLiveQuery((q) =>
-    q.from({ company: companiesCollection })
+    q.from({ company: companiesCollection }),
   )
-  const company = companies?.find(c => c.id === companyId)
+  const company = companies?.find((c) => c.id === companyId)
 
-  const [name, setName] = useState("")
-  const [companyBrief, setCompanyBrief] = useState("")
-  const [ehr, setEhr] = useState<string>("")
+  const [name, setName] = useState('')
+  const [companyBrief, setCompanyBrief] = useState('')
+  const [ehr, setEhr] = useState<string>('')
 
   useEffect(() => {
     if (company) {
       setName(company.name)
-      setCompanyBrief(company.companyBrief || "")
-      setEhr(company.ehr || "")
+      setCompanyBrief(company.companyBrief || '')
+      setEhr(company.ehr || '')
     }
   }, [company])
 
   const handleSave = async () => {
     try {
-      await companiesCollection.update(companyId, {
-        name,
-        companyBrief,
-        ehr: ehr || null
+      companiesCollection.update({ id: companyId, ehr: ehr }, (draft) => {
+        draft.ehr = ehr as EhrType
       })
-      toast.success("Company settings updated")
+      toast.success('Company settings updated')
     } catch (error) {
-      toast.error("Failed to update company settings")
+      console.error('Failed to update company settings:', error)
+      toast.error('Failed to update company settings')
     }
   }
 
@@ -96,7 +102,7 @@ export function CompanySettings({ companyId }: CompanySettingsProps) {
               type="button"
               variant="ghost"
               size="sm"
-              onClick={() => setEhr("")}
+              onClick={() => setEhr('')}
               className="h-8 px-2 text-xs"
             >
               Clear selection

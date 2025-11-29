@@ -34,6 +34,8 @@ export type ContactMinAggregateOutputType = {
   fullName: string | null
   firstName: string | null
   lastName: string | null
+  gender: string | null
+  dateOfBirth: Date | null
   ghlContactId: string | null
   chirotouchAccountId: string | null
 }
@@ -48,6 +50,8 @@ export type ContactMaxAggregateOutputType = {
   fullName: string | null
   firstName: string | null
   lastName: string | null
+  gender: string | null
+  dateOfBirth: Date | null
   ghlContactId: string | null
   chirotouchAccountId: string | null
 }
@@ -62,6 +66,8 @@ export type ContactCountAggregateOutputType = {
   fullName: number
   firstName: number
   lastName: number
+  gender: number
+  dateOfBirth: number
   ghlContactId: number
   chirotouchAccountId: number
   _all: number
@@ -78,6 +84,8 @@ export type ContactMinAggregateInputType = {
   fullName?: true
   firstName?: true
   lastName?: true
+  gender?: true
+  dateOfBirth?: true
   ghlContactId?: true
   chirotouchAccountId?: true
 }
@@ -92,6 +100,8 @@ export type ContactMaxAggregateInputType = {
   fullName?: true
   firstName?: true
   lastName?: true
+  gender?: true
+  dateOfBirth?: true
   ghlContactId?: true
   chirotouchAccountId?: true
 }
@@ -106,6 +116,8 @@ export type ContactCountAggregateInputType = {
   fullName?: true
   firstName?: true
   lastName?: true
+  gender?: true
+  dateOfBirth?: true
   ghlContactId?: true
   chirotouchAccountId?: true
   _all?: true
@@ -193,6 +205,8 @@ export type ContactGroupByOutputType = {
   fullName: string | null
   firstName: string | null
   lastName: string | null
+  gender: string | null
+  dateOfBirth: Date | null
   ghlContactId: string | null
   chirotouchAccountId: string | null
   _count: ContactCountAggregateOutputType | null
@@ -228,6 +242,8 @@ export type ContactWhereInput = {
   fullName?: Prisma.StringNullableFilter<"Contact"> | string | null
   firstName?: Prisma.StringNullableFilter<"Contact"> | string | null
   lastName?: Prisma.StringNullableFilter<"Contact"> | string | null
+  gender?: Prisma.StringNullableFilter<"Contact"> | string | null
+  dateOfBirth?: Prisma.DateTimeNullableFilter<"Contact"> | Date | string | null
   ghlContactId?: Prisma.StringNullableFilter<"Contact"> | string | null
   chirotouchAccountId?: Prisma.StringNullableFilter<"Contact"> | string | null
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
@@ -246,6 +262,8 @@ export type ContactOrderByWithRelationInput = {
   fullName?: Prisma.SortOrderInput | Prisma.SortOrder
   firstName?: Prisma.SortOrderInput | Prisma.SortOrder
   lastName?: Prisma.SortOrderInput | Prisma.SortOrder
+  gender?: Prisma.SortOrderInput | Prisma.SortOrder
+  dateOfBirth?: Prisma.SortOrderInput | Prisma.SortOrder
   ghlContactId?: Prisma.SortOrderInput | Prisma.SortOrder
   chirotouchAccountId?: Prisma.SortOrderInput | Prisma.SortOrder
   company?: Prisma.CompanyOrderByWithRelationInput
@@ -269,6 +287,8 @@ export type ContactWhereUniqueInput = Prisma.AtLeast<{
   fullName?: Prisma.StringNullableFilter<"Contact"> | string | null
   firstName?: Prisma.StringNullableFilter<"Contact"> | string | null
   lastName?: Prisma.StringNullableFilter<"Contact"> | string | null
+  gender?: Prisma.StringNullableFilter<"Contact"> | string | null
+  dateOfBirth?: Prisma.DateTimeNullableFilter<"Contact"> | Date | string | null
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   ghlContact?: Prisma.XOR<Prisma.GhlContactNullableScalarRelationFilter, Prisma.GhlContactWhereInput> | null
   sessions?: Prisma.SessionListRelationFilter
@@ -285,6 +305,8 @@ export type ContactOrderByWithAggregationInput = {
   fullName?: Prisma.SortOrderInput | Prisma.SortOrder
   firstName?: Prisma.SortOrderInput | Prisma.SortOrder
   lastName?: Prisma.SortOrderInput | Prisma.SortOrder
+  gender?: Prisma.SortOrderInput | Prisma.SortOrder
+  dateOfBirth?: Prisma.SortOrderInput | Prisma.SortOrder
   ghlContactId?: Prisma.SortOrderInput | Prisma.SortOrder
   chirotouchAccountId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ContactCountOrderByAggregateInput
@@ -305,6 +327,8 @@ export type ContactScalarWhereWithAggregatesInput = {
   fullName?: Prisma.StringNullableWithAggregatesFilter<"Contact"> | string | null
   firstName?: Prisma.StringNullableWithAggregatesFilter<"Contact"> | string | null
   lastName?: Prisma.StringNullableWithAggregatesFilter<"Contact"> | string | null
+  gender?: Prisma.StringNullableWithAggregatesFilter<"Contact"> | string | null
+  dateOfBirth?: Prisma.DateTimeNullableWithAggregatesFilter<"Contact"> | Date | string | null
   ghlContactId?: Prisma.StringNullableWithAggregatesFilter<"Contact"> | string | null
   chirotouchAccountId?: Prisma.StringNullableWithAggregatesFilter<"Contact"> | string | null
 }
@@ -318,6 +342,8 @@ export type ContactCreateInput = {
   fullName?: string | null
   firstName?: string | null
   lastName?: string | null
+  gender?: string | null
+  dateOfBirth?: Date | string | null
   chirotouchAccountId?: string | null
   company: Prisma.CompanyCreateNestedOneWithoutContactsInput
   ghlContact?: Prisma.GhlContactCreateNestedOneWithoutContactInput
@@ -335,6 +361,8 @@ export type ContactUncheckedCreateInput = {
   fullName?: string | null
   firstName?: string | null
   lastName?: string | null
+  gender?: string | null
+  dateOfBirth?: Date | string | null
   ghlContactId?: string | null
   chirotouchAccountId?: string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutContactInput
@@ -350,6 +378,8 @@ export type ContactUpdateInput = {
   fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.CompanyUpdateOneRequiredWithoutContactsNestedInput
   ghlContact?: Prisma.GhlContactUpdateOneWithoutContactNestedInput
@@ -367,6 +397,8 @@ export type ContactUncheckedUpdateInput = {
   fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ghlContactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutContactNestedInput
@@ -383,6 +415,8 @@ export type ContactCreateManyInput = {
   fullName?: string | null
   firstName?: string | null
   lastName?: string | null
+  gender?: string | null
+  dateOfBirth?: Date | string | null
   ghlContactId?: string | null
   chirotouchAccountId?: string | null
 }
@@ -396,6 +430,8 @@ export type ContactUpdateManyMutationInput = {
   fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -409,6 +445,8 @@ export type ContactUncheckedUpdateManyInput = {
   fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ghlContactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -433,6 +471,8 @@ export type ContactCountOrderByAggregateInput = {
   fullName?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  dateOfBirth?: Prisma.SortOrder
   ghlContactId?: Prisma.SortOrder
   chirotouchAccountId?: Prisma.SortOrder
 }
@@ -447,6 +487,8 @@ export type ContactMaxOrderByAggregateInput = {
   fullName?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  dateOfBirth?: Prisma.SortOrder
   ghlContactId?: Prisma.SortOrder
   chirotouchAccountId?: Prisma.SortOrder
 }
@@ -461,6 +503,8 @@ export type ContactMinOrderByAggregateInput = {
   fullName?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  dateOfBirth?: Prisma.SortOrder
   ghlContactId?: Prisma.SortOrder
   chirotouchAccountId?: Prisma.SortOrder
 }
@@ -586,6 +630,8 @@ export type ContactCreateWithoutCompanyInput = {
   fullName?: string | null
   firstName?: string | null
   lastName?: string | null
+  gender?: string | null
+  dateOfBirth?: Date | string | null
   chirotouchAccountId?: string | null
   ghlContact?: Prisma.GhlContactCreateNestedOneWithoutContactInput
   sessions?: Prisma.SessionCreateNestedManyWithoutContactInput
@@ -601,6 +647,8 @@ export type ContactUncheckedCreateWithoutCompanyInput = {
   fullName?: string | null
   firstName?: string | null
   lastName?: string | null
+  gender?: string | null
+  dateOfBirth?: Date | string | null
   ghlContactId?: string | null
   chirotouchAccountId?: string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutContactInput
@@ -646,6 +694,8 @@ export type ContactScalarWhereInput = {
   fullName?: Prisma.StringNullableFilter<"Contact"> | string | null
   firstName?: Prisma.StringNullableFilter<"Contact"> | string | null
   lastName?: Prisma.StringNullableFilter<"Contact"> | string | null
+  gender?: Prisma.StringNullableFilter<"Contact"> | string | null
+  dateOfBirth?: Prisma.DateTimeNullableFilter<"Contact"> | Date | string | null
   ghlContactId?: Prisma.StringNullableFilter<"Contact"> | string | null
   chirotouchAccountId?: Prisma.StringNullableFilter<"Contact"> | string | null
 }
@@ -659,6 +709,8 @@ export type ContactCreateWithoutGhlContactInput = {
   fullName?: string | null
   firstName?: string | null
   lastName?: string | null
+  gender?: string | null
+  dateOfBirth?: Date | string | null
   chirotouchAccountId?: string | null
   company: Prisma.CompanyCreateNestedOneWithoutContactsInput
   sessions?: Prisma.SessionCreateNestedManyWithoutContactInput
@@ -675,6 +727,8 @@ export type ContactUncheckedCreateWithoutGhlContactInput = {
   fullName?: string | null
   firstName?: string | null
   lastName?: string | null
+  gender?: string | null
+  dateOfBirth?: Date | string | null
   chirotouchAccountId?: string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutContactInput
   patient?: Prisma.PatientUncheckedCreateNestedOneWithoutContactInput
@@ -705,6 +759,8 @@ export type ContactUpdateWithoutGhlContactInput = {
   fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.CompanyUpdateOneRequiredWithoutContactsNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutContactNestedInput
@@ -721,6 +777,8 @@ export type ContactUncheckedUpdateWithoutGhlContactInput = {
   fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutContactNestedInput
   patient?: Prisma.PatientUncheckedUpdateOneWithoutContactNestedInput
@@ -735,6 +793,8 @@ export type ContactCreateWithoutSessionsInput = {
   fullName?: string | null
   firstName?: string | null
   lastName?: string | null
+  gender?: string | null
+  dateOfBirth?: Date | string | null
   chirotouchAccountId?: string | null
   company: Prisma.CompanyCreateNestedOneWithoutContactsInput
   ghlContact?: Prisma.GhlContactCreateNestedOneWithoutContactInput
@@ -751,6 +811,8 @@ export type ContactUncheckedCreateWithoutSessionsInput = {
   fullName?: string | null
   firstName?: string | null
   lastName?: string | null
+  gender?: string | null
+  dateOfBirth?: Date | string | null
   ghlContactId?: string | null
   chirotouchAccountId?: string | null
   patient?: Prisma.PatientUncheckedCreateNestedOneWithoutContactInput
@@ -781,6 +843,8 @@ export type ContactUpdateWithoutSessionsInput = {
   fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.CompanyUpdateOneRequiredWithoutContactsNestedInput
   ghlContact?: Prisma.GhlContactUpdateOneWithoutContactNestedInput
@@ -797,6 +861,8 @@ export type ContactUncheckedUpdateWithoutSessionsInput = {
   fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ghlContactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   patient?: Prisma.PatientUncheckedUpdateOneWithoutContactNestedInput
@@ -811,6 +877,8 @@ export type ContactCreateWithoutPatientInput = {
   fullName?: string | null
   firstName?: string | null
   lastName?: string | null
+  gender?: string | null
+  dateOfBirth?: Date | string | null
   chirotouchAccountId?: string | null
   company: Prisma.CompanyCreateNestedOneWithoutContactsInput
   ghlContact?: Prisma.GhlContactCreateNestedOneWithoutContactInput
@@ -827,6 +895,8 @@ export type ContactUncheckedCreateWithoutPatientInput = {
   fullName?: string | null
   firstName?: string | null
   lastName?: string | null
+  gender?: string | null
+  dateOfBirth?: Date | string | null
   ghlContactId?: string | null
   chirotouchAccountId?: string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutContactInput
@@ -857,6 +927,8 @@ export type ContactUpdateWithoutPatientInput = {
   fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.CompanyUpdateOneRequiredWithoutContactsNestedInput
   ghlContact?: Prisma.GhlContactUpdateOneWithoutContactNestedInput
@@ -873,6 +945,8 @@ export type ContactUncheckedUpdateWithoutPatientInput = {
   fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ghlContactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutContactNestedInput
@@ -887,6 +961,8 @@ export type ContactCreateManyCompanyInput = {
   fullName?: string | null
   firstName?: string | null
   lastName?: string | null
+  gender?: string | null
+  dateOfBirth?: Date | string | null
   ghlContactId?: string | null
   chirotouchAccountId?: string | null
 }
@@ -900,6 +976,8 @@ export type ContactUpdateWithoutCompanyInput = {
   fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ghlContact?: Prisma.GhlContactUpdateOneWithoutContactNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutContactNestedInput
@@ -915,6 +993,8 @@ export type ContactUncheckedUpdateWithoutCompanyInput = {
   fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ghlContactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutContactNestedInput
@@ -930,6 +1010,8 @@ export type ContactUncheckedUpdateManyWithoutCompanyInput = {
   fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ghlContactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -975,6 +1057,8 @@ export type ContactSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   fullName?: boolean
   firstName?: boolean
   lastName?: boolean
+  gender?: boolean
+  dateOfBirth?: boolean
   ghlContactId?: boolean
   chirotouchAccountId?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
@@ -994,6 +1078,8 @@ export type ContactSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   fullName?: boolean
   firstName?: boolean
   lastName?: boolean
+  gender?: boolean
+  dateOfBirth?: boolean
   ghlContactId?: boolean
   chirotouchAccountId?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
@@ -1010,6 +1096,8 @@ export type ContactSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   fullName?: boolean
   firstName?: boolean
   lastName?: boolean
+  gender?: boolean
+  dateOfBirth?: boolean
   ghlContactId?: boolean
   chirotouchAccountId?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
@@ -1026,11 +1114,13 @@ export type ContactSelectScalar = {
   fullName?: boolean
   firstName?: boolean
   lastName?: boolean
+  gender?: boolean
+  dateOfBirth?: boolean
   ghlContactId?: boolean
   chirotouchAccountId?: boolean
 }
 
-export type ContactOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "companyId" | "email" | "phone" | "fullName" | "firstName" | "lastName" | "ghlContactId" | "chirotouchAccountId", ExtArgs["result"]["contact"]>
+export type ContactOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "companyId" | "email" | "phone" | "fullName" | "firstName" | "lastName" | "gender" | "dateOfBirth" | "ghlContactId" | "chirotouchAccountId", ExtArgs["result"]["contact"]>
 export type ContactInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   ghlContact?: boolean | Prisma.Contact$ghlContactArgs<ExtArgs>
@@ -1065,6 +1155,8 @@ export type $ContactPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     fullName: string | null
     firstName: string | null
     lastName: string | null
+    gender: string | null
+    dateOfBirth: Date | null
     ghlContactId: string | null
     chirotouchAccountId: string | null
   }, ExtArgs["result"]["contact"]>
@@ -1503,6 +1595,8 @@ export interface ContactFieldRefs {
   readonly fullName: Prisma.FieldRef<"Contact", 'String'>
   readonly firstName: Prisma.FieldRef<"Contact", 'String'>
   readonly lastName: Prisma.FieldRef<"Contact", 'String'>
+  readonly gender: Prisma.FieldRef<"Contact", 'String'>
+  readonly dateOfBirth: Prisma.FieldRef<"Contact", 'DateTime'>
   readonly ghlContactId: Prisma.FieldRef<"Contact", 'String'>
   readonly chirotouchAccountId: Prisma.FieldRef<"Contact", 'String'>
 }

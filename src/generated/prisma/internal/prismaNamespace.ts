@@ -1378,6 +1378,8 @@ export const ContactScalarFieldEnum = {
   fullName: 'fullName',
   firstName: 'firstName',
   lastName: 'lastName',
+  gender: 'gender',
+  dateOfBirth: 'dateOfBirth',
   ghlContactId: 'ghlContactId',
   chirotouchAccountId: 'chirotouchAccountId'
 } as const
@@ -1503,6 +1505,11 @@ export type AppointmentProcedureScalarFieldEnum = (typeof AppointmentProcedureSc
 export const PatientScalarFieldEnum = {
   id: 'id',
   contactId: 'contactId',
+  address1: 'address1',
+  address2: 'address2',
+  zip: 'zip',
+  city: 'city',
+  state: 'state',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

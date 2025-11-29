@@ -27,8 +27,8 @@ export const updateCompanySchema = z.object({
   companyId: z.string(),
   name: z.string().min(1).optional(),
   domain: z.string().optional(),
-  companyBrief: z.string().optional(),
-  ehr: z.enum(['unified_practice', 'ghl']).optional(),
+  companyBrief: z.string().optional().nullable(),
+  ehr: z.enum(['unified_practice', 'ghl']).optional().nullable(),
 })
 
 export const deleteCompanySchema = z.object({
@@ -191,10 +191,7 @@ export function createCompaniesCollection(queryClient: QueryClient) {
         await updateCompany({
           data: {
             companyId: original.id,
-            name: modified.name,
-            domain: modified.domain,
-            companyBrief: modified.companyBrief,
-            ehr: modified.ehr,
+            ...modified,
           },
         })
       },
