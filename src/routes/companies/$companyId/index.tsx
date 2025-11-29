@@ -39,8 +39,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useState, useMemo } from 'react'
-import { getCompany } from '@/server/functions/companies'
-import { getSessions, getSessionPageViews, getLast24HoursVisitors, getTopPages } from '@/server/functions/tracking'
+import { getCompany, getSessions, getSessionPageViews, getLast24HoursVisitors, getTopPages } from '@/collections'
 import { ChartAreaInteractive } from '@/components/chart-area-interactive'
 import { ChartCategories } from '@/components/chart-categories'
 import {

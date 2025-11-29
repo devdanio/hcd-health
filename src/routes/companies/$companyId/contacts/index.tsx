@@ -89,8 +89,8 @@ function ContactsPage() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [globalFilter, setGlobalFilter] = useState('')
 
-  // Fetch contacts and analytics data
   const contacts = useQuery(api.contacts.getContacts, {
+    // Fetch contacts and analytics data
     companyId: companyId as Id<'companies'>,
   })
 

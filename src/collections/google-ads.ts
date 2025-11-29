@@ -1,17 +1,49 @@
 import { createServerFn } from '@tanstack/react-start'
+import { z } from 'zod'
+import { prisma } from '@/server/db/client'
+import { encryptToken, decryptToken } from '@/server/lib/encryption'
 
-import { prisma } from '../db/client'
-import { encryptToken, decryptToken } from '../lib/encryption'
-import {
-  generateOAuthUrlSchema,
-  handleOAuthCallbackSchema,
-  listAccessibleAccountsSchema,
-  selectAccountSchema,
-  refreshAccessTokenSchema,
-  disconnectGoogleAdsSchema,
-  getCampaignsSchema,
-  ensureValidTokenSchema,
-} from '../schemas/google-ads'
+// ============================================================================
+// Schemas
+// ============================================================================
+
+export const generateOAuthUrlSchema = z.object({
+  companyId: z.string(),
+})
+
+export const handleOAuthCallbackSchema = z.object({
+  code: z.string(),
+  state: z.string(),
+})
+
+export const listAccessibleAccountsSchema = z.object({
+  companyId: z.string(),
+})
+
+export const selectAccountSchema = z.object({
+  companyId: z.string(),
+  customerId: z.string(),
+})
+
+export const refreshAccessTokenSchema = z.object({
+  companyId: z.string(),
+})
+
+export const disconnectGoogleAdsSchema = z.object({
+  companyId: z.string(),
+})
+
+export const getCampaignsSchema = z.object({
+  companyId: z.string(),
+})
+
+export const ensureValidTokenSchema = z.object({
+  companyId: z.string(),
+})
+
+// ============================================================================
+// Helper Functions
+// ============================================================================
 
 /**
  * Generate a secure random string for OAuth state parameter
@@ -26,6 +58,10 @@ function generateSecureState(companyId: string): string {
   const stateData = `${companyId}:${randomHex}`
   return btoa(stateData)
 }
+
+// ============================================================================
+// Server Functions
+// ============================================================================
 
 /**
  * Generate OAuth URL for Google Ads authorization

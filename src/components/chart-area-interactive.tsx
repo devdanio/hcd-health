@@ -3,7 +3,7 @@
 import * as React from "react"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 import { useQuery } from "@tanstack/react-query"
-import { getVisitorAnalytics } from "@/server/functions/tracking"
+import { getVisitorAnalytics } from "@/collections"
 
 import {
   Card,

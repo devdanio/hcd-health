@@ -20,7 +20,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createContext, useContext, useMemo } from 'react'
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
-import { createCollections, type Collections } from '../lib/collections'
+import { createCollections, type Collections } from '@/collections'
 
 import appCss from '../styles.css?url'
 import { auth } from '@clerk/tanstack-react-start/server'

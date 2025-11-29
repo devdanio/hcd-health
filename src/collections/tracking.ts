@@ -1,18 +1,95 @@
 import { createServerFn } from '@tanstack/react-start'
+import { createCollection } from '@tanstack/react-db'
+import { queryCollectionOptions } from '@tanstack/query-db-collection'
+import { z } from 'zod'
+import { prisma } from '@/server/db/client'
+import { resolveChannel } from '@/server/lib/channel-resolver'
+import type { QueryClient } from '@tanstack/react-query'
 
-import { prisma } from '../db/client'
-import {
-  trackPageViewSchema,
-  getSessionsSchema,
-  getVisitorAnalyticsSchema,
-  getCategoryAnalyticsSchema,
-  getSessionDetailsSchema,
-  getTopPagesSchema,
-  getLast24HoursVisitorsSchema,
-  getSessionPageViewsSchema,
-  type AttributionData,
-} from '../schemas/tracking'
-import { resolveChannel } from '../lib/channel-resolver'
+// ============================================================================
+// Schemas
+// ============================================================================
+
+// Attribution data schema
+export const attributionSchema = z.object({
+  // UTM parameters
+  utm_source: z.string().optional(),
+  utm_medium: z.string().optional(),
+  utm_campaign: z.string().optional(),
+  utm_content: z.string().optional(),
+  utm_term: z.string().optional(),
+
+  // Click IDs
+  fbclid: z.string().optional(),
+  gclid: z.string().optional(),
+  msclkid: z.string().optional(),
+  ttclid: z.string().optional(),
+  twclid: z.string().optional(),
+  li_fat_id: z.string().optional(),
+  ScCid: z.string().optional(),
+
+  // Page data
+  url: z.string().url(),
+  referrer: z.string().optional(),
+  timestamp: z.number().optional(),
+})
+
+export type AttributionData = z.infer<typeof attributionSchema>
+
+// Track page view schema
+export const trackPageViewSchema = z.object({
+  apiKey: z.string(),
+  visitorId: z.string(),
+  sessionId: z.string(),
+  metadata: attributionSchema,
+  userAgent: z.string().optional(),
+  ipAddress: z.string().optional(),
+  screenResolution: z.string().optional(),
+  timezone: z.string().optional(),
+})
+
+// Get sessions schema
+export const getSessionsSchema = z.object({
+  companyId: z.string(),
+  limit: z.number().optional(),
+})
+
+// Get session page views schema
+export const getSessionPageViewsSchema = z.object({
+  sessionId: z.string(),
+})
+
+// Get visitor analytics schema
+export const getVisitorAnalyticsSchema = z.object({
+  companyId: z.string(),
+  timeRange: z.enum(['24h', '7d', '30d', '90d']),
+})
+
+// Get category analytics schema
+export const getCategoryAnalyticsSchema = z.object({
+  companyId: z.string(),
+  timeRange: z.enum(['24h', '7d', '30d', '90d']).optional(),
+})
+
+// Get session details schema
+export const getSessionDetailsSchema = z.object({
+  sessionId: z.string(),
+})
+
+// Get top pages schema
+export const getTopPagesSchema = z.object({
+  companyId: z.string(),
+  timeRange: z.enum(['24h', '7d', '30d', '90d']),
+})
+
+// Get last 24h visitors schema
+export const getLast24HoursVisitorsSchema = z.object({
+  companyId: z.string(),
+})
+
+// ============================================================================
+// Server Functions
+// ============================================================================
 
 /**
  * Track a page view event
@@ -415,3 +492,25 @@ export const getTopPages = createServerFn({ method: 'GET' })
       .sort((a, b) => b.sessions - a.sessions)
       .slice(0, 3)
   })
+
+// ============================================================================
+// Collection
+// ============================================================================
+
+export function createSessionsCollection(queryClient: QueryClient) {
+  return createCollection(
+    queryCollectionOptions({
+      id: 'sessions',
+      queryKey: ['sessions'],
+      queryFn: async (ctx) => {
+        const companyId = ctx.meta?.companyId as string | undefined
+        const limit = ctx.meta?.limit as number | undefined
+        if (!companyId) return []
+        return await getSessions({ data: { companyId, limit: limit || 500 } })
+      },
+      queryClient,
+      getKey: (item) => item.id,
+      // Read-only collection - no mutations
+    }),
+  )
+}

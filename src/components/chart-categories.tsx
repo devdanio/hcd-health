@@ -3,7 +3,7 @@
 import * as React from "react"
 import { Pie, PieChart, Cell, Label } from "recharts"
 import { useQuery } from "@tanstack/react-query"
-import { getCategoryAnalytics } from "@/server/functions/tracking"
+import { getCategoryAnalytics } from "@/collections"
 
 import {
   Card,
