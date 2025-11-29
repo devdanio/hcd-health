@@ -130,7 +130,7 @@ export function PatientLocationMap({ patients }: PatientLocationMapProps) {
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/light-v11',
       center: [CLINIC_LOCATION.longitude, CLINIC_LOCATION.latitude],
-      zoom: 11,
+      zoom: 8,
     })
 
     // Add navigation controls
