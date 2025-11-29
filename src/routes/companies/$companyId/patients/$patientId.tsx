@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useQuery } from 'convex/react'
-import { api } from '../../../../../convex/_generated/api'
-import { Id } from '../../../../../convex/_generated/dataModel'
+import { useLiveQuery } from '@tanstack/react-db'
+import { useCollections } from '@/routes/__root'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
@@ -29,14 +28,18 @@ export const Route = createFileRoute(
 
 function PatientDetailPage() {
   const { companyId, patientId } = Route.useParams()
+  const { patientsCollection } = useCollections()
 
-  const patient = useQuery(api.patients.getPatient, {
-    id: patientId as Id<'patients'>,
-  })
+  const { data: patients } = useLiveQuery((q) =>
+    q.from({ patient: patientsCollection })
+      .setMeta({ companyId })
+  )
+
+  const patient = patients?.find(p => p.id === patientId)
 
   const [isEditOpen, setIsEditOpen] = useState(false)
 
-  if (patient === undefined) {
+  if (patients === undefined) {
     return (
       <div className="container mx-auto p-8">
         <div>Loading...</div>
@@ -44,7 +47,7 @@ function PatientDetailPage() {
     )
   }
 
-  if (patient === null) {
+  if (!patient) {
     return (
       <div className="container mx-auto p-8">
         <div>Patient not found</div>
@@ -77,7 +80,7 @@ function PatientDetailPage() {
                 </DialogTrigger>
                 <DialogContent className="max-w-2xl">
                   <PatientForm
-                    patientId={patientId as Id<'patients'>}
+                    patientId={patientId}
                     patientData={{
                       firstName: patient.contact?.firstName || '',
                       lastName: patient.contact?.lastName || '',

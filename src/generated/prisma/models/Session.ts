@@ -27,7 +27,6 @@ export type AggregateSession = {
 export type SessionMinAggregateOutputType = {
   id: string | null
   browserSessionId: string | null
-  companyId: string | null
   contactId: string | null
   userAgent: string | null
   ipAddress: string | null
@@ -35,12 +34,12 @@ export type SessionMinAggregateOutputType = {
   timezone: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  companyId: string | null
 }
 
 export type SessionMaxAggregateOutputType = {
   id: string | null
   browserSessionId: string | null
-  companyId: string | null
   contactId: string | null
   userAgent: string | null
   ipAddress: string | null
@@ -48,12 +47,12 @@ export type SessionMaxAggregateOutputType = {
   timezone: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  companyId: string | null
 }
 
 export type SessionCountAggregateOutputType = {
   id: number
   browserSessionId: number
-  companyId: number
   contactId: number
   userAgent: number
   ipAddress: number
@@ -63,6 +62,7 @@ export type SessionCountAggregateOutputType = {
   lastSessionAttribution: number
   createdAt: number
   updatedAt: number
+  companyId: number
   _all: number
 }
 
@@ -70,7 +70,6 @@ export type SessionCountAggregateOutputType = {
 export type SessionMinAggregateInputType = {
   id?: true
   browserSessionId?: true
-  companyId?: true
   contactId?: true
   userAgent?: true
   ipAddress?: true
@@ -78,12 +77,12 @@ export type SessionMinAggregateInputType = {
   timezone?: true
   createdAt?: true
   updatedAt?: true
+  companyId?: true
 }
 
 export type SessionMaxAggregateInputType = {
   id?: true
   browserSessionId?: true
-  companyId?: true
   contactId?: true
   userAgent?: true
   ipAddress?: true
@@ -91,12 +90,12 @@ export type SessionMaxAggregateInputType = {
   timezone?: true
   createdAt?: true
   updatedAt?: true
+  companyId?: true
 }
 
 export type SessionCountAggregateInputType = {
   id?: true
   browserSessionId?: true
-  companyId?: true
   contactId?: true
   userAgent?: true
   ipAddress?: true
@@ -106,6 +105,7 @@ export type SessionCountAggregateInputType = {
   lastSessionAttribution?: true
   createdAt?: true
   updatedAt?: true
+  companyId?: true
   _all?: true
 }
 
@@ -184,7 +184,6 @@ export type SessionGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type SessionGroupByOutputType = {
   id: string
   browserSessionId: string
-  companyId: string
   contactId: string
   userAgent: string | null
   ipAddress: string | null
@@ -194,6 +193,7 @@ export type SessionGroupByOutputType = {
   lastSessionAttribution: runtime.JsonValue
   createdAt: Date
   updatedAt: Date
+  companyId: string | null
   _count: SessionCountAggregateOutputType | null
   _min: SessionMinAggregateOutputType | null
   _max: SessionMaxAggregateOutputType | null
@@ -220,7 +220,6 @@ export type SessionWhereInput = {
   NOT?: Prisma.SessionWhereInput | Prisma.SessionWhereInput[]
   id?: Prisma.StringFilter<"Session"> | string
   browserSessionId?: Prisma.StringFilter<"Session"> | string
-  companyId?: Prisma.StringFilter<"Session"> | string
   contactId?: Prisma.StringFilter<"Session"> | string
   userAgent?: Prisma.StringNullableFilter<"Session"> | string | null
   ipAddress?: Prisma.StringNullableFilter<"Session"> | string | null
@@ -230,15 +229,15 @@ export type SessionWhereInput = {
   lastSessionAttribution?: Prisma.JsonFilter<"Session">
   createdAt?: Prisma.DateTimeFilter<"Session"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Session"> | Date | string
-  company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
+  companyId?: Prisma.StringNullableFilter<"Session"> | string | null
   contact?: Prisma.XOR<Prisma.ContactScalarRelationFilter, Prisma.ContactWhereInput>
   events?: Prisma.EventListRelationFilter
+  company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
 }
 
 export type SessionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   browserSessionId?: Prisma.SortOrder
-  companyId?: Prisma.SortOrder
   contactId?: Prisma.SortOrder
   userAgent?: Prisma.SortOrderInput | Prisma.SortOrder
   ipAddress?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -248,9 +247,10 @@ export type SessionOrderByWithRelationInput = {
   lastSessionAttribution?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  company?: Prisma.CompanyOrderByWithRelationInput
+  companyId?: Prisma.SortOrderInput | Prisma.SortOrder
   contact?: Prisma.ContactOrderByWithRelationInput
   events?: Prisma.EventOrderByRelationAggregateInput
+  company?: Prisma.CompanyOrderByWithRelationInput
 }
 
 export type SessionWhereUniqueInput = Prisma.AtLeast<{
@@ -259,7 +259,6 @@ export type SessionWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.SessionWhereInput | Prisma.SessionWhereInput[]
   OR?: Prisma.SessionWhereInput[]
   NOT?: Prisma.SessionWhereInput | Prisma.SessionWhereInput[]
-  companyId?: Prisma.StringFilter<"Session"> | string
   contactId?: Prisma.StringFilter<"Session"> | string
   userAgent?: Prisma.StringNullableFilter<"Session"> | string | null
   ipAddress?: Prisma.StringNullableFilter<"Session"> | string | null
@@ -269,15 +268,15 @@ export type SessionWhereUniqueInput = Prisma.AtLeast<{
   lastSessionAttribution?: Prisma.JsonFilter<"Session">
   createdAt?: Prisma.DateTimeFilter<"Session"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Session"> | Date | string
-  company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
+  companyId?: Prisma.StringNullableFilter<"Session"> | string | null
   contact?: Prisma.XOR<Prisma.ContactScalarRelationFilter, Prisma.ContactWhereInput>
   events?: Prisma.EventListRelationFilter
+  company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
 }, "id" | "browserSessionId">
 
 export type SessionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   browserSessionId?: Prisma.SortOrder
-  companyId?: Prisma.SortOrder
   contactId?: Prisma.SortOrder
   userAgent?: Prisma.SortOrderInput | Prisma.SortOrder
   ipAddress?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -287,6 +286,7 @@ export type SessionOrderByWithAggregationInput = {
   lastSessionAttribution?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  companyId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.SessionCountOrderByAggregateInput
   _max?: Prisma.SessionMaxOrderByAggregateInput
   _min?: Prisma.SessionMinOrderByAggregateInput
@@ -298,7 +298,6 @@ export type SessionScalarWhereWithAggregatesInput = {
   NOT?: Prisma.SessionScalarWhereWithAggregatesInput | Prisma.SessionScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Session"> | string
   browserSessionId?: Prisma.StringWithAggregatesFilter<"Session"> | string
-  companyId?: Prisma.StringWithAggregatesFilter<"Session"> | string
   contactId?: Prisma.StringWithAggregatesFilter<"Session"> | string
   userAgent?: Prisma.StringNullableWithAggregatesFilter<"Session"> | string | null
   ipAddress?: Prisma.StringNullableWithAggregatesFilter<"Session"> | string | null
@@ -308,6 +307,7 @@ export type SessionScalarWhereWithAggregatesInput = {
   lastSessionAttribution?: Prisma.JsonWithAggregatesFilter<"Session">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Session"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Session"> | Date | string
+  companyId?: Prisma.StringNullableWithAggregatesFilter<"Session"> | string | null
 }
 
 export type SessionCreateInput = {
@@ -321,15 +321,14 @@ export type SessionCreateInput = {
   lastSessionAttribution: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
-  company: Prisma.CompanyCreateNestedOneWithoutSessionsInput
   contact: Prisma.ContactCreateNestedOneWithoutSessionsInput
   events?: Prisma.EventCreateNestedManyWithoutSessionInput
+  company?: Prisma.CompanyCreateNestedOneWithoutSessionsInput
 }
 
 export type SessionUncheckedCreateInput = {
   id?: string
   browserSessionId: string
-  companyId: string
   contactId: string
   userAgent?: string | null
   ipAddress?: string | null
@@ -339,6 +338,7 @@ export type SessionUncheckedCreateInput = {
   lastSessionAttribution: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  companyId?: string | null
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSessionInput
 }
 
@@ -353,15 +353,14 @@ export type SessionUpdateInput = {
   lastSessionAttribution?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  company?: Prisma.CompanyUpdateOneRequiredWithoutSessionsNestedInput
   contact?: Prisma.ContactUpdateOneRequiredWithoutSessionsNestedInput
   events?: Prisma.EventUpdateManyWithoutSessionNestedInput
+  company?: Prisma.CompanyUpdateOneWithoutSessionsNestedInput
 }
 
 export type SessionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   browserSessionId?: Prisma.StringFieldUpdateOperationsInput | string
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
   contactId?: Prisma.StringFieldUpdateOperationsInput | string
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -371,13 +370,13 @@ export type SessionUncheckedUpdateInput = {
   lastSessionAttribution?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   events?: Prisma.EventUncheckedUpdateManyWithoutSessionNestedInput
 }
 
 export type SessionCreateManyInput = {
   id?: string
   browserSessionId: string
-  companyId: string
   contactId: string
   userAgent?: string | null
   ipAddress?: string | null
@@ -387,6 +386,7 @@ export type SessionCreateManyInput = {
   lastSessionAttribution: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  companyId?: string | null
 }
 
 export type SessionUpdateManyMutationInput = {
@@ -405,7 +405,6 @@ export type SessionUpdateManyMutationInput = {
 export type SessionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   browserSessionId?: Prisma.StringFieldUpdateOperationsInput | string
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
   contactId?: Prisma.StringFieldUpdateOperationsInput | string
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -415,6 +414,7 @@ export type SessionUncheckedUpdateManyInput = {
   lastSessionAttribution?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type SessionListRelationFilter = {
@@ -430,7 +430,6 @@ export type SessionOrderByRelationAggregateInput = {
 export type SessionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   browserSessionId?: Prisma.SortOrder
-  companyId?: Prisma.SortOrder
   contactId?: Prisma.SortOrder
   userAgent?: Prisma.SortOrder
   ipAddress?: Prisma.SortOrder
@@ -440,12 +439,12 @@ export type SessionCountOrderByAggregateInput = {
   lastSessionAttribution?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  companyId?: Prisma.SortOrder
 }
 
 export type SessionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   browserSessionId?: Prisma.SortOrder
-  companyId?: Prisma.SortOrder
   contactId?: Prisma.SortOrder
   userAgent?: Prisma.SortOrder
   ipAddress?: Prisma.SortOrder
@@ -453,12 +452,12 @@ export type SessionMaxOrderByAggregateInput = {
   timezone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  companyId?: Prisma.SortOrder
 }
 
 export type SessionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   browserSessionId?: Prisma.SortOrder
-  companyId?: Prisma.SortOrder
   contactId?: Prisma.SortOrder
   userAgent?: Prisma.SortOrder
   ipAddress?: Prisma.SortOrder
@@ -466,6 +465,7 @@ export type SessionMinOrderByAggregateInput = {
   timezone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  companyId?: Prisma.SortOrder
 }
 
 export type SessionScalarRelationFilter = {
@@ -633,7 +633,6 @@ export type SessionScalarWhereInput = {
   NOT?: Prisma.SessionScalarWhereInput | Prisma.SessionScalarWhereInput[]
   id?: Prisma.StringFilter<"Session"> | string
   browserSessionId?: Prisma.StringFilter<"Session"> | string
-  companyId?: Prisma.StringFilter<"Session"> | string
   contactId?: Prisma.StringFilter<"Session"> | string
   userAgent?: Prisma.StringNullableFilter<"Session"> | string | null
   ipAddress?: Prisma.StringNullableFilter<"Session"> | string | null
@@ -643,6 +642,7 @@ export type SessionScalarWhereInput = {
   lastSessionAttribution?: Prisma.JsonFilter<"Session">
   createdAt?: Prisma.DateTimeFilter<"Session"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Session"> | Date | string
+  companyId?: Prisma.StringNullableFilter<"Session"> | string | null
 }
 
 export type SessionCreateWithoutContactInput = {
@@ -656,14 +656,13 @@ export type SessionCreateWithoutContactInput = {
   lastSessionAttribution: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
-  company: Prisma.CompanyCreateNestedOneWithoutSessionsInput
   events?: Prisma.EventCreateNestedManyWithoutSessionInput
+  company?: Prisma.CompanyCreateNestedOneWithoutSessionsInput
 }
 
 export type SessionUncheckedCreateWithoutContactInput = {
   id?: string
   browserSessionId: string
-  companyId: string
   userAgent?: string | null
   ipAddress?: string | null
   screenResolution?: string | null
@@ -672,6 +671,7 @@ export type SessionUncheckedCreateWithoutContactInput = {
   lastSessionAttribution: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  companyId?: string | null
   events?: Prisma.EventUncheckedCreateNestedManyWithoutSessionInput
 }
 
@@ -712,14 +712,13 @@ export type SessionCreateWithoutEventsInput = {
   lastSessionAttribution: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
-  company: Prisma.CompanyCreateNestedOneWithoutSessionsInput
   contact: Prisma.ContactCreateNestedOneWithoutSessionsInput
+  company?: Prisma.CompanyCreateNestedOneWithoutSessionsInput
 }
 
 export type SessionUncheckedCreateWithoutEventsInput = {
   id?: string
   browserSessionId: string
-  companyId: string
   contactId: string
   userAgent?: string | null
   ipAddress?: string | null
@@ -729,6 +728,7 @@ export type SessionUncheckedCreateWithoutEventsInput = {
   lastSessionAttribution: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  companyId?: string | null
 }
 
 export type SessionCreateOrConnectWithoutEventsInput = {
@@ -758,14 +758,13 @@ export type SessionUpdateWithoutEventsInput = {
   lastSessionAttribution?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  company?: Prisma.CompanyUpdateOneRequiredWithoutSessionsNestedInput
   contact?: Prisma.ContactUpdateOneRequiredWithoutSessionsNestedInput
+  company?: Prisma.CompanyUpdateOneWithoutSessionsNestedInput
 }
 
 export type SessionUncheckedUpdateWithoutEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   browserSessionId?: Prisma.StringFieldUpdateOperationsInput | string
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
   contactId?: Prisma.StringFieldUpdateOperationsInput | string
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -775,6 +774,7 @@ export type SessionUncheckedUpdateWithoutEventsInput = {
   lastSessionAttribution?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type SessionCreateManyCompanyInput = {
@@ -838,7 +838,6 @@ export type SessionUncheckedUpdateManyWithoutCompanyInput = {
 export type SessionCreateManyContactInput = {
   id?: string
   browserSessionId: string
-  companyId: string
   userAgent?: string | null
   ipAddress?: string | null
   screenResolution?: string | null
@@ -847,6 +846,7 @@ export type SessionCreateManyContactInput = {
   lastSessionAttribution: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  companyId?: string | null
 }
 
 export type SessionUpdateWithoutContactInput = {
@@ -860,14 +860,13 @@ export type SessionUpdateWithoutContactInput = {
   lastSessionAttribution?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  company?: Prisma.CompanyUpdateOneRequiredWithoutSessionsNestedInput
   events?: Prisma.EventUpdateManyWithoutSessionNestedInput
+  company?: Prisma.CompanyUpdateOneWithoutSessionsNestedInput
 }
 
 export type SessionUncheckedUpdateWithoutContactInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   browserSessionId?: Prisma.StringFieldUpdateOperationsInput | string
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenResolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -876,13 +875,13 @@ export type SessionUncheckedUpdateWithoutContactInput = {
   lastSessionAttribution?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   events?: Prisma.EventUncheckedUpdateManyWithoutSessionNestedInput
 }
 
 export type SessionUncheckedUpdateManyWithoutContactInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   browserSessionId?: Prisma.StringFieldUpdateOperationsInput | string
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
   userAgent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenResolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -891,6 +890,7 @@ export type SessionUncheckedUpdateManyWithoutContactInput = {
   lastSessionAttribution?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -927,7 +927,6 @@ export type SessionCountOutputTypeCountEventsArgs<ExtArgs extends runtime.Types.
 export type SessionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   browserSessionId?: boolean
-  companyId?: boolean
   contactId?: boolean
   userAgent?: boolean
   ipAddress?: boolean
@@ -937,16 +936,16 @@ export type SessionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   lastSessionAttribution?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
+  companyId?: boolean
   contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
   events?: boolean | Prisma.Session$eventsArgs<ExtArgs>
+  company?: boolean | Prisma.Session$companyArgs<ExtArgs>
   _count?: boolean | Prisma.SessionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["session"]>
 
 export type SessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   browserSessionId?: boolean
-  companyId?: boolean
   contactId?: boolean
   userAgent?: boolean
   ipAddress?: boolean
@@ -956,14 +955,14 @@ export type SessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   lastSessionAttribution?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
+  companyId?: boolean
   contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
+  company?: boolean | Prisma.Session$companyArgs<ExtArgs>
 }, ExtArgs["result"]["session"]>
 
 export type SessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   browserSessionId?: boolean
-  companyId?: boolean
   contactId?: boolean
   userAgent?: boolean
   ipAddress?: boolean
@@ -973,14 +972,14 @@ export type SessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   lastSessionAttribution?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
+  companyId?: boolean
   contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
+  company?: boolean | Prisma.Session$companyArgs<ExtArgs>
 }, ExtArgs["result"]["session"]>
 
 export type SessionSelectScalar = {
   id?: boolean
   browserSessionId?: boolean
-  companyId?: boolean
   contactId?: boolean
   userAgent?: boolean
   ipAddress?: boolean
@@ -990,35 +989,35 @@ export type SessionSelectScalar = {
   lastSessionAttribution?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  companyId?: boolean
 }
 
-export type SessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "browserSessionId" | "companyId" | "contactId" | "userAgent" | "ipAddress" | "screenResolution" | "timezone" | "firstSessionAttribution" | "lastSessionAttribution" | "createdAt" | "updatedAt", ExtArgs["result"]["session"]>
+export type SessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "browserSessionId" | "contactId" | "userAgent" | "ipAddress" | "screenResolution" | "timezone" | "firstSessionAttribution" | "lastSessionAttribution" | "createdAt" | "updatedAt" | "companyId", ExtArgs["result"]["session"]>
 export type SessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
   events?: boolean | Prisma.Session$eventsArgs<ExtArgs>
+  company?: boolean | Prisma.Session$companyArgs<ExtArgs>
   _count?: boolean | Prisma.SessionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SessionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
+  company?: boolean | Prisma.Session$companyArgs<ExtArgs>
 }
 export type SessionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
+  company?: boolean | Prisma.Session$companyArgs<ExtArgs>
 }
 
 export type $SessionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Session"
   objects: {
-    company: Prisma.$CompanyPayload<ExtArgs>
     contact: Prisma.$ContactPayload<ExtArgs>
     events: Prisma.$EventPayload<ExtArgs>[]
+    company: Prisma.$CompanyPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     browserSessionId: string
-    companyId: string
     contactId: string
     userAgent: string | null
     ipAddress: string | null
@@ -1028,6 +1027,7 @@ export type $SessionPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     lastSessionAttribution: runtime.JsonValue
     createdAt: Date
     updatedAt: Date
+    companyId: string | null
   }, ExtArgs["result"]["session"]>
   composites: {}
 }
@@ -1422,9 +1422,9 @@ readonly fields: SessionFieldRefs;
  */
 export interface Prisma__SessionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  company<T extends Prisma.CompanyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyDefaultArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   contact<T extends Prisma.ContactDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContactDefaultArgs<ExtArgs>>): Prisma.Prisma__ContactClient<runtime.Types.Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   events<T extends Prisma.Session$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Session$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  company<T extends Prisma.Session$companyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Session$companyArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1456,7 +1456,6 @@ export interface Prisma__SessionClient<T, Null = never, ExtArgs extends runtime.
 export interface SessionFieldRefs {
   readonly id: Prisma.FieldRef<"Session", 'String'>
   readonly browserSessionId: Prisma.FieldRef<"Session", 'String'>
-  readonly companyId: Prisma.FieldRef<"Session", 'String'>
   readonly contactId: Prisma.FieldRef<"Session", 'String'>
   readonly userAgent: Prisma.FieldRef<"Session", 'String'>
   readonly ipAddress: Prisma.FieldRef<"Session", 'String'>
@@ -1466,6 +1465,7 @@ export interface SessionFieldRefs {
   readonly lastSessionAttribution: Prisma.FieldRef<"Session", 'Json'>
   readonly createdAt: Prisma.FieldRef<"Session", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Session", 'DateTime'>
+  readonly companyId: Prisma.FieldRef<"Session", 'String'>
 }
     
 
@@ -1883,6 +1883,25 @@ export type Session$eventsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.EventScalarFieldEnum | Prisma.EventScalarFieldEnum[]
+}
+
+/**
+ * Session.company
+ */
+export type Session$companyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Company
+   */
+  select?: Prisma.CompanySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Company
+   */
+  omit?: Prisma.CompanyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyInclude<ExtArgs> | null
+  where?: Prisma.CompanyWhereInput
 }
 
 /**

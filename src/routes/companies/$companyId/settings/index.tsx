@@ -4,7 +4,6 @@ import { CompanySettings } from '@/components/settings/company-settings'
 import { ServicesSettings } from '@/components/settings/services-settings'
 import { ProvidersSettings } from '@/components/settings/providers-settings'
 import { IntegrationsSettings } from '@/components/settings/integrations-settings'
-import { Id } from 'convex/_generated/dataModel'
 import React, { useEffect } from 'react'
 import { toast } from 'sonner'
 
@@ -56,16 +55,16 @@ function RouteComponent() {
           <TabsTrigger value="integrations">Integrations</TabsTrigger>
         </TabsList>
         <TabsContent value="company">
-          <CompanySettings companyId={companyId as Id<"companies">} />
+          <CompanySettings companyId={companyId} />
         </TabsContent>
         <TabsContent value="services">
-          <ServicesSettings companyId={companyId as Id<"companies">} />
+          <ServicesSettings companyId={companyId} />
         </TabsContent>
         <TabsContent value="providers">
-          <ProvidersSettings companyId={companyId as Id<"companies">} />
+          <ProvidersSettings companyId={companyId} />
         </TabsContent>
         <TabsContent value="integrations">
-          <IntegrationsSettings companyId={companyId as Id<"companies">} />
+          <IntegrationsSettings companyId={companyId} />
         </TabsContent>
       </Tabs>
     </div>

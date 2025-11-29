@@ -1,7 +1,6 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import { useQuery } from 'convex/react'
-import { api } from '../../../../../convex/_generated/api'
-import { Id } from '../../../../../convex/_generated/dataModel'
+import { useLiveQuery } from '@tanstack/react-db'
+import { useCollections } from '@/routes/__root'
 import {
   useReactTable,
   getCoreRowModel,
@@ -35,32 +34,38 @@ export const Route = createFileRoute('/companies/$companyId/patients/')({
 })
 
 type Patient = {
-  _id: Id<'patients'>
-  _creationTime: number
-  contactId?: Id<'contacts'>
-  dateOfBirth?: string
-  gender?: string
-  payerName?: string
-  memberId?: string
-  groupId?: string
-  contact?: {
-    firstName?: string
-    lastName?: string
-    email?: string
-    phone?: string
-  } | null
+  id: string
+  contactId: string
+  dateOfBirth: string | null
+  gender: string | null
+  payerName: string | null
+  memberId: string | null
+  groupId: string | null
+  createdAt: Date
+  updatedAt: Date
+  contact: {
+    firstName: string | null
+    lastName: string | null
+    email: string | null
+    phone: string | null
+    fullName: string | null
+  }
 }
 
 function PatientsPage() {
   const { companyId } = Route.useParams()
+  const { patientsCollection } = useCollections()
   const navigate = useNavigate()
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [globalFilter, setGlobalFilter] = useState('')
   const [isAddOpen, setIsAddOpen] = useState(false)
 
-  // Fetch patients
-  const patients = useQuery(api.patients.getPatients, {})
+  // Use TanStack DB useLiveQuery for reactive data
+  const { data: patients } = useLiveQuery((q) =>
+    q.from({ patient: patientsCollection })
+      .setMeta({ companyId })
+  )
 
   const columns = useMemo<ColumnDef<Patient>[]>(
     () => [
@@ -279,7 +284,7 @@ function PatientsPage() {
                           to: '/companies/$companyId/patients/$patientId',
                           params: {
                             companyId,
-                            patientId: row.original._id,
+                            patientId: row.original.id,
                           },
                         })
                       }

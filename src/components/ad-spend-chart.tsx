@@ -2,8 +2,6 @@
 
 import * as React from "react"
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
-import { useAction } from "convex/react"
-import { api } from "convex/_generated/api"
 
 import {
   Card,
@@ -26,40 +24,40 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
+// TODO: Re-implement Facebook integration with TanStack DB collections
 export function AdSpendChart() {
-  const getAdSpend = useAction(api.facebook.getAdSpend)
-  const [data, setData] = React.useState<any[]>([])
-  const [loading, setLoading] = React.useState(true)
-  const [error, setError] = React.useState<string | null>(null)
+  const [data] = React.useState<any[]>([])
+  const [loading] = React.useState(false)
+  const [error] = React.useState<string | null>(null)
 
-  React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await getAdSpend({
-          level: 'account',
-          timeIncrement: 1,
-        })
-        
-        // Format data for chart
-        // The API returns data in reverse chronological order usually, but we want chronological
-        const formattedData = (result.data || [])
-          .map((item: any) => ({
-            date: item.date_start,
-            spend: parseFloat(item.spend || '0'),
-          }))
-          .reverse()
-
-        setData(formattedData)
-      } catch (err) {
-        console.error("Failed to fetch ad spend:", err)
-        setError("Failed to load ad spend data")
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchData()
-  }, [getAdSpend])
+  // Temporarily disabled - needs Facebook integration to be migrated to collections
+  // React.useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const result = await getAdSpend({
+  //         level: 'account',
+  //         timeIncrement: 1,
+  //       })
+  //
+  //       // Format data for chart
+  //       // The API returns data in reverse chronological order usually, but we want chronological
+  //       const formattedData = (result.data || [])
+  //         .map((item: any) => ({
+  //           date: item.date_start,
+  //           spend: parseFloat(item.spend || '0'),
+  //         }))
+  //         .reverse()
+  //
+  //       setData(formattedData)
+  //     } catch (err) {
+  //       console.error("Failed to fetch ad spend:", err)
+  //       setError("Failed to load ad spend data")
+  //     } finally {
+  //       setLoading(false)
+  //     }
+  //   }
+  //   fetchData()
+  // }, [])
 
   const totalSpend = React.useMemo(() => {
     return data.reduce((acc, curr) => acc + curr.spend, 0)

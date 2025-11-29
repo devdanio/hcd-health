@@ -48,7 +48,7 @@ export type EventCountAggregateOutputType = {
   contactId: number
   sessionId: number
   type: number
-  metadata: number
+  data: number
   createdAt: number
   _all: number
 }
@@ -78,7 +78,7 @@ export type EventCountAggregateInputType = {
   contactId?: true
   sessionId?: true
   type?: true
-  metadata?: true
+  data?: true
   createdAt?: true
   _all?: true
 }
@@ -161,7 +161,7 @@ export type EventGroupByOutputType = {
   contactId: string
   sessionId: string
   type: $Enums.EventType
-  metadata: runtime.JsonValue
+  data: runtime.JsonValue
   createdAt: Date
   _count: EventCountAggregateOutputType | null
   _min: EventMinAggregateOutputType | null
@@ -192,10 +192,9 @@ export type EventWhereInput = {
   contactId?: Prisma.StringFilter<"Event"> | string
   sessionId?: Prisma.StringFilter<"Event"> | string
   type?: Prisma.EnumEventTypeFilter<"Event"> | $Enums.EventType
-  metadata?: Prisma.JsonFilter<"Event">
+  data?: Prisma.JsonFilter<"Event">
   createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
-  contact?: Prisma.XOR<Prisma.ContactScalarRelationFilter, Prisma.ContactWhereInput>
   session?: Prisma.XOR<Prisma.SessionScalarRelationFilter, Prisma.SessionWhereInput>
 }
 
@@ -205,10 +204,9 @@ export type EventOrderByWithRelationInput = {
   contactId?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  metadata?: Prisma.SortOrder
+  data?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   company?: Prisma.CompanyOrderByWithRelationInput
-  contact?: Prisma.ContactOrderByWithRelationInput
   session?: Prisma.SessionOrderByWithRelationInput
 }
 
@@ -221,10 +219,9 @@ export type EventWhereUniqueInput = Prisma.AtLeast<{
   contactId?: Prisma.StringFilter<"Event"> | string
   sessionId?: Prisma.StringFilter<"Event"> | string
   type?: Prisma.EnumEventTypeFilter<"Event"> | $Enums.EventType
-  metadata?: Prisma.JsonFilter<"Event">
+  data?: Prisma.JsonFilter<"Event">
   createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
-  contact?: Prisma.XOR<Prisma.ContactScalarRelationFilter, Prisma.ContactWhereInput>
   session?: Prisma.XOR<Prisma.SessionScalarRelationFilter, Prisma.SessionWhereInput>
 }, "id">
 
@@ -234,7 +231,7 @@ export type EventOrderByWithAggregationInput = {
   contactId?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  metadata?: Prisma.SortOrder
+  data?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.EventCountOrderByAggregateInput
   _max?: Prisma.EventMaxOrderByAggregateInput
@@ -250,17 +247,17 @@ export type EventScalarWhereWithAggregatesInput = {
   contactId?: Prisma.StringWithAggregatesFilter<"Event"> | string
   sessionId?: Prisma.StringWithAggregatesFilter<"Event"> | string
   type?: Prisma.EnumEventTypeWithAggregatesFilter<"Event"> | $Enums.EventType
-  metadata?: Prisma.JsonWithAggregatesFilter<"Event">
+  data?: Prisma.JsonWithAggregatesFilter<"Event">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Event"> | Date | string
 }
 
 export type EventCreateInput = {
   id?: string
+  contactId: string
   type: $Enums.EventType
-  metadata: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  data: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutEventsInput
-  contact: Prisma.ContactCreateNestedOneWithoutEventsInput
   session: Prisma.SessionCreateNestedOneWithoutEventsInput
 }
 
@@ -270,17 +267,17 @@ export type EventUncheckedCreateInput = {
   contactId: string
   sessionId: string
   type: $Enums.EventType
-  metadata: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  data: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
 export type EventUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  contactId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutEventsNestedInput
-  contact?: Prisma.ContactUpdateOneRequiredWithoutEventsNestedInput
   session?: Prisma.SessionUpdateOneRequiredWithoutEventsNestedInput
 }
 
@@ -290,7 +287,7 @@ export type EventUncheckedUpdateInput = {
   contactId?: Prisma.StringFieldUpdateOperationsInput | string
   sessionId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -300,14 +297,15 @@ export type EventCreateManyInput = {
   contactId: string
   sessionId: string
   type: $Enums.EventType
-  metadata: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  data: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
 export type EventUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  contactId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -317,7 +315,7 @@ export type EventUncheckedUpdateManyInput = {
   contactId?: Prisma.StringFieldUpdateOperationsInput | string
   sessionId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -337,7 +335,7 @@ export type EventCountOrderByAggregateInput = {
   contactId?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  metadata?: Prisma.SortOrder
+  data?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -401,48 +399,6 @@ export type EventUncheckedUpdateManyWithoutCompanyNestedInput = {
   deleteMany?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
 }
 
-export type EventCreateNestedManyWithoutContactInput = {
-  create?: Prisma.XOR<Prisma.EventCreateWithoutContactInput, Prisma.EventUncheckedCreateWithoutContactInput> | Prisma.EventCreateWithoutContactInput[] | Prisma.EventUncheckedCreateWithoutContactInput[]
-  connectOrCreate?: Prisma.EventCreateOrConnectWithoutContactInput | Prisma.EventCreateOrConnectWithoutContactInput[]
-  createMany?: Prisma.EventCreateManyContactInputEnvelope
-  connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-}
-
-export type EventUncheckedCreateNestedManyWithoutContactInput = {
-  create?: Prisma.XOR<Prisma.EventCreateWithoutContactInput, Prisma.EventUncheckedCreateWithoutContactInput> | Prisma.EventCreateWithoutContactInput[] | Prisma.EventUncheckedCreateWithoutContactInput[]
-  connectOrCreate?: Prisma.EventCreateOrConnectWithoutContactInput | Prisma.EventCreateOrConnectWithoutContactInput[]
-  createMany?: Prisma.EventCreateManyContactInputEnvelope
-  connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-}
-
-export type EventUpdateManyWithoutContactNestedInput = {
-  create?: Prisma.XOR<Prisma.EventCreateWithoutContactInput, Prisma.EventUncheckedCreateWithoutContactInput> | Prisma.EventCreateWithoutContactInput[] | Prisma.EventUncheckedCreateWithoutContactInput[]
-  connectOrCreate?: Prisma.EventCreateOrConnectWithoutContactInput | Prisma.EventCreateOrConnectWithoutContactInput[]
-  upsert?: Prisma.EventUpsertWithWhereUniqueWithoutContactInput | Prisma.EventUpsertWithWhereUniqueWithoutContactInput[]
-  createMany?: Prisma.EventCreateManyContactInputEnvelope
-  set?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  disconnect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  delete?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  update?: Prisma.EventUpdateWithWhereUniqueWithoutContactInput | Prisma.EventUpdateWithWhereUniqueWithoutContactInput[]
-  updateMany?: Prisma.EventUpdateManyWithWhereWithoutContactInput | Prisma.EventUpdateManyWithWhereWithoutContactInput[]
-  deleteMany?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
-}
-
-export type EventUncheckedUpdateManyWithoutContactNestedInput = {
-  create?: Prisma.XOR<Prisma.EventCreateWithoutContactInput, Prisma.EventUncheckedCreateWithoutContactInput> | Prisma.EventCreateWithoutContactInput[] | Prisma.EventUncheckedCreateWithoutContactInput[]
-  connectOrCreate?: Prisma.EventCreateOrConnectWithoutContactInput | Prisma.EventCreateOrConnectWithoutContactInput[]
-  upsert?: Prisma.EventUpsertWithWhereUniqueWithoutContactInput | Prisma.EventUpsertWithWhereUniqueWithoutContactInput[]
-  createMany?: Prisma.EventCreateManyContactInputEnvelope
-  set?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  disconnect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  delete?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  update?: Prisma.EventUpdateWithWhereUniqueWithoutContactInput | Prisma.EventUpdateWithWhereUniqueWithoutContactInput[]
-  updateMany?: Prisma.EventUpdateManyWithWhereWithoutContactInput | Prisma.EventUpdateManyWithWhereWithoutContactInput[]
-  deleteMany?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
-}
-
 export type EventCreateNestedManyWithoutSessionInput = {
   create?: Prisma.XOR<Prisma.EventCreateWithoutSessionInput, Prisma.EventUncheckedCreateWithoutSessionInput> | Prisma.EventCreateWithoutSessionInput[] | Prisma.EventUncheckedCreateWithoutSessionInput[]
   connectOrCreate?: Prisma.EventCreateOrConnectWithoutSessionInput | Prisma.EventCreateOrConnectWithoutSessionInput[]
@@ -491,10 +447,10 @@ export type EnumEventTypeFieldUpdateOperationsInput = {
 
 export type EventCreateWithoutCompanyInput = {
   id?: string
+  contactId: string
   type: $Enums.EventType
-  metadata: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  data: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
-  contact: Prisma.ContactCreateNestedOneWithoutEventsInput
   session: Prisma.SessionCreateNestedOneWithoutEventsInput
 }
 
@@ -503,7 +459,7 @@ export type EventUncheckedCreateWithoutCompanyInput = {
   contactId: string
   sessionId: string
   type: $Enums.EventType
-  metadata: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  data: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
@@ -542,61 +498,17 @@ export type EventScalarWhereInput = {
   contactId?: Prisma.StringFilter<"Event"> | string
   sessionId?: Prisma.StringFilter<"Event"> | string
   type?: Prisma.EnumEventTypeFilter<"Event"> | $Enums.EventType
-  metadata?: Prisma.JsonFilter<"Event">
+  data?: Prisma.JsonFilter<"Event">
   createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
-}
-
-export type EventCreateWithoutContactInput = {
-  id?: string
-  type: $Enums.EventType
-  metadata: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Date | string
-  company: Prisma.CompanyCreateNestedOneWithoutEventsInput
-  session: Prisma.SessionCreateNestedOneWithoutEventsInput
-}
-
-export type EventUncheckedCreateWithoutContactInput = {
-  id?: string
-  companyId: string
-  sessionId: string
-  type: $Enums.EventType
-  metadata: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Date | string
-}
-
-export type EventCreateOrConnectWithoutContactInput = {
-  where: Prisma.EventWhereUniqueInput
-  create: Prisma.XOR<Prisma.EventCreateWithoutContactInput, Prisma.EventUncheckedCreateWithoutContactInput>
-}
-
-export type EventCreateManyContactInputEnvelope = {
-  data: Prisma.EventCreateManyContactInput | Prisma.EventCreateManyContactInput[]
-  skipDuplicates?: boolean
-}
-
-export type EventUpsertWithWhereUniqueWithoutContactInput = {
-  where: Prisma.EventWhereUniqueInput
-  update: Prisma.XOR<Prisma.EventUpdateWithoutContactInput, Prisma.EventUncheckedUpdateWithoutContactInput>
-  create: Prisma.XOR<Prisma.EventCreateWithoutContactInput, Prisma.EventUncheckedCreateWithoutContactInput>
-}
-
-export type EventUpdateWithWhereUniqueWithoutContactInput = {
-  where: Prisma.EventWhereUniqueInput
-  data: Prisma.XOR<Prisma.EventUpdateWithoutContactInput, Prisma.EventUncheckedUpdateWithoutContactInput>
-}
-
-export type EventUpdateManyWithWhereWithoutContactInput = {
-  where: Prisma.EventScalarWhereInput
-  data: Prisma.XOR<Prisma.EventUpdateManyMutationInput, Prisma.EventUncheckedUpdateManyWithoutContactInput>
 }
 
 export type EventCreateWithoutSessionInput = {
   id?: string
+  contactId: string
   type: $Enums.EventType
-  metadata: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  data: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutEventsInput
-  contact: Prisma.ContactCreateNestedOneWithoutEventsInput
 }
 
 export type EventUncheckedCreateWithoutSessionInput = {
@@ -604,7 +516,7 @@ export type EventUncheckedCreateWithoutSessionInput = {
   companyId: string
   contactId: string
   type: $Enums.EventType
-  metadata: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  data: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
@@ -639,16 +551,16 @@ export type EventCreateManyCompanyInput = {
   contactId: string
   sessionId: string
   type: $Enums.EventType
-  metadata: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  data: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
 export type EventUpdateWithoutCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  contactId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contact?: Prisma.ContactUpdateOneRequiredWithoutEventsNestedInput
   session?: Prisma.SessionUpdateOneRequiredWithoutEventsNestedInput
 }
 
@@ -657,7 +569,7 @@ export type EventUncheckedUpdateWithoutCompanyInput = {
   contactId?: Prisma.StringFieldUpdateOperationsInput | string
   sessionId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -666,43 +578,7 @@ export type EventUncheckedUpdateManyWithoutCompanyInput = {
   contactId?: Prisma.StringFieldUpdateOperationsInput | string
   sessionId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type EventCreateManyContactInput = {
-  id?: string
-  companyId: string
-  sessionId: string
-  type: $Enums.EventType
-  metadata: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Date | string
-}
-
-export type EventUpdateWithoutContactInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  company?: Prisma.CompanyUpdateOneRequiredWithoutEventsNestedInput
-  session?: Prisma.SessionUpdateOneRequiredWithoutEventsNestedInput
-}
-
-export type EventUncheckedUpdateWithoutContactInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
-  sessionId?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type EventUncheckedUpdateManyWithoutContactInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
-  sessionId?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -711,17 +587,17 @@ export type EventCreateManySessionInput = {
   companyId: string
   contactId: string
   type: $Enums.EventType
-  metadata: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  data: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
 export type EventUpdateWithoutSessionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  contactId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutEventsNestedInput
-  contact?: Prisma.ContactUpdateOneRequiredWithoutEventsNestedInput
 }
 
 export type EventUncheckedUpdateWithoutSessionInput = {
@@ -729,7 +605,7 @@ export type EventUncheckedUpdateWithoutSessionInput = {
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   contactId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -738,7 +614,7 @@ export type EventUncheckedUpdateManyWithoutSessionInput = {
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   contactId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -750,10 +626,9 @@ export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   contactId?: boolean
   sessionId?: boolean
   type?: boolean
-  metadata?: boolean
+  data?: boolean
   createdAt?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
   session?: boolean | Prisma.SessionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["event"]>
 
@@ -763,10 +638,9 @@ export type EventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   contactId?: boolean
   sessionId?: boolean
   type?: boolean
-  metadata?: boolean
+  data?: boolean
   createdAt?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
   session?: boolean | Prisma.SessionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["event"]>
 
@@ -776,10 +650,9 @@ export type EventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   contactId?: boolean
   sessionId?: boolean
   type?: boolean
-  metadata?: boolean
+  data?: boolean
   createdAt?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
   session?: boolean | Prisma.SessionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["event"]>
 
@@ -789,24 +662,21 @@ export type EventSelectScalar = {
   contactId?: boolean
   sessionId?: boolean
   type?: boolean
-  metadata?: boolean
+  data?: boolean
   createdAt?: boolean
 }
 
-export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "contactId" | "sessionId" | "type" | "metadata" | "createdAt", ExtArgs["result"]["event"]>
+export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "contactId" | "sessionId" | "type" | "data" | "createdAt", ExtArgs["result"]["event"]>
 export type EventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
   session?: boolean | Prisma.SessionDefaultArgs<ExtArgs>
 }
 export type EventIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
   session?: boolean | Prisma.SessionDefaultArgs<ExtArgs>
 }
 export type EventIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
   session?: boolean | Prisma.SessionDefaultArgs<ExtArgs>
 }
 
@@ -814,7 +684,6 @@ export type $EventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name: "Event"
   objects: {
     company: Prisma.$CompanyPayload<ExtArgs>
-    contact: Prisma.$ContactPayload<ExtArgs>
     session: Prisma.$SessionPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -823,7 +692,7 @@ export type $EventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     contactId: string
     sessionId: string
     type: $Enums.EventType
-    metadata: runtime.JsonValue
+    data: runtime.JsonValue
     createdAt: Date
   }, ExtArgs["result"]["event"]>
   composites: {}
@@ -1220,7 +1089,6 @@ readonly fields: EventFieldRefs;
 export interface Prisma__EventClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   company<T extends Prisma.CompanyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyDefaultArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  contact<T extends Prisma.ContactDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContactDefaultArgs<ExtArgs>>): Prisma.Prisma__ContactClient<runtime.Types.Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   session<T extends Prisma.SessionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SessionDefaultArgs<ExtArgs>>): Prisma.Prisma__SessionClient<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1256,7 +1124,7 @@ export interface EventFieldRefs {
   readonly contactId: Prisma.FieldRef<"Event", 'String'>
   readonly sessionId: Prisma.FieldRef<"Event", 'String'>
   readonly type: Prisma.FieldRef<"Event", 'EventType'>
-  readonly metadata: Prisma.FieldRef<"Event", 'Json'>
+  readonly data: Prisma.FieldRef<"Event", 'Json'>
   readonly createdAt: Prisma.FieldRef<"Event", 'DateTime'>
 }
     

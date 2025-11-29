@@ -1,7 +1,6 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import { useQuery } from 'convex/react'
-import { api } from '../../../../../convex/_generated/api'
-import { Id } from '../../../../../convex/_generated/dataModel'
+import { useLiveQuery } from '@tanstack/react-db'
+import { useCollections } from '@/routes/__root'
 import {
   useReactTable,
   getCoreRowModel,
@@ -29,8 +28,8 @@ export const Route = createFileRoute('/companies/$companyId/cms-pages/')({
 })
 
 type CmsPage = {
-  _id: Id<'cmsPages'>
-  _creationTime: number
+  id: string
+  createdAt: Date
   h1: string
   pageTitle: string
   pageDescription: string
@@ -40,12 +39,16 @@ type CmsPage = {
 
 function CmsPagesPage() {
   const { companyId } = Route.useParams()
+  const { cmsPagesCollection } = useCollections()
   const navigate = useNavigate()
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [globalFilter, setGlobalFilter] = useState('')
 
-  const pages = useQuery(api.cmsPages.getPages, { companyId: companyId as Id<'companies'> })
+  const { data: pages } = useLiveQuery((q) =>
+    q.from({ page: cmsPagesCollection })
+      .setMeta({ companyId })
+  )
 
   const columns = useMemo<ColumnDef<CmsPage>[]>(
     () => [
@@ -77,7 +80,7 @@ function CmsPagesPage() {
         cell: ({ row }) => <div>{row.getValue('slug')}</div>,
       },
       {
-        accessorKey: '_creationTime',
+        accessorKey: 'createdAt',
         header: ({ column }) => {
           return (
             <Button
@@ -92,9 +95,10 @@ function CmsPagesPage() {
           )
         },
         cell: ({ row }) => {
+          const date = row.getValue('createdAt')
           return (
             <div>
-              {new Date(row.getValue('_creationTime')).toLocaleDateString()}
+              {date instanceof Date ? date.toLocaleDateString() : new Date(date as string).toLocaleDateString()}
             </div>
           )
         },
@@ -194,7 +198,7 @@ function CmsPagesPage() {
                           to: '/companies/$companyId/cms-pages/$pageId',
                           params: {
                             companyId,
-                            pageId: row.original._id,
+                            pageId: row.original.id,
                           },
                         })
                       }

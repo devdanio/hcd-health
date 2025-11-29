@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useQuery } from 'convex/react'
-import { api } from 'convex/_generated/api'
-import { Id } from 'convex/_generated/dataModel'
+import { useLiveQuery } from '@tanstack/react-db'
+import { useQuery } from '@tanstack/react-query'
+import { useCollections } from '@/routes/__root'
+import { getAppointmentsAnalytics, getRevenueByService } from '@/collections'
 import { useState, useMemo } from 'react'
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
 import {
@@ -34,30 +35,34 @@ export const Route = createFileRoute(
 
 function AppointmentsPage() {
   const { companyId } = Route.useParams()
+  const { appointmentsCollection, servicesCollection } = useCollections()
+
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d' | 'all'>(
     '30d',
   )
   const [groupBy, setGroupBy] = useState<'day' | 'week' | 'month'>('day')
 
-  // Fetch appointments and analytics data
-  const appointments = useQuery(api.appointments.getAppointments, {
-    companyId: companyId as Id<'companies'>,
+  // Fetch appointments with useLiveQuery
+  const { data: appointments } = useLiveQuery((q) =>
+    q.from({ appointment: appointmentsCollection })
+      .setMeta({ companyId })
+  )
+
+  // Fetch services with useLiveQuery
+  const { data: services } = useLiveQuery((q) =>
+    q.from({ service: servicesCollection })
+      .setMeta({ companyId })
+  )
+
+  // Use React Query for analytics (non-reactive)
+  const { data: analyticsData } = useQuery({
+    queryKey: ['appointments-analytics', companyId, timeRange, groupBy],
+    queryFn: () => getAppointmentsAnalytics({ data: { companyId, timeRange, groupBy } }),
   })
 
-  // Fetch services for dynamic chart config
-  const services = useQuery(api.services.list, {
-    companyId: companyId as Id<'companies'>,
-  })
-
-  const analyticsData = useQuery(api.appointments.getAppointmentsAnalytics, {
-    companyId: companyId as Id<'companies'>,
-    timeRange,
-    groupBy,
-  })
-
-  const revenueByService = useQuery(api.appointments.getRevenueByService, {
-    companyId: companyId as Id<'companies'>,
-    timeRange,
+  const { data: revenueByService } = useQuery({
+    queryKey: ['revenue-by-service', companyId, timeRange],
+    queryFn: () => getRevenueByService({ data: { companyId, timeRange } }),
   })
 
   console.log('appointments', appointments)

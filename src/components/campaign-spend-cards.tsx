@@ -1,8 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { useAction } from "convex/react"
-import { api } from "convex/_generated/api"
 
 import {
   Card,
@@ -11,31 +9,31 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
+// TODO: Re-implement Facebook integration with TanStack DB collections
 export function CampaignSpendCards() {
-  const getAdSpend = useAction(api.facebook.getAdSpend)
-  const [data, setData] = React.useState<any[]>([])
-  const [loading, setLoading] = React.useState(true)
-  const [error, setError] = React.useState<string | null>(null)
+  const [data] = React.useState<any[]>([])
+  const [loading] = React.useState(false)
+  const [error] = React.useState<string | null>(null)
 
-  React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await getAdSpend({
-          level: 'campaign',
-          timeIncrement: 'all_days',
-        })
-        
-        setData(result.data || [])
-      } catch (err) {
-        console.error("Failed to fetch campaign spend:", err)
-        setError("Failed to load campaign data")
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchData()
-  }, [getAdSpend])
+  // Temporarily disabled - needs Facebook integration to be migrated to collections
+  // React.useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const result = await getAdSpend({
+  //         level: 'campaign',
+  //         timeIncrement: 'all_days',
+  //       })
+  //
+  //       setData(result.data || [])
+  //     } catch (err) {
+  //       console.error("Failed to fetch campaign spend:", err)
+  //       setError("Failed to load campaign data")
+  //     } finally {
+  //       setLoading(false)
+  //     }
+  //   }
+  //   fetchData()
+  // }, [])
 
   if (loading) {
     return (

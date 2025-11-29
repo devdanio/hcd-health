@@ -1,7 +1,6 @@
 import { createFileRoute, useNavigate, Link } from '@tanstack/react-router'
-import { useQuery, useMutation } from 'convex/react'
-import { api } from '../../../../../convex/_generated/api'
-import { Id } from '../../../../../convex/_generated/dataModel'
+import { useLiveQuery } from '@tanstack/react-db'
+import { useCollections } from '@/routes/__root'
 import { CmsPageForm } from '@/components/CmsPageForm'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -25,14 +24,19 @@ export const Route = createFileRoute('/companies/$companyId/cms-pages/$pageId')(
 
 function EditCmsPage() {
   const { companyId, pageId } = Route.useParams()
+  const { cmsPagesCollection } = useCollections()
   const navigate = useNavigate()
-  
-  const page = useQuery(api.cmsPages.getPage, { id: pageId as Id<'cmsPages'> })
-  const deletePage = useMutation(api.cmsPages.deletePage)
+
+  const { data: pages } = useLiveQuery((q) =>
+    q.from({ page: cmsPagesCollection })
+      .setMeta({ companyId })
+  )
+
+  const page = pages?.find((p) => p.id === pageId)
 
   const handleDelete = async () => {
     try {
-      await deletePage({ id: pageId as Id<'cmsPages'> })
+      await cmsPagesCollection.delete(pageId)
       toast.success('Page deleted successfully')
       navigate({ to: '/companies/$companyId/cms-pages', params: { companyId } })
     } catch (error) {
@@ -41,11 +45,11 @@ function EditCmsPage() {
     }
   }
 
-  if (page === undefined) {
+  if (pages === undefined) {
     return <div className="container mx-auto p-8">Loading...</div>
   }
 
-  if (page === null) {
+  if (!page) {
     return <div className="container mx-auto p-8">Page not found</div>
   }
 
@@ -62,7 +66,7 @@ function EditCmsPage() {
           </Link>
           <h1 className="text-3xl font-bold">Edit Page: {page.pageTitle}</h1>
         </div>
-        
+
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button variant="destructive">
@@ -93,8 +97,8 @@ function EditCmsPage() {
         </CardHeader>
         <CardContent>
           <CmsPageForm
-            companyId={companyId as Id<'companies'>}
-            pageId={pageId as Id<'cmsPages'>}
+            companyId={companyId}
+            pageId={pageId}
             pageData={{
               h1: page.h1,
               pageTitle: page.pageTitle,

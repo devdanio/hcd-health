@@ -1,8 +1,7 @@
 "use client"
 
-import { useMutation, useQuery } from "convex/react"
-import { api } from "convex/_generated/api"
-import { Id } from "convex/_generated/dataModel"
+import { useLiveQuery } from "@tanstack/react-db"
+import { useCollections } from "@/routes/__root"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -12,12 +11,16 @@ import { Textarea } from "@/components/ui/textarea"
 import { toast } from "sonner"
 
 interface CompanySettingsProps {
-  companyId: Id<"companies">
+  companyId: string
 }
 
 export function CompanySettings({ companyId }: CompanySettingsProps) {
-  const company = useQuery(api.companies.getCompany, { companyId })
-  const updateCompany = useMutation(api.companies.updateCompany)
+  const { companiesCollection } = useCollections()
+  const { data: companies } = useLiveQuery((q) =>
+    q.from({ company: companiesCollection })
+  )
+  const company = companies?.find(c => c.id === companyId)
+
   const [name, setName] = useState("")
   const [companyBrief, setCompanyBrief] = useState("")
 
@@ -30,7 +33,7 @@ export function CompanySettings({ companyId }: CompanySettingsProps) {
 
   const handleSave = async () => {
     try {
-      await updateCompany({ companyId, name, companyBrief })
+      await companiesCollection.update(companyId, { name, companyBrief })
       toast.success("Company settings updated")
     } catch (error) {
       toast.error("Failed to update company name")

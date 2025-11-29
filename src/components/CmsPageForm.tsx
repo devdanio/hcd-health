@@ -1,12 +1,10 @@
 import { useForm } from '@tanstack/react-form'
-import { useMutation } from 'convex/react'
-import { api } from '../../convex/_generated/api'
-import { Id } from '../../convex/_generated/dataModel'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
+import { useCollections } from '@/routes/__root'
 
 type CmsPageFormData = {
   h1: string
@@ -18,8 +16,8 @@ type CmsPageFormData = {
 }
 
 type CmsPageFormProps = {
-  companyId: Id<'companies'>
-  pageId?: Id<'cmsPages'>
+  companyId: string
+  pageId?: string
   pageData?: Partial<CmsPageFormData>
   onSuccess?: () => void
   onCancel?: () => void
@@ -32,8 +30,7 @@ export function CmsPageForm({
   onSuccess,
   onCancel,
 }: CmsPageFormProps) {
-  const createPage = useMutation(api.cmsPages.createPage)
-  const updatePage = useMutation(api.cmsPages.updatePage)
+  const { cmsPagesCollection } = useCollections()
 
   const isUpdateMode = !!pageId
 
@@ -48,7 +45,7 @@ export function CmsPageForm({
     },
     onSubmit: async ({ value }) => {
       try {
-        let parsedJsonSchema = undefined
+        let parsedJsonSchema = null
         if (value.jsonSchema) {
           try {
             parsedJsonSchema = JSON.parse(value.jsonSchema)
@@ -59,8 +56,7 @@ export function CmsPageForm({
         }
 
         if (isUpdateMode && pageId) {
-          await updatePage({
-            id: pageId,
+          await cmsPagesCollection.update(pageId, {
             h1: value.h1,
             pageTitle: value.pageTitle,
             pageDescription: value.pageDescription,
@@ -70,7 +66,7 @@ export function CmsPageForm({
           })
           toast.success('Page updated successfully')
         } else {
-          await createPage({
+          await cmsPagesCollection.insert({
             companyId,
             h1: value.h1,
             pageTitle: value.pageTitle,

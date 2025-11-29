@@ -109,6 +109,8 @@ export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeo
 
 export const ContactScalarFieldEnum = {
   id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   companyId: 'companyId',
   email: 'email',
   phone: 'phone',
@@ -116,10 +118,7 @@ export const ContactScalarFieldEnum = {
   firstName: 'firstName',
   lastName: 'lastName',
   ghlContactId: 'ghlContactId',
-  chirotouchAccountId: 'chirotouchAccountId',
-  firstServiceId: 'firstServiceId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  chirotouchAccountId: 'chirotouchAccountId'
 } as const
 
 export type ContactScalarFieldEnum = (typeof ContactScalarFieldEnum)[keyof typeof ContactScalarFieldEnum]
@@ -162,7 +161,6 @@ export type GhlContactScalarFieldEnum = (typeof GhlContactScalarFieldEnum)[keyof
 export const SessionScalarFieldEnum = {
   id: 'id',
   browserSessionId: 'browserSessionId',
-  companyId: 'companyId',
   contactId: 'contactId',
   userAgent: 'userAgent',
   ipAddress: 'ipAddress',
@@ -171,7 +169,8 @@ export const SessionScalarFieldEnum = {
   firstSessionAttribution: 'firstSessionAttribution',
   lastSessionAttribution: 'lastSessionAttribution',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  companyId: 'companyId'
 } as const
 
 export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
@@ -183,7 +182,7 @@ export const EventScalarFieldEnum = {
   contactId: 'contactId',
   sessionId: 'sessionId',
   type: 'type',
-  metadata: 'metadata',
+  data: 'data',
   createdAt: 'createdAt'
 } as const
 
@@ -216,7 +215,7 @@ export type ProviderScalarFieldEnum = (typeof ProviderScalarFieldEnum)[keyof typ
 export const AppointmentScalarFieldEnum = {
   id: 'id',
   companyId: 'companyId',
-  contactId: 'contactId',
+  patientId: 'patientId',
   patientName: 'patientName',
   dateOfService: 'dateOfService',
   service: 'service',

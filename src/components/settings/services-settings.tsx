@@ -1,8 +1,7 @@
 "use client"
 
-import { useMutation, useQuery } from "convex/react"
-import { api } from "convex/_generated/api"
-import { Id } from "convex/_generated/dataModel"
+import { useLiveQuery } from "@tanstack/react-db"
+import { useCollections } from "@/routes/__root"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -13,22 +12,23 @@ import { toast } from "sonner"
 import { Pencil, Trash2, Plus } from "lucide-react"
 
 interface ServicesSettingsProps {
-  companyId: Id<"companies">
+  companyId: string
 }
 
 export function ServicesSettings({ companyId }: ServicesSettingsProps) {
-  const services = useQuery(api.services.list, { companyId })
-  const createService = useMutation(api.services.create)
-  const updateService = useMutation(api.services.update)
-  const deleteService = useMutation(api.services.remove)
+  const { servicesCollection } = useCollections()
+  const { data: services } = useLiveQuery((q) =>
+    q.from({ service: servicesCollection })
+      .setMeta({ companyId })
+  )
 
   const [newServiceName, setNewServiceName] = useState("")
   const [isCreateOpen, setIsCreateOpen] = useState(false)
-  const [editingService, setEditingService] = useState<{ id: Id<"services">, name: string } | null>(null)
+  const [editingService, setEditingService] = useState<{ id: string, name: string } | null>(null)
 
   const handleCreate = async () => {
     try {
-      await createService({ companyId, name: newServiceName })
+      await servicesCollection.insert({ companyId, name: newServiceName })
       setNewServiceName("")
       setIsCreateOpen(false)
       toast.success("Service created")
@@ -40,7 +40,7 @@ export function ServicesSettings({ companyId }: ServicesSettingsProps) {
   const handleUpdate = async () => {
     if (!editingService) return
     try {
-      await updateService({ id: editingService.id, name: editingService.name })
+      await servicesCollection.update(editingService.id, { name: editingService.name })
       setEditingService(null)
       toast.success("Service updated")
     } catch (error) {
@@ -48,10 +48,10 @@ export function ServicesSettings({ companyId }: ServicesSettingsProps) {
     }
   }
 
-  const handleDelete = async (id: Id<"services">) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this service?")) return
     try {
-      await deleteService({ id })
+      await servicesCollection.delete(id)
       toast.success("Service deleted")
     } catch (error) {
       toast.error("Failed to delete service")
@@ -96,9 +96,9 @@ export function ServicesSettings({ companyId }: ServicesSettingsProps) {
           </TableHeader>
           <TableBody>
             {services.map((service) => (
-              <TableRow key={service._id}>
+              <TableRow key={service.id}>
                 <TableCell>
-                  {editingService?.id === service._id ? (
+                  {editingService?.id === service.id ? (
                     <div className="flex gap-2">
                       <Input
                         value={editingService.name}
@@ -113,10 +113,10 @@ export function ServicesSettings({ companyId }: ServicesSettingsProps) {
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
-                    <Button size="icon" variant="ghost" onClick={() => setEditingService({ id: service._id, name: service.name })}>
+                    <Button size="icon" variant="ghost" onClick={() => setEditingService({ id: service.id, name: service.name })}>
                       <Pencil className="h-4 w-4" />
                     </Button>
-                    <Button size="icon" variant="ghost" onClick={() => handleDelete(service._id)}>
+                    <Button size="icon" variant="ghost" onClick={() => handleDelete(service.id)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>

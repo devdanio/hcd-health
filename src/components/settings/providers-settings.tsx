@@ -1,8 +1,7 @@
 "use client"
 
-import { useMutation, useQuery } from "convex/react"
-import { api } from "convex/_generated/api"
-import { Id } from "convex/_generated/dataModel"
+import { useLiveQuery } from "@tanstack/react-db"
+import { useCollections } from "@/routes/__root"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,20 +13,26 @@ import { toast } from "sonner"
 import { Pencil, Trash2, Plus } from "lucide-react"
 
 interface ProvidersSettingsProps {
-  companyId: Id<"companies">
+  companyId: string
 }
 
 export function ProvidersSettings({ companyId }: ProvidersSettingsProps) {
-  const providers = useQuery(api.providers.list, { companyId })
-  const services = useQuery(api.services.list, { companyId })
-  const createProvider = useMutation(api.providers.create)
-  const updateProvider = useMutation(api.providers.update)
-  const deleteProvider = useMutation(api.providers.remove)
+  const { providersCollection, servicesCollection } = useCollections()
+
+  const { data: providers } = useLiveQuery((q) =>
+    q.from({ provider: providersCollection })
+      .setMeta({ companyId })
+  )
+
+  const { data: services } = useLiveQuery((q) =>
+    q.from({ service: servicesCollection })
+      .setMeta({ companyId })
+  )
 
   const [newProviderName, setNewProviderName] = useState("")
   const [newProviderService, setNewProviderService] = useState<string>("")
   const [isCreateOpen, setIsCreateOpen] = useState(false)
-  const [editingProvider, setEditingProvider] = useState<{ id: Id<"providers">, name: string, service: Id<"services"> } | null>(null)
+  const [editingProvider, setEditingProvider] = useState<{ id: string, name: string, serviceId: string } | null>(null)
 
   const handleCreate = async () => {
     if (!newProviderService) {
@@ -35,10 +40,10 @@ export function ProvidersSettings({ companyId }: ProvidersSettingsProps) {
       return
     }
     try {
-      await createProvider({ 
-        companyId, 
-        name: newProviderName, 
-        service: newProviderService as Id<"services"> 
+      await providersCollection.insert({
+        companyId,
+        name: newProviderName,
+        serviceId: newProviderService
       })
       setNewProviderName("")
       setNewProviderService("")
@@ -52,10 +57,9 @@ export function ProvidersSettings({ companyId }: ProvidersSettingsProps) {
   const handleUpdate = async () => {
     if (!editingProvider) return
     try {
-      await updateProvider({ 
-        id: editingProvider.id, 
+      await providersCollection.update(editingProvider.id, {
         name: editingProvider.name,
-        service: editingProvider.service
+        serviceId: editingProvider.serviceId
       })
       setEditingProvider(null)
       toast.success("Provider updated")
@@ -64,10 +68,10 @@ export function ProvidersSettings({ companyId }: ProvidersSettingsProps) {
     }
   }
 
-  const handleDelete = async (id: Id<"providers">) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this provider?")) return
     try {
-      await deleteProvider({ id })
+      await providersCollection.delete(id)
       toast.success("Provider deleted")
     } catch (error) {
       toast.error("Failed to delete provider")
@@ -103,7 +107,7 @@ export function ProvidersSettings({ companyId }: ProvidersSettingsProps) {
                 </SelectTrigger>
                 <SelectContent>
                   {services.map((service) => (
-                    <SelectItem key={service._id} value={service._id}>
+                    <SelectItem key={service.id} value={service.id}>
                       {service.name}
                     </SelectItem>
                   ))}
@@ -124,58 +128,61 @@ export function ProvidersSettings({ companyId }: ProvidersSettingsProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {providers.map((provider) => (
-              <TableRow key={provider._id}>
-                <TableCell>
-                  {editingProvider?.id === provider._id ? (
-                    <Input
-                      value={editingProvider.name}
-                      onChange={(e) => setEditingProvider({ ...editingProvider, name: e.target.value })}
-                    />
-                  ) : (
-                    provider.name
-                  )}
-                </TableCell>
-                <TableCell>
-                  {editingProvider?.id === provider._id ? (
-                    <Select 
-                      value={editingProvider.service} 
-                      onValueChange={(val) => setEditingProvider({ ...editingProvider, service: val as Id<"services"> })}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {services.map((service) => (
-                          <SelectItem key={service._id} value={service._id}>
-                            {service.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  ) : (
-                    provider.serviceName
-                  )}
-                </TableCell>
-                <TableCell className="text-right">
-                  {editingProvider?.id === provider._id ? (
-                    <div className="flex justify-end gap-2">
-                      <Button size="sm" onClick={handleUpdate}>Save</Button>
-                      <Button size="sm" variant="ghost" onClick={() => setEditingProvider(null)}>Cancel</Button>
-                    </div>
-                  ) : (
-                    <div className="flex justify-end gap-2">
-                      <Button size="icon" variant="ghost" onClick={() => setEditingProvider({ id: provider._id, name: provider.name, service: provider.service })}>
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button size="icon" variant="ghost" onClick={() => handleDelete(provider._id)}>
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  )}
-                </TableCell>
-              </TableRow>
-            ))}
+            {providers.map((provider) => {
+              const service = services.find(s => s.id === provider.serviceId)
+              return (
+                <TableRow key={provider.id}>
+                  <TableCell>
+                    {editingProvider?.id === provider.id ? (
+                      <Input
+                        value={editingProvider.name}
+                        onChange={(e) => setEditingProvider({ ...editingProvider, name: e.target.value })}
+                      />
+                    ) : (
+                      provider.name
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {editingProvider?.id === provider.id ? (
+                      <Select
+                        value={editingProvider.serviceId}
+                        onValueChange={(val) => setEditingProvider({ ...editingProvider, serviceId: val })}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {services.map((service) => (
+                            <SelectItem key={service.id} value={service.id}>
+                              {service.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      service?.name || '-'
+                    )}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    {editingProvider?.id === provider.id ? (
+                      <div className="flex justify-end gap-2">
+                        <Button size="sm" onClick={handleUpdate}>Save</Button>
+                        <Button size="sm" variant="ghost" onClick={() => setEditingProvider(null)}>Cancel</Button>
+                      </div>
+                    ) : (
+                      <div className="flex justify-end gap-2">
+                        <Button size="icon" variant="ghost" onClick={() => setEditingProvider({ id: provider.id, name: provider.name, serviceId: provider.serviceId })}>
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button size="icon" variant="ghost" onClick={() => handleDelete(provider.id)}>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    )}
+                  </TableCell>
+                </TableRow>
+              )
+            })}
           </TableBody>
         </Table>
       </CardContent>

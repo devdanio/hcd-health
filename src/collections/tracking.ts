@@ -41,7 +41,7 @@ export const trackPageViewSchema = z.object({
   apiKey: z.string(),
   visitorId: z.string(),
   sessionId: z.string(),
-  metadata: attributionSchema,
+  data: attributionSchema,
   userAgent: z.string().optional(),
   ipAddress: z.string().optional(),
   screenResolution: z.string().optional(),
@@ -109,8 +109,8 @@ export const trackPageView = createServerFn({ method: 'POST' })
 
     const now = new Date()
     const attribution: AttributionData = {
-      ...data.metadata,
-      timestamp: data.metadata.timestamp || now.getTime(),
+      ...data.data,
+      timestamp: data.data.timestamp || now.getTime(),
     }
 
     // 2. Get or create contact (simplified - TODO: better visitor ID logic)
@@ -165,7 +165,7 @@ export const trackPageView = createServerFn({ method: 'POST' })
         contactId: contact.id,
         sessionId: session.id,
         type: 'pageview',
-        metadata: attribution as any,
+        data: attribution as any,
       },
     })
 
@@ -209,13 +209,13 @@ export const getSessions = createServerFn({ method: 'GET' })
     // Transform to match Convex response format
     return sessions.map((session) => {
       const latestEvent = session.events[0]
-      const metadata = latestEvent?.metadata as any
+      const data = latestEvent?.data as any
 
       return {
         ...session,
         eventsCount: session.events.length, // This will only be 1 with current query
         lastActivity:
-          metadata?.timestamp ||
+          data?.timestamp ||
           (session.lastSessionAttribution as any)?.timestamp ||
           session.createdAt.getTime(),
       }
@@ -259,12 +259,12 @@ export const getSessionPageViews = createServerFn({ method: 'GET' })
 
     // Enrich with channel information
     return events.map((event) => {
-      const metadata = event.metadata as any
-      const channel = resolveChannel(metadata)
+      const data = event.data as any
+      const channel = resolveChannel(data)
 
       return {
         ...event,
-        url: metadata.url,
+        url: data.url,
         channel: {
           source: channel.source,
           category: channel.category,
@@ -466,11 +466,11 @@ export const getTopPages = createServerFn({ method: 'GET' })
     const pageMap = new Map<string, Set<string>>()
 
     for (const event of events) {
-      const metadata = event.metadata as any
-      if (!metadata.url) continue
+      const data = event.data as any
+      if (!data.url) continue
 
       try {
-        const urlObj = new URL(metadata.url)
+        const urlObj = new URL(data.url)
         const pathname = urlObj.pathname
 
         if (!pageMap.has(pathname)) {

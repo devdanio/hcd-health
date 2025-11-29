@@ -1,8 +1,14 @@
 'use client'
 
-import { useAction, useQuery } from 'convex/react'
-import { api } from 'convex/_generated/api'
-import { Id } from 'convex/_generated/dataModel'
+import { useLiveQuery } from '@tanstack/react-db'
+import { useCollections } from '@/routes/__root'
+import {
+  generateOAuthUrl as generateGoogleOAuthUrl,
+  disconnectGoogleAds,
+  listAccessibleAccounts,
+  selectAccount,
+  getCampaigns as getGoogleAdsCampaigns,
+} from '@/collections'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -17,16 +23,15 @@ import { CheckCircle2, XCircle, ExternalLink, Loader2, List } from 'lucide-react
 import { useState, useEffect } from 'react'
 
 interface IntegrationsSettingsProps {
-  companyId: Id<'companies'>
+  companyId: string
 }
 
 export function IntegrationsSettings({ companyId }: IntegrationsSettingsProps) {
-  const company = useQuery(api.companies.getCompany, { companyId })
-  const generateOAuthUrl = useAction(api.googleAds.generateOAuthUrl)
-  const disconnect = useAction(api.googleAds.disconnectGoogleAds)
-  const listAccounts = useAction(api.googleAds.listAccessibleAccounts)
-  const selectAccount = useAction(api.googleAds.selectAccount)
-  const getCampaigns = useAction(api.googleAds.getCampaigns)
+  const { companiesCollection } = useCollections()
+  const { data: companies } = useLiveQuery((q) =>
+    q.from({ company: companiesCollection })
+  )
+  const company = companies?.find(c => c.id === companyId)
 
   const [isConnecting, setIsConnecting] = useState(false)
   const [isDisconnecting, setIsDisconnecting] = useState(false)
@@ -72,7 +77,7 @@ export function IntegrationsSettings({ companyId }: IntegrationsSettingsProps) {
   const loadAccounts = async () => {
     try {
       setIsLoadingAccounts(true)
-      const accountList = await listAccounts({ companyId })
+      const accountList = await listAccessibleAccounts({ data: { companyId } })
       setAccounts(accountList)
 
       // If no accounts found, show manual input
@@ -91,7 +96,7 @@ export function IntegrationsSettings({ companyId }: IntegrationsSettingsProps) {
   const handleConnect = async () => {
     try {
       setIsConnecting(true)
-      const { oauthUrl } = await generateOAuthUrl({ companyId })
+      const { oauthUrl } = await generateGoogleOAuthUrl({ data: { companyId } })
       // Redirect to Google OAuth
       window.location.href = oauthUrl
     } catch (error: any) {
@@ -103,7 +108,7 @@ export function IntegrationsSettings({ companyId }: IntegrationsSettingsProps) {
   const handleSelectAccount = async (customerId: string) => {
     try {
       setIsSelectingAccount(true)
-      await selectAccount({ companyId, customerId })
+      await selectAccount({ data: { companyId, customerId } })
       toast.success('Google Ads account selected successfully!')
       setAccounts(null) // Clear account list
       setManualCustomerId('')
@@ -137,7 +142,7 @@ export function IntegrationsSettings({ companyId }: IntegrationsSettingsProps) {
 
     try {
       setIsDisconnecting(true)
-      await disconnect({ companyId })
+      await disconnectGoogleAds({ data: { companyId } })
       setAccounts(null) // Clear account list
       setCampaigns(null) // Clear campaigns
       toast.success('Google Ads disconnected successfully')
@@ -151,7 +156,7 @@ export function IntegrationsSettings({ companyId }: IntegrationsSettingsProps) {
   const handleLoadCampaigns = async () => {
     try {
       setIsLoadingCampaigns(true)
-      const campaignList = await getCampaigns({ companyId })
+      const campaignList = await getGoogleAdsCampaigns({ data: { companyId } })
       setCampaigns(campaignList)
       toast.success(`Loaded ${campaignList.length} campaigns`)
     } catch (error: any) {

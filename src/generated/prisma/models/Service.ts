@@ -185,7 +185,6 @@ export type ServiceWhereInput = {
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   providers?: Prisma.ProviderListRelationFilter
   appointments?: Prisma.AppointmentListRelationFilter
-  firstContacts?: Prisma.ContactListRelationFilter
 }
 
 export type ServiceOrderByWithRelationInput = {
@@ -197,7 +196,6 @@ export type ServiceOrderByWithRelationInput = {
   company?: Prisma.CompanyOrderByWithRelationInput
   providers?: Prisma.ProviderOrderByRelationAggregateInput
   appointments?: Prisma.AppointmentOrderByRelationAggregateInput
-  firstContacts?: Prisma.ContactOrderByRelationAggregateInput
 }
 
 export type ServiceWhereUniqueInput = Prisma.AtLeast<{
@@ -212,7 +210,6 @@ export type ServiceWhereUniqueInput = Prisma.AtLeast<{
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   providers?: Prisma.ProviderListRelationFilter
   appointments?: Prisma.AppointmentListRelationFilter
-  firstContacts?: Prisma.ContactListRelationFilter
 }, "id">
 
 export type ServiceOrderByWithAggregationInput = {
@@ -245,7 +242,6 @@ export type ServiceCreateInput = {
   company: Prisma.CompanyCreateNestedOneWithoutServicesInput
   providers?: Prisma.ProviderCreateNestedManyWithoutServiceInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutServiceRelInput
-  firstContacts?: Prisma.ContactCreateNestedManyWithoutFirstServiceInput
 }
 
 export type ServiceUncheckedCreateInput = {
@@ -256,7 +252,6 @@ export type ServiceUncheckedCreateInput = {
   updatedAt?: Date | string
   providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutServiceInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutServiceRelInput
-  firstContacts?: Prisma.ContactUncheckedCreateNestedManyWithoutFirstServiceInput
 }
 
 export type ServiceUpdateInput = {
@@ -267,7 +262,6 @@ export type ServiceUpdateInput = {
   company?: Prisma.CompanyUpdateOneRequiredWithoutServicesNestedInput
   providers?: Prisma.ProviderUpdateManyWithoutServiceNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutServiceRelNestedInput
-  firstContacts?: Prisma.ContactUpdateManyWithoutFirstServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateInput = {
@@ -278,7 +272,6 @@ export type ServiceUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   providers?: Prisma.ProviderUncheckedUpdateManyWithoutServiceNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutServiceRelNestedInput
-  firstContacts?: Prisma.ContactUncheckedUpdateManyWithoutFirstServiceNestedInput
 }
 
 export type ServiceCreateManyInput = {
@@ -314,11 +307,6 @@ export type ServiceOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type ServiceNullableScalarRelationFilter = {
-  is?: Prisma.ServiceWhereInput | null
-  isNot?: Prisma.ServiceWhereInput | null
-}
-
 export type ServiceCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
@@ -346,6 +334,11 @@ export type ServiceMinOrderByAggregateInput = {
 export type ServiceScalarRelationFilter = {
   is?: Prisma.ServiceWhereInput
   isNot?: Prisma.ServiceWhereInput
+}
+
+export type ServiceNullableScalarRelationFilter = {
+  is?: Prisma.ServiceWhereInput | null
+  isNot?: Prisma.ServiceWhereInput | null
 }
 
 export type ServiceCreateNestedManyWithoutCompanyInput = {
@@ -390,22 +383,6 @@ export type ServiceUncheckedUpdateManyWithoutCompanyNestedInput = {
   deleteMany?: Prisma.ServiceScalarWhereInput | Prisma.ServiceScalarWhereInput[]
 }
 
-export type ServiceCreateNestedOneWithoutFirstContactsInput = {
-  create?: Prisma.XOR<Prisma.ServiceCreateWithoutFirstContactsInput, Prisma.ServiceUncheckedCreateWithoutFirstContactsInput>
-  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutFirstContactsInput
-  connect?: Prisma.ServiceWhereUniqueInput
-}
-
-export type ServiceUpdateOneWithoutFirstContactsNestedInput = {
-  create?: Prisma.XOR<Prisma.ServiceCreateWithoutFirstContactsInput, Prisma.ServiceUncheckedCreateWithoutFirstContactsInput>
-  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutFirstContactsInput
-  upsert?: Prisma.ServiceUpsertWithoutFirstContactsInput
-  disconnect?: Prisma.ServiceWhereInput | boolean
-  delete?: Prisma.ServiceWhereInput | boolean
-  connect?: Prisma.ServiceWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ServiceUpdateToOneWithWhereWithoutFirstContactsInput, Prisma.ServiceUpdateWithoutFirstContactsInput>, Prisma.ServiceUncheckedUpdateWithoutFirstContactsInput>
-}
-
 export type ServiceCreateNestedOneWithoutProvidersInput = {
   create?: Prisma.XOR<Prisma.ServiceCreateWithoutProvidersInput, Prisma.ServiceUncheckedCreateWithoutProvidersInput>
   connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutProvidersInput
@@ -443,7 +420,6 @@ export type ServiceCreateWithoutCompanyInput = {
   updatedAt?: Date | string
   providers?: Prisma.ProviderCreateNestedManyWithoutServiceInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutServiceRelInput
-  firstContacts?: Prisma.ContactCreateNestedManyWithoutFirstServiceInput
 }
 
 export type ServiceUncheckedCreateWithoutCompanyInput = {
@@ -453,7 +429,6 @@ export type ServiceUncheckedCreateWithoutCompanyInput = {
   updatedAt?: Date | string
   providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutServiceInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutServiceRelInput
-  firstContacts?: Prisma.ContactUncheckedCreateNestedManyWithoutFirstServiceInput
 }
 
 export type ServiceCreateOrConnectWithoutCompanyInput = {
@@ -493,62 +468,6 @@ export type ServiceScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Service"> | Date | string
 }
 
-export type ServiceCreateWithoutFirstContactsInput = {
-  id?: string
-  name: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  company: Prisma.CompanyCreateNestedOneWithoutServicesInput
-  providers?: Prisma.ProviderCreateNestedManyWithoutServiceInput
-  appointments?: Prisma.AppointmentCreateNestedManyWithoutServiceRelInput
-}
-
-export type ServiceUncheckedCreateWithoutFirstContactsInput = {
-  id?: string
-  companyId: string
-  name: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutServiceInput
-  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutServiceRelInput
-}
-
-export type ServiceCreateOrConnectWithoutFirstContactsInput = {
-  where: Prisma.ServiceWhereUniqueInput
-  create: Prisma.XOR<Prisma.ServiceCreateWithoutFirstContactsInput, Prisma.ServiceUncheckedCreateWithoutFirstContactsInput>
-}
-
-export type ServiceUpsertWithoutFirstContactsInput = {
-  update: Prisma.XOR<Prisma.ServiceUpdateWithoutFirstContactsInput, Prisma.ServiceUncheckedUpdateWithoutFirstContactsInput>
-  create: Prisma.XOR<Prisma.ServiceCreateWithoutFirstContactsInput, Prisma.ServiceUncheckedCreateWithoutFirstContactsInput>
-  where?: Prisma.ServiceWhereInput
-}
-
-export type ServiceUpdateToOneWithWhereWithoutFirstContactsInput = {
-  where?: Prisma.ServiceWhereInput
-  data: Prisma.XOR<Prisma.ServiceUpdateWithoutFirstContactsInput, Prisma.ServiceUncheckedUpdateWithoutFirstContactsInput>
-}
-
-export type ServiceUpdateWithoutFirstContactsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  company?: Prisma.CompanyUpdateOneRequiredWithoutServicesNestedInput
-  providers?: Prisma.ProviderUpdateManyWithoutServiceNestedInput
-  appointments?: Prisma.AppointmentUpdateManyWithoutServiceRelNestedInput
-}
-
-export type ServiceUncheckedUpdateWithoutFirstContactsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  providers?: Prisma.ProviderUncheckedUpdateManyWithoutServiceNestedInput
-  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutServiceRelNestedInput
-}
-
 export type ServiceCreateWithoutProvidersInput = {
   id?: string
   name: string
@@ -556,7 +475,6 @@ export type ServiceCreateWithoutProvidersInput = {
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutServicesInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutServiceRelInput
-  firstContacts?: Prisma.ContactCreateNestedManyWithoutFirstServiceInput
 }
 
 export type ServiceUncheckedCreateWithoutProvidersInput = {
@@ -566,7 +484,6 @@ export type ServiceUncheckedCreateWithoutProvidersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutServiceRelInput
-  firstContacts?: Prisma.ContactUncheckedCreateNestedManyWithoutFirstServiceInput
 }
 
 export type ServiceCreateOrConnectWithoutProvidersInput = {
@@ -592,7 +509,6 @@ export type ServiceUpdateWithoutProvidersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutServicesNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutServiceRelNestedInput
-  firstContacts?: Prisma.ContactUpdateManyWithoutFirstServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateWithoutProvidersInput = {
@@ -602,7 +518,6 @@ export type ServiceUncheckedUpdateWithoutProvidersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutServiceRelNestedInput
-  firstContacts?: Prisma.ContactUncheckedUpdateManyWithoutFirstServiceNestedInput
 }
 
 export type ServiceCreateWithoutAppointmentsInput = {
@@ -612,7 +527,6 @@ export type ServiceCreateWithoutAppointmentsInput = {
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutServicesInput
   providers?: Prisma.ProviderCreateNestedManyWithoutServiceInput
-  firstContacts?: Prisma.ContactCreateNestedManyWithoutFirstServiceInput
 }
 
 export type ServiceUncheckedCreateWithoutAppointmentsInput = {
@@ -622,7 +536,6 @@ export type ServiceUncheckedCreateWithoutAppointmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutServiceInput
-  firstContacts?: Prisma.ContactUncheckedCreateNestedManyWithoutFirstServiceInput
 }
 
 export type ServiceCreateOrConnectWithoutAppointmentsInput = {
@@ -648,7 +561,6 @@ export type ServiceUpdateWithoutAppointmentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutServicesNestedInput
   providers?: Prisma.ProviderUpdateManyWithoutServiceNestedInput
-  firstContacts?: Prisma.ContactUpdateManyWithoutFirstServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateWithoutAppointmentsInput = {
@@ -658,7 +570,6 @@ export type ServiceUncheckedUpdateWithoutAppointmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   providers?: Prisma.ProviderUncheckedUpdateManyWithoutServiceNestedInput
-  firstContacts?: Prisma.ContactUncheckedUpdateManyWithoutFirstServiceNestedInput
 }
 
 export type ServiceCreateManyCompanyInput = {
@@ -675,7 +586,6 @@ export type ServiceUpdateWithoutCompanyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   providers?: Prisma.ProviderUpdateManyWithoutServiceNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutServiceRelNestedInput
-  firstContacts?: Prisma.ContactUpdateManyWithoutFirstServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateWithoutCompanyInput = {
@@ -685,7 +595,6 @@ export type ServiceUncheckedUpdateWithoutCompanyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   providers?: Prisma.ProviderUncheckedUpdateManyWithoutServiceNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutServiceRelNestedInput
-  firstContacts?: Prisma.ContactUncheckedUpdateManyWithoutFirstServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateManyWithoutCompanyInput = {
@@ -703,13 +612,11 @@ export type ServiceUncheckedUpdateManyWithoutCompanyInput = {
 export type ServiceCountOutputType = {
   providers: number
   appointments: number
-  firstContacts: number
 }
 
 export type ServiceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   providers?: boolean | ServiceCountOutputTypeCountProvidersArgs
   appointments?: boolean | ServiceCountOutputTypeCountAppointmentsArgs
-  firstContacts?: boolean | ServiceCountOutputTypeCountFirstContactsArgs
 }
 
 /**
@@ -736,13 +643,6 @@ export type ServiceCountOutputTypeCountAppointmentsArgs<ExtArgs extends runtime.
   where?: Prisma.AppointmentWhereInput
 }
 
-/**
- * ServiceCountOutputType without action
- */
-export type ServiceCountOutputTypeCountFirstContactsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ContactWhereInput
-}
-
 
 export type ServiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -753,7 +653,6 @@ export type ServiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   providers?: boolean | Prisma.Service$providersArgs<ExtArgs>
   appointments?: boolean | Prisma.Service$appointmentsArgs<ExtArgs>
-  firstContacts?: boolean | Prisma.Service$firstContactsArgs<ExtArgs>
   _count?: boolean | Prisma.ServiceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["service"]>
 
@@ -788,7 +687,6 @@ export type ServiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   providers?: boolean | Prisma.Service$providersArgs<ExtArgs>
   appointments?: boolean | Prisma.Service$appointmentsArgs<ExtArgs>
-  firstContacts?: boolean | Prisma.Service$firstContactsArgs<ExtArgs>
   _count?: boolean | Prisma.ServiceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ServiceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -804,7 +702,6 @@ export type $ServicePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     company: Prisma.$CompanyPayload<ExtArgs>
     providers: Prisma.$ProviderPayload<ExtArgs>[]
     appointments: Prisma.$AppointmentPayload<ExtArgs>[]
-    firstContacts: Prisma.$ContactPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1209,7 +1106,6 @@ export interface Prisma__ServiceClient<T, Null = never, ExtArgs extends runtime.
   company<T extends Prisma.CompanyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyDefaultArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   providers<T extends Prisma.Service$providersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Service$providersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   appointments<T extends Prisma.Service$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Service$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  firstContacts<T extends Prisma.Service$firstContactsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Service$firstContactsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1685,30 +1581,6 @@ export type Service$appointmentsArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.AppointmentScalarFieldEnum | Prisma.AppointmentScalarFieldEnum[]
-}
-
-/**
- * Service.firstContacts
- */
-export type Service$firstContactsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Contact
-   */
-  select?: Prisma.ContactSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Contact
-   */
-  omit?: Prisma.ContactOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ContactInclude<ExtArgs> | null
-  where?: Prisma.ContactWhereInput
-  orderBy?: Prisma.ContactOrderByWithRelationInput | Prisma.ContactOrderByWithRelationInput[]
-  cursor?: Prisma.ContactWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ContactScalarFieldEnum | Prisma.ContactScalarFieldEnum[]
 }
 
 /**

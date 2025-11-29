@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useQuery } from 'convex/react'
-import { api } from 'convex/_generated/api'
-import { Id } from 'convex/_generated/dataModel'
+import { useLiveQuery } from '@tanstack/react-db'
+import { useCollections } from '@/routes/__root'
+import { useQuery } from '@tanstack/react-query'
+import { getContactsAnalytics } from '@/collections'
 import {
   useReactTable,
   getCoreRowModel,
@@ -52,8 +53,6 @@ const chartConfig = {
 } satisfies ChartConfig
 
 type GHLContact = {
-  _id: Id<'ghlContacts'>
-  _creationTime: number
   id: string
   locationId: string
   contactName: string | null
@@ -62,26 +61,30 @@ type GHLContact = {
   companyName: string | null
   email: string | null
   phone: string | null
-  dateAdded: number
-  dateUpdated: number
-  [key: string]: any
+  dateAdded: Date
+  dateUpdated: Date
+  createdAt: Date
+  updatedAt: Date
 }
 
 type Contact = {
-  _id: Id<'contacts'>
-  _creationTime: number
-  email?: string
-  phone?: string
-  fullName?: string
-  firstName?: string
-  lastName?: string
-  companyId?: Id<'companies'>
-  ghlContactId?: Id<'ghlContacts'>
+  id: string
+  email: string | null
+  phone: string | null
+  fullName: string | null
+  firstName: string | null
+  lastName: string | null
+  companyId: string
+  ghlContactId: string | null
   ghlContact: GHLContact | null
+  createdAt: Date
+  updatedAt: Date
 }
 
 function ContactsPage() {
   const { companyId } = Route.useParams()
+  const { contactsCollection } = useCollections()
+
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d' | 'all'>(
     '30d',
   )
@@ -89,14 +92,30 @@ function ContactsPage() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [globalFilter, setGlobalFilter] = useState('')
 
-  const contacts = useQuery(api.contacts.getContacts, {
-    // Fetch contacts and analytics data
-    companyId: companyId as Id<'companies'>,
-  })
+  // Use TanStack DB useLiveQuery for reactive data
+  const { data: contacts } = useLiveQuery((q) =>
+    q.from({ contact: contactsCollection })
+      .setMeta({ companyId })
+  )
 
-  const analyticsData = useQuery(api.contacts.getContactsAnalytics, {
-    companyId: companyId as Id<'companies'>,
-    timeRange,
+  // Calculate date range for analytics
+  const getDateRange = (range: '7d' | '30d' | '90d' | 'all') => {
+    const endDate = new Date()
+    const startDate = new Date()
+
+    if (range === '7d') startDate.setDate(startDate.getDate() - 7)
+    else if (range === '30d') startDate.setDate(startDate.getDate() - 30)
+    else if (range === '90d') startDate.setDate(startDate.getDate() - 90)
+    else startDate.setFullYear(2000) // 'all' - far back date
+
+    return { startDate, endDate }
+  }
+
+  const { startDate, endDate } = getDateRange(timeRange)
+
+  const { data: analyticsData } = useQuery({
+    queryKey: ['contacts-analytics', companyId, timeRange],
+    queryFn: () => getContactsAnalytics({ data: { companyId, startDate, endDate } }),
   })
 
   // Define table columns using GHL data
@@ -193,7 +212,7 @@ function ContactsPage() {
         cell: ({ row }) => {
           const dateAdded = row.original.ghlContact?.dateAdded
           if (!dateAdded) return <div>-</div>
-          const date = new Date(dateAdded)
+          const date = dateAdded instanceof Date ? dateAdded : new Date(dateAdded)
           return <div>{date.toLocaleDateString()}</div>
         },
       },

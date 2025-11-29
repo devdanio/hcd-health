@@ -16,7 +16,8 @@
       "Bash(npx prisma init:*)",
       "Bash(npx prisma migrate:*)",
       "Bash(PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION=\"you can continue\" npx prisma migrate reset:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(pnpm remove:*)"
     ],
     "deny": [],
     "ask": []

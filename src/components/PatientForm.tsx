@@ -1,7 +1,4 @@
 import { useForm } from '@tanstack/react-form'
-import { useMutation } from 'convex/react'
-import { api } from '../../convex/_generated/api'
-import { Id } from '../../convex/_generated/dataModel'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -12,6 +9,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { toast } from 'sonner'
+import { useCollections } from '@/routes/__root'
 
 type PatientFormData = {
   firstName: string
@@ -28,8 +26,8 @@ type PatientFormData = {
 }
 
 type PatientFormProps = {
-  companyId?: Id<'companies'>
-  patientId?: Id<'patients'>
+  companyId?: string
+  patientId?: string
   patientData?: Partial<PatientFormData>
   onSuccess?: () => void
   onCancel?: () => void
@@ -42,8 +40,7 @@ export function PatientForm({
   onSuccess,
   onCancel,
 }: PatientFormProps) {
-  const createPatient = useMutation(api.patients.createPatient)
-  const updatePatient = useMutation(api.patients.updatePatient)
+  const { patientsCollection } = useCollections()
 
   const isUpdateMode = !!patientId
 
@@ -65,19 +62,18 @@ export function PatientForm({
       try {
         if (isUpdateMode) {
           // Update existing patient
-          await updatePatient({
-            id: patientId,
+          await patientsCollection.update(patientId!, {
             firstName: value.firstName,
-            lastName: value.lastName || undefined,
+            lastName: value.lastName || null,
             phone: value.phone,
-            email: value.email || undefined,
-            payerName: value.payerName || undefined,
-            dateOfBirth: value.dateOfBirth || undefined,
-            memberId: value.memberId || undefined,
-            groupId: value.groupId || undefined,
-            emergencyContactName: value.emergencyContactName || undefined,
-            emergencyContactPhone: value.emergencyContactPhone || undefined,
-            emergencyContactRelation: value.emergencyContactRelation || undefined,
+            email: value.email || null,
+            payerName: value.payerName || null,
+            dateOfBirth: value.dateOfBirth || null,
+            memberId: value.memberId || null,
+            groupId: value.groupId || null,
+            emergencyContactName: value.emergencyContactName || null,
+            emergencyContactPhone: value.emergencyContactPhone || null,
+            emergencyContactRelation: value.emergencyContactRelation || null,
           })
           toast.success('Patient updated successfully')
         } else {
@@ -86,19 +82,19 @@ export function PatientForm({
             toast.error('Company ID is required to create a patient')
             return
           }
-          await createPatient({
+          await patientsCollection.insert({
             companyId,
             firstName: value.firstName,
-            lastName: value.lastName || undefined,
+            lastName: value.lastName || null,
             phone: value.phone,
-            email: value.email || undefined,
-            payerName: value.payerName || undefined,
-            dateOfBirth: value.dateOfBirth || undefined,
-            memberId: value.memberId || undefined,
-            groupId: value.groupId || undefined,
-            emergencyContactName: value.emergencyContactName || undefined,
-            emergencyContactPhone: value.emergencyContactPhone || undefined,
-            emergencyContactRelation: value.emergencyContactRelation || undefined,
+            email: value.email || null,
+            payerName: value.payerName || null,
+            dateOfBirth: value.dateOfBirth || null,
+            memberId: value.memberId || null,
+            groupId: value.groupId || null,
+            emergencyContactName: value.emergencyContactName || null,
+            emergencyContactPhone: value.emergencyContactPhone || null,
+            emergencyContactRelation: value.emergencyContactRelation || null,
           })
           toast.success('Patient created successfully')
         }
