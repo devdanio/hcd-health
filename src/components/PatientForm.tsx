@@ -16,13 +16,6 @@ type PatientFormData = {
   lastName: string
   phone: string
   email: string
-  dateOfBirth: string
-  payerName: string
-  memberId: string
-  groupId: string
-  emergencyContactName: string
-  emergencyContactPhone: string
-  emergencyContactRelation: string
 }
 
 type PatientFormProps = {
@@ -50,13 +43,6 @@ export function PatientForm({
       lastName: patientData?.lastName || '',
       phone: patientData?.phone || '',
       email: patientData?.email || '',
-      dateOfBirth: patientData?.dateOfBirth || '',
-      payerName: patientData?.payerName || '',
-      memberId: patientData?.memberId || '',
-      groupId: patientData?.groupId || '',
-      emergencyContactName: patientData?.emergencyContactName || '',
-      emergencyContactPhone: patientData?.emergencyContactPhone || '',
-      emergencyContactRelation: patientData?.emergencyContactRelation || '',
     },
     onSubmit: async ({ value }) => {
       try {
@@ -67,13 +53,6 @@ export function PatientForm({
             lastName: value.lastName || null,
             phone: value.phone,
             email: value.email || null,
-            payerName: value.payerName || null,
-            dateOfBirth: value.dateOfBirth || null,
-            memberId: value.memberId || null,
-            groupId: value.groupId || null,
-            emergencyContactName: value.emergencyContactName || null,
-            emergencyContactPhone: value.emergencyContactPhone || null,
-            emergencyContactRelation: value.emergencyContactRelation || null,
           })
           toast.success('Patient updated successfully')
         } else {
@@ -84,17 +63,14 @@ export function PatientForm({
           }
           await patientsCollection.insert({
             companyId,
+            email: value.email || null,
+            phone: value.phone,
             firstName: value.firstName,
             lastName: value.lastName || null,
-            phone: value.phone,
-            email: value.email || null,
-            payerName: value.payerName || null,
-            dateOfBirth: value.dateOfBirth || null,
-            memberId: value.memberId || null,
-            groupId: value.groupId || null,
-            emergencyContactName: value.emergencyContactName || null,
-            emergencyContactPhone: value.emergencyContactPhone || null,
-            emergencyContactRelation: value.emergencyContactRelation || null,
+            fullName:
+              value.firstName && value.lastName
+                ? `${value.firstName} ${value.lastName}`
+                : value.firstName || value.lastName || null,
           })
           toast.success('Patient created successfully')
         }
@@ -116,7 +92,7 @@ export function PatientForm({
         </DialogTitle>
         <DialogDescription>
           {isUpdateMode
-            ? "Update the patient's personal, insurance, and emergency contact information."
+            ? "Update the patient's contact information."
             : 'Enter the details for the new patient. First Name and Phone are required.'}
         </DialogDescription>
       </DialogHeader>
@@ -204,117 +180,6 @@ export function PatientForm({
                   <Input
                     id="email"
                     type="email"
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                </div>
-              )}
-            </form.Field>
-
-            {/* Date of Birth */}
-            <form.Field name="dateOfBirth">
-              {(field) => (
-                <div className="grid gap-2">
-                  <Label htmlFor="dob">Date of Birth</Label>
-                  <Input
-                    id="dob"
-                    type="date"
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                </div>
-              )}
-            </form.Field>
-
-            {/* Payer Name */}
-            <form.Field name="payerName">
-              {(field) => (
-                <div className="grid gap-2">
-                  <Label htmlFor="payerName">Payer Name</Label>
-                  <Input
-                    id="payerName"
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                </div>
-              )}
-            </form.Field>
-
-            {/* Member ID */}
-            <form.Field name="memberId">
-              {(field) => (
-                <div className="grid gap-2">
-                  <Label htmlFor="memberId">Member ID</Label>
-                  <Input
-                    id="memberId"
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                </div>
-              )}
-            </form.Field>
-
-            {/* Group ID */}
-            <form.Field name="groupId">
-              {(field) => (
-                <div className="grid gap-2">
-                  <Label htmlFor="groupId">Group ID</Label>
-                  <Input
-                    id="groupId"
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                </div>
-              )}
-            </form.Field>
-
-            {/* Emergency Contact Section */}
-            <div className="col-span-2 border-t pt-4 mt-2">
-              <h4 className="font-medium mb-2">Emergency Contact</h4>
-            </div>
-
-            {/* Emergency Contact Name */}
-            <form.Field name="emergencyContactName">
-              {(field) => (
-                <div className="grid gap-2">
-                  <Label htmlFor="ecName">Name</Label>
-                  <Input
-                    id="ecName"
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                </div>
-              )}
-            </form.Field>
-
-            {/* Emergency Contact Phone */}
-            <form.Field name="emergencyContactPhone">
-              {(field) => (
-                <div className="grid gap-2">
-                  <Label htmlFor="ecPhone">Phone</Label>
-                  <Input
-                    id="ecPhone"
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                </div>
-              )}
-            </form.Field>
-
-            {/* Emergency Contact Relation */}
-            <form.Field name="emergencyContactRelation">
-              {(field) => (
-                <div className="grid gap-2">
-                  <Label htmlFor="ecRelation">Relation</Label>
-                  <Input
-                    id="ecRelation"
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}

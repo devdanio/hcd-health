@@ -1,5 +1,9 @@
 import { createServerFn } from '@tanstack/react-start'
-import { createCollection } from '@tanstack/react-db'
+import {
+  createCollection,
+  eq,
+  parseLoadSubsetOptions,
+} from '@tanstack/react-db'
 import { queryCollectionOptions } from '@tanstack/query-db-collection'
 import { z } from 'zod'
 import { prisma } from '@/server/db/client'
@@ -151,8 +155,12 @@ export function createCmsPagesCollection(queryClient: QueryClient) {
     queryCollectionOptions({
       id: 'cmsPages',
       queryKey: ['cmsPages'],
+      syncMode: 'on-demand',
       queryFn: async (ctx) => {
-        const companyId = ctx.meta?.companyId as string | undefined
+        const options = parseLoadSubsetOptions(ctx.meta?.loadSubsetOptions)
+        const companyId = options?.filters.find((filter) =>
+          filter.field.includes('companyId'),
+        )?.value as string | undefined
         if (!companyId) return []
         return await getPages({ data: { companyId } })
       },

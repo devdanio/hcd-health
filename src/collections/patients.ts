@@ -1,9 +1,14 @@
 import { createServerFn } from '@tanstack/react-start'
-import { createCollection } from '@tanstack/react-db'
+import {
+  createCollection,
+  eq,
+  parseLoadSubsetOptions,
+} from '@tanstack/react-db'
 import { queryCollectionOptions } from '@tanstack/query-db-collection'
 import { z } from 'zod'
 import { prisma } from '@/server/db/client'
 import type { QueryClient } from '@tanstack/react-query'
+import { createContactSchema } from './contacts'
 
 // ============================================================================
 // Schemas
@@ -19,19 +24,12 @@ export const getPatientSchema = z.object({
 
 export const createPatientSchema = z.object({
   companyId: z.string(),
-  email: z.string().email().optional(),
-  phone: z.string().optional(),
-  fullName: z.string().optional(),
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
-  dateOfBirth: z.string().optional(),
-  gender: z.string().optional(),
-  payerName: z.string().optional(),
-  memberId: z.string().optional(),
-  groupId: z.string().optional(),
-  emergencyContactName: z.string().optional(),
-  emergencyContactPhone: z.string().optional(),
-  emergencyContactRelation: z.string().optional(),
+  contactId: z.string().nullable().optional(),
+  email: z.email().nullable().optional(),
+  phone: z.string(),
+  fullName: z.string().nullable().optional(),
+  firstName: z.string(),
+  lastName: z.string().nullable().optional(),
 })
 
 export const updatePatientSchema = z.object({
@@ -41,14 +39,6 @@ export const updatePatientSchema = z.object({
   fullName: z.string().optional(),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
-  dateOfBirth: z.string().optional(),
-  gender: z.string().optional(),
-  payerName: z.string().optional(),
-  memberId: z.string().optional(),
-  groupId: z.string().optional(),
-  emergencyContactName: z.string().optional(),
-  emergencyContactPhone: z.string().optional(),
-  emergencyContactRelation: z.string().optional(),
 })
 
 export const deletePatientSchema = z.object({
@@ -72,15 +62,7 @@ export const getPatients = createServerFn({ method: 'GET' })
         },
       },
       include: {
-        contact: {
-          select: {
-            email: true,
-            phone: true,
-            fullName: true,
-            firstName: true,
-            lastName: true,
-          },
-        },
+        contact: true,
       },
       orderBy: { createdAt: 'desc' },
     })
@@ -107,58 +89,123 @@ export const getPatient = createServerFn({ method: 'GET' })
   })
 
 /**
- * Create a patient with contact
+ * Create a patient with contact (create new or upsert existing)
+ *
+ * Logic:
+ * 1. If contact is null -> create new contact
+ * 2. If contact.id exists -> upsert that contact (update only provided fields)
+ * 3. If contact has email/phone -> try to match existing contact, then upsert
+ * 4. Always create a new patient record
  */
 export const createPatient = createServerFn({ method: 'POST' })
   .inputValidator(createPatientSchema)
   .handler(async ({ data }) => {
-    const {
-      companyId,
-      email,
-      phone,
-      fullName,
-      firstName,
-      lastName,
-      ...patientData
-    } = data
+    const { companyId, contactId, ...patientData } = data
 
-    // First, find or create contact
-    let contact = null
-
-    if (email) {
-      contact = await prisma.contact.findFirst({
-        where: {
-          companyId,
-          email,
-        },
-      })
-    } else if (phone) {
-      contact = await prisma.contact.findFirst({
-        where: {
-          companyId,
-          phone,
-        },
-      })
-    }
-
-    if (!contact) {
-      contact = await prisma.contact.create({
+    let newContactId: string
+    if (!contactId) {
+      // Case 1: No contact provided, create a new empty contact
+      const newContact = await prisma.contact.create({
         data: {
           companyId,
-          email,
-          phone,
-          fullName,
-          firstName,
-          lastName,
+          email: null,
+          phone: null,
+          fullName: null,
+          firstName: null,
+          lastName: null,
         },
       })
+      newContactId = newContact.id
+    } else if (contactId) {
+      // Case 2: Contact ID provided, upsert that contact
+      // Only update fields that are actually provided (not null/undefined)
+      const updateData: any = {}
+
+      if (patientData.email !== undefined) updateData.email = patientData.email
+      if (patientData.phone !== undefined) updateData.phone = patientData.phone
+      if (patientData.fullName !== undefined)
+        updateData.fullName = patientData.fullName
+      if (patientData.firstName !== undefined)
+        updateData.firstName = patientData.firstName
+      if (patientData.lastName !== undefined)
+        updateData.lastName = patientData.lastName
+
+      // If there's data to update, update the contact
+      if (Object.keys(updateData).length > 0) {
+        await prisma.contact.update({
+          where: { id: contactId },
+          data: updateData,
+        })
+      }
+    } else {
+      // Case 3: Try to find existing contact by email or phone
+      let existingContact = null
+
+      if (patientData.email) {
+        existingContact = await prisma.contact.findFirst({
+          where: {
+            companyId,
+            email: patientData.email,
+          },
+        })
+      }
+
+      if (!existingContact && patientData.phone) {
+        existingContact = await prisma.contact.findFirst({
+          where: {
+            companyId,
+            phone: patientData.phone,
+          },
+        })
+      }
+
+      if (existingContact) {
+        // Found existing contact, upsert it
+        const updateData: any = {}
+
+        if (patientData.email !== undefined)
+          updateData.email = patientData.email
+        if (patientData.phone !== undefined)
+          updateData.phone = patientData.phone
+        if (patientData.fullName !== undefined)
+          updateData.fullName = patientData.fullName
+        if (patientData.firstName !== undefined)
+          updateData.firstName = patientData.firstName
+        if (patientData.lastName !== undefined)
+          updateData.lastName = patientData.lastName
+
+        if (Object.keys(updateData).length > 0) {
+          await prisma.contact.update({
+            where: { id: existingContact.id },
+            data: updateData,
+          })
+        }
+
+        newContactId = existingContact.id
+      } else {
+        // No existing contact found, create new one
+        const newContact = await prisma.contact.create({
+          data: {
+            companyId,
+            email: patientData.email ?? null,
+            phone: patientData.phone ?? null,
+            fullName: patientData.fullName ?? null,
+            firstName: patientData.firstName ?? null,
+            lastName: patientData.lastName ?? null,
+          },
+        })
+        newContactId = newContact.id
+      }
     }
 
-    // Create patient
+    // Always create the patient record
     return await prisma.patient.create({
       data: {
-        contactId: contact.id,
-        ...patientData,
+        contact: {
+          connect: {
+            id: contactId ?? newContactId,
+          },
+        },
       },
       include: {
         contact: true,
@@ -172,15 +219,7 @@ export const createPatient = createServerFn({ method: 'POST' })
 export const updatePatient = createServerFn({ method: 'POST' })
   .inputValidator(updatePatientSchema)
   .handler(async ({ data }) => {
-    const {
-      patientId,
-      email,
-      phone,
-      fullName,
-      firstName,
-      lastName,
-      ...patientData
-    } = data
+    const { patientId, email, phone, fullName, firstName, lastName } = data
 
     const patient = await prisma.patient.findUnique({
       where: { id: patientId },
@@ -204,10 +243,9 @@ export const updatePatient = createServerFn({ method: 'POST' })
       })
     }
 
-    // Update patient
-    return await prisma.patient.update({
+    // Return updated patient with contact
+    return await prisma.patient.findUnique({
       where: { id: patientId },
-      data: patientData,
       include: {
         contact: true,
       },
@@ -236,8 +274,12 @@ export function createPatientsCollection(queryClient: QueryClient) {
     queryCollectionOptions({
       id: 'patients',
       queryKey: ['patients'],
+      syncMode: 'on-demand',
       queryFn: async (ctx) => {
-        const companyId = ctx.meta?.companyId as string | undefined
+        const options = parseLoadSubsetOptions(ctx.meta?.loadSubsetOptions)
+        const companyId = options?.filters.find((filter) =>
+          filter.field.includes('companyId'),
+        )?.value as string | undefined
         if (!companyId) return []
         return await getPatients({ data: { companyId } })
       },
@@ -246,22 +288,7 @@ export function createPatientsCollection(queryClient: QueryClient) {
       onInsert: async ({ transaction }) => {
         const { modified } = transaction.mutations[0]
         await createPatient({
-          data: {
-            companyId: modified.contact.companyId,
-            email: modified.contact.email,
-            phone: modified.contact.phone,
-            fullName: modified.contact.fullName,
-            firstName: modified.contact.firstName,
-            lastName: modified.contact.lastName,
-            dateOfBirth: modified.dateOfBirth,
-            gender: modified.gender,
-            payerName: modified.payerName,
-            memberId: modified.memberId,
-            groupId: modified.groupId,
-            emergencyContactName: modified.emergencyContactName,
-            emergencyContactPhone: modified.emergencyContactPhone,
-            emergencyContactRelation: modified.emergencyContactRelation,
-          },
+          data: modified,
         })
       },
       onUpdate: async ({ transaction }) => {
@@ -269,19 +296,7 @@ export function createPatientsCollection(queryClient: QueryClient) {
         await updatePatient({
           data: {
             patientId: original.id,
-            email: modified.contact?.email,
-            phone: modified.contact?.phone,
-            fullName: modified.contact?.fullName,
-            firstName: modified.contact?.firstName,
-            lastName: modified.contact?.lastName,
-            dateOfBirth: modified.dateOfBirth,
-            gender: modified.gender,
-            payerName: modified.payerName,
-            memberId: modified.memberId,
-            groupId: modified.groupId,
-            emergencyContactName: modified.emergencyContactName,
-            emergencyContactPhone: modified.emergencyContactPhone,
-            emergencyContactRelation: modified.emergencyContactRelation,
+            ...modified,
           },
         })
       },

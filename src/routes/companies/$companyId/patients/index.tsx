@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import { useLiveQuery } from '@tanstack/react-db'
+import { eq, useLiveQuery } from '@tanstack/react-db'
 import { useCollections } from '@/routes/__root'
 import {
   useReactTable,
@@ -15,18 +15,16 @@ import {
 import { useState, useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Dialog,
   DialogContent,
   DialogTrigger,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
 } from '@/components/ui/dialog'
-import { ArrowUpDown, Plus } from 'lucide-react'
+import { ArrowUpDown, Plus, Upload, FileSpreadsheet } from 'lucide-react'
 import { PatientForm } from '@/components/PatientForm'
 
 export const Route = createFileRoute('/companies/$companyId/patients/')({
@@ -60,11 +58,14 @@ function PatientsPage() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [globalFilter, setGlobalFilter] = useState('')
   const [isAddOpen, setIsAddOpen] = useState(false)
+  const [isImportOpen, setIsImportOpen] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
 
   // Use TanStack DB useLiveQuery for reactive data
   const { data: patients } = useLiveQuery((q) =>
-    q.from({ patient: patientsCollection })
-      .setMeta({ companyId })
+    q
+      .from({ patient: patientsCollection })
+      .where(({ patient }) => eq(patient.contact.companyId, companyId)),
   )
 
   const columns = useMemo<ColumnDef<Patient>[]>(
@@ -86,7 +87,9 @@ function PatientsPage() {
           )
         },
         cell: ({ row }) => (
-          <div className="capitalize">{row.original.contact?.firstName || '-'}</div>
+          <div className="capitalize">
+            {row.original.contact?.firstName || '-'}
+          </div>
         ),
       },
       {
@@ -106,14 +109,18 @@ function PatientsPage() {
           )
         },
         cell: ({ row }) => (
-          <div className="capitalize">{row.original.contact?.lastName || '-'}</div>
+          <div className="capitalize">
+            {row.original.contact?.lastName || '-'}
+          </div>
         ),
       },
       {
         accessorFn: (row) => row.contact?.email,
         id: 'email',
         header: 'Email',
-        cell: ({ row }) => <div className="lowercase">{row.original.contact?.email || '-'}</div>,
+        cell: ({ row }) => (
+          <div className="lowercase">{row.original.contact?.email || '-'}</div>
+        ),
       },
       {
         accessorFn: (row) => row.contact?.phone,
@@ -219,24 +226,93 @@ function PatientsPage() {
             ← Back to Dashboard
           </Link>
           <h1 className="text-3xl font-bold">Patients</h1>
-          <p className="text-muted-foreground">
-            Manage and view all patients
-          </p>
+          <p className="text-muted-foreground">Manage and view all patients</p>
         </div>
-        <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" /> Add Patient
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl">
-            <PatientForm
-              companyId={companyId as Id<'companies'>}
-              onSuccess={() => setIsAddOpen(false)}
-              onCancel={() => setIsAddOpen(false)}
-            />
-          </DialogContent>
-        </Dialog>
+        <div className="flex items-center gap-2">
+          <Dialog open={isImportOpen} onOpenChange={setIsImportOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline">
+                <Upload className="mr-2 h-4 w-4" /> Import
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>Import Patients</DialogTitle>
+                <DialogDescription>
+                  Upload a CSV or XLS file to import patients. Drag and drop
+                  your file or click to browse.
+                </DialogDescription>
+              </DialogHeader>
+              <div
+                className={`mt-4 border-2 border-dashed rounded-lg p-12 text-center transition-colors ${
+                  isDragging
+                    ? 'border-primary bg-primary/5'
+                    : 'border-muted-foreground/25 hover:border-muted-foreground/50'
+                }`}
+                onDragOver={(e) => {
+                  e.preventDefault()
+                  setIsDragging(true)
+                }}
+                onDragLeave={() => setIsDragging(false)}
+                onDrop={(e) => {
+                  e.preventDefault()
+                  setIsDragging(false)
+                  const files = e.dataTransfer.files
+                  if (files.length > 0) {
+                    // File handling will be implemented later
+                  }
+                }}
+              >
+                <FileSpreadsheet className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+                <p className="text-sm font-medium mb-2">
+                  Drag and drop your file here
+                </p>
+                <p className="text-xs text-muted-foreground mb-4">
+                  or click to browse
+                </p>
+                <input
+                  type="file"
+                  accept=".csv,.xls,.xlsx"
+                  className="hidden"
+                  id="file-upload"
+                  onChange={(e) => {
+                    const files = e.target.files
+                    if (files && files.length > 0) {
+                      // File handling will be implemented later
+                    }
+                  }}
+                />
+                <label htmlFor="file-upload">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="cursor-pointer"
+                    asChild
+                  >
+                    <span>Select File</span>
+                  </Button>
+                </label>
+                <p className="text-xs text-muted-foreground mt-4">
+                  Supported formats: CSV, XLS, XLSX
+                </p>
+              </div>
+            </DialogContent>
+          </Dialog>
+          <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" /> Add Patient
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl">
+              <PatientForm
+                companyId={companyId}
+                onSuccess={() => setIsAddOpen(false)}
+                onCancel={() => setIsAddOpen(false)}
+              />
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       <Card>

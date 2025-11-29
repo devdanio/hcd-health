@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate, Link } from '@tanstack/react-router'
-import { useLiveQuery } from '@tanstack/react-db'
+import { eq, useLiveQuery } from '@tanstack/react-db'
 import { useCollections } from '@/routes/__root'
 import { CmsPageForm } from '@/components/CmsPageForm'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -28,8 +28,9 @@ function EditCmsPage() {
   const navigate = useNavigate()
 
   const { data: pages } = useLiveQuery((q) =>
-    q.from({ page: cmsPagesCollection })
-      .setMeta({ companyId })
+    q
+      .from({ page: cmsPagesCollection })
+      .where(({ page }) => eq(page.companyId, companyId)),
   )
 
   const page = pages?.find((p) => p.id === pageId)

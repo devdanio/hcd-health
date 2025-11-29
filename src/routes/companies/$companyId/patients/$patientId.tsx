@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useLiveQuery } from '@tanstack/react-db'
+import { eq, useLiveQuery } from '@tanstack/react-db'
 import { useCollections } from '@/routes/__root'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -31,8 +31,9 @@ function PatientDetailPage() {
   const { patientsCollection } = useCollections()
 
   const { data: patients } = useLiveQuery((q) =>
-    q.from({ patient: patientsCollection })
-      .setMeta({ companyId })
+    q
+      .from({ patient: patientsCollection })
+      .where(({ patient }) => eq(patient.companyId, companyId)),
   )
 
   const patient = patients?.find(p => p.id === patientId)

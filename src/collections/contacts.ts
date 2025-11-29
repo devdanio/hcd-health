@@ -1,5 +1,9 @@
 import { createServerFn } from '@tanstack/react-start'
-import { createCollection } from '@tanstack/react-db'
+import {
+  createCollection,
+  eq,
+  parseLoadSubsetOptions,
+} from '@tanstack/react-db'
 import { queryCollectionOptions } from '@tanstack/query-db-collection'
 import { z } from 'zod'
 import { prisma } from '@/server/db/client'
@@ -34,23 +38,22 @@ export const getContactCountsByFirstServiceSchema = z.object({
 
 export const createContactSchema = z.object({
   companyId: z.string(),
-  email: z.string().email().optional(),
-  phone: z.string().optional(),
-  fullName: z.string().optional(),
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
-  ghlContactId: z.string().optional(),
-  chirotouchAccountId: z.string().optional(),
-  firstServiceId: z.string().optional(),
+  email: z.email().nullable(),
+  phone: z.string().nullable(),
+  fullName: z.string().nullable(),
+  firstName: z.string().nullable(),
+  lastName: z.string().nullable(),
+  ghlContactId: z.string().nullable(),
+  chirotouchAccountId: z.string().nullable(),
 })
 
 export const updateContactSchema = z.object({
   contactId: z.string(),
-  email: z.string().email().optional(),
-  phone: z.string().optional(),
-  fullName: z.string().optional(),
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
+  email: z.email().nullable(),
+  phone: z.string().nullable(),
+  fullName: z.string().nullable(),
+  firstName: z.string().nullable(),
+  lastName: z.string().nullable(),
 })
 
 export const deleteContactSchema = z.object({
@@ -83,12 +86,6 @@ export const getContacts = createServerFn({ method: 'GET' })
 
     const contacts = await prisma.contact.findMany({
       where: { companyId: data.companyId },
-      include: {
-        ghlContact: true,
-        firstService: {
-          select: { name: true },
-        },
-      },
       orderBy: { [sortBy]: sortOrder },
       take: limit,
     })
@@ -104,12 +101,6 @@ export const getMostRecentContact = createServerFn({ method: 'GET' })
   .handler(async ({ data }) => {
     return await prisma.contact.findFirst({
       where: { companyId: data.companyId },
-      include: {
-        ghlContact: true,
-        firstService: {
-          select: { name: true },
-        },
-      },
       orderBy: { createdAt: 'desc' },
     })
   })
@@ -159,14 +150,6 @@ export const getContactCountsByFirstService = createServerFn({ method: 'GET' })
         createdAt: {
           gte: data.startDate,
           lte: data.endDate,
-        },
-        firstServiceId: {
-          not: null,
-        },
-      },
-      include: {
-        firstService: {
-          select: { name: true },
         },
       },
     })
@@ -256,8 +239,12 @@ export function createContactsCollection(queryClient: QueryClient) {
     queryCollectionOptions({
       id: 'contacts',
       queryKey: ['contacts'],
+      syncMode: 'on-demand',
       queryFn: async (ctx) => {
-        const companyId = ctx.meta?.companyId as string | undefined
+        const options = parseLoadSubsetOptions(ctx.meta?.loadSubsetOptions)
+        const companyId = options?.filters.find((filter) =>
+          filter.field.includes('companyId'),
+        )?.value as string | undefined
         if (!companyId) return []
         return await getContacts({ data: { companyId } })
       },
@@ -265,27 +252,18 @@ export function createContactsCollection(queryClient: QueryClient) {
       getKey: (item) => item.id,
       onInsert: async ({ transaction }) => {
         const { modified } = transaction.mutations[0]
+        const { createdAt, updatedAt, ...data } = modified
         await createContact({
-          data: {
-            companyId: modified.companyId,
-            email: modified.email,
-            phone: modified.phone,
-            fullName: modified.fullName,
-            firstName: modified.firstName,
-            lastName: modified.lastName,
-          },
+          data,
         })
       },
       onUpdate: async ({ transaction }) => {
         const { original, modified } = transaction.mutations[0]
+
         await updateContact({
           data: {
             contactId: original.id,
-            email: modified.email,
-            phone: modified.phone,
-            fullName: modified.fullName,
-            firstName: modified.firstName,
-            lastName: modified.lastName,
+            ...modified,
           },
         })
       },

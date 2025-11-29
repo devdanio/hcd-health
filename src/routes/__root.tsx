@@ -16,25 +16,15 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 
 import Header from '../components/Header'
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClientProvider } from '@tanstack/react-query'
 import { createContext, useContext, useMemo } from 'react'
 
-import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 import { createCollections, type Collections } from '@/collections'
+import { queryClient } from '@/lib/queryClient'
 
 import appCss from '../styles.css?url'
 import { auth } from '@clerk/tanstack-react-start/server'
 import { createServerFn } from '@tanstack/react-start'
-
-// Create QueryClient instance
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 60 * 1000, // 1 minute
-      refetchOnWindowFocus: false,
-    },
-  },
-})
 
 // Collections Context
 const CollectionsContext = createContext<Collections | null>(null)
@@ -129,7 +119,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                   name: 'Tanstack Router',
                   render: <TanStackRouterDevtoolsPanel />,
                 },
-                TanStackQueryDevtools,
               ]}
             />
           </CollectionsContext.Provider>

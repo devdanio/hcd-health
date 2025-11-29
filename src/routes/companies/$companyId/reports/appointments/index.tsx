@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useLiveQuery } from '@tanstack/react-db'
+import { eq, useLiveQuery } from '@tanstack/react-db'
 import { useQuery } from '@tanstack/react-query'
 import { useCollections } from '@/routes/__root'
 import { getAppointmentsAnalytics, getRevenueByService } from '@/collections'
@@ -44,14 +44,16 @@ function AppointmentsPage() {
 
   // Fetch appointments with useLiveQuery
   const { data: appointments } = useLiveQuery((q) =>
-    q.from({ appointment: appointmentsCollection })
-      .setMeta({ companyId })
+    q
+      .from({ appointment: appointmentsCollection })
+      .where(({ appointment }) => eq(appointment.companyId, companyId)),
   )
 
   // Fetch services with useLiveQuery
   const { data: services } = useLiveQuery((q) =>
-    q.from({ service: servicesCollection })
-      .setMeta({ companyId })
+    q
+      .from({ service: servicesCollection })
+      .where(({ service }) => eq(service.companyId, companyId)),
   )
 
   // Use React Query for analytics (non-reactive)

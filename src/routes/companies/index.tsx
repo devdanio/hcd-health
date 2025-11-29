@@ -8,6 +8,7 @@ import { eq } from '@tanstack/react-db'
 
 export const Route = createFileRoute('/companies/')({
   component: CompaniesPage,
+  ssr: false,
 })
 
 function CompanyVisitorCount({ companyId }: { companyId: string }) {
@@ -26,7 +27,7 @@ function CompaniesPage() {
 
   // Use useLiveQuery to reactively query the companies collection
   const { data: companies } = useLiveQuery((q) =>
-    q.from({ company: companiesCollection })
+    q.from({ company: companiesCollection }),
   )
 
   const [isCreating, setIsCreating] = useState(false)

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a TanStack Start application using React 19, Vite, Convex (backend), and Tailwind CSS. The project is focused on building an attribution tracking system (Leadalytics).
+This is a TanStack Start application using React 19, Vite, Prisma (PostgreSQL), and Tailwind CSS. The project is focused on building an attribution tracking system (Leadalytics) for healthcare/chiropractic practices.
 
 ## Commands
 
@@ -12,12 +12,14 @@ This is a TanStack Start application using React 19, Vite, Convex (backend), and
 ```bash
 pnpm install          # Install dependencies
 pnpm dev              # Start dev server on port 3000
-npx convex dev        # Start Convex backend (run in separate terminal)
+npx prisma studio     # Open Prisma Studio (database GUI)
+npx prisma migrate dev # Run migrations
 ```
 
 ### Building & Testing
 ```bash
-pnpm build            # Build for production
+pnpm build            # Build for production (includes widget build)
+pnpm build:widget     # Build chat widget separately
 pnpm serve            # Preview production build
 pnpm test             # Run all tests with Vitest
 ```
@@ -29,6 +31,13 @@ pnpm format           # Run Prettier
 pnpm check            # Format and fix with both Prettier and ESLint
 ```
 
+### Database
+```bash
+npx prisma migrate dev --name <migration-name>  # Create and apply migration
+npx prisma generate                             # Generate Prisma Client
+npx prisma studio                               # Open database GUI
+```
+
 ### UI Components
 ```bash
 pnpx shadcn@latest add <component-name>  # Add shadcn components
@@ -38,22 +47,28 @@ pnpx shadcn@latest add <component-name>  # Add shadcn components
 
 ### Stack Overview
 - **Frontend Framework**: React 19 + TanStack Start (file-based routing with SSR)
-- **Router**: TanStack Router (v1.132.0) with file-based routes
-- **Backend**: Convex (real-time database and serverless functions)
+- **Router**: TanStack Router (v1.139.10) with file-based routes
+- **Backend**: Prisma ORM + PostgreSQL + TanStack DB Collections
+- **State/Data**: TanStack Query + TanStack DB
+- **Auth**: Clerk (OAuth/SSO)
 - **Styling**: Tailwind CSS v4 + shadcn/ui components
-- **State/Data**: TanStack Query + Convex React Query integration
 - **Forms**: TanStack Form
 - **Testing**: Vitest + Testing Library
+- **AI/LLM**: Anthropic Claude + LangChain (available for AI features)
 
 ### Project Structure
 
 **Key Directories:**
 - `src/routes/` - File-based routing (TanStack Router generates route tree)
 - `src/components/` - React components (including `ui/` for shadcn components)
-- `src/integrations/` - Provider setup for Convex and TanStack Query
+- `src/integrations/` - Provider setup for TanStack Query
+- `src/collections/` - TanStack DB collections (data layer)
+- `src/server/` - Server-side code (database client, utilities)
 - `src/lib/` - Utility functions
 - `src/hooks/` - Custom React hooks
-- `convex/` - Backend schema and serverless functions
+- `src/generated/prisma/` - Generated Prisma Client (auto-generated, do not edit)
+- `prisma/` - Database schema and migrations
+- `public-components/chat-widget/` - Standalone chat widget
 
 ### Router Architecture
 
@@ -63,59 +78,70 @@ TanStack Router uses **file-based routing** where files in `src/routes/` automat
 - Route tree auto-generated in `src/routeTree.gen.ts` (do not edit manually)
 
 **Root Layout**: `src/routes/__root.tsx` defines the shell component that wraps all routes with:
-- Convex provider
-- Header component
+- Clerk authentication provider
+- QueryClient provider
+- Collections context provider
 - TanStack devtools (Router + Query)
 
-### Convex Integration
+### Database & Data Layer
 
-Convex provides real-time database and serverless backend:
+**Prisma Schema**: `prisma/schema.prisma` defines the database structure with PostgreSQL.
 
-**Setup Requirements:**
-- Environment variables: `VITE_CONVEX_URL` and `CONVEX_DEPLOYMENT` in `.env.local`
-- Run `npx convex init` to auto-configure, or `npx convex dev` to start
+**Key Models**:
+- `Company` - Multi-tenant root with Google Ads OAuth integration
+- `Contact` - Unified visitor/patient identity (links to GHL/ChiroTouch)
+- `GhlContact` - GoHighLevel CRM sync
+- `Session` - Browser sessions with attribution tracking (UTM params, click IDs)
+- `Event` - Tracking events (pageviews, conversions)
+- `Patient` - Patient records linked to contacts
+- `Appointment` - Appointments with service/provider relations
+- `Service` & `Provider` - Practice services and providers
+- `CmsPage` - CMS pages for SEO
 
-**Provider Setup**: `src/integrations/convex/provider.tsx` wraps the app with ConvexProvider, using `ConvexQueryClient` for TanStack Query integration.
+**Prisma Client**: Generated to `src/generated/prisma/` (custom output location)
+- Import: `import { prisma } from '@/server/db/client'`
+- Run `npx prisma generate` after schema changes
 
-**Schema Location**: `convex/schema.ts` - defines database tables using Convex schema builder
+**TanStack DB Collections**: `src/collections/` provides type-safe data collections with TanStack Query integration
+- Collections are created in `__root.tsx` and accessed via `useCollections()` hook
+- Each collection file (e.g., `contacts.ts`) exports:
+  - Zod schemas for validation
+  - Server functions for CRUD operations
+  - Collection configuration with `createCollection()`
+  - Helper function to create query options
 
-### Convex Schema Guidelines (from .cursorrules)
-
-When designing schemas:
-
-**System Fields** (auto-generated, no need to define):
-- `_id`: Document ID
-- `_creationTime`: Creation timestamp in ms since Unix epoch
-
-**Validator Types** (use `v` from `convex/values`):
+**Example Collection Pattern**:
 ```typescript
-v.id("tableName")     // Reference to another table
-v.string()
-v.number()            // or v.float64()
-v.bigint()            // or v.int64()
-v.boolean()
-v.array(element)
-v.object({ fields })
-v.union(...)
-v.optional(value)
-v.literal(value)
+// Create server functions
+const getContacts = createServerFn({ method: 'GET' })
+  .validator(getContactsSchema)
+  .handler(async ({ data }) => {
+    return await prisma.contact.findMany({ where: { companyId: data.companyId } })
+  })
+
+// Create collection
+export const contactsCollection = createCollection({
+  id: 'contacts',
+  fns: {
+    getContacts,
+    createContact,
+    updateContact,
+    deleteContact,
+  },
+})
+
+// Create query options helper
+export const createContactsCollectionOptions = (queryClient: QueryClient) =>
+  queryCollectionOptions(queryClient, contactsCollection)
 ```
 
-**Index Definition**: Add `.index("indexName", ["field1", "field2"])` after `defineTable()`
+### Authentication (Clerk)
 
-**Example Schema Pattern**:
-```typescript
-import { defineSchema, defineTable } from "convex/server";
-import { v } from "convex/values";
-
-export default defineSchema({
-  tableName: defineTable({
-    field: v.string(),
-    userId: v.id("users"),
-    optional: v.optional(v.string()),
-  }).index("userId", ["userId"]),
-});
-```
+**Setup**: Clerk provides OAuth/SSO authentication
+- Environment variables required (see below)
+- Provider in `__root.tsx`
+- Server-side auth check in `beforeLoad` hook
+- Components: `SignInButton`, `SignedIn`, `SignedOut`, `UserButton`
 
 ### TypeScript Configuration
 
@@ -133,33 +159,63 @@ export default defineSchema({
 
 **shadcn/ui**: Component library with "new-york" style
 - Components in: `src/components/ui/`
-- Icon library: lucide-react
+- Icon libraries: lucide-react, @tabler/icons-react
 
-### Demo Files
+### Google Ads Integration
 
-Files prefixed with `demo` in routes and components can be safely deleted. They demonstrate features like:
-- SSR modes (full SSR, SPA mode, data-only)
-- API requests
-- Server functions
-- Convex integration
-- TanStack Query usage
-- Form handling
-- Table components
+Google Ads OAuth tokens are stored encrypted directly in the `Company` model:
+- `googleAdsAccessToken`, `googleAdsRefreshToken`
+- `googleAdsCustomerId`, `googleAdsAccountName`
+- Token expiration and sync tracking fields
+- Uses `google-ads-api` package for API access
+
+### External Integrations
+
+**Available Packages**:
+- `@anthropic-ai/sdk` - Anthropic Claude API
+- `@langchain/anthropic` - LangChain integration
+- `@gohighlevel/api-client` - GoHighLevel CRM
+- `google-ads-api` - Google Ads API
+- Encryption utilities in `src/server/lib/encryption.ts`
 
 ## Environment Variables
 
 Required in `.env.local`:
 ```
-VITE_CONVEX_URL=<your-convex-url>
-CONVEX_DEPLOYMENT=<your-deployment>
-```
+# Database
+DATABASE_URL=postgresql://...
 
-Run `npx convex init` to generate automatically.
+# Clerk Auth
+CLERK_PUBLISHABLE_KEY=pk_...
+CLERK_SECRET_KEY=sk_...
+
+# Google Ads (optional)
+GOOGLE_ADS_CLIENT_ID=...
+GOOGLE_ADS_CLIENT_SECRET=...
+GOOGLE_ADS_DEVELOPER_TOKEN=...
+
+# Anthropic (optional, for AI features)
+ANTHROPIC_API_KEY=...
+
+# Other integrations as needed
+```
 
 ## Development Workflow
 
-1. Start Convex backend: `npx convex dev`
-2. Start dev server: `pnpm dev` (runs on port 3000)
-3. Add shadcn components as needed: `pnpx shadcn@latest add <component>`
-4. Define schema in `convex/schema.ts` before creating queries/mutations
-5. Routes auto-generate from files in `src/routes/` - create `.tsx` files there for new pages
+1. Install dependencies: `pnpm install`
+2. Set up environment variables in `.env.local`
+3. Run database migrations: `npx prisma migrate dev`
+4. Generate Prisma Client: `npx prisma generate`
+5. Start dev server: `pnpm dev` (runs on port 3000)
+6. Add shadcn components as needed: `pnpx shadcn@latest add <component>`
+7. Create new routes by adding `.tsx` files to `src/routes/`
+8. Define database schema in `prisma/schema.prisma` before creating migrations
+
+## Important Notes
+
+- **Prisma Client Location**: Generated to `src/generated/prisma/`, not the default location
+- **Multi-tenant**: All data is scoped by `companyId`
+- **Attribution Tracking**: Session attribution data stored as JSON (UTM params + click IDs)
+- **Server Functions**: Use `createServerFn()` from `@tanstack/react-start` for server-side operations
+- **Collections**: Use TanStack DB collections for type-safe data access with TanStack Query
+- **Production Build**: Includes widget build step (`build:widget`)

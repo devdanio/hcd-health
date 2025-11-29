@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useLiveQuery } from '@tanstack/react-db'
+import { eq, useLiveQuery } from '@tanstack/react-db'
 import { useCollections } from '@/routes/__root'
 import { useQuery } from '@tanstack/react-query'
 import { getContactsAnalytics } from '@/collections'
@@ -94,8 +94,9 @@ function ContactsPage() {
 
   // Use TanStack DB useLiveQuery for reactive data
   const { data: contacts } = useLiveQuery((q) =>
-    q.from({ contact: contactsCollection })
-      .setMeta({ companyId })
+    q
+      .from({ contact: contactsCollection })
+      .where(({ contact }) => eq(contact.companyId, companyId)),
   )
 
   // Calculate date range for analytics
@@ -115,7 +116,8 @@ function ContactsPage() {
 
   const { data: analyticsData } = useQuery({
     queryKey: ['contacts-analytics', companyId, timeRange],
-    queryFn: () => getContactsAnalytics({ data: { companyId, startDate, endDate } }),
+    queryFn: () =>
+      getContactsAnalytics({ data: { companyId, startDate, endDate } }),
   })
 
   // Define table columns using GHL data
@@ -212,7 +214,8 @@ function ContactsPage() {
         cell: ({ row }) => {
           const dateAdded = row.original.ghlContact?.dateAdded
           if (!dateAdded) return <div>-</div>
-          const date = dateAdded instanceof Date ? dateAdded : new Date(dateAdded)
+          const date =
+            dateAdded instanceof Date ? dateAdded : new Date(dateAdded)
           return <div>{date.toLocaleDateString()}</div>
         },
       },

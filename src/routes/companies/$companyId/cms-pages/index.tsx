@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import { useLiveQuery } from '@tanstack/react-db'
+import { eq, useLiveQuery } from '@tanstack/react-db'
 import { useCollections } from '@/routes/__root'
 import {
   useReactTable,
@@ -46,8 +46,9 @@ function CmsPagesPage() {
   const [globalFilter, setGlobalFilter] = useState('')
 
   const { data: pages } = useLiveQuery((q) =>
-    q.from({ page: cmsPagesCollection })
-      .setMeta({ companyId })
+    q
+      .from({ page: cmsPagesCollection })
+      .where(({ page }) => eq(page.companyId, companyId)),
   )
 
   const columns = useMemo<ColumnDef<CmsPage>[]>(

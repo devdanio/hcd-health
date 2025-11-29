@@ -1503,14 +1503,6 @@ export type AppointmentProcedureScalarFieldEnum = (typeof AppointmentProcedureSc
 export const PatientScalarFieldEnum = {
   id: 'id',
   contactId: 'contactId',
-  dateOfBirth: 'dateOfBirth',
-  gender: 'gender',
-  payerName: 'payerName',
-  memberId: 'memberId',
-  groupId: 'groupId',
-  emergencyContactName: 'emergencyContactName',
-  emergencyContactPhone: 'emergencyContactPhone',
-  emergencyContactRelation: 'emergencyContactRelation',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

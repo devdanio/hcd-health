@@ -253,14 +253,14 @@ model Patient {
   contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
   contactId String  @unique
 
-  dateOfBirth              String?
-  gender                   String?
-  payerName                String?
-  memberId                 String?
-  groupId                  String?
-  emergencyContactName     String?
-  emergencyContactPhone    String?
-  emergencyContactRelation String?
+  // dateOfBirth              String?
+  // gender                   String?
+  // payerName                String?
+  // memberId                 String?
+  // groupId                  String?
+  // emergencyContactName     String?
+  // emergencyContactPhone    String?
+  // emergencyContactRelation String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

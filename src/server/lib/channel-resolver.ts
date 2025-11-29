@@ -2,7 +2,7 @@ import {
   ChannelDefinition,
   SOURCE_DEFINITIONS,
   MEDIUM_DEFINITIONS,
-} from 'convex/channelDefinitions'
+} from './channelDefinitions'
 
 export type TrafficCategory =
   | 'organic_search'

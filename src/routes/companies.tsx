@@ -8,14 +8,13 @@ export const Route = createFileRoute('/companies')({
       throw new Error('Not authenticated')
     }
   },
+  ssr: false,
 })
 
 function CompaniesLayout() {
-
   return (
     <ThemeProvider defaultTheme="system" storageKey="leadalytics-ui-theme">
       <Outlet />
-      
     </ThemeProvider>
   )
 }

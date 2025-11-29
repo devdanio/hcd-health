@@ -1,9 +1,14 @@
 import { createServerFn } from '@tanstack/react-start'
-import { createCollection } from '@tanstack/react-db'
+import {
+  createCollection,
+  eq,
+  parseLoadSubsetOptions,
+} from '@tanstack/react-db'
 import { queryCollectionOptions } from '@tanstack/query-db-collection'
 import { z } from 'zod'
 import { prisma } from '@/server/db/client'
-import type { QueryClient } from '@tanstack/react-query'
+import { queryClient } from '@/lib/queryClient'
+import { QueryClient } from '@tanstack/react-query'
 
 // ============================================================================
 // Schemas
@@ -37,10 +42,14 @@ export const removeServiceSchema = z.object({
 export const listServices = createServerFn({ method: 'GET' })
   .inputValidator(listServicesSchema)
   .handler(async ({ data }) => {
-    return await prisma.service.findMany({
+    const dan = await prisma.service.findMany({
       where: { companyId: data.companyId },
       orderBy: { name: 'asc' },
     })
+
+    console.log('dan', dan)
+
+    return dan
   })
 
 /**
@@ -49,9 +58,21 @@ export const listServices = createServerFn({ method: 'GET' })
 export const createService = createServerFn({ method: 'POST' })
   .inputValidator(createServiceSchema)
   .handler(async ({ data }) => {
-    return await prisma.service.create({
-      data,
+    console.log('going to insert', data)
+    const result = await prisma.service.create({
+      data: {
+        name: data.name,
+        company: {
+          connect: {
+            id: data.companyId,
+          },
+        },
+      },
     })
+
+    console.log('result', result)
+
+    return result
   })
 
 /**
@@ -90,10 +111,16 @@ export function createServicesCollection(queryClient: QueryClient) {
     queryCollectionOptions({
       id: 'services',
       queryKey: ['services'],
+      syncMode: 'on-demand',
       queryFn: async (ctx) => {
-        const companyId = ctx.meta?.companyId as string | undefined
+        const options = parseLoadSubsetOptions(ctx.meta?.loadSubsetOptions)
+
+        const companyId = options?.filters.find((filter) =>
+          filter.field.includes('companyId'),
+        )?.value as string | undefined
         if (!companyId) return []
-        return await listServices({ data: { companyId } })
+        const result = await listServices({ data: { companyId } })
+        return result
       },
       queryClient,
       getKey: (item) => item.id,
