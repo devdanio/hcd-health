@@ -7,6 +7,16 @@ datasource db {
   provider = "postgresql"
 }
 
+
+model CityLatLng{
+  city String
+  state String
+  latitude Float
+  longitude Float
+
+  @@unique([city, state])
+}
+
 // Companies - Multi-tenant root
 model Company {
   id           String   @id @default(cuid())
@@ -15,6 +25,7 @@ model Company {
   companyBrief String?
   apiKey       String   @unique
   ehr          EhrType?
+  address      String?
 
   // Google Ads OAuth (encrypted tokens stored directly)
   googleAdsAccessToken       String?

@@ -384,6 +384,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+  CityLatLng: 'CityLatLng',
   Company: 'Company',
   Contact: 'Contact',
   GhlContact: 'GhlContact',
@@ -411,10 +412,84 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "company" | "contact" | "ghlContact" | "session" | "event" | "service" | "provider" | "appointment" | "appointmentProcedure" | "patient" | "oAuthState" | "cmsPage"
+    modelProps: "cityLatLng" | "company" | "contact" | "ghlContact" | "session" | "event" | "service" | "provider" | "appointment" | "appointmentProcedure" | "patient" | "oAuthState" | "cmsPage"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
+    CityLatLng: {
+      payload: Prisma.$CityLatLngPayload<ExtArgs>
+      fields: Prisma.CityLatLngFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CityLatLngFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CityLatLngPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CityLatLngFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CityLatLngPayload>
+        }
+        findFirst: {
+          args: Prisma.CityLatLngFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CityLatLngPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CityLatLngFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CityLatLngPayload>
+        }
+        findMany: {
+          args: Prisma.CityLatLngFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CityLatLngPayload>[]
+        }
+        create: {
+          args: Prisma.CityLatLngCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CityLatLngPayload>
+        }
+        createMany: {
+          args: Prisma.CityLatLngCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CityLatLngCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CityLatLngPayload>[]
+        }
+        delete: {
+          args: Prisma.CityLatLngDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CityLatLngPayload>
+        }
+        update: {
+          args: Prisma.CityLatLngUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CityLatLngPayload>
+        }
+        deleteMany: {
+          args: Prisma.CityLatLngDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CityLatLngUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CityLatLngUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CityLatLngPayload>[]
+        }
+        upsert: {
+          args: Prisma.CityLatLngUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CityLatLngPayload>
+        }
+        aggregate: {
+          args: Prisma.CityLatLngAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCityLatLng>
+        }
+        groupBy: {
+          args: Prisma.CityLatLngGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CityLatLngGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CityLatLngCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CityLatLngCountAggregateOutputType> | number
+        }
+      }
+    }
     Company: {
       payload: Prisma.$CompanyPayload<ExtArgs>
       fields: Prisma.CompanyFieldRefs
@@ -1342,6 +1417,16 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const CityLatLngScalarFieldEnum = {
+  city: 'city',
+  state: 'state',
+  latitude: 'latitude',
+  longitude: 'longitude'
+} as const
+
+export type CityLatLngScalarFieldEnum = (typeof CityLatLngScalarFieldEnum)[keyof typeof CityLatLngScalarFieldEnum]
+
+
 export const CompanyScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -1349,6 +1434,7 @@ export const CompanyScalarFieldEnum = {
   companyBrief: 'companyBrief',
   apiKey: 'apiKey',
   ehr: 'ehr',
+  address: 'address',
   googleAdsAccessToken: 'googleAdsAccessToken',
   googleAdsRefreshToken: 'googleAdsRefreshToken',
   googleAdsTokenExpiresAt: 'googleAdsTokenExpiresAt',
@@ -1613,6 +1699,20 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
  * Reference to a field of type 'EhrType'
  */
 export type EnumEhrTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EhrType'>
@@ -1679,20 +1779,6 @@ export type EnumEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$Prisma
  * Reference to a field of type 'EventType[]'
  */
 export type ListEnumEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EventType[]'>
-    
-
-
-/**
- * Reference to a field of type 'Float'
- */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-/**
- * Reference to a field of type 'Float[]'
- */
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 
@@ -1788,6 +1874,7 @@ export type PrismaClientOptions = ({
   omit?: GlobalOmitConfig
 }
 export type GlobalOmitConfig = {
+  cityLatLng?: Prisma.CityLatLngOmit
   company?: Prisma.CompanyOmit
   contact?: Prisma.ContactOmit
   ghlContact?: Prisma.GhlContactOmit

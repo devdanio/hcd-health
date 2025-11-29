@@ -31,6 +31,7 @@ export type CompanyMinAggregateOutputType = {
   companyBrief: string | null
   apiKey: string | null
   ehr: $Enums.EhrType | null
+  address: string | null
   googleAdsAccessToken: string | null
   googleAdsRefreshToken: string | null
   googleAdsTokenExpiresAt: Date | null
@@ -54,6 +55,7 @@ export type CompanyMaxAggregateOutputType = {
   companyBrief: string | null
   apiKey: string | null
   ehr: $Enums.EhrType | null
+  address: string | null
   googleAdsAccessToken: string | null
   googleAdsRefreshToken: string | null
   googleAdsTokenExpiresAt: Date | null
@@ -77,6 +79,7 @@ export type CompanyCountAggregateOutputType = {
   companyBrief: number
   apiKey: number
   ehr: number
+  address: number
   googleAdsAccessToken: number
   googleAdsRefreshToken: number
   googleAdsTokenExpiresAt: number
@@ -102,6 +105,7 @@ export type CompanyMinAggregateInputType = {
   companyBrief?: true
   apiKey?: true
   ehr?: true
+  address?: true
   googleAdsAccessToken?: true
   googleAdsRefreshToken?: true
   googleAdsTokenExpiresAt?: true
@@ -125,6 +129,7 @@ export type CompanyMaxAggregateInputType = {
   companyBrief?: true
   apiKey?: true
   ehr?: true
+  address?: true
   googleAdsAccessToken?: true
   googleAdsRefreshToken?: true
   googleAdsTokenExpiresAt?: true
@@ -148,6 +153,7 @@ export type CompanyCountAggregateInputType = {
   companyBrief?: true
   apiKey?: true
   ehr?: true
+  address?: true
   googleAdsAccessToken?: true
   googleAdsRefreshToken?: true
   googleAdsTokenExpiresAt?: true
@@ -244,6 +250,7 @@ export type CompanyGroupByOutputType = {
   companyBrief: string | null
   apiKey: string
   ehr: $Enums.EhrType | null
+  address: string | null
   googleAdsAccessToken: string | null
   googleAdsRefreshToken: string | null
   googleAdsTokenExpiresAt: Date | null
@@ -288,6 +295,7 @@ export type CompanyWhereInput = {
   companyBrief?: Prisma.StringNullableFilter<"Company"> | string | null
   apiKey?: Prisma.StringFilter<"Company"> | string
   ehr?: Prisma.EnumEhrTypeNullableFilter<"Company"> | $Enums.EhrType | null
+  address?: Prisma.StringNullableFilter<"Company"> | string | null
   googleAdsAccessToken?: Prisma.StringNullableFilter<"Company"> | string | null
   googleAdsRefreshToken?: Prisma.StringNullableFilter<"Company"> | string | null
   googleAdsTokenExpiresAt?: Prisma.DateTimeNullableFilter<"Company"> | Date | string | null
@@ -320,6 +328,7 @@ export type CompanyOrderByWithRelationInput = {
   companyBrief?: Prisma.SortOrderInput | Prisma.SortOrder
   apiKey?: Prisma.SortOrder
   ehr?: Prisma.SortOrderInput | Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
   googleAdsAccessToken?: Prisma.SortOrderInput | Prisma.SortOrder
   googleAdsRefreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
   googleAdsTokenExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -355,6 +364,7 @@ export type CompanyWhereUniqueInput = Prisma.AtLeast<{
   domain?: Prisma.StringFilter<"Company"> | string
   companyBrief?: Prisma.StringNullableFilter<"Company"> | string | null
   ehr?: Prisma.EnumEhrTypeNullableFilter<"Company"> | $Enums.EhrType | null
+  address?: Prisma.StringNullableFilter<"Company"> | string | null
   googleAdsAccessToken?: Prisma.StringNullableFilter<"Company"> | string | null
   googleAdsRefreshToken?: Prisma.StringNullableFilter<"Company"> | string | null
   googleAdsTokenExpiresAt?: Prisma.DateTimeNullableFilter<"Company"> | Date | string | null
@@ -387,6 +397,7 @@ export type CompanyOrderByWithAggregationInput = {
   companyBrief?: Prisma.SortOrderInput | Prisma.SortOrder
   apiKey?: Prisma.SortOrder
   ehr?: Prisma.SortOrderInput | Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
   googleAdsAccessToken?: Prisma.SortOrderInput | Prisma.SortOrder
   googleAdsRefreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
   googleAdsTokenExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -416,6 +427,7 @@ export type CompanyScalarWhereWithAggregatesInput = {
   companyBrief?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
   apiKey?: Prisma.StringWithAggregatesFilter<"Company"> | string
   ehr?: Prisma.EnumEhrTypeNullableWithAggregatesFilter<"Company"> | $Enums.EhrType | null
+  address?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
   googleAdsAccessToken?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
   googleAdsRefreshToken?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
   googleAdsTokenExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Company"> | Date | string | null
@@ -439,6 +451,7 @@ export type CompanyCreateInput = {
   companyBrief?: string | null
   apiKey: string
   ehr?: $Enums.EhrType | null
+  address?: string | null
   googleAdsAccessToken?: string | null
   googleAdsRefreshToken?: string | null
   googleAdsTokenExpiresAt?: Date | string | null
@@ -471,6 +484,7 @@ export type CompanyUncheckedCreateInput = {
   companyBrief?: string | null
   apiKey: string
   ehr?: $Enums.EhrType | null
+  address?: string | null
   googleAdsAccessToken?: string | null
   googleAdsRefreshToken?: string | null
   googleAdsTokenExpiresAt?: Date | string | null
@@ -503,6 +517,7 @@ export type CompanyUpdateInput = {
   companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -535,6 +550,7 @@ export type CompanyUncheckedUpdateInput = {
   companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -567,6 +583,7 @@ export type CompanyCreateManyInput = {
   companyBrief?: string | null
   apiKey: string
   ehr?: $Enums.EhrType | null
+  address?: string | null
   googleAdsAccessToken?: string | null
   googleAdsRefreshToken?: string | null
   googleAdsTokenExpiresAt?: Date | string | null
@@ -590,6 +607,7 @@ export type CompanyUpdateManyMutationInput = {
   companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -613,6 +631,7 @@ export type CompanyUncheckedUpdateManyInput = {
   companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -636,6 +655,7 @@ export type CompanyCountOrderByAggregateInput = {
   companyBrief?: Prisma.SortOrder
   apiKey?: Prisma.SortOrder
   ehr?: Prisma.SortOrder
+  address?: Prisma.SortOrder
   googleAdsAccessToken?: Prisma.SortOrder
   googleAdsRefreshToken?: Prisma.SortOrder
   googleAdsTokenExpiresAt?: Prisma.SortOrder
@@ -659,6 +679,7 @@ export type CompanyMaxOrderByAggregateInput = {
   companyBrief?: Prisma.SortOrder
   apiKey?: Prisma.SortOrder
   ehr?: Prisma.SortOrder
+  address?: Prisma.SortOrder
   googleAdsAccessToken?: Prisma.SortOrder
   googleAdsRefreshToken?: Prisma.SortOrder
   googleAdsTokenExpiresAt?: Prisma.SortOrder
@@ -682,6 +703,7 @@ export type CompanyMinOrderByAggregateInput = {
   companyBrief?: Prisma.SortOrder
   apiKey?: Prisma.SortOrder
   ehr?: Prisma.SortOrder
+  address?: Prisma.SortOrder
   googleAdsAccessToken?: Prisma.SortOrder
   googleAdsRefreshToken?: Prisma.SortOrder
   googleAdsTokenExpiresAt?: Prisma.SortOrder
@@ -706,10 +728,6 @@ export type CompanyScalarRelationFilter = {
 export type CompanyNullableScalarRelationFilter = {
   is?: Prisma.CompanyWhereInput | null
   isNot?: Prisma.CompanyWhereInput | null
-}
-
-export type StringFieldUpdateOperationsInput = {
-  set?: string
 }
 
 export type NullableStringFieldUpdateOperationsInput = {
@@ -863,6 +881,7 @@ export type CompanyCreateWithoutContactsInput = {
   companyBrief?: string | null
   apiKey: string
   ehr?: $Enums.EhrType | null
+  address?: string | null
   googleAdsAccessToken?: string | null
   googleAdsRefreshToken?: string | null
   googleAdsTokenExpiresAt?: Date | string | null
@@ -894,6 +913,7 @@ export type CompanyUncheckedCreateWithoutContactsInput = {
   companyBrief?: string | null
   apiKey: string
   ehr?: $Enums.EhrType | null
+  address?: string | null
   googleAdsAccessToken?: string | null
   googleAdsRefreshToken?: string | null
   googleAdsTokenExpiresAt?: Date | string | null
@@ -941,6 +961,7 @@ export type CompanyUpdateWithoutContactsInput = {
   companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -972,6 +993,7 @@ export type CompanyUncheckedUpdateWithoutContactsInput = {
   companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1003,6 +1025,7 @@ export type CompanyCreateWithoutGhlContactsInput = {
   companyBrief?: string | null
   apiKey: string
   ehr?: $Enums.EhrType | null
+  address?: string | null
   googleAdsAccessToken?: string | null
   googleAdsRefreshToken?: string | null
   googleAdsTokenExpiresAt?: Date | string | null
@@ -1034,6 +1057,7 @@ export type CompanyUncheckedCreateWithoutGhlContactsInput = {
   companyBrief?: string | null
   apiKey: string
   ehr?: $Enums.EhrType | null
+  address?: string | null
   googleAdsAccessToken?: string | null
   googleAdsRefreshToken?: string | null
   googleAdsTokenExpiresAt?: Date | string | null
@@ -1081,6 +1105,7 @@ export type CompanyUpdateWithoutGhlContactsInput = {
   companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1112,6 +1137,7 @@ export type CompanyUncheckedUpdateWithoutGhlContactsInput = {
   companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1143,6 +1169,7 @@ export type CompanyCreateWithoutSessionsInput = {
   companyBrief?: string | null
   apiKey: string
   ehr?: $Enums.EhrType | null
+  address?: string | null
   googleAdsAccessToken?: string | null
   googleAdsRefreshToken?: string | null
   googleAdsTokenExpiresAt?: Date | string | null
@@ -1174,6 +1201,7 @@ export type CompanyUncheckedCreateWithoutSessionsInput = {
   companyBrief?: string | null
   apiKey: string
   ehr?: $Enums.EhrType | null
+  address?: string | null
   googleAdsAccessToken?: string | null
   googleAdsRefreshToken?: string | null
   googleAdsTokenExpiresAt?: Date | string | null
@@ -1221,6 +1249,7 @@ export type CompanyUpdateWithoutSessionsInput = {
   companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1252,6 +1281,7 @@ export type CompanyUncheckedUpdateWithoutSessionsInput = {
   companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1283,6 +1313,7 @@ export type CompanyCreateWithoutEventsInput = {
   companyBrief?: string | null
   apiKey: string
   ehr?: $Enums.EhrType | null
+  address?: string | null
   googleAdsAccessToken?: string | null
   googleAdsRefreshToken?: string | null
   googleAdsTokenExpiresAt?: Date | string | null
@@ -1314,6 +1345,7 @@ export type CompanyUncheckedCreateWithoutEventsInput = {
   companyBrief?: string | null
   apiKey: string
   ehr?: $Enums.EhrType | null
+  address?: string | null
   googleAdsAccessToken?: string | null
   googleAdsRefreshToken?: string | null
   googleAdsTokenExpiresAt?: Date | string | null
@@ -1361,6 +1393,7 @@ export type CompanyUpdateWithoutEventsInput = {
   companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1392,6 +1425,7 @@ export type CompanyUncheckedUpdateWithoutEventsInput = {
   companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1423,6 +1457,7 @@ export type CompanyCreateWithoutServicesInput = {
   companyBrief?: string | null
   apiKey: string
   ehr?: $Enums.EhrType | null
+  address?: string | null
   googleAdsAccessToken?: string | null
   googleAdsRefreshToken?: string | null
   googleAdsTokenExpiresAt?: Date | string | null
@@ -1454,6 +1489,7 @@ export type CompanyUncheckedCreateWithoutServicesInput = {
   companyBrief?: string | null
   apiKey: string
   ehr?: $Enums.EhrType | null
+  address?: string | null
   googleAdsAccessToken?: string | null
   googleAdsRefreshToken?: string | null
   googleAdsTokenExpiresAt?: Date | string | null
@@ -1501,6 +1537,7 @@ export type CompanyUpdateWithoutServicesInput = {
   companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1532,6 +1569,7 @@ export type CompanyUncheckedUpdateWithoutServicesInput = {
   companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1563,6 +1601,7 @@ export type CompanyCreateWithoutProvidersInput = {
   companyBrief?: string | null
   apiKey: string
   ehr?: $Enums.EhrType | null
+  address?: string | null
   googleAdsAccessToken?: string | null
   googleAdsRefreshToken?: string | null
   googleAdsTokenExpiresAt?: Date | string | null
@@ -1594,6 +1633,7 @@ export type CompanyUncheckedCreateWithoutProvidersInput = {
   companyBrief?: string | null
   apiKey: string
   ehr?: $Enums.EhrType | null
+  address?: string | null
   googleAdsAccessToken?: string | null
   googleAdsRefreshToken?: string | null
   googleAdsTokenExpiresAt?: Date | string | null
@@ -1641,6 +1681,7 @@ export type CompanyUpdateWithoutProvidersInput = {
   companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1672,6 +1713,7 @@ export type CompanyUncheckedUpdateWithoutProvidersInput = {
   companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1703,6 +1745,7 @@ export type CompanyCreateWithoutAppointmentsInput = {
   companyBrief?: string | null
   apiKey: string
   ehr?: $Enums.EhrType | null
+  address?: string | null
   googleAdsAccessToken?: string | null
   googleAdsRefreshToken?: string | null
   googleAdsTokenExpiresAt?: Date | string | null
@@ -1734,6 +1777,7 @@ export type CompanyUncheckedCreateWithoutAppointmentsInput = {
   companyBrief?: string | null
   apiKey: string
   ehr?: $Enums.EhrType | null
+  address?: string | null
   googleAdsAccessToken?: string | null
   googleAdsRefreshToken?: string | null
   googleAdsTokenExpiresAt?: Date | string | null
@@ -1781,6 +1825,7 @@ export type CompanyUpdateWithoutAppointmentsInput = {
   companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1812,6 +1857,7 @@ export type CompanyUncheckedUpdateWithoutAppointmentsInput = {
   companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1843,6 +1889,7 @@ export type CompanyCreateWithoutOauthStatesInput = {
   companyBrief?: string | null
   apiKey: string
   ehr?: $Enums.EhrType | null
+  address?: string | null
   googleAdsAccessToken?: string | null
   googleAdsRefreshToken?: string | null
   googleAdsTokenExpiresAt?: Date | string | null
@@ -1874,6 +1921,7 @@ export type CompanyUncheckedCreateWithoutOauthStatesInput = {
   companyBrief?: string | null
   apiKey: string
   ehr?: $Enums.EhrType | null
+  address?: string | null
   googleAdsAccessToken?: string | null
   googleAdsRefreshToken?: string | null
   googleAdsTokenExpiresAt?: Date | string | null
@@ -1921,6 +1969,7 @@ export type CompanyUpdateWithoutOauthStatesInput = {
   companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1952,6 +2001,7 @@ export type CompanyUncheckedUpdateWithoutOauthStatesInput = {
   companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1983,6 +2033,7 @@ export type CompanyCreateWithoutCmsPagesInput = {
   companyBrief?: string | null
   apiKey: string
   ehr?: $Enums.EhrType | null
+  address?: string | null
   googleAdsAccessToken?: string | null
   googleAdsRefreshToken?: string | null
   googleAdsTokenExpiresAt?: Date | string | null
@@ -2014,6 +2065,7 @@ export type CompanyUncheckedCreateWithoutCmsPagesInput = {
   companyBrief?: string | null
   apiKey: string
   ehr?: $Enums.EhrType | null
+  address?: string | null
   googleAdsAccessToken?: string | null
   googleAdsRefreshToken?: string | null
   googleAdsTokenExpiresAt?: Date | string | null
@@ -2061,6 +2113,7 @@ export type CompanyUpdateWithoutCmsPagesInput = {
   companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2092,6 +2145,7 @@ export type CompanyUncheckedUpdateWithoutCmsPagesInput = {
   companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2226,6 +2280,7 @@ export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   companyBrief?: boolean
   apiKey?: boolean
   ehr?: boolean
+  address?: boolean
   googleAdsAccessToken?: boolean
   googleAdsRefreshToken?: boolean
   googleAdsTokenExpiresAt?: boolean
@@ -2259,6 +2314,7 @@ export type CompanySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   companyBrief?: boolean
   apiKey?: boolean
   ehr?: boolean
+  address?: boolean
   googleAdsAccessToken?: boolean
   googleAdsRefreshToken?: boolean
   googleAdsTokenExpiresAt?: boolean
@@ -2282,6 +2338,7 @@ export type CompanySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   companyBrief?: boolean
   apiKey?: boolean
   ehr?: boolean
+  address?: boolean
   googleAdsAccessToken?: boolean
   googleAdsRefreshToken?: boolean
   googleAdsTokenExpiresAt?: boolean
@@ -2305,6 +2362,7 @@ export type CompanySelectScalar = {
   companyBrief?: boolean
   apiKey?: boolean
   ehr?: boolean
+  address?: boolean
   googleAdsAccessToken?: boolean
   googleAdsRefreshToken?: boolean
   googleAdsTokenExpiresAt?: boolean
@@ -2321,7 +2379,7 @@ export type CompanySelectScalar = {
   updatedAt?: boolean
 }
 
-export type CompanyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "domain" | "companyBrief" | "apiKey" | "ehr" | "googleAdsAccessToken" | "googleAdsRefreshToken" | "googleAdsTokenExpiresAt" | "googleAdsCustomerId" | "googleAdsAccountName" | "googleAdsCurrencyCode" | "googleAdsTimeZone" | "googleAdsConnectedAt" | "googleAdsAccountSelectedAt" | "googleAdsLastSyncedAt" | "googleAdsLastError" | "googleAdsLastErrorAt" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
+export type CompanyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "domain" | "companyBrief" | "apiKey" | "ehr" | "address" | "googleAdsAccessToken" | "googleAdsRefreshToken" | "googleAdsTokenExpiresAt" | "googleAdsCustomerId" | "googleAdsAccountName" | "googleAdsCurrencyCode" | "googleAdsTimeZone" | "googleAdsConnectedAt" | "googleAdsAccountSelectedAt" | "googleAdsLastSyncedAt" | "googleAdsLastError" | "googleAdsLastErrorAt" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
 export type CompanyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   contacts?: boolean | Prisma.Company$contactsArgs<ExtArgs>
   sessions?: boolean | Prisma.Company$sessionsArgs<ExtArgs>
@@ -2357,6 +2415,7 @@ export type $CompanyPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     companyBrief: string | null
     apiKey: string
     ehr: $Enums.EhrType | null
+    address: string | null
     googleAdsAccessToken: string | null
     googleAdsRefreshToken: string | null
     googleAdsTokenExpiresAt: Date | null
@@ -2809,6 +2868,7 @@ export interface CompanyFieldRefs {
   readonly companyBrief: Prisma.FieldRef<"Company", 'String'>
   readonly apiKey: Prisma.FieldRef<"Company", 'String'>
   readonly ehr: Prisma.FieldRef<"Company", 'EhrType'>
+  readonly address: Prisma.FieldRef<"Company", 'String'>
   readonly googleAdsAccessToken: Prisma.FieldRef<"Company", 'String'>
   readonly googleAdsRefreshToken: Prisma.FieldRef<"Company", 'String'>
   readonly googleAdsTokenExpiresAt: Prisma.FieldRef<"Company", 'DateTime'>

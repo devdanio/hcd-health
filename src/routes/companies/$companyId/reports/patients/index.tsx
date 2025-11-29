@@ -17,6 +17,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart'
+import { PatientLocationMap } from '@/components/patient-location-map'
 
 export const Route = createFileRoute('/companies/$companyId/reports/patients/')({
   component: RouteComponent,
@@ -77,78 +78,96 @@ function RouteComponent() {
   if (patients === undefined) {
     return (
       <div className="container mx-auto p-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Patient Age Distribution</CardTitle>
-            <CardDescription>Loading patient data...</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex h-[400px] items-center justify-center text-muted-foreground">
-              Loading chart...
-            </div>
-          </CardContent>
-        </Card>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Patient Age Distribution</CardTitle>
+              <CardDescription>Loading patient data...</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex h-[400px] items-center justify-center text-muted-foreground">
+                Loading chart...
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Patient Locations</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex h-[400px] items-center justify-center text-muted-foreground">
+                Loading map...
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     )
   }
 
   return (
     <div className="container mx-auto p-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Patient Age Distribution</CardTitle>
-          <CardDescription>
-            {totalPatients.toLocaleString()} total patients (ages 20-85)
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {totalPatients === 0 ? (
-            <div className="flex h-[400px] items-center justify-center text-muted-foreground">
-              No patient data available
-            </div>
-          ) : (
-            <ChartContainer config={chartConfig}>
-              <BarChart
-                data={ageDistribution}
-                margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis
-                  dataKey="ageRange"
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={8}
-                  label={{
-                    value: 'Age Range',
-                    position: 'insideBottom',
-                    offset: -50,
-                  }}
-                />
-                <YAxis
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={8}
-                  label={{
-                    value: 'Patient Count',
-                    angle: -90,
-                    position: 'insideLeft',
-                  }}
-                  allowDecimals={false}
-                />
-                <ChartTooltip
-                  cursor={false}
-                  content={<ChartTooltipContent hideLabel />}
-                />
-                <Bar
-                  dataKey="count"
-                  fill="var(--color-count)"
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
-            </ChartContainer>
-          )}
-        </CardContent>
-      </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Age Distribution Chart */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Patient Age Distribution</CardTitle>
+            <CardDescription>
+              {totalPatients.toLocaleString()} total patients (ages 20-85)
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {totalPatients === 0 ? (
+              <div className="flex h-[400px] items-center justify-center text-muted-foreground">
+                No patient data available
+              </div>
+            ) : (
+              <ChartContainer config={chartConfig}>
+                <BarChart
+                  data={ageDistribution}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis
+                    dataKey="ageRange"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
+                    label={{
+                      value: 'Age Range',
+                      position: 'insideBottom',
+                      offset: -50,
+                    }}
+                  />
+                  <YAxis
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
+                    label={{
+                      value: 'Patient Count',
+                      angle: -90,
+                      position: 'insideLeft',
+                    }}
+                    allowDecimals={false}
+                  />
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent hideLabel />}
+                  />
+                  <Bar
+                    dataKey="count"
+                    fill="var(--color-count)"
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ChartContainer>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Patient Location Map */}
+        <PatientLocationMap patients={patients} />
+      </div>
     </div>
   )
 }

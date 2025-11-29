@@ -403,14 +403,6 @@ export type AppointmentProcedureUncheckedUpdateManyWithoutAppointmentNestedInput
   deleteMany?: Prisma.AppointmentProcedureScalarWhereInput | Prisma.AppointmentProcedureScalarWhereInput[]
 }
 
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type AppointmentProcedureCreateWithoutAppointmentInput = {
   id?: string
   procedureCode: string

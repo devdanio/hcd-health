@@ -26,6 +26,7 @@ import { createCmsPagesCollection } from './cms'
 import { createAppointmentsCollection } from './appointments'
 import { createServicesCollection } from './services'
 import { createProvidersCollection } from './providers'
+import { createCityStateLatLngCollection } from './city-state-lat-lng'
 
 // ============================================================================
 // Collection factory function
@@ -41,6 +42,7 @@ export function createCollections(queryClient: QueryClient) {
     appointmentsCollection: createAppointmentsCollection(queryClient),
     servicesCollection: createServicesCollection(queryClient),
     providersCollection: createProvidersCollection(queryClient),
+    cityStateLatLngCollection: createCityStateLatLngCollection(queryClient),
   }
 }
 

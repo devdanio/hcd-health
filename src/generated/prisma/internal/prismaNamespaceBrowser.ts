@@ -51,6 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  CityLatLng: 'CityLatLng',
   Company: 'Company',
   Contact: 'Contact',
   GhlContact: 'GhlContact',
@@ -81,6 +82,16 @@ export const TransactionIsolationLevel = {
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const CityLatLngScalarFieldEnum = {
+  city: 'city',
+  state: 'state',
+  latitude: 'latitude',
+  longitude: 'longitude'
+} as const
+
+export type CityLatLngScalarFieldEnum = (typeof CityLatLngScalarFieldEnum)[keyof typeof CityLatLngScalarFieldEnum]
+
+
 export const CompanyScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -88,6 +99,7 @@ export const CompanyScalarFieldEnum = {
   companyBrief: 'companyBrief',
   apiKey: 'apiKey',
   ehr: 'ehr',
+  address: 'address',
   googleAdsAccessToken: 'googleAdsAccessToken',
   googleAdsRefreshToken: 'googleAdsRefreshToken',
   googleAdsTokenExpiresAt: 'googleAdsTokenExpiresAt',
