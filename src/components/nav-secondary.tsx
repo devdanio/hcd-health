@@ -1,7 +1,7 @@
-"use client"
+'use client'
 
-import * as React from "react"
-import { type Icon } from "@tabler/icons-react"
+import * as React from 'react'
+import { type Icon } from '@tabler/icons-react'
 
 import {
   SidebarGroup,
@@ -9,7 +9,8 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from '@/components/ui/sidebar'
+import { Link } from '@tanstack/react-router'
 
 export function NavSecondary({
   items,
@@ -28,10 +29,10 @@ export function NavSecondary({
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild>
-                <a href={item.url}>
+                <Link to={item.url}>
                   <item.icon />
                   <span>{item.title}</span>
-                </a>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}

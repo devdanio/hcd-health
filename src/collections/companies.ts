@@ -193,6 +193,8 @@ export function createCompaniesCollection(queryClient: QueryClient) {
             companyId: original.id,
             name: modified.name,
             domain: modified.domain,
+            companyBrief: modified.companyBrief,
+            ehr: modified.ehr,
           },
         })
       },
