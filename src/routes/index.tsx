@@ -61,12 +61,11 @@ function App() {
             </span>
           </h1>
           <p className="text-2xl md:text-3xl text-gray-300 mb-4 font-light">
-            Attribution tracking for modern marketing
+            Modern data solutions for your healthcare practice
           </p>
           <p className="text-lg text-gray-400 max-w-3xl mx-auto mb-8">
-            Track every touchpoint from ad click to conversion. Understand your
-            customer journey with iOS-compatible, cross-domain attribution
-            tracking.
+            We pick up where your EHR leaves off. Proving you with actionable
+            insights to grow your practice.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <SignedIn>
@@ -82,6 +81,11 @@ function App() {
             </SignedOut>
           </div>
         </div>
+      </section>
+
+      <section className="py-16 px-6 max-w-7xl mx-auto text-secondary">
+        Your EHR tracks patients, your CRM tracks leads, Leadalytics tracks the
+        bridge between the two. Your accountant will love you for it.
       </section>
 
       <section className="py-16 px-6 max-w-7xl mx-auto">
