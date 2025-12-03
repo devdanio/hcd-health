@@ -30,7 +30,7 @@ export const getLeadCalculatorSchema = z.object({
  * Create a new calculator entry
  */
 export const createLeadCalculator = createServerFn({ method: 'POST' })
-  .validator(createLeadCalculatorSchema)
+  .inputValidator(createLeadCalculatorSchema)
   .handler(async ({ data }) => {
     return await prisma.leadCalculator.create({
       data,
@@ -41,7 +41,7 @@ export const createLeadCalculator = createServerFn({ method: 'POST' })
  * Get a calculator entry by ID
  */
 export const getLeadCalculator = createServerFn({ method: 'GET' })
-  .validator(getLeadCalculatorSchema)
+  .inputValidator(getLeadCalculatorSchema)
   .handler(async ({ data }) => {
     return await prisma.leadCalculator.findUnique({
       where: { id: data.id },
