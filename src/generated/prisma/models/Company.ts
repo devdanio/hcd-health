@@ -749,10 +749,6 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
-}
-
 export type CompanyCreateNestedOneWithoutContactsInput = {
   create?: Prisma.XOR<Prisma.CompanyCreateWithoutContactsInput, Prisma.CompanyUncheckedCreateWithoutContactsInput>
   connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutContactsInput

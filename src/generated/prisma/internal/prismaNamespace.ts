@@ -385,6 +385,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   CityLatLng: 'CityLatLng',
+  LeadCalculator: 'LeadCalculator',
   Company: 'Company',
   Contact: 'Contact',
   GhlContact: 'GhlContact',
@@ -413,7 +414,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "cityLatLng" | "company" | "contact" | "ghlContact" | "session" | "event" | "service" | "payments" | "provider" | "appointment" | "appointmentProcedure" | "patient" | "oAuthState" | "cmsPage"
+    modelProps: "cityLatLng" | "leadCalculator" | "company" | "contact" | "ghlContact" | "session" | "event" | "service" | "payments" | "provider" | "appointment" | "appointmentProcedure" | "patient" | "oAuthState" | "cmsPage"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -488,6 +489,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CityLatLngCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CityLatLngCountAggregateOutputType> | number
+        }
+      }
+    }
+    LeadCalculator: {
+      payload: Prisma.$LeadCalculatorPayload<ExtArgs>
+      fields: Prisma.LeadCalculatorFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LeadCalculatorFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadCalculatorPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LeadCalculatorFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadCalculatorPayload>
+        }
+        findFirst: {
+          args: Prisma.LeadCalculatorFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadCalculatorPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LeadCalculatorFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadCalculatorPayload>
+        }
+        findMany: {
+          args: Prisma.LeadCalculatorFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadCalculatorPayload>[]
+        }
+        create: {
+          args: Prisma.LeadCalculatorCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadCalculatorPayload>
+        }
+        createMany: {
+          args: Prisma.LeadCalculatorCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LeadCalculatorCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadCalculatorPayload>[]
+        }
+        delete: {
+          args: Prisma.LeadCalculatorDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadCalculatorPayload>
+        }
+        update: {
+          args: Prisma.LeadCalculatorUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadCalculatorPayload>
+        }
+        deleteMany: {
+          args: Prisma.LeadCalculatorDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LeadCalculatorUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LeadCalculatorUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadCalculatorPayload>[]
+        }
+        upsert: {
+          args: Prisma.LeadCalculatorUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadCalculatorPayload>
+        }
+        aggregate: {
+          args: Prisma.LeadCalculatorAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLeadCalculator>
+        }
+        groupBy: {
+          args: Prisma.LeadCalculatorGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LeadCalculatorGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LeadCalculatorCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LeadCalculatorCountAggregateOutputType> | number
         }
       }
     }
@@ -1502,6 +1577,24 @@ export const CityLatLngScalarFieldEnum = {
 export type CityLatLngScalarFieldEnum = (typeof CityLatLngScalarFieldEnum)[keyof typeof CityLatLngScalarFieldEnum]
 
 
+export const LeadCalculatorScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  revenue: 'revenue',
+  patients: 'patients',
+  newPatients: 'newPatients',
+  avgVisits: 'avgVisits',
+  marketingCosts: 'marketingCosts',
+  directCareCosts: 'directCareCosts',
+  overheadCosts: 'overheadCosts',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LeadCalculatorScalarFieldEnum = (typeof LeadCalculatorScalarFieldEnum)[keyof typeof LeadCalculatorScalarFieldEnum]
+
+
 export const CompanyScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -1803,16 +1896,16 @@ export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMode
 
 
 /**
- * Reference to a field of type 'EhrType'
+ * Reference to a field of type 'Int'
  */
-export type EnumEhrTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EhrType'>
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
     
 
 
 /**
- * Reference to a field of type 'EhrType[]'
+ * Reference to a field of type 'Int[]'
  */
-export type ListEnumEhrTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EhrType[]'>
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -1827,6 +1920,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'EhrType'
+ */
+export type EnumEhrTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EhrType'>
+    
+
+
+/**
+ * Reference to a field of type 'EhrType[]'
+ */
+export type ListEnumEhrTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EhrType[]'>
     
 
 
@@ -1869,20 +1976,6 @@ export type EnumEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$Prisma
  * Reference to a field of type 'EventType[]'
  */
 export type ListEnumEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EventType[]'>
-    
-
-
-/**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -1979,6 +2072,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   cityLatLng?: Prisma.CityLatLngOmit
+  leadCalculator?: Prisma.LeadCalculatorOmit
   company?: Prisma.CompanyOmit
   contact?: Prisma.ContactOmit
   ghlContact?: Prisma.GhlContactOmit

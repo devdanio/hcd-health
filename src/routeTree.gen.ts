@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as CompaniesRouteImport } from './routes/companies'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CompaniesIndexRouteImport } from './routes/companies/index'
+import { Route as HealthcarePracticeMetricsCalculatorIdRouteImport } from './routes/healthcare-practice-metrics-calculator.$id'
 import { Route as CompaniesCompanyIdRouteRouteImport } from './routes/companies/$companyId/route'
 import { Route as CompaniesCompanyIdIndexRouteImport } from './routes/companies/$companyId/index'
 import { Route as CompaniesCompanyIdSettingsRouteRouteImport } from './routes/companies/$companyId/settings/route'
@@ -50,6 +51,12 @@ const CompaniesIndexRoute = CompaniesIndexRouteImport.update({
   path: '/',
   getParentRoute: () => CompaniesRoute,
 } as any)
+const HealthcarePracticeMetricsCalculatorIdRoute =
+  HealthcarePracticeMetricsCalculatorIdRouteImport.update({
+    id: '/healthcare-practice-metrics-calculator/$id',
+    path: '/healthcare-practice-metrics-calculator/$id',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const CompaniesCompanyIdRouteRoute = CompaniesCompanyIdRouteRouteImport.update({
   id: '/$companyId',
   path: '/$companyId',
@@ -185,6 +192,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/companies': typeof CompaniesRouteWithChildren
   '/companies/$companyId': typeof CompaniesCompanyIdRouteRouteWithChildren
+  '/healthcare-practice-metrics-calculator/$id': typeof HealthcarePracticeMetricsCalculatorIdRoute
   '/companies/': typeof CompaniesIndexRoute
   '/companies/$companyId/settings': typeof CompaniesCompanyIdSettingsRouteRouteWithChildren
   '/companies/$companyId/': typeof CompaniesCompanyIdIndexRoute
@@ -210,6 +218,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/healthcare-practice-metrics-calculator/$id': typeof HealthcarePracticeMetricsCalculatorIdRoute
   '/companies': typeof CompaniesIndexRoute
   '/companies/$companyId': typeof CompaniesCompanyIdIndexRoute
   '/companies/$companyId/cms-pages/$pageId': typeof CompaniesCompanyIdCmsPagesPageIdRoute
@@ -237,6 +246,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/companies': typeof CompaniesRouteWithChildren
   '/companies/$companyId': typeof CompaniesCompanyIdRouteRouteWithChildren
+  '/healthcare-practice-metrics-calculator/$id': typeof HealthcarePracticeMetricsCalculatorIdRoute
   '/companies/': typeof CompaniesIndexRoute
   '/companies/$companyId/settings': typeof CompaniesCompanyIdSettingsRouteRouteWithChildren
   '/companies/$companyId/': typeof CompaniesCompanyIdIndexRoute
@@ -266,6 +276,7 @@ export interface FileRouteTypes {
     | '/'
     | '/companies'
     | '/companies/$companyId'
+    | '/healthcare-practice-metrics-calculator/$id'
     | '/companies/'
     | '/companies/$companyId/settings'
     | '/companies/$companyId/'
@@ -291,6 +302,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/healthcare-practice-metrics-calculator/$id'
     | '/companies'
     | '/companies/$companyId'
     | '/companies/$companyId/cms-pages/$pageId'
@@ -317,6 +329,7 @@ export interface FileRouteTypes {
     | '/'
     | '/companies'
     | '/companies/$companyId'
+    | '/healthcare-practice-metrics-calculator/$id'
     | '/companies/'
     | '/companies/$companyId/settings'
     | '/companies/$companyId/'
@@ -344,6 +357,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CompaniesRoute: typeof CompaniesRouteWithChildren
+  HealthcarePracticeMetricsCalculatorIdRoute: typeof HealthcarePracticeMetricsCalculatorIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -368,6 +382,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/companies/'
       preLoaderRoute: typeof CompaniesIndexRouteImport
       parentRoute: typeof CompaniesRoute
+    }
+    '/healthcare-practice-metrics-calculator/$id': {
+      id: '/healthcare-practice-metrics-calculator/$id'
+      path: '/healthcare-practice-metrics-calculator/$id'
+      fullPath: '/healthcare-practice-metrics-calculator/$id'
+      preLoaderRoute: typeof HealthcarePracticeMetricsCalculatorIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/companies/$companyId': {
       id: '/companies/$companyId'
@@ -623,6 +644,8 @@ const CompaniesRouteWithChildren = CompaniesRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CompaniesRoute: CompaniesRouteWithChildren,
+  HealthcarePracticeMetricsCalculatorIdRoute:
+    HealthcarePracticeMetricsCalculatorIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

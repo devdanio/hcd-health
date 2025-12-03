@@ -45,6 +45,11 @@ export { Prisma }
  */
 export type CityLatLng = Prisma.CityLatLngModel
 /**
+ * Model LeadCalculator
+ * 
+ */
+export type LeadCalculator = Prisma.LeadCalculatorModel
+/**
  * Model Company
  * 
  */

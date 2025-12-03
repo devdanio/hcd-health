@@ -17,6 +17,21 @@ model CityLatLng{
   @@unique([city, state])
 }
 
+model LeadCalculator {
+  id                String   @id @default(cuid())
+  name              String
+  email             String
+  revenue           Float
+  patients          Int
+  newPatients       Int
+  avgVisits         Float
+  marketingCosts    Float
+  directCareCosts   Float
+  overheadCosts     Float
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
 // Companies - Multi-tenant root
 model Company {
   id           String   @id @default(cuid())

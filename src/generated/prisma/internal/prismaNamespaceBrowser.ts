@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   CityLatLng: 'CityLatLng',
+  LeadCalculator: 'LeadCalculator',
   Company: 'Company',
   Contact: 'Contact',
   GhlContact: 'GhlContact',
@@ -91,6 +92,24 @@ export const CityLatLngScalarFieldEnum = {
 } as const
 
 export type CityLatLngScalarFieldEnum = (typeof CityLatLngScalarFieldEnum)[keyof typeof CityLatLngScalarFieldEnum]
+
+
+export const LeadCalculatorScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  revenue: 'revenue',
+  patients: 'patients',
+  newPatients: 'newPatients',
+  avgVisits: 'avgVisits',
+  marketingCosts: 'marketingCosts',
+  directCareCosts: 'directCareCosts',
+  overheadCosts: 'overheadCosts',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LeadCalculatorScalarFieldEnum = (typeof LeadCalculatorScalarFieldEnum)[keyof typeof LeadCalculatorScalarFieldEnum]
 
 
 export const CompanyScalarFieldEnum = {
