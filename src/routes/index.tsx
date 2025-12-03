@@ -1,140 +1,435 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { Target, Smartphone, BarChart3, Zap, Shield, Globe } from 'lucide-react'
+import { createFileRoute } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
-import {
-  SignedIn,
-  UserButton,
-  SignedOut,
-  SignInButton,
-} from '@clerk/tanstack-react-start'
+import { Input } from '@/components/ui/input'
+import { Check, Heart, Clock, Smartphone } from 'lucide-react'
 
 export const Route = createFileRoute('/')({ component: App })
 
 function App() {
-  const features = [
-    {
-      icon: <Target className="w-12 h-12 text-cyan-400" />,
-      title: 'Full Attribution Tracking',
-      description:
-        'Track UTM parameters, click IDs, referrers, and user journeys across your entire funnel.',
-    },
-    {
-      icon: <Smartphone className="w-12 h-12 text-cyan-400" />,
-      title: 'iOS Compatible',
-      description:
-        'First-party cookies and Safari ITP compliance ensure tracking works on all devices.',
-    },
-    {
-      icon: <Globe className="w-12 h-12 text-cyan-400" />,
-      title: 'Cross-Domain & Iframes',
-      description:
-        'Track conversions even across iframes and different domains with seamless postMessage integration.',
-    },
-    {
-      icon: <BarChart3 className="w-12 h-12 text-cyan-400" />,
-      title: 'Multi-Touch Attribution',
-      description:
-        'Understand your customer journey with first-touch, last-touch, and full path attribution.',
-    },
-    {
-      icon: <Zap className="w-12 h-12 text-cyan-400" />,
-      title: 'Real-Time Analytics',
-      description:
-        'Powered by Convex for instant insights into sessions, events, and conversions.',
-    },
-    {
-      icon: <Shield className="w-12 h-12 text-cyan-400" />,
-      title: 'Privacy Focused',
-      description:
-        'GDPR/CCPA compliant with first-party cookies and no third-party tracking domains.',
-    },
-  ]
-
   return (
-    <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-900">
-      <section className="relative py-20 px-6 text-center overflow-hidden">
-        <div className="absolute inset-0 bg-linear-to-r from-cyan-500/10 via-blue-500/10 to-purple-500/10"></div>
-        <div className="relative max-w-5xl mx-auto">
-          <h1 className="text-6xl md:text-7xl font-black text-white mb-6">
-            <span className="bg-linear-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-              Leadalytics
-            </span>
-          </h1>
-          <p className="text-2xl md:text-3xl text-gray-300 mb-4 font-light">
-            Modern data solutions for your healthcare practice
-          </p>
-          <p className="text-lg text-gray-400 max-w-3xl mx-auto mb-8">
-            We pick up where your EHR leaves off. Proving you with actionable
-            insights to grow your practice.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <SignedIn>
-              <UserButton />
-              <Link to="/companies">
-                <Button size="lg" className="bg-cyan-500 hover:bg-cyan-600">
-                  View Companies
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-teal-500 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-xl">L</span>
+            </div>
+            <span className="text-xl font-semibold text-gray-900">Leadalytics</span>
+          </div>
+          <button className="text-gray-700 hover:text-gray-900 underline">
+            Contact us
+          </button>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="bg-white py-20">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <div>
+              {/* Doctor Avatars */}
+              <div className="flex items-center gap-2 mb-6">
+                <span className="text-gray-600">(</span>
+                <div className="flex -space-x-3">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 border-2 border-white" />
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-100 to-teal-200 border-2 border-white" />
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-100 to-purple-200 border-2 border-white" />
+                </div>
+                <span className="text-gray-600">)</span>
+              </div>
+
+              <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                A Leap In Healthcare
+                <br />
+                Data Analytics
+              </h1>
+
+              <p className="text-lg text-gray-600 mb-8 max-w-lg">
+                Telehealth solutions thoughtfully designed to streamline your virtual care delivery.
+              </p>
+
+              <div className="flex flex-wrap gap-4 mb-12">
+                <Button className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-6 rounded-full text-lg">
+                  Get Started →
                 </Button>
-              </Link>
-            </SignedIn>
-            <SignedOut>
-              <SignInButton />
-            </SignedOut>
+                <Button variant="outline" className="border-2 border-gray-900 text-gray-900 px-8 py-6 rounded-full text-lg bg-lime-200 hover:bg-lime-300">
+                  Book scoping call
+                </Button>
+              </div>
+
+              {/* Stats Badge */}
+              <div className="flex items-center gap-4 bg-gray-50 rounded-2xl p-4 inline-flex">
+                <div className="flex -space-x-2">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 border-2 border-white" />
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-100 to-teal-200 border-2 border-white" />
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-100 to-purple-200 border-2 border-white" />
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-100 to-pink-200 border-2 border-white" />
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-gray-900">50+</div>
+                  <div className="text-sm text-gray-600">Medical specialties</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Content - Hero Image */}
+            <div className="relative">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+                <img
+                  src="/Users/dan/.gemini/antigravity/brain/0607b265-82b2-4118-82e8-5fd1f3490020/hero_customer_service_1764781457469.png"
+                  alt="Healthcare professional"
+                  className="w-full h-auto"
+                />
+                
+                {/* Floating Tags */}
+                <div className="absolute top-6 left-6 bg-white rounded-full px-4 py-2 shadow-lg flex items-center gap-2">
+                  <div className="w-2 h-2 bg-lime-400 rounded-full" />
+                  <span className="text-sm font-medium">Convenient</span>
+                  <button className="text-gray-400 hover:text-gray-600">+</button>
+                </div>
+                
+                <div className="absolute top-16 left-6 bg-white rounded-full px-4 py-2 shadow-lg flex items-center gap-2">
+                  <div className="w-2 h-2 bg-lime-400 rounded-full" />
+                  <span className="text-sm font-medium">Accessible</span>
+                  <button className="text-gray-400 hover:text-gray-600">+</button>
+                </div>
+                
+                <div className="absolute top-26 left-6 bg-white rounded-full px-4 py-2 shadow-lg flex items-center gap-2">
+                  <div className="w-2 h-2 bg-gray-300 rounded-full" />
+                  <span className="text-sm font-medium text-gray-400">Affordable</span>
+                  <button className="text-gray-400 hover:text-gray-600">+</button>
+                </div>
+
+                {/* Floating Info Cards */}
+                <div className="absolute bottom-6 right-6 bg-white rounded-2xl p-4 shadow-xl max-w-xs">
+                  <div className="flex items-start gap-3">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-100 to-blue-200" />
+                    <div>
+                      <div className="font-semibold text-gray-900">24/7 Support For</div>
+                      <div className="font-semibold text-gray-900">Clinicians</div>
+                      <div className="text-xs text-gray-500 mt-1">Service #1</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="absolute bottom-24 right-6 bg-teal-500 rounded-full p-3 shadow-xl">
+                  <Check className="w-6 h-6 text-white" />
+                </div>
+                <div className="absolute bottom-24 right-20 bg-white rounded-2xl px-4 py-2 shadow-xl">
+                  <span className="text-sm font-medium">Flexibility & Convenience</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="py-16 px-6 max-w-7xl mx-auto text-secondary">
-        Your EHR tracks patients, your CRM tracks leads, Leadalytics tracks the
-        bridge between the two. Your accountant will love you for it.
-      </section>
+      {/* Features Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-4">
+            <span className="inline-block bg-lime-200 text-gray-900 px-4 py-1 rounded-full text-sm font-medium mb-6">
+              For Providers
+            </span>
+          </div>
+          
+          <h2 className="text-4xl lg:text-5xl font-bold text-center text-gray-900 mb-4">
+            Efficiently Manage and
+          </h2>
+          <div className="flex items-center justify-center gap-3 mb-16">
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900">Grow</h2>
+            <div className="w-12 h-12 bg-teal-500 rounded-full flex items-center justify-center">
+              <Check className="w-6 h-6 text-white" />
+            </div>
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900">Your Practice</h2>
+          </div>
 
-      <section className="py-16 px-6 max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold text-white text-center mb-12">
-          Everything You Need for Attribution
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 hover:border-cyan-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10"
-            >
-              <div className="mb-4">{feature.icon}</div>
-              <h3 className="text-xl font-semibold text-white mb-3">
-                {feature.title}
+          {/* Doctor Avatars Row */}
+          <div className="flex justify-center -space-x-4 mb-16">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 border-4 border-white shadow-lg" />
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-teal-100 to-teal-200 border-4 border-white shadow-lg" />
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-100 to-purple-200 border-4 border-white shadow-lg" />
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-pink-100 to-pink-200 border-4 border-white shadow-lg" />
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-yellow-100 to-yellow-200 border-4 border-white shadow-lg" />
+          </div>
+
+          {/* Feature Cards */}
+          <div className="grid lg:grid-cols-3 gap-8 mb-16">
+            <div className="bg-gray-50 rounded-3xl p-8">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                Join Us And Take Your Medical Practice To New Heights.
               </h3>
-              <p className="text-gray-400 leading-relaxed">
-                {feature.description}
+              <p className="text-gray-600">
+                With our user-friendly application, you can efficiently serve a larger number of patients while increasing your earnings.
               </p>
             </div>
-          ))}
-        </div>
-      </section>
 
-      <section className="py-16 px-6 max-w-5xl mx-auto">
-        <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-8">
-          <h2 className="text-2xl font-bold text-white mb-4">Quick Start</h2>
-          <div className="space-y-4">
-            <div>
-              <p className="text-gray-400 mb-2">1. Create a project:</p>
-              <code className="block bg-slate-900 p-3 rounded text-cyan-400 text-sm">
-                Click "View Projects" → "Create Project"
-              </code>
+            <div className="bg-gray-100 rounded-3xl overflow-hidden">
+              <img
+                src="/Users/dan/.gemini/antigravity/brain/0607b265-82b2-4118-82e8-5fd1f3490020/doctors_collaborating_1764781472684.png"
+                alt="Doctors collaborating"
+                className="w-full h-full object-cover"
+              />
             </div>
-            <div>
-              <p className="text-gray-400 mb-2">2. Install tracking script:</p>
-              <code className="block bg-slate-900 p-3 rounded text-cyan-400 text-sm overflow-x-auto">
-                {`<script src="/tracker/tracker.js" data-api-key="YOUR_API_KEY" data-api-url="YOUR_CONVEX_URL"></script>`}
-              </code>
+
+            <div className="bg-gray-50 rounded-3xl p-8 flex flex-col justify-between">
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                  Care For More Patients From Home
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Our platform offers doctors the opportunity to expand their practice like never before.
+                </p>
+              </div>
+              <div className="flex justify-end -space-x-3">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 border-2 border-white" />
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-100 to-teal-200 border-2 border-white" />
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-100 to-purple-200 border-2 border-white" />
+                <button className="w-12 h-12 rounded-full bg-white border-2 border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-50">
+                  +
+                </button>
+              </div>
             </div>
-            <div>
-              <p className="text-gray-400 mb-2">3. Track conversions:</p>
-              <code className="block bg-slate-900 p-3 rounded text-cyan-400 text-sm">
-                {`trackConversion('purchase', { revenue: 99.99 })`}
-              </code>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="text-5xl font-bold text-gray-900 mb-2">5+</div>
+              <div className="text-gray-600">Million Patient Visits</div>
+            </div>
+            <div className="text-center">
+              <div className="text-5xl font-bold text-gray-900 mb-2">20%</div>
+              <div className="text-gray-600">Increase in Earnings</div>
+            </div>
+            <div className="text-center">
+              <div className="text-5xl font-bold text-gray-900 mb-2">9k+</div>
+              <div className="text-gray-600">Registered Doctors</div>
+            </div>
+            <div className="text-center">
+              <div className="text-5xl font-bold text-gray-900 mb-2">24/7</div>
+              <div className="text-gray-600">Accessibility</div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Waitlist Form Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="flex items-center gap-2 mb-8">
+            <div className="w-10 h-10 bg-lime-200 rounded-lg flex items-center justify-center">
+              <span className="text-xl">✉️</span>
+            </div>
+            <span className="text-gray-700">hi@leadalytics.com</span>
+          </div>
+
+          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-12">
+            Be the first to access our app: join the waiting list today
+          </h2>
+
+          <div className="bg-white rounded-3xl p-8 shadow-lg">
+            <form className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    First Name
+                  </label>
+                  <Input
+                    placeholder="Emily"
+                    className="w-full border-b border-gray-300 rounded-none border-t-0 border-l-0 border-r-0 px-0 focus:ring-0 focus:border-gray-900"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Last Name
+                  </label>
+                  <Input
+                    placeholder="Johnson"
+                    className="w-full border-b border-gray-300 rounded-none border-t-0 border-l-0 border-r-0 px-0 focus:ring-0 focus:border-gray-900"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Your Email
+                </label>
+                <Input
+                  type="email"
+                  placeholder="emily.johnson@email.com"
+                  className="w-full border-b border-gray-300 rounded-none border-t-0 border-l-0 border-r-0 px-0 focus:ring-0 focus:border-gray-900"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Phone
+                </label>
+                <Input
+                  type="tel"
+                  placeholder="Phone"
+                  className="w-full border-b border-gray-300 rounded-none border-t-0 border-l-0 border-r-0 px-0 focus:ring-0 focus:border-gray-900"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Specialization
+                </label>
+                <Input
+                  placeholder="Dentist"
+                  className="w-full border-b border-gray-300 rounded-none border-t-0 border-l-0 border-r-0 px-0 focus:ring-0 focus:border-gray-900"
+                />
+              </div>
+
+              <div className="flex justify-end pt-4">
+                <Button className="bg-gray-900 hover:bg-gray-800 text-white px-8 py-6 rounded-full text-lg">
+                  Join Waiting List →
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      {/* Patient Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-4">
+            <span className="inline-block bg-lime-200 text-gray-900 px-4 py-1 rounded-full text-sm font-medium mb-6">
+              For Patients
+            </span>
+          </div>
+
+          <h2 className="text-4xl lg:text-5xl font-bold text-center text-gray-900 mb-16">
+            Get Expert Consultations
+            <br />
+            Anytime, <span className="inline-flex items-center gap-2"><Clock className="w-10 h-10" /> Anywhere.</span>
+          </h2>
+
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Mobile App Mockup */}
+            <div className="bg-gray-100 rounded-3xl p-8">
+              <div className="bg-white rounded-3xl p-6 shadow-xl max-w-sm mx-auto">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex -space-x-2">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 border-2 border-white" />
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-100 to-teal-200 border-2 border-white" />
+                  </div>
+                  <div className="w-8 h-8 bg-teal-500 rounded-lg" />
+                  <button className="text-gray-400">🔍</button>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-4">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-200 to-blue-300" />
+                      <div>
+                        <div className="font-semibold text-gray-900">Dr. Sarah Chen</div>
+                        <div className="text-xs text-gray-600">Cardiologist</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-teal-50 to-teal-100 rounded-2xl p-4">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-200 to-teal-300" />
+                      <div>
+                        <div className="font-semibold text-gray-900">Dr. Michael Ross</div>
+                        <div className="text-xs text-gray-600">Pediatrician</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-4">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-200 to-purple-300" />
+                      <div>
+                        <div className="font-semibold text-gray-900">Dr. Lisa Park</div>
+                        <div className="text-xs text-gray-600">Dermatologist</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 text-center">
+                  <div className="text-sm font-medium text-gray-700">Your recent doctors</div>
+                  <div className="flex justify-center -space-x-2 mt-2">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 border-2 border-white" />
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-100 to-teal-200 border-2 border-white" />
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-100 to-purple-200 border-2 border-white" />
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-100 to-pink-200 border-2 border-white" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 text-center">
+                <p className="text-gray-700 font-medium">Say goodbye to long waits at the doctor's office.</p>
+              </div>
+            </div>
+
+            {/* Patient Image and Features */}
+            <div>
+              <div className="bg-gray-100 rounded-3xl overflow-hidden mb-8">
+                <img
+                  src="/Users/dan/.gemini/antigravity/brain/0607b265-82b2-4118-82e8-5fd1f3490020/patient_laptop_1764781498345.png"
+                  alt="Patient using laptop"
+                  className="w-full h-auto"
+                />
+                <div className="p-6 bg-white">
+                  <p className="text-gray-700">
+                    With our app, you can get expert medical advice right at your fingertips.
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-6">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                    <Smartphone className="w-8 h-8 text-teal-600" />
+                  </div>
+                  <div className="font-semibold text-gray-900">Instant</div>
+                  <div className="font-semibold text-gray-900">Consultations</div>
+                </div>
+
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                    <Heart className="w-8 h-8 text-teal-600" />
+                  </div>
+                  <div className="font-semibold text-gray-900">Health</div>
+                  <div className="font-semibold text-gray-900">Journey</div>
+                </div>
+
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                    <Check className="w-8 h-8 text-teal-600" />
+                  </div>
+                  <div className="font-semibold text-gray-900">Verified</div>
+                  <div className="font-semibold text-gray-900">Doctors</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <div className="w-8 h-8 bg-teal-500 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-xl">L</span>
+            </div>
+            <span className="text-xl font-semibold">Leadalytics</span>
+          </div>
+          <p className="text-gray-400">
+            Modern data solutions for your healthcare practice
+          </p>
+        </div>
+      </footer>
     </div>
   )
 }
