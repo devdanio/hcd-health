@@ -24,3 +24,12 @@ export const EventType = {
 } as const
 
 export type EventType = (typeof EventType)[keyof typeof EventType]
+
+
+export const PaymentStatus = {
+  pending: 'pending',
+  posted: 'posted',
+  failed: 'failed'
+} as const
+
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]

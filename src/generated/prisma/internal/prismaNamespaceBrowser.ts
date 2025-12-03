@@ -58,6 +58,7 @@ export const ModelName = {
   Session: 'Session',
   Event: 'Event',
   Service: 'Service',
+  Payments: 'Payments',
   Provider: 'Provider',
   Appointment: 'Appointment',
   AppointmentProcedure: 'AppointmentProcedure',
@@ -214,6 +215,21 @@ export const ServiceScalarFieldEnum = {
 export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
 
 
+export const PaymentsScalarFieldEnum = {
+  id: 'id',
+  externalId: 'externalId',
+  companyId: 'companyId',
+  amount_in_cents: 'amount_in_cents',
+  posted_date: 'posted_date',
+  status: 'status',
+  patientId: 'patientId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentsScalarFieldEnum = (typeof PaymentsScalarFieldEnum)[keyof typeof PaymentsScalarFieldEnum]
+
+
 export const ProviderScalarFieldEnum = {
   id: 'id',
   companyId: 'companyId',
@@ -255,6 +271,7 @@ export type AppointmentProcedureScalarFieldEnum = (typeof AppointmentProcedureSc
 export const PatientScalarFieldEnum = {
   id: 'id',
   contactId: 'contactId',
+  externalId: 'externalId',
   address1: 'address1',
   address2: 'address2',
   zip: 'zip',

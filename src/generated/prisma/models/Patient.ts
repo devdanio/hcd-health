@@ -27,6 +27,7 @@ export type AggregatePatient = {
 export type PatientMinAggregateOutputType = {
   id: string | null
   contactId: string | null
+  externalId: string | null
   address1: string | null
   address2: string | null
   zip: string | null
@@ -39,6 +40,7 @@ export type PatientMinAggregateOutputType = {
 export type PatientMaxAggregateOutputType = {
   id: string | null
   contactId: string | null
+  externalId: string | null
   address1: string | null
   address2: string | null
   zip: string | null
@@ -51,6 +53,7 @@ export type PatientMaxAggregateOutputType = {
 export type PatientCountAggregateOutputType = {
   id: number
   contactId: number
+  externalId: number
   address1: number
   address2: number
   zip: number
@@ -65,6 +68,7 @@ export type PatientCountAggregateOutputType = {
 export type PatientMinAggregateInputType = {
   id?: true
   contactId?: true
+  externalId?: true
   address1?: true
   address2?: true
   zip?: true
@@ -77,6 +81,7 @@ export type PatientMinAggregateInputType = {
 export type PatientMaxAggregateInputType = {
   id?: true
   contactId?: true
+  externalId?: true
   address1?: true
   address2?: true
   zip?: true
@@ -89,6 +94,7 @@ export type PatientMaxAggregateInputType = {
 export type PatientCountAggregateInputType = {
   id?: true
   contactId?: true
+  externalId?: true
   address1?: true
   address2?: true
   zip?: true
@@ -174,6 +180,7 @@ export type PatientGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type PatientGroupByOutputType = {
   id: string
   contactId: string
+  externalId: string | null
   address1: string | null
   address2: string | null
   zip: string | null
@@ -207,6 +214,7 @@ export type PatientWhereInput = {
   NOT?: Prisma.PatientWhereInput | Prisma.PatientWhereInput[]
   id?: Prisma.StringFilter<"Patient"> | string
   contactId?: Prisma.StringFilter<"Patient"> | string
+  externalId?: Prisma.StringNullableFilter<"Patient"> | string | null
   address1?: Prisma.StringNullableFilter<"Patient"> | string | null
   address2?: Prisma.StringNullableFilter<"Patient"> | string | null
   zip?: Prisma.StringNullableFilter<"Patient"> | string | null
@@ -215,12 +223,14 @@ export type PatientWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Patient"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Patient"> | Date | string
   contact?: Prisma.XOR<Prisma.ContactScalarRelationFilter, Prisma.ContactWhereInput>
+  payments?: Prisma.PaymentsListRelationFilter
   appointments?: Prisma.AppointmentListRelationFilter
 }
 
 export type PatientOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   contactId?: Prisma.SortOrder
+  externalId?: Prisma.SortOrderInput | Prisma.SortOrder
   address1?: Prisma.SortOrderInput | Prisma.SortOrder
   address2?: Prisma.SortOrderInput | Prisma.SortOrder
   zip?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -229,12 +239,14 @@ export type PatientOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   contact?: Prisma.ContactOrderByWithRelationInput
+  payments?: Prisma.PaymentsOrderByRelationAggregateInput
   appointments?: Prisma.AppointmentOrderByRelationAggregateInput
 }
 
 export type PatientWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   contactId?: string
+  externalId?: string
   AND?: Prisma.PatientWhereInput | Prisma.PatientWhereInput[]
   OR?: Prisma.PatientWhereInput[]
   NOT?: Prisma.PatientWhereInput | Prisma.PatientWhereInput[]
@@ -246,12 +258,14 @@ export type PatientWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Patient"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Patient"> | Date | string
   contact?: Prisma.XOR<Prisma.ContactScalarRelationFilter, Prisma.ContactWhereInput>
+  payments?: Prisma.PaymentsListRelationFilter
   appointments?: Prisma.AppointmentListRelationFilter
-}, "id" | "contactId">
+}, "id" | "contactId" | "externalId">
 
 export type PatientOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   contactId?: Prisma.SortOrder
+  externalId?: Prisma.SortOrderInput | Prisma.SortOrder
   address1?: Prisma.SortOrderInput | Prisma.SortOrder
   address2?: Prisma.SortOrderInput | Prisma.SortOrder
   zip?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -270,6 +284,7 @@ export type PatientScalarWhereWithAggregatesInput = {
   NOT?: Prisma.PatientScalarWhereWithAggregatesInput | Prisma.PatientScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Patient"> | string
   contactId?: Prisma.StringWithAggregatesFilter<"Patient"> | string
+  externalId?: Prisma.StringNullableWithAggregatesFilter<"Patient"> | string | null
   address1?: Prisma.StringNullableWithAggregatesFilter<"Patient"> | string | null
   address2?: Prisma.StringNullableWithAggregatesFilter<"Patient"> | string | null
   zip?: Prisma.StringNullableWithAggregatesFilter<"Patient"> | string | null
@@ -281,6 +296,7 @@ export type PatientScalarWhereWithAggregatesInput = {
 
 export type PatientCreateInput = {
   id?: string
+  externalId?: string | null
   address1?: string | null
   address2?: string | null
   zip?: string | null
@@ -289,12 +305,14 @@ export type PatientCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   contact: Prisma.ContactCreateNestedOneWithoutPatientInput
+  payments?: Prisma.PaymentsCreateNestedManyWithoutPatientInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutPatientInput
 }
 
 export type PatientUncheckedCreateInput = {
   id?: string
   contactId: string
+  externalId?: string | null
   address1?: string | null
   address2?: string | null
   zip?: string | null
@@ -302,11 +320,13 @@ export type PatientUncheckedCreateInput = {
   state?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutPatientInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutPatientInput
 }
 
 export type PatientUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -315,12 +335,14 @@ export type PatientUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contact?: Prisma.ContactUpdateOneRequiredWithoutPatientNestedInput
+  payments?: Prisma.PaymentsUpdateManyWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutPatientNestedInput
 }
 
 export type PatientUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   contactId?: Prisma.StringFieldUpdateOperationsInput | string
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -328,12 +350,14 @@ export type PatientUncheckedUpdateInput = {
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentsUncheckedUpdateManyWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutPatientNestedInput
 }
 
 export type PatientCreateManyInput = {
   id?: string
   contactId: string
+  externalId?: string | null
   address1?: string | null
   address2?: string | null
   zip?: string | null
@@ -345,6 +369,7 @@ export type PatientCreateManyInput = {
 
 export type PatientUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -357,6 +382,7 @@ export type PatientUpdateManyMutationInput = {
 export type PatientUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   contactId?: Prisma.StringFieldUpdateOperationsInput | string
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -379,6 +405,7 @@ export type PatientScalarRelationFilter = {
 export type PatientCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   contactId?: Prisma.SortOrder
+  externalId?: Prisma.SortOrder
   address1?: Prisma.SortOrder
   address2?: Prisma.SortOrder
   zip?: Prisma.SortOrder
@@ -391,6 +418,7 @@ export type PatientCountOrderByAggregateInput = {
 export type PatientMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   contactId?: Prisma.SortOrder
+  externalId?: Prisma.SortOrder
   address1?: Prisma.SortOrder
   address2?: Prisma.SortOrder
   zip?: Prisma.SortOrder
@@ -403,6 +431,7 @@ export type PatientMaxOrderByAggregateInput = {
 export type PatientMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   contactId?: Prisma.SortOrder
+  externalId?: Prisma.SortOrder
   address1?: Prisma.SortOrder
   address2?: Prisma.SortOrder
   zip?: Prisma.SortOrder
@@ -444,6 +473,20 @@ export type PatientUncheckedUpdateOneWithoutContactNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PatientUpdateToOneWithWhereWithoutContactInput, Prisma.PatientUpdateWithoutContactInput>, Prisma.PatientUncheckedUpdateWithoutContactInput>
 }
 
+export type PatientCreateNestedOneWithoutPaymentsInput = {
+  create?: Prisma.XOR<Prisma.PatientCreateWithoutPaymentsInput, Prisma.PatientUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.PatientCreateOrConnectWithoutPaymentsInput
+  connect?: Prisma.PatientWhereUniqueInput
+}
+
+export type PatientUpdateOneRequiredWithoutPaymentsNestedInput = {
+  create?: Prisma.XOR<Prisma.PatientCreateWithoutPaymentsInput, Prisma.PatientUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.PatientCreateOrConnectWithoutPaymentsInput
+  upsert?: Prisma.PatientUpsertWithoutPaymentsInput
+  connect?: Prisma.PatientWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PatientUpdateToOneWithWhereWithoutPaymentsInput, Prisma.PatientUpdateWithoutPaymentsInput>, Prisma.PatientUncheckedUpdateWithoutPaymentsInput>
+}
+
 export type PatientCreateNestedOneWithoutAppointmentsInput = {
   create?: Prisma.XOR<Prisma.PatientCreateWithoutAppointmentsInput, Prisma.PatientUncheckedCreateWithoutAppointmentsInput>
   connectOrCreate?: Prisma.PatientCreateOrConnectWithoutAppointmentsInput
@@ -460,6 +503,7 @@ export type PatientUpdateOneRequiredWithoutAppointmentsNestedInput = {
 
 export type PatientCreateWithoutContactInput = {
   id?: string
+  externalId?: string | null
   address1?: string | null
   address2?: string | null
   zip?: string | null
@@ -467,11 +511,13 @@ export type PatientCreateWithoutContactInput = {
   state?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  payments?: Prisma.PaymentsCreateNestedManyWithoutPatientInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutPatientInput
 }
 
 export type PatientUncheckedCreateWithoutContactInput = {
   id?: string
+  externalId?: string | null
   address1?: string | null
   address2?: string | null
   zip?: string | null
@@ -479,6 +525,7 @@ export type PatientUncheckedCreateWithoutContactInput = {
   state?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutPatientInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutPatientInput
 }
 
@@ -500,6 +547,7 @@ export type PatientUpdateToOneWithWhereWithoutContactInput = {
 
 export type PatientUpdateWithoutContactInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -507,11 +555,86 @@ export type PatientUpdateWithoutContactInput = {
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentsUpdateManyWithoutPatientNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutPatientNestedInput
 }
 
 export type PatientUncheckedUpdateWithoutContactInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentsUncheckedUpdateManyWithoutPatientNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutPatientNestedInput
+}
+
+export type PatientCreateWithoutPaymentsInput = {
+  id?: string
+  externalId?: string | null
+  address1?: string | null
+  address2?: string | null
+  zip?: string | null
+  city?: string | null
+  state?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  contact: Prisma.ContactCreateNestedOneWithoutPatientInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutPatientInput
+}
+
+export type PatientUncheckedCreateWithoutPaymentsInput = {
+  id?: string
+  contactId: string
+  externalId?: string | null
+  address1?: string | null
+  address2?: string | null
+  zip?: string | null
+  city?: string | null
+  state?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutPatientInput
+}
+
+export type PatientCreateOrConnectWithoutPaymentsInput = {
+  where: Prisma.PatientWhereUniqueInput
+  create: Prisma.XOR<Prisma.PatientCreateWithoutPaymentsInput, Prisma.PatientUncheckedCreateWithoutPaymentsInput>
+}
+
+export type PatientUpsertWithoutPaymentsInput = {
+  update: Prisma.XOR<Prisma.PatientUpdateWithoutPaymentsInput, Prisma.PatientUncheckedUpdateWithoutPaymentsInput>
+  create: Prisma.XOR<Prisma.PatientCreateWithoutPaymentsInput, Prisma.PatientUncheckedCreateWithoutPaymentsInput>
+  where?: Prisma.PatientWhereInput
+}
+
+export type PatientUpdateToOneWithWhereWithoutPaymentsInput = {
+  where?: Prisma.PatientWhereInput
+  data: Prisma.XOR<Prisma.PatientUpdateWithoutPaymentsInput, Prisma.PatientUncheckedUpdateWithoutPaymentsInput>
+}
+
+export type PatientUpdateWithoutPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contact?: Prisma.ContactUpdateOneRequiredWithoutPatientNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutPatientNestedInput
+}
+
+export type PatientUncheckedUpdateWithoutPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  contactId?: Prisma.StringFieldUpdateOperationsInput | string
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -524,6 +647,7 @@ export type PatientUncheckedUpdateWithoutContactInput = {
 
 export type PatientCreateWithoutAppointmentsInput = {
   id?: string
+  externalId?: string | null
   address1?: string | null
   address2?: string | null
   zip?: string | null
@@ -532,11 +656,13 @@ export type PatientCreateWithoutAppointmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   contact: Prisma.ContactCreateNestedOneWithoutPatientInput
+  payments?: Prisma.PaymentsCreateNestedManyWithoutPatientInput
 }
 
 export type PatientUncheckedCreateWithoutAppointmentsInput = {
   id?: string
   contactId: string
+  externalId?: string | null
   address1?: string | null
   address2?: string | null
   zip?: string | null
@@ -544,6 +670,7 @@ export type PatientUncheckedCreateWithoutAppointmentsInput = {
   state?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutPatientInput
 }
 
 export type PatientCreateOrConnectWithoutAppointmentsInput = {
@@ -564,6 +691,7 @@ export type PatientUpdateToOneWithWhereWithoutAppointmentsInput = {
 
 export type PatientUpdateWithoutAppointmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -572,11 +700,13 @@ export type PatientUpdateWithoutAppointmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contact?: Prisma.ContactUpdateOneRequiredWithoutPatientNestedInput
+  payments?: Prisma.PaymentsUpdateManyWithoutPatientNestedInput
 }
 
 export type PatientUncheckedUpdateWithoutAppointmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   contactId?: Prisma.StringFieldUpdateOperationsInput | string
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -584,6 +714,7 @@ export type PatientUncheckedUpdateWithoutAppointmentsInput = {
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentsUncheckedUpdateManyWithoutPatientNestedInput
 }
 
 
@@ -592,10 +723,12 @@ export type PatientUncheckedUpdateWithoutAppointmentsInput = {
  */
 
 export type PatientCountOutputType = {
+  payments: number
   appointments: number
 }
 
 export type PatientCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  payments?: boolean | PatientCountOutputTypeCountPaymentsArgs
   appointments?: boolean | PatientCountOutputTypeCountAppointmentsArgs
 }
 
@@ -612,6 +745,13 @@ export type PatientCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
 /**
  * PatientCountOutputType without action
  */
+export type PatientCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PaymentsWhereInput
+}
+
+/**
+ * PatientCountOutputType without action
+ */
 export type PatientCountOutputTypeCountAppointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.AppointmentWhereInput
 }
@@ -620,6 +760,7 @@ export type PatientCountOutputTypeCountAppointmentsArgs<ExtArgs extends runtime.
 export type PatientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   contactId?: boolean
+  externalId?: boolean
   address1?: boolean
   address2?: boolean
   zip?: boolean
@@ -628,6 +769,7 @@ export type PatientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   createdAt?: boolean
   updatedAt?: boolean
   contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
+  payments?: boolean | Prisma.Patient$paymentsArgs<ExtArgs>
   appointments?: boolean | Prisma.Patient$appointmentsArgs<ExtArgs>
   _count?: boolean | Prisma.PatientCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["patient"]>
@@ -635,6 +777,7 @@ export type PatientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 export type PatientSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   contactId?: boolean
+  externalId?: boolean
   address1?: boolean
   address2?: boolean
   zip?: boolean
@@ -648,6 +791,7 @@ export type PatientSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type PatientSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   contactId?: boolean
+  externalId?: boolean
   address1?: boolean
   address2?: boolean
   zip?: boolean
@@ -661,6 +805,7 @@ export type PatientSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type PatientSelectScalar = {
   id?: boolean
   contactId?: boolean
+  externalId?: boolean
   address1?: boolean
   address2?: boolean
   zip?: boolean
@@ -670,9 +815,10 @@ export type PatientSelectScalar = {
   updatedAt?: boolean
 }
 
-export type PatientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "contactId" | "address1" | "address2" | "zip" | "city" | "state" | "createdAt" | "updatedAt", ExtArgs["result"]["patient"]>
+export type PatientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "contactId" | "externalId" | "address1" | "address2" | "zip" | "city" | "state" | "createdAt" | "updatedAt", ExtArgs["result"]["patient"]>
 export type PatientInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
+  payments?: boolean | Prisma.Patient$paymentsArgs<ExtArgs>
   appointments?: boolean | Prisma.Patient$appointmentsArgs<ExtArgs>
   _count?: boolean | Prisma.PatientCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -687,11 +833,13 @@ export type $PatientPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   name: "Patient"
   objects: {
     contact: Prisma.$ContactPayload<ExtArgs>
+    payments: Prisma.$PaymentsPayload<ExtArgs>[]
     appointments: Prisma.$AppointmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     contactId: string
+    externalId: string | null
     address1: string | null
     address2: string | null
     zip: string | null
@@ -1094,6 +1242,7 @@ readonly fields: PatientFieldRefs;
 export interface Prisma__PatientClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   contact<T extends Prisma.ContactDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContactDefaultArgs<ExtArgs>>): Prisma.Prisma__ContactClient<runtime.Types.Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  payments<T extends Prisma.Patient$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Patient$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   appointments<T extends Prisma.Patient$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Patient$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1126,6 +1275,7 @@ export interface Prisma__PatientClient<T, Null = never, ExtArgs extends runtime.
 export interface PatientFieldRefs {
   readonly id: Prisma.FieldRef<"Patient", 'String'>
   readonly contactId: Prisma.FieldRef<"Patient", 'String'>
+  readonly externalId: Prisma.FieldRef<"Patient", 'String'>
   readonly address1: Prisma.FieldRef<"Patient", 'String'>
   readonly address2: Prisma.FieldRef<"Patient", 'String'>
   readonly zip: Prisma.FieldRef<"Patient", 'String'>
@@ -1526,6 +1676,30 @@ export type PatientDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Patients to delete.
    */
   limit?: number
+}
+
+/**
+ * Patient.payments
+ */
+export type Patient$paymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Payments
+   */
+  select?: Prisma.PaymentsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Payments
+   */
+  omit?: Prisma.PaymentsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaymentsInclude<ExtArgs> | null
+  where?: Prisma.PaymentsWhereInput
+  orderBy?: Prisma.PaymentsOrderByWithRelationInput | Prisma.PaymentsOrderByWithRelationInput[]
+  cursor?: Prisma.PaymentsWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PaymentsScalarFieldEnum | Prisma.PaymentsScalarFieldEnum[]
 }
 
 /**

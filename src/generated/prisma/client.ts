@@ -75,6 +75,11 @@ export type Event = Prisma.EventModel
  */
 export type Service = Prisma.ServiceModel
 /**
+ * Model Payments
+ * 
+ */
+export type Payments = Prisma.PaymentsModel
+/**
  * Model Provider
  * 
  */

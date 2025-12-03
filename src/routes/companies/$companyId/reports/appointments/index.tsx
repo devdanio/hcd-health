@@ -103,6 +103,122 @@ function AppointmentsPage() {
     return { chartConfig: config, serviceKeys: serviceKeysArray }
   }, [analyticsData])
 
+  // Process appointments for count chart (using useLiveQuery data)
+  const appointmentCountData = useMemo(() => {
+    if (!appointments || !services) return []
+
+    // Calculate start date based on timeRange
+    let startDate = new Date(0)
+    if (timeRange !== 'all') {
+      const days = { '7d': 7, '30d': 30, '90d': 90 }[timeRange]
+      startDate = new Date()
+      startDate.setDate(startDate.getDate() - days)
+      startDate.setHours(0, 0, 0, 0)
+    }
+
+    // Filter appointments by time range
+    const filteredAppointments = appointments.filter((apt) => {
+      const aptDate = new Date(apt.dateOfService)
+      return timeRange === 'all' || aptDate >= startDate
+    })
+
+    // Create a map of serviceId to service name
+    const serviceMap = new Map<string, string>()
+    services.forEach((service) => {
+      serviceMap.set(service.id, service.name)
+    })
+
+    // Group appointments by date and serviceId
+    const grouped = new Map<string, Map<string, number>>()
+
+    filteredAppointments.forEach((apt) => {
+      const aptDate = new Date(apt.dateOfService)
+      let dateKey: string
+
+      if (groupBy === 'day') {
+        dateKey = dayjs(aptDate).format('YYYY-MM-DD')
+      } else if (groupBy === 'week') {
+        dateKey = dayjs(aptDate).format('YYYY-[W]WW')
+      } else {
+        dateKey = dayjs(aptDate).format('YYYY-MM')
+      }
+
+      const serviceName =
+        apt.serviceId && serviceMap.has(apt.serviceId)
+          ? serviceMap.get(apt.serviceId)!
+          : 'Unknown'
+
+      if (!grouped.has(dateKey)) {
+        grouped.set(dateKey, new Map())
+      }
+
+      const serviceCounts = grouped.get(dateKey)!
+      serviceCounts.set(
+        serviceName,
+        (serviceCounts.get(serviceName) || 0) + 1,
+      )
+    })
+
+    // Convert to array format for chart
+    const result: Array<Record<string, string | number>> = []
+    const allServiceNames = new Set<string>()
+
+    grouped.forEach((serviceCounts, dateKey) => {
+      serviceCounts.forEach((_, serviceName) => {
+        allServiceNames.add(serviceName)
+      })
+    })
+
+    grouped.forEach((serviceCounts, dateKey) => {
+      const dataPoint: Record<string, string | number> = { date: dateKey }
+      allServiceNames.forEach((serviceName) => {
+        dataPoint[serviceName] = serviceCounts.get(serviceName) || 0
+      })
+      result.push(dataPoint)
+    })
+
+    // Sort by date
+    result.sort((a, b) => {
+      const dateA = a.date as string
+      const dateB = b.date as string
+      return dateA.localeCompare(dateB)
+    })
+
+    return result
+  }, [appointments, services, timeRange, groupBy])
+
+  // Generate chart config for appointment counts
+  const appointmentCountChartConfig = useMemo(() => {
+    if (!appointmentCountData || appointmentCountData.length === 0) {
+      return { chartConfig: {} as ChartConfig, serviceKeys: [] as string[] }
+    }
+
+    // Extract all unique service keys from the data
+    const keys = new Set<string>()
+    appointmentCountData.forEach((dataPoint) => {
+      Object.keys(dataPoint).forEach((key) => {
+        if (key !== 'date') {
+          keys.add(key)
+        }
+      })
+    })
+
+    const serviceKeysArray = Array.from(keys)
+
+    // Generate chart config for each service
+    const config: ChartConfig = {}
+    serviceKeysArray.forEach((serviceName, index) => {
+      // Cycle through chart colors 1-5
+      const colorIndex = (index % 5) + 1
+      config[serviceName] = {
+        label: serviceName,
+        color: `var(--chart-${colorIndex})`,
+      }
+    })
+
+    return { chartConfig: config, serviceKeys: serviceKeysArray }
+  }, [appointmentCountData])
+
   if (
     appointments === undefined ||
     analyticsData === undefined ||
@@ -248,6 +364,74 @@ function AppointmentsPage() {
                     key={serviceName}
                     dataKey={serviceName}
                     fill={chartConfig[serviceName]?.color}
+                    stackId="a"
+                    radius={[4, 4, 0, 0]}
+                  />
+                ))}
+              </BarChart>
+            </ChartContainer>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Appointment Count Chart Card */}
+      <Card className="mb-6">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>Appointment Count Over Time</CardTitle>
+            <CardDescription>
+              Total number of appointments by service grouped by{' '}
+              {groupBy === 'day'
+                ? 'day'
+                : groupBy === 'week'
+                  ? 'week'
+                  : 'month'}
+            </CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {appointmentCountData.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              No appointments data available for this time range
+            </div>
+          ) : (
+            <ChartContainer
+              config={appointmentCountChartConfig.chartConfig}
+              className="h-[180px] w-full"
+            >
+              <BarChart
+                accessibilityLayer
+                data={appointmentCountData}
+                width={800}
+              >
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="date"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                  tickFormatter={(value) => {
+                    if (groupBy === 'day') {
+                      return dayjs(value).format('MMM D')
+                    } else if (groupBy === 'week') {
+                      // Format: 2025-W05 -> Week 5
+                      const weekNum = value.split('-W')[1]
+                      return `Week ${weekNum}`
+                    } else {
+                      // Format: 2025-03 -> Mar
+                      return dayjs(value).format('MMM')
+                    }
+                  }}
+                />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent />}
+                />
+                {appointmentCountChartConfig.serviceKeys.map((serviceName) => (
+                  <Bar
+                    key={serviceName}
+                    dataKey={serviceName}
+                    fill={appointmentCountChartConfig.chartConfig[serviceName]?.color}
                     stackId="a"
                     radius={[4, 4, 0, 0]}
                   />

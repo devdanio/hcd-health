@@ -11,6 +11,7 @@ import { dirname, join } from 'path'
 import { config } from 'dotenv'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '../../../src/generated/prisma/client'
+import { cuid } from 'zod'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -176,11 +177,6 @@ async function main() {
       },
     })
 
-    console.log(`Found ${services.length} service(s):`)
-    services.forEach((service) => {
-      console.log(`  - ${service.name} (${service.id})`)
-    })
-
     // Create a map of service name to serviceId for quick lookup
     const serviceMap = new Map<string, string>()
     services.forEach((service) => {
@@ -194,166 +190,95 @@ async function main() {
     let errorCount = 0
     let skippedCount = 0
 
-    for (let i = 0; i < appointments.length; i++) {
-      const apt = appointments[i]
+    for (const apt of appointments) {
+      const patientName = apt.Patient?.trim()
+      const dateOfServiceStr = apt['Date of Service']
+      const serviceName = apt.Service?.trim()
 
-      try {
-        // Parse patient name from Excel
-        const patientName = apt.Patient?.trim()
-        const dateOfServiceStr = apt['Date of Service']
-        const serviceName = apt.Service?.trim()
+      if (!patientName || !dateOfServiceStr || !serviceName) {
+        console.log(
+          `⚠️  Skipping row: No patient name, date of service, or service name`,
+        )
+        skippedCount++
+        continue
+      }
 
-        if (!patientName) {
-          console.log(`⚠️  Skipping row ${i + 1}: No patient name`)
-          skippedCount++
-          continue
-        }
+      const dateOfService = parseDate(dateOfServiceStr)
+      if (!dateOfService) {
+        console.log(`⚠️  Skipping row: Invalid date of service`)
+        skippedCount++
+        continue
+      }
 
-        // Match service name to serviceId
-        let serviceId: string | null = null
-        if (serviceName) {
-          serviceId = serviceMap.get(serviceName) || null
-          if (!serviceId) {
-            console.log(
-              `⚠️  Skipping row ${i + 1}: Service "${serviceName}" not found in services table for ${patientName}`,
-            )
-            skippedCount++
-            continue
-          }
-        }
+      let contact = await prisma.contact.findFirst({
+        where: {
+          companyId: COMPANY_ID,
+          fullName: patientName,
+        },
+        include: {
+          patient: true,
+        },
+      })
 
-        // Parse date of service
-        const dateOfService = parseDate(dateOfServiceStr)
-
-        if (!dateOfService) {
-          console.log(
-            `⚠️  Skipping row ${i + 1}: Invalid or missing date of service for ${patientName}`,
-          )
-          skippedCount++
-          continue
-        }
-
-        // Upsert contact by fullName
-        const trimmedName = patientName.trim()
-        let contact = await prisma.contact.findFirst({
-          where: {
+      if (!contact) {
+        console.log(`⚠️  Creating new contact: ${patientName}`)
+        contact = await prisma.contact.create({
+          data: {
             companyId: COMPANY_ID,
-            fullName: trimmedName,
+            fullName: patientName,
+            dateOfBirth: parseDate(apt['Patient DoB']) || undefined,
+            patient: {
+              create: {
+                id: crypto.randomUUID(),
+              },
+            },
           },
           include: {
             patient: true,
           },
         })
-
-        if (contact) {
-          // Update existing contact
-          contact = await prisma.contact.update({
-            where: { id: contact.id },
-            data: {
-              fullName: trimmedName,
-            },
-            include: {
-              patient: true,
-            },
-          })
-        } else {
-          // Create new contact
-          contact = await prisma.contact.create({
-            data: {
-              companyId: COMPANY_ID,
-              fullName: trimmedName,
-            },
-            include: {
-              patient: true,
-            },
-          })
-        }
-
-        // Upsert patient for this contact
-        let patient
-        if (contact.patient) {
-          // Patient already exists, use it
-          patient = contact.patient
-        } else {
-          // Create new patient
-          patient = await prisma.patient.create({
-            data: {
-              contactId: contact.id,
-            },
-          })
-        }
-
-        // Check if appointment already exists (by patientId and dateOfService)
-        // Note: The schema has a unique constraint on [patientId, dateOfService, serviceId]
-        // so we check for existing appointments with the same patient, date, and service
-        let existingAppointment = null
-        try {
-          existingAppointment = await prisma.appointment.findFirst({
-            where: {
-              patientId: patient.id,
-              dateOfService: dateOfService,
-              ...(serviceId ? { serviceId: serviceId } : {}),
-            },
-          })
-        } catch (queryError) {
-          console.error(
-            `❌ Error checking for existing appointment (row ${i + 1}):`,
-            queryError instanceof Error
-              ? queryError.message
-              : String(queryError),
-          )
-          // Continue to try creating anyway - the unique constraint will catch duplicates
-        }
-
-        if (existingAppointment) {
-          console.log(
-            `⚠️  Skipping row ${i + 1}: Appointment already exists for ${patientName} on ${dateOfService.toISOString()}`,
-          )
-          skippedCount++
-          continue
-        }
-
-        // Create appointment
-        try {
-          await prisma.appointment.create({
-            data: {
-              companyId: COMPANY_ID,
-              patientId: patient.id,
-              dateOfService: dateOfService,
-              providerId: PROVIDER_ID,
-              serviceId: serviceId,
-            },
-          })
-        } catch (createError) {
-          // Check if it's a unique constraint violation (duplicate)
-          console.log('createError', createError)
-          if (
-            createError instanceof Error &&
-            createError.message.includes('Unique constraint')
-          ) {
-            console.log(
-              `⚠️  Skipping row ${i + 1}: Appointment already exists (unique constraint) for ${patientName} on ${dateOfService.toISOString()}: ${JSON.stringify(existingAppointment)}`,
-            )
-            skippedCount++
-            continue
-          }
-          // Re-throw if it's a different error
-          throw createError
-        }
-
-        successCount++
-
-        // Log progress every 50 appointments
-        if ((i + 1) % 50 === 0) {
-          console.log(`Progress: ${i + 1}/${appointments.length} processed`)
-        }
-      } catch (error) {
-        errorCount++
-        console.error(
-          `❌ Failed to process appointment ${i + 1}:`,
-          error instanceof Error ? error.message : String(error),
-        )
       }
+
+      let patient = contact.patient
+
+      if (!patient) {
+        patient = await prisma.patient.create({
+          data: {
+            contact: {
+              connect: {
+                id: contact.id,
+              },
+            },
+          },
+        })
+      }
+
+      const serviceId = serviceMap.get(serviceName)
+      if (!serviceId) {
+        console.log(
+          `⚠️  Skipping row: Service "${serviceName}" not found in services table for ${patientName}`,
+        )
+        skippedCount++
+        continue
+      }
+
+      console.log(
+        `✅ Creating new appointment: ${patientName} on ${dateOfService} for service ${serviceName}`,
+      )
+      const appointment = await prisma.appointment.create({
+        data: {
+          companyId: COMPANY_ID,
+          patientId: patient.id,
+          dateOfService: dateOfService,
+          providerId: PROVIDER_ID,
+          serviceId: serviceId,
+        },
+      })
+      successCount++
+
+      console.log(
+        `✅ Successfully created appointment: ${appointment.id} for ${patientName} on ${dateOfService}`,
+      )
     }
 
     console.log(`\n📊 Upload Summary:`)

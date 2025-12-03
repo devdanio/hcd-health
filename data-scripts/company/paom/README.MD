@@ -1,10 +1,8 @@
 # Steps for import
 
-## Paitents
+## Upsert new patients
 
-https://ehr.unifiedpractice.com/Public/app/#/reports/patient-summary-report
-Export
-$ bun upsert-patients.ts
+$ bun data-scripts/company/paom/fetch-patients.ts
 
 ## Appointments
 

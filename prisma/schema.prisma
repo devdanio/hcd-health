@@ -53,7 +53,7 @@ model Company {
   oauthStates  OAuthState[]
   cmsPages     CmsPage[]
   ghlContacts  GhlContact[]
-
+  payments Payments[]
   @@index([apiKey])
 }
 
@@ -200,6 +200,29 @@ model Service {
   @@index([companyId])
 }
 
+enum PaymentStatus {
+  pending
+  posted
+  failed
+}
+model Payments{
+  id String @id @default(cuid())
+  externalId String @unique
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  amount_in_cents Int
+  posted_date DateTime
+  status PaymentStatus
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([companyId])
+  @@index([externalId])
+}
+
+
+
 // Providers
 model Provider {
   id        String  @id @default(cuid())
@@ -240,8 +263,6 @@ model Appointment {
 
   procedures AppointmentProcedure[]
 
-
-  @@unique([patientId, dateOfService, serviceId])
 }
 
 // Appointment Procedures - Revenue tracking
@@ -264,6 +285,8 @@ model Patient {
   contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
   contactId String  @unique
 
+  // EHR ID
+  externalId String? @unique
   address1 String?
   address2 String?
   zip String?
@@ -279,6 +302,7 @@ model Patient {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  payments Payments[]
   appointments Appointment[]
 
   @@index([contactId])

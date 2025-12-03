@@ -58,6 +58,7 @@
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/router-plugin": "^1.139.10",
     "@turf/turf": "^7.3.1",
+    "cheerio": "^1.1.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cookie": "0.6.0",

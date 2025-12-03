@@ -240,7 +240,6 @@ export type AppointmentOrderByWithRelationInput = {
 
 export type AppointmentWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  patientId_dateOfService_serviceId?: Prisma.AppointmentPatientIdDateOfServiceServiceIdCompoundUniqueInput
   AND?: Prisma.AppointmentWhereInput | Prisma.AppointmentWhereInput[]
   OR?: Prisma.AppointmentWhereInput[]
   NOT?: Prisma.AppointmentWhereInput | Prisma.AppointmentWhereInput[]
@@ -257,7 +256,7 @@ export type AppointmentWhereUniqueInput = Prisma.AtLeast<{
   serviceRel?: Prisma.XOR<Prisma.ServiceNullableScalarRelationFilter, Prisma.ServiceWhereInput> | null
   provider?: Prisma.XOR<Prisma.ProviderNullableScalarRelationFilter, Prisma.ProviderWhereInput> | null
   procedures?: Prisma.AppointmentProcedureListRelationFilter
-}, "id" | "patientId_dateOfService_serviceId">
+}, "id">
 
 export type AppointmentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -381,12 +380,6 @@ export type AppointmentListRelationFilter = {
 
 export type AppointmentOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type AppointmentPatientIdDateOfServiceServiceIdCompoundUniqueInput = {
-  patientId: string
-  dateOfService: Date | string
-  serviceId: string
 }
 
 export type AppointmentCountOrderByAggregateInput = {
