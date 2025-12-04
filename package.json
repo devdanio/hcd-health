@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev --port 3000",
-    "build": "vite build && npm run build:widget",
+    "build": "npx prisma db push && npx prisma generate && vite build && npm run build:widget",
     "build:widget": "cd public-components/chat-widget && npm install && npm run build",
     "serve": "vite preview",
     "test": "vitest run",
