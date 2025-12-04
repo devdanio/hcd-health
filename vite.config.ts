@@ -14,9 +14,9 @@ const config = defineConfig(({ mode }) => ({
       cookie: 'cookie-es',
     },
   },
-  ssr: {
-    external: ['@clerk/backend'],
-  },
+  // ssr: {
+  //   external: ['@clerk/backend'],
+  // },
   plugins: [
     // this is the plugin that enables path aliases
     viteTsConfigPaths({
