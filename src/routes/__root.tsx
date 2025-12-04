@@ -128,7 +128,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <QueryClientProvider client={queryClient}>
           <CollectionsContext.Provider value={collections}>
             {children}
-            <TanStackDevtools
+            {/* <TanStackDevtools
               config={{
                 position: 'bottom-right',
               }}
@@ -138,7 +138,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                   render: <TanStackRouterDevtoolsPanel />,
                 },
               ]}
-            />
+            /> */}
           </CollectionsContext.Provider>
         </QueryClientProvider>
         <Scripts />
