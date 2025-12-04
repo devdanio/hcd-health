@@ -14,9 +14,15 @@ const config = defineConfig(({ mode }) => ({
       cookie: 'cookie-es',
     },
   },
-  // ssr: {
-  //   external: ['@clerk/backend'],
-  // },
+  ssr: {
+    external: [
+      '@clerk/backend',
+      '@prisma/client',
+      '@prisma/adapter-pg',
+      'pg',
+      'pg-pool',
+    ],
+  },
   plugins: [
     // this is the plugin that enables path aliases
     viteTsConfigPaths({
