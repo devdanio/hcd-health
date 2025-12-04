@@ -16,7 +16,6 @@ const config = defineConfig(({ mode }) => ({
   },
   ssr: {
     external: [
-      '@clerk/backend',
       '@prisma/client',
       '@prisma/adapter-pg',
       'pg',
