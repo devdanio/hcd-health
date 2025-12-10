@@ -461,6 +461,85 @@ function AppointmentsPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Revenue Summary by Service */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Revenue Summary by Service</CardTitle>
+          <CardDescription>
+            Total revenue for each service in the selected time period (
+            {timeRange === '7d'
+              ? 'Last 7 days'
+              : timeRange === '30d'
+                ? 'Last 30 days'
+                : timeRange === '90d'
+                  ? 'Last 90 days'
+                  : 'All time'}
+            )
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {!revenueByService || revenueByService.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              No revenue data available for this time range
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {revenueByService
+                .sort((a, b) => b.revenue - a.revenue)
+                .map((service) => (
+                  <div
+                    key={service.serviceId}
+                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors"
+                  >
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-lg">
+                        {service.service}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        Service ID: {service.serviceId}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold">
+                        $
+                        {service.revenue.toLocaleString('en-US', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Total revenue
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              <div className="flex items-center justify-between p-4 border-2 border-primary rounded-lg bg-primary/5">
+                <div className="flex-1">
+                  <h3 className="font-bold text-lg">Total</h3>
+                  <p className="text-sm text-muted-foreground">
+                    All services combined
+                  </p>
+                </div>
+                <div className="text-right">
+                  <div className="text-2xl font-bold text-primary">
+                    $
+                    {revenueByService
+                      .reduce((sum, s) => sum + s.revenue, 0)
+                      .toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Total revenue
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }

@@ -2,7 +2,15 @@ import { createFileRoute } from '@tanstack/react-router'
 import { eq, useLiveQuery } from '@tanstack/react-db'
 import { useCollections } from '@/routes/__root'
 import { useMemo } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import {
+  getRevenueByAge,
+  getRevenuePerPatientByService,
+  getPatientsByServiceCount,
+} from '@/collections'
+import {
+  Area,
+  AreaChart,
   Bar,
   BarChart,
   Cell,
@@ -60,6 +68,19 @@ const genderChartConfig = {
   },
 } satisfies ChartConfig
 
+const revenueByAgeChartConfig = {
+  '0-10': { label: '0-10', color: 'hsl(210 100% 70%)' }, // blue-300
+  '10-20': { label: '10-20', color: 'hsl(217 91% 60%)' }, // blue-500
+  '20-30': { label: '20-30', color: 'hsl(142 76% 36%)' }, // green-600
+  '30-40': { label: '30-40', color: 'hsl(173 80% 40%)' }, // teal-600
+  '40-50': { label: '40-50', color: 'hsl(43 96% 56%)' }, // yellow-500
+  '50-60': { label: '50-60', color: 'hsl(25 95% 53%)' }, // orange-500
+  '60-70': { label: '60-70', color: 'hsl(340 82% 52%)' }, // pink-500
+  '70-80': { label: '70-80', color: 'hsl(291 47% 51%)' }, // purple-500
+  '80-90': { label: '80-90', color: 'hsl(262 52% 47%)' }, // violet-600
+  '90-100': { label: '90-100', color: 'hsl(215 16% 47%)' }, // gray-500
+} satisfies ChartConfig
+
 function RouteComponent() {
   const { companyId } = Route.useParams()
   const { contactsCollection } = useCollections()
@@ -70,6 +91,24 @@ function RouteComponent() {
       .from({ contact: contactsCollection })
       .where(({ contact }) => eq(contact.companyId, companyId)),
   )
+
+  // Fetch revenue by age data
+  const { data: revenueByAge } = useQuery({
+    queryKey: ['revenue-by-age', companyId],
+    queryFn: () => getRevenueByAge({ data: { companyId } }),
+  })
+
+  // Fetch revenue per patient by service
+  const { data: revenuePerPatientByService } = useQuery({
+    queryKey: ['revenue-per-patient-by-service', companyId],
+    queryFn: () => getRevenuePerPatientByService({ data: { companyId } }),
+  })
+
+  // Fetch patients by service count distribution
+  const { data: patientsByServiceCount } = useQuery({
+    queryKey: ['patients-by-service-count', companyId],
+    queryFn: () => getPatientsByServiceCount({ data: { companyId } }),
+  })
 
   // Calculate age distribution grouped by 10-year intervals
   const ageDistribution = useMemo(() => {
@@ -146,6 +185,12 @@ function RouteComponent() {
     (sum, item) => sum + item.count,
     0,
   )
+
+  // Calculate total revenue from age groups
+  const totalRevenue = useMemo(() => {
+    if (!revenueByAge) return 0
+    return revenueByAge.reduce((sum, item) => sum + item.revenue, 0)
+  }, [revenueByAge])
 
   if (patients === undefined) {
     return (
@@ -246,7 +291,7 @@ function RouteComponent() {
           <PatientLocationMap patients={patients} />
         </div>
 
-        {/* Second row: Gender Distribution Pie Chart (50% width) */}
+        {/* Second row: Gender Distribution and Revenue by Age Pie Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card className="lg:col-span-1">
             <CardHeader>
@@ -298,7 +343,233 @@ function RouteComponent() {
               )}
             </CardContent>
           </Card>
+
+          {/* Revenue by Age Distribution Pie Chart */}
+          <Card className="lg:col-span-1">
+            <CardHeader>
+              <CardTitle>Revenue by Age Group</CardTitle>
+              <CardDescription>
+                $
+                {totalRevenue.toLocaleString('en-US', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}{' '}
+                total revenue
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {!revenueByAge || revenueByAge.length === 0 || totalRevenue === 0 ? (
+                <div className="flex h-[400px] items-center justify-center text-muted-foreground">
+                  No revenue data available
+                </div>
+              ) : (
+                <ChartContainer
+                  config={revenueByAgeChartConfig}
+                  className="mx-auto aspect-square max-h-[400px] w-full max-w-full"
+                >
+                  <PieChart>
+                    <ChartTooltip
+                      cursor={false}
+                      content={<ChartTooltipContent hideLabel />}
+                    />
+                    <Pie
+                      data={revenueByAge}
+                      dataKey="revenue"
+                      nameKey="ageGroup"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={120}
+                      label={({ ageGroup, percent }) =>
+                        percent > 0.05
+                          ? `${ageGroup}: ${(percent * 100).toFixed(0)}%`
+                          : ''
+                      }
+                    >
+                      {revenueByAge.map((entry, index) => {
+                        const colorKey =
+                          entry.ageGroup as keyof typeof revenueByAgeChartConfig
+                        const config = revenueByAgeChartConfig[colorKey]
+                        return (
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={config?.color || 'hsl(215 16% 47%)'}
+                          />
+                        )
+                      })}
+                    </Pie>
+                  </PieChart>
+                </ChartContainer>
+              )}
+            </CardContent>
+          </Card>
         </div>
+
+        {/* Third row: Revenue Per Patient by Service */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Revenue Per Patient by Service</CardTitle>
+            <CardDescription>
+              Average revenue generated per unique patient for each service
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {!revenuePerPatientByService ||
+            revenuePerPatientByService.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                No service revenue data available
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {revenuePerPatientByService
+                  .filter((service) => service.patientCount > 0)
+                  .map((service) => (
+                    <div
+                      key={service.serviceId}
+                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors"
+                    >
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-lg">
+                          {service.serviceName}
+                        </h3>
+                        <div className="flex gap-4 mt-1">
+                          <p className="text-sm text-muted-foreground">
+                            {service.patientCount.toLocaleString()}{' '}
+                            {service.patientCount === 1 ? 'patient' : 'patients'}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            Total: $
+                            {service.totalRevenue.toLocaleString('en-US', {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold">
+                          $
+                          {service.revenuePerPatient.toLocaleString('en-US', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Per patient
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Fourth row: Patient Service Diversity Chart */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Patient Service Diversity</CardTitle>
+            <CardDescription>
+              Distribution of patients by number of unique services received
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {!patientsByServiceCount || patientsByServiceCount.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                No patient service data available
+              </div>
+            ) : (
+              <ChartContainer
+                config={{
+                  1: { label: '1 Service', color: 'hsl(210 100% 70%)' },
+                  2: { label: '2 Services', color: 'hsl(217 91% 60%)' },
+                  3: { label: '3 Services', color: 'hsl(142 76% 36%)' },
+                  4: { label: '4 Services', color: 'hsl(173 80% 40%)' },
+                  5: { label: '5 Services', color: 'hsl(43 96% 56%)' },
+                  6: { label: '6 Services', color: 'hsl(25 95% 53%)' },
+                  7: { label: '7 Services', color: 'hsl(340 82% 52%)' },
+                  8: { label: '8 Services', color: 'hsl(291 47% 51%)' },
+                  9: { label: '9 Services', color: 'hsl(262 52% 47%)' },
+                  10: { label: '10 Services', color: 'hsl(215 16% 47%)' },
+                }}
+                className="mx-auto aspect-square max-h-[400px] w-full max-w-full"
+              >
+                <PieChart>
+                  <ChartTooltip
+                    cursor={false}
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        const data = payload[0].payload
+                        return (
+                          <div className="rounded-lg border bg-background p-2 shadow-sm">
+                            <div className="flex flex-col gap-2">
+                              <div className="flex flex-col">
+                                <span className="text-[0.70rem] uppercase text-muted-foreground">
+                                  Services
+                                </span>
+                                <span className="font-bold text-foreground">
+                                  {data.serviceCount}{' '}
+                                  {data.serviceCount === 1
+                                    ? 'service'
+                                    : 'services'}
+                                </span>
+                              </div>
+                              <div className="flex flex-col">
+                                <span className="text-[0.70rem] uppercase text-muted-foreground">
+                                  Patients
+                                </span>
+                                <span className="font-bold text-foreground">
+                                  {data.patientCount.toLocaleString()}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      }
+                      return null
+                    }}
+                  />
+                  <Pie
+                    data={patientsByServiceCount.filter((d) => d.patientCount > 0)}
+                    dataKey="patientCount"
+                    nameKey="serviceCount"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={120}
+                    label={({ serviceCount, percent }) =>
+                      percent > 0.05
+                        ? `${serviceCount} ${serviceCount === 1 ? 'service' : 'services'}: ${(percent * 100).toFixed(0)}%`
+                        : ''
+                    }
+                  >
+                    {patientsByServiceCount
+                      .filter((d) => d.patientCount > 0)
+                      .map((entry, index) => {
+                        // Use predefined colors or cycle through them
+                        const colors = [
+                          'hsl(210 100% 70%)',
+                          'hsl(217 91% 60%)',
+                          'hsl(142 76% 36%)',
+                          'hsl(173 80% 40%)',
+                          'hsl(43 96% 56%)',
+                          'hsl(25 95% 53%)',
+                          'hsl(340 82% 52%)',
+                          'hsl(291 47% 51%)',
+                          'hsl(262 52% 47%)',
+                          'hsl(215 16% 47%)',
+                        ]
+                        return (
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={colors[index % colors.length]}
+                          />
+                        )
+                      })}
+                  </Pie>
+                </PieChart>
+              </ChartContainer>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   )
