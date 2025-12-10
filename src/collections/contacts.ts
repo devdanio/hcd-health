@@ -48,6 +48,10 @@ export const getPatientsByServiceCountSchema = z.object({
   companyId: z.string(),
 })
 
+export const getPatientServiceJourneySchema = z.object({
+  companyId: z.string(),
+})
+
 export const createContactSchema = z.object({
   companyId: z.string(),
   email: z.email().nullable(),
@@ -346,6 +350,129 @@ export const getPatientsByServiceCount = createServerFn({ method: 'GET' })
     }
 
     return distribution
+  })
+
+/**
+ * Get patient service journey for Sankey diagram
+ * Tracks the sequence of unique services patients receive
+ */
+export const getPatientServiceJourney = createServerFn({ method: 'GET' })
+  .inputValidator(getPatientServiceJourneySchema)
+  .handler(async ({ data }) => {
+    // Get all appointments with their service and charge dates
+    const appointments = await prisma.appointment.findMany({
+      where: {
+        companyId: data.companyId,
+        serviceId: { not: null },
+      },
+      include: {
+        serviceRel: {
+          select: { name: true },
+        },
+        procedures: {
+          select: { chargeDate: true },
+          orderBy: { chargeDate: 'asc' },
+        },
+      },
+      orderBy: { dateOfService: 'asc' },
+    })
+
+    // Group appointments by contact and build service sequences
+    const contactJourneys = new Map<
+      string,
+      Array<{ serviceName: string; chargeDate: Date }>
+    >()
+
+    for (const appointment of appointments) {
+      if (!appointment.serviceRel) continue
+
+      const serviceName = appointment.serviceRel.name
+      const contactId = appointment.contactId
+
+      // Use the earliest charge date from procedures, or appointment date
+      const chargeDate =
+        appointment.procedures.length > 0 && appointment.procedures[0].chargeDate
+          ? appointment.procedures[0].chargeDate
+          : appointment.dateOfService
+
+      if (!contactJourneys.has(contactId)) {
+        contactJourneys.set(contactId, [])
+      }
+
+      contactJourneys.get(contactId)!.push({
+        serviceName,
+        chargeDate,
+      })
+    }
+
+    // Get all unique services for this company to create nodes
+    const allServices = await prisma.service.findMany({
+      where: { companyId: data.companyId },
+      select: { name: true },
+    })
+
+    const serviceNames = allServices.map((s) => s.name)
+
+    // Build patient sequences and count position-based transitions
+    const positionCounts = new Map<string, number>() // e.g., "0-Chiro" -> count
+    const transitions = new Map<string, number>() // e.g., "0-Chiro|1-OT" -> count
+    let maxPosition = 0
+
+    for (const [contactId, journey] of contactJourneys.entries()) {
+      // Sort by charge date
+      journey.sort((a, b) => a.chargeDate.getTime() - b.chargeDate.getTime())
+
+      // Build sequence of unique services (true Set behavior - no duplicates at all)
+      const serviceSequence: string[] = []
+      const seenServices = new Set<string>()
+
+      for (const step of journey) {
+        // Only add if we haven't seen this service before for this patient
+        if (!seenServices.has(step.serviceName)) {
+          serviceSequence.push(step.serviceName)
+          seenServices.add(step.serviceName)
+        }
+      }
+
+      // Track max position
+      maxPosition = Math.max(maxPosition, serviceSequence.length - 1)
+
+      // Count at each position
+      for (let i = 0; i < serviceSequence.length; i++) {
+        const positionKey = `${i}-${serviceSequence[i]}`
+        positionCounts.set(positionKey, (positionCounts.get(positionKey) || 0) + 1)
+      }
+
+      // Count transitions between positions
+      for (let i = 0; i < serviceSequence.length - 1; i++) {
+        const source = `${i}-${serviceSequence[i]}`
+        const target = `${i + 1}-${serviceSequence[i + 1]}`
+        const transitionKey = `${source}|${target}`
+
+        transitions.set(transitionKey, (transitions.get(transitionKey) || 0) + 1)
+      }
+    }
+
+    // Build nodes: One for each service at each position
+    const nodes: Array<{ id: string; name: string }> = []
+    for (let position = 0; position <= maxPosition; position++) {
+      for (const serviceName of serviceNames) {
+        const nodeId = `${position}-${serviceName}`
+        // Only add nodes that actually have patients
+        if (positionCounts.has(nodeId)) {
+          nodes.push({ id: nodeId, name: serviceName })
+        }
+      }
+    }
+
+    // Build links
+    const links: Array<{ source: string; target: string; value: number }> = []
+    for (const [transitionKey, count] of transitions.entries()) {
+      const [source, target] = transitionKey.split('|')
+      links.push({ source, target, value: count })
+    }
+
+    return { nodes, links }
   })
 
 /**

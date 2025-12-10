@@ -7,7 +7,9 @@ import {
   getRevenueByAge,
   getRevenuePerPatientByService,
   getPatientsByServiceCount,
+  getPatientServiceJourney,
 } from '@/collections'
+import Plot from 'react-plotly.js'
 import {
   Area,
   AreaChart,
@@ -109,6 +111,13 @@ function RouteComponent() {
     queryKey: ['patients-by-service-count', companyId],
     queryFn: () => getPatientsByServiceCount({ data: { companyId } }),
   })
+
+  // Fetch patient service journey for Sankey diagram
+  const { data: patientServiceJourney } = useQuery({
+    queryKey: ['patient-service-journey', companyId],
+    queryFn: () => getPatientServiceJourney({ data: { companyId } }),
+  })
+  console.log('patientServiceJourney', patientServiceJourney)
 
   // Calculate age distribution grouped by 10-year intervals
   const ageDistribution = useMemo(() => {
@@ -358,7 +367,9 @@ function RouteComponent() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {!revenueByAge || revenueByAge.length === 0 || totalRevenue === 0 ? (
+              {!revenueByAge ||
+              revenueByAge.length === 0 ||
+              totalRevenue === 0 ? (
                 <div className="flex h-[400px] items-center justify-center text-muted-foreground">
                   No revenue data available
                 </div>
@@ -434,7 +445,9 @@ function RouteComponent() {
                         <div className="flex gap-4 mt-1">
                           <p className="text-sm text-muted-foreground">
                             {service.patientCount.toLocaleString()}{' '}
-                            {service.patientCount === 1 ? 'patient' : 'patients'}
+                            {service.patientCount === 1
+                              ? 'patient'
+                              : 'patients'}
                           </p>
                           <p className="text-sm text-muted-foreground">
                             Total: $
@@ -529,7 +542,9 @@ function RouteComponent() {
                     }}
                   />
                   <Pie
-                    data={patientsByServiceCount.filter((d) => d.patientCount > 0)}
+                    data={patientsByServiceCount.filter(
+                      (d) => d.patientCount > 0,
+                    )}
                     dataKey="patientCount"
                     nameKey="serviceCount"
                     cx="50%"
@@ -567,6 +582,98 @@ function RouteComponent() {
                   </Pie>
                 </PieChart>
               </ChartContainer>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Fifth row: Patient Service Journey Sankey Chart */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Patient Service Journey</CardTitle>
+            <CardDescription>
+              Flow of patients through different services (only shows
+              transitions when service changes)
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {!patientServiceJourney ||
+            !patientServiceJourney.nodes ||
+            patientServiceJourney.nodes.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                No patient journey data available
+              </div>
+            ) : (
+              <div className="w-full">
+                <Plot
+                  data={[
+                    {
+                      type: 'sankey',
+                      orientation: 'h',
+                      node: {
+                        pad: 15,
+                        thickness: 20,
+                        line: {
+                          color: 'black',
+                          width: 0.5,
+                        },
+                        label: patientServiceJourney.nodes.map((n) => n.name),
+                        color: [
+                          '#93c5fd',
+                          '#60a5fa',
+                          '#3b82f6',
+                          '#2563eb',
+                          '#1d4ed8',
+                          '#1e40af',
+                          '#1e3a8a',
+                          '#86efac',
+                          '#4ade80',
+                          '#22c55e',
+                          '#16a34a',
+                          '#15803d',
+                          '#fde047',
+                          '#facc15',
+                          '#eab308',
+                          '#fca5a5',
+                          '#f87171',
+                          '#ef4444',
+                          '#dc2626',
+                          '#b91c1c',
+                        ],
+                      },
+                      link: {
+                        source: patientServiceJourney.links.map((l) => {
+                          const sourceIndex =
+                            patientServiceJourney.nodes.findIndex(
+                              (n) => n.id === l.source,
+                            )
+                          return sourceIndex
+                        }),
+                        target: patientServiceJourney.links.map((l) => {
+                          const targetIndex =
+                            patientServiceJourney.nodes.findIndex(
+                              (n) => n.id === l.target,
+                            )
+                          return targetIndex
+                        }),
+                        value: patientServiceJourney.links.map((l) => l.value),
+                        color: 'rgba(0,0,0,0.2)',
+                      },
+                    },
+                  ]}
+                  layout={{
+                    height: 500,
+                    font: {
+                      size: 12,
+                    },
+                    margin: { l: 20, r: 20, t: 20, b: 20 },
+                  }}
+                  config={{
+                    responsive: true,
+                    displayModeBar: false,
+                  }}
+                  style={{ width: '100%' }}
+                />
+              </div>
             )}
           </CardContent>
         </Card>
