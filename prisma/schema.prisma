@@ -74,6 +74,7 @@ model Company {
 
 enum EhrType {
   unified_practice
+  chirotouch
   ghl
 }
 
@@ -94,13 +95,24 @@ model Contact {
   gender    String?
   dateOfBirth DateTime?
 
+  externalId String? @unique
+  address1 String?
+  address2 String?
+  zip String?
+  city String?
+  state String?
+
+
+  payments Payments[]
+  appointments Appointment[]
+
+
   ghlContactId String?     @unique
   ghlContact   GhlContact? @relation(fields: [ghlContactId], references: [id])
 
   chirotouchAccountId String? @unique
 
   sessions Session[]
-  patient  Patient?
 
   @@index([companyId, email])
   @@index([companyId, phone])
@@ -228,8 +240,8 @@ model Payments{
   amount_in_cents Int
   posted_date DateTime
   status PaymentStatus
-  patientId String
-  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  contactId String
+  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@index([companyId])
@@ -263,8 +275,8 @@ model Appointment {
   companyId String
   company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
-  patient   Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
-  patientId String  
+  contactId String
+  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
 
   dateOfService DateTime
   service       String?
@@ -288,6 +300,13 @@ model AppointmentProcedure {
   procedureCode String
   chargeAmount  Float
 
+  // High level grouping of insurance
+  caseType String?
+  // Specific insurance pan that is paying
+  payerName String?
+
+  chargeDate DateTime?
+
   createdAt DateTime @default(now())
 
   @@index([appointmentId])
@@ -295,33 +314,14 @@ model AppointmentProcedure {
 }
 
 // Patients
-model Patient {
-  id        String  @id @default(cuid())
-  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
-  contactId String  @unique
+// model Patient {
+//   id        String  @id @default(cuid())
+//   contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+//   contactId String  @unique
 
-  // EHR ID
-  externalId String? @unique
-  address1 String?
-  address2 String?
-  zip String?
-  city String?
-  state String?
-  // payerName                String?
-  // memberId                 String?
-  // groupId                  String?
-  // emergencyContactName     String?
-  // emergencyContactPhone    String?
-  // emergencyContactRelation String?
+//   // EHR ID
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  payments Payments[]
-  appointments Appointment[]
-
-  @@index([contactId])
-}
+// }
 
 // OAuth States - CSRF protection
 model OAuthState {

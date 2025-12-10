@@ -1,26 +1,22 @@
 import fs from 'fs'
-import path from 'path'
+import { parse } from 'csv-parse/sync'
 import { fileURLToPath } from 'url'
-import csv from 'csv-parser'
-import 'dotenv/config'
-import { ConvexHttpClient } from 'convex/browser'
-import { api } from 'convex/_generated/api'
-import { Id } from 'convex/_generated/dataModel'
+import { dirname, join } from 'path'
+import { PrismaClient } from '@/generated/prisma/client'
+import { PrismaPg } from '@prisma/adapter-pg'
 
 const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const __dirname = dirname(__filename)
 
-const csvFilePath = path.join(
-  __dirname,
-  'thrive-ar-insurance-pii-redacted-nov-20-2025.csv',
-)
-
-const convex = new ConvexHttpClient(process.env.VITE_CONVEX_URL!)
-const companyId = 'jx777b2jmrhtncf5jxnyt0781d7w0m1n' as Id<'companies'>
+const connectionString = `${process.env.DATABASE_URL}`
+const adapter = new PrismaPg({ connectionString })
+const prisma = new PrismaClient({ adapter })
 
 interface CSVRow {
   'Account #': string
+  Patient: string
   'Case Type': string
+  'Birth Date': string
   'Charge Date': string
   'Charge Age': string
   Procedure: string
@@ -30,6 +26,9 @@ interface CSVRow {
   'Charge Status': string
   'Policy Sequence': string
   Payer: string
+  'Subscriber #': string
+  'Plan Name': string
+  'Plan #': string
   'First Billed Date': string
   'Last Billed Date': string
   'Last Paid Date': string
@@ -49,189 +48,249 @@ interface CSVRow {
   'Patient Payment': string
 }
 
-interface Provider {
-  _id: Id<'providers'>
-  name: string
-  service: Id<'services'>
-  serviceId?: Id<'services'>
-  providerId?: Id<'providers'>
-}
-
-// Parse date from "11/20/2025 16:00:00" format to Unix timestamp
-function parseChargeDate(dateStr: string): number {
-  if (!dateStr) return 0
-  // Extract just the date part (before the space)
-  const datePart = dateStr.split(' ')[0]
-  // Parse MM/DD/YYYY to timestamp
-  const [month, day, year] = datePart.split('/').map(Number)
-  return new Date(year, month - 1, day).getTime()
-}
-
-async function main() {
-  try {
-    console.log('Starting CSV import process...\n')
-
-    // Step 1: Fetch all providers
-    console.log('Step 1: Fetching providers...')
-    const providers = await convex.query(api.providers.list, { companyId })
-    console.log(`Found ${providers.length} provider(s)\n`)
-
-    // Create a map for quick lookup by provider name
-    const providerMap = new Map<string, Provider>()
-    for (const provider of providers) {
-      providerMap.set(provider.name, {
-        _id: provider._id,
-        name: provider.name,
-        service: provider.service,
-        serviceId: provider.service,
-        providerId: provider._id,
-      })
-    }
-
-    console.log('Step 2: Reading CSV rows...\n')
-
-    // Step 2: Read CSV into memory
-    const rows: CSVRow[] = []
-    await new Promise<void>((resolve, reject) => {
-      fs.createReadStream(csvFilePath)
-        .pipe(csv())
-        .on('data', (row: CSVRow) => {
-          rows.push(row)
-        })
-        .on('end', () => {
-          resolve()
-        })
-        .on('error', (error) => {
-          reject(error)
-        })
-    })
-
-    console.log(`Loaded ${rows.length} rows from CSV\n`)
-
-    // Step 3: Create all contacts in parallel
-    console.log('Step 3: Creating contacts in parallel...')
-    const uniqueAccountIds = new Set<string>()
-    const contactPromises: Promise<Id<'contacts'>>[] = []
-    const accountIdToPromiseIndex = new Map<string, number>()
-
-    rows.forEach((row) => {
-      const accountId = row['Account #']?.trim()
-      if (accountId && !uniqueAccountIds.has(accountId)) {
-        uniqueAccountIds.add(accountId)
-        accountIdToPromiseIndex.set(accountId, contactPromises.length)
-        contactPromises.push(
-          convex.mutation(api.contacts.upsertContactByChirotouchAccountId, {
-            companyId,
-            chirotouchAccountId: accountId,
-          }),
-        )
-      }
-    })
-
-    const contactIds = await Promise.all(contactPromises)
-    const contactMap = new Map<string, Id<'contacts'>>()
-    uniqueAccountIds.forEach((accountId) => {
-      const index = accountIdToPromiseIndex.get(accountId)!
-      contactMap.set(accountId, contactIds[index])
-    })
-    console.log(`✅ Created ${contactIds.length} contact(s)\n`)
-
-    // Step 4: Create all appointments in parallel
-    console.log('Step 4: Creating appointments in parallel...')
-    const appointmentPromises: Promise<Id<'appointments'>>[] = []
-    const appointmentKeys: string[] = []
-    const seenAppointments = new Set<string>()
-
-    rows.forEach((row, index) => {
-      const accountId = row['Account #']?.trim()
-      const chargeDate = row['Charge Date']?.trim()
-      const providerName = row['Provider']?.trim()
-
-      if (!accountId || !chargeDate) {
-        return
-      }
-
-      const dateTimestamp = parseChargeDate(chargeDate)
-      const appointmentKey = `${accountId}|${dateTimestamp}`
-
-      if (!seenAppointments.has(appointmentKey)) {
-        seenAppointments.add(appointmentKey)
-        const contactId = contactMap.get(accountId)!
-        const provider = providerMap.get(providerName)
-
-        if (!provider && providerName) {
-          console.warn(
-            `⚠️  Row ${index + 1}: Provider "${providerName}" not found in providers list`,
-          )
-        }
-
-        appointmentKeys.push(appointmentKey)
-        appointmentPromises.push(
-          convex.mutation(api.appointments.createAppointmentWithContact, {
-            companyId,
-            contactId,
-            patientName: undefined,
-            dateOfService: dateTimestamp,
-            service: undefined,
-            serviceId: provider?.serviceId,
-            providerId: provider?.providerId,
-          }),
-        )
-      }
-    })
-
-    const appointmentIds = await Promise.all(appointmentPromises)
-    const appointmentMap = new Map<string, Id<'appointments'>>()
-    appointmentKeys.forEach((key, index) => {
-      appointmentMap.set(key, appointmentIds[index])
-    })
-    console.log(`✅ Created ${appointmentIds.length} appointment(s)\n`)
-
-    // Step 5: Create all procedures in parallel
-    console.log('Step 5: Creating appointment procedures in parallel...')
-    const procedurePromises: Promise<Id<'appointmentProcedures'>>[] = []
-
-    rows.forEach((row) => {
-      const accountId = row['Account #']?.trim()
-      const chargeDate = row['Charge Date']?.trim()
-      const procedureCode = row['Procedure']?.trim()
-      const chargeAmount = parseFloat(row['Charge Amt']?.trim() || '0')
-
-      if (!accountId || !chargeDate) {
-        return
-      }
-
-      const dateTimestamp = parseChargeDate(chargeDate)
-      const appointmentKey = `${accountId}|${dateTimestamp}`
-      const appointmentId = appointmentMap.get(appointmentKey)
-
-      if (appointmentId && procedureCode && chargeAmount > 0) {
-        procedurePromises.push(
-          convex.mutation(api.appointments.createAppointmentProcedure, {
-            appointmentId,
-            procedureCode,
-            chargeAmount,
-          }),
-        )
-      }
-    })
-
-    const procedureIds = await Promise.all(procedurePromises)
-    console.log(`✅ Created ${procedureIds.length} procedure(s)\n`)
-
-    console.log(`\n✅ Import Complete!`)
-    console.log(`📊 Summary:`)
-    console.log(`   Total rows processed: ${rows.length}`)
-    console.log(`   Contacts created/updated: ${contactIds.length}`)
-    console.log(`   Appointments created: ${appointmentIds.length}`)
-    console.log(`   Procedures created: ${procedureIds.length}`)
-  } catch (error) {
-    console.error(
-      '❌ Error:',
-      error instanceof Error ? error.message : String(error),
-    )
-    process.exit(1)
+/**
+ * Parse patient name from "Last, First" format
+ */
+function parseName(patientName: string): {
+  firstName: string
+  lastName: string
+} {
+  const parts = patientName.split(',').map((p) => p.trim())
+  return {
+    lastName: parts[0] || '',
+    firstName: parts[1] || '',
   }
 }
 
-main()
+/**
+ * Parse date from M/D/YYYY format to Date object
+ */
+function parseDate(dateStr: string): Date | null {
+  if (!dateStr) return null
+
+  // Handle datetime format "M/D/YYYY HH:MM:SS"
+  const datePart = dateStr.split(' ')[0]
+  const [month, day, year] = datePart.split('/')
+
+  if (!month || !day || !year) return null
+
+  return new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`)
+}
+
+/**
+ * Parse procedure code - extract just the code without modifiers
+ */
+function parseProcedureCode(procedure: string): string {
+  // Extract code from formats like "97012 [GP]" or "99213 [25]"
+  return procedure.split(' ')[0] || procedure
+}
+
+/**
+ * Check if a row has valid data
+ */
+function isValidRow(row: CSVRow): boolean {
+  return !!(
+    row['Account #']?.trim() &&
+    row.Patient?.trim() &&
+    row.Procedure?.trim() &&
+    row.Provider?.trim()
+  )
+}
+
+async function main() {
+  console.log('=� Starting ChiroTouch AR Insurance import...\n')
+
+  // Get company ID from environment or use default
+  const companyId = 'cmj0aw8zo0000xwapp9axlyqv'
+  if (!companyId) {
+    console.error('L Error: COMPANY_ID environment variable is required')
+    process.exit(1)
+  }
+
+  // Verify company exists
+  const company = await prisma.company.findUnique({
+    where: { id: companyId },
+  })
+
+  if (!company) {
+    console.error(`L Error: Company with ID ${companyId} not found`)
+    process.exit(1)
+  }
+
+  console.log(` Processing data for company: ${company.name}\n`)
+
+  // Read and parse CSV file
+  const csvPath = join(__dirname, 'ar-insurance.csv')
+  const fileContent = fs.readFileSync(csvPath, 'utf-8')
+
+  const records = parse(fileContent, {
+    columns: true,
+    skip_empty_lines: true,
+    trim: true,
+    relax_quotes: true,
+  }) as CSVRow[]
+
+  console.log(`=� Found ${records.length} total rows in CSV\n`)
+
+  // Filter valid rows
+  const validRows = records.filter(isValidRow)
+  console.log(` ${validRows.length} valid rows to process\n`)
+
+  // Fetch all providers for this company
+  const providers = await prisma.provider.findMany({
+    where: { companyId },
+    include: { service: true },
+  })
+
+  console.log(` Found ${providers.length} providers in database\n`)
+
+  // Create a map of provider names to IDs for quick lookup
+  const providerMap = new Map(
+    providers.map((p) => [p.name.toLowerCase().trim(), p]),
+  )
+
+  let stats = {
+    contactsCreated: 0,
+    contactsUpdated: 0,
+    appointmentsCreated: 0,
+    proceduresCreated: 0,
+    errors: 0,
+    providersNotFound: new Set<string>(),
+  }
+
+  // Process each row
+  for (const [index, row] of validRows.entries()) {
+    try {
+      const accountNumber = row['Account #'].trim()
+      const { firstName, lastName } = parseName(row.Patient)
+      const dateOfBirth = parseDate(row['Birth Date'])
+      const chargeDate = parseDate(row['Charge Date'])
+      const procedureCode = parseProcedureCode(row.Procedure)
+      const chargeAmount = parseFloat(row['Charge Amt']) || 0
+      const providerName = row.Provider.trim()
+      const caseType = row['Case Type']?.trim() || null
+      const payerName = row.Payer?.trim() || null
+
+      // Upsert contact
+      const existingContact = await prisma.contact.findUnique({
+        where: { externalId: accountNumber },
+      })
+
+      let contact
+      if (existingContact) {
+        // Contact exists, optionally update it
+        contact = await prisma.contact.update({
+          where: { externalId: accountNumber },
+          data: {
+            firstName,
+            lastName,
+            fullName: `${firstName} ${lastName}`,
+            dateOfBirth,
+            companyId,
+          },
+        })
+        stats.contactsUpdated++
+      } else {
+        // Create new contact
+        contact = await prisma.contact.create({
+          data: {
+            externalId: accountNumber,
+            firstName,
+            lastName,
+            fullName: `${firstName} ${lastName}`,
+            dateOfBirth,
+            companyId,
+          },
+        })
+        stats.contactsCreated++
+      }
+
+      // Find provider
+      const provider = providerMap.get(providerName.toLowerCase())
+      if (!provider) {
+        stats.providersNotFound.add(providerName)
+        console.warn(
+          `�  Provider not found: "${providerName}" (row ${index + 2})`,
+        )
+        continue
+      }
+
+      // Find or create appointment for this date of service
+      // We'll use the charge date as the date of service
+      let appointment = chargeDate
+        ? await prisma.appointment.findFirst({
+            where: {
+              companyId,
+              contactId: contact.id,
+              providerId: provider.id,
+              dateOfService: chargeDate,
+            },
+          })
+        : null
+
+      if (!appointment && chargeDate) {
+        appointment = await prisma.appointment.create({
+          data: {
+            companyId,
+            contactId: contact.id,
+            dateOfService: chargeDate,
+            providerId: provider.id,
+            serviceId: provider.serviceId,
+          },
+        })
+        stats.appointmentsCreated++
+      }
+
+      // Create appointment procedure
+      if (appointment) {
+        await prisma.appointmentProcedure.create({
+          data: {
+            appointmentId: appointment.id,
+            procedureCode,
+            chargeAmount,
+            caseType,
+            payerName,
+            chargeDate,
+          },
+        })
+        stats.proceduresCreated++
+      }
+
+      // Log progress every 50 rows
+      if ((index + 1) % 1000 === 0) {
+        console.log(`=� Processed ${index + 1} / ${validRows.length} rows...`)
+      }
+    } catch (error) {
+      stats.errors++
+      console.error(`L Error processing row ${index + 2}:`, error)
+      console.error(
+        `   Account #: ${row['Account #']}, Patient: ${row.Patient}`,
+      )
+    }
+  }
+
+  console.log('\n' + '='.repeat(60))
+  console.log('=� IMPORT SUMMARY')
+  console.log('='.repeat(60))
+  console.log(`   Total rows processed: ${validRows.length}`)
+  console.log(`   Contacts created: ${stats.contactsCreated}`)
+  console.log(`   Contacts updated: ${stats.contactsUpdated}`)
+  console.log(`   Appointments created: ${stats.appointmentsCreated}`)
+  console.log(`   Procedures created: ${stats.proceduresCreated}`)
+  console.log(`   Errors: ${stats.errors}`)
+
+  if (stats.providersNotFound.size > 0) {
+    console.log('\n�  Providers not found in database:')
+    stats.providersNotFound.forEach((name) => console.log(`   - ${name}`))
+  }
+
+  console.log('\n Import complete!')
+
+  await prisma.$disconnect()
+}
+
+main().catch((error) => {
+  console.error('Fatal error:', error)
+  prisma.$disconnect()
+  process.exit(1)
+})

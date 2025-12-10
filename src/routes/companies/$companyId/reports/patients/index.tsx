@@ -62,25 +62,25 @@ const genderChartConfig = {
 
 function RouteComponent() {
   const { companyId } = Route.useParams()
-  const { patientsCollection } = useCollections()
+  const { contactsCollection } = useCollections()
 
   // Use TanStack DB useLiveQuery for reactive data
   const { data: patients } = useLiveQuery((q) =>
     q
-      .from({ patient: patientsCollection })
-      .where(({ patient }) => eq(patient.contact.companyId, companyId)),
+      .from({ contact: contactsCollection })
+      .where(({ contact }) => eq(contact.companyId, companyId)),
   )
 
-  // Calculate age distribution grouped by 5-year intervals
+  // Calculate age distribution grouped by 10-year intervals
   const ageDistribution = useMemo(() => {
     if (!patients) return []
 
-    // Initialize age groups (20-25, 25-30, ..., 80-85)
+    // Initialize age groups (0-10, 10-20, 20-30, ..., 90-100)
     const ageGroups: { ageRange: string; count: number; sortOrder: number }[] =
       []
-    for (let age = 20; age <= 80; age += 5) {
+    for (let age = 0; age <= 90; age += 10) {
       ageGroups.push({
-        ageRange: `${age}-${age + 5}`,
+        ageRange: `${age}-${age + 10}`,
         count: 0,
         sortOrder: age,
       })
@@ -88,12 +88,12 @@ function RouteComponent() {
 
     // Calculate ages and count
     patients.forEach((patient) => {
-      if (patient.contact.dateOfBirth) {
-        const age = dayjs().diff(dayjs(patient.contact.dateOfBirth), 'year')
-        // Only count ages in our range (20-85)
-        if (age >= 20 && age < 85) {
-          // Find which 5-year group this age belongs to
-          const groupIndex = Math.floor((age - 20) / 5)
+      if (patient.dateOfBirth) {
+        const age = dayjs().diff(dayjs(patient.dateOfBirth), 'year')
+        // Only count ages in our range (0-100)
+        if (age >= 0 && age < 100) {
+          // Find which 10-year group this age belongs to
+          const groupIndex = Math.floor(age / 10)
           if (groupIndex >= 0 && groupIndex < ageGroups.length) {
             ageGroups[groupIndex].count++
           }
@@ -111,7 +111,7 @@ function RouteComponent() {
     const genderCounts: Record<string, number> = {}
 
     patients.forEach((patient) => {
-      const gender = patient.contact.gender
+      const gender = patient.gender
       if (!gender) return // Skip if no gender data
 
       // Normalize gender values - only include Male and Female
@@ -187,7 +187,7 @@ function RouteComponent() {
             <CardHeader>
               <CardTitle>Patient Age Distribution</CardTitle>
               <CardDescription>
-                {totalPatients.toLocaleString()} total patients (ages 20-85)
+                {totalPatients.toLocaleString()} total patients (ages 0-100)
               </CardDescription>
             </CardHeader>
             <CardContent>

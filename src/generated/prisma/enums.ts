@@ -11,6 +11,7 @@
 
 export const EhrType = {
   unified_practice: 'unified_practice',
+  chirotouch: 'chirotouch',
   ghl: 'ghl'
 } as const
 

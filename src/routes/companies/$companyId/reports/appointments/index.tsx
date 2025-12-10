@@ -56,15 +56,35 @@ function AppointmentsPage() {
       .where(({ service }) => eq(service.companyId, companyId)),
   )
 
+  // Calculate date range based on timeRange
+  const dateRange = useMemo(() => {
+    if (timeRange === 'all') {
+      return { startDate: undefined, endDate: undefined }
+    }
+    const days = { '7d': 7, '30d': 30, '90d': 90 }[timeRange]
+    const startDate = new Date()
+    startDate.setDate(startDate.getDate() - days)
+    startDate.setHours(0, 0, 0, 0)
+    return { startDate, endDate: new Date() }
+  }, [timeRange])
+
   // Use React Query for analytics (non-reactive)
   const { data: analyticsData } = useQuery({
     queryKey: ['appointments-analytics', companyId, timeRange, groupBy],
-    queryFn: () => getAppointmentsAnalytics({ data: { companyId, timeRange, groupBy } }),
+    queryFn: () =>
+      getAppointmentsAnalytics({ data: { companyId, timeRange, groupBy } }),
   })
 
   const { data: revenueByService } = useQuery({
     queryKey: ['revenue-by-service', companyId, timeRange],
-    queryFn: () => getRevenueByService({ data: { companyId, timeRange } }),
+    queryFn: () =>
+      getRevenueByService({
+        data: {
+          companyId,
+          startDate: dateRange.startDate,
+          endDate: dateRange.endDate,
+        },
+      }),
   })
 
   console.log('appointments', appointments)
@@ -153,10 +173,7 @@ function AppointmentsPage() {
       }
 
       const serviceCounts = grouped.get(dateKey)!
-      serviceCounts.set(
-        serviceName,
-        (serviceCounts.get(serviceName) || 0) + 1,
-      )
+      serviceCounts.set(serviceName, (serviceCounts.get(serviceName) || 0) + 1)
     })
 
     // Convert to array format for chart
@@ -249,7 +266,7 @@ function AppointmentsPage() {
       </div>
 
       {/* Revenue by Service Cards */}
-      {revenueByService.length > 0 && (
+      {revenueByService && revenueByService.length > 0 && (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mb-6">
           {revenueByService.map((service) => (
             <Card key={service.serviceId} className="gradient-border-hover">
@@ -263,7 +280,7 @@ function AppointmentsPage() {
               >
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm font-medium text-muted-foreground">
-                    {service.serviceName}
+                    {service.service}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -431,7 +448,10 @@ function AppointmentsPage() {
                   <Bar
                     key={serviceName}
                     dataKey={serviceName}
-                    fill={appointmentCountChartConfig.chartConfig[serviceName]?.color}
+                    fill={
+                      appointmentCountChartConfig.chartConfig[serviceName]
+                        ?.color
+                    }
                     stackId="a"
                     radius={[4, 4, 0, 0]}
                   />

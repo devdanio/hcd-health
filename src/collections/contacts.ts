@@ -80,7 +80,7 @@ export const upsertContactByChirotouchAccountIdSchema = z.object({
 export const getContacts = createServerFn({ method: 'GET' })
   .inputValidator(getContactsSchema)
   .handler(async ({ data }) => {
-    const limit = data.limit ?? 100
+    const limit = data.limit ?? 10000
     const sortBy = data.sortBy ?? 'createdAt'
     const sortOrder = data.sortOrder ?? 'desc'
 

@@ -39,6 +39,9 @@ export type AppointmentProcedureMinAggregateOutputType = {
   appointmentId: string | null
   procedureCode: string | null
   chargeAmount: number | null
+  caseType: string | null
+  payerName: string | null
+  chargeDate: Date | null
   createdAt: Date | null
 }
 
@@ -47,6 +50,9 @@ export type AppointmentProcedureMaxAggregateOutputType = {
   appointmentId: string | null
   procedureCode: string | null
   chargeAmount: number | null
+  caseType: string | null
+  payerName: string | null
+  chargeDate: Date | null
   createdAt: Date | null
 }
 
@@ -55,6 +61,9 @@ export type AppointmentProcedureCountAggregateOutputType = {
   appointmentId: number
   procedureCode: number
   chargeAmount: number
+  caseType: number
+  payerName: number
+  chargeDate: number
   createdAt: number
   _all: number
 }
@@ -73,6 +82,9 @@ export type AppointmentProcedureMinAggregateInputType = {
   appointmentId?: true
   procedureCode?: true
   chargeAmount?: true
+  caseType?: true
+  payerName?: true
+  chargeDate?: true
   createdAt?: true
 }
 
@@ -81,6 +93,9 @@ export type AppointmentProcedureMaxAggregateInputType = {
   appointmentId?: true
   procedureCode?: true
   chargeAmount?: true
+  caseType?: true
+  payerName?: true
+  chargeDate?: true
   createdAt?: true
 }
 
@@ -89,6 +104,9 @@ export type AppointmentProcedureCountAggregateInputType = {
   appointmentId?: true
   procedureCode?: true
   chargeAmount?: true
+  caseType?: true
+  payerName?: true
+  chargeDate?: true
   createdAt?: true
   _all?: true
 }
@@ -184,6 +202,9 @@ export type AppointmentProcedureGroupByOutputType = {
   appointmentId: string
   procedureCode: string
   chargeAmount: number
+  caseType: string | null
+  payerName: string | null
+  chargeDate: Date | null
   createdAt: Date
   _count: AppointmentProcedureCountAggregateOutputType | null
   _avg: AppointmentProcedureAvgAggregateOutputType | null
@@ -215,6 +236,9 @@ export type AppointmentProcedureWhereInput = {
   appointmentId?: Prisma.StringFilter<"AppointmentProcedure"> | string
   procedureCode?: Prisma.StringFilter<"AppointmentProcedure"> | string
   chargeAmount?: Prisma.FloatFilter<"AppointmentProcedure"> | number
+  caseType?: Prisma.StringNullableFilter<"AppointmentProcedure"> | string | null
+  payerName?: Prisma.StringNullableFilter<"AppointmentProcedure"> | string | null
+  chargeDate?: Prisma.DateTimeNullableFilter<"AppointmentProcedure"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"AppointmentProcedure"> | Date | string
   appointment?: Prisma.XOR<Prisma.AppointmentScalarRelationFilter, Prisma.AppointmentWhereInput>
 }
@@ -224,6 +248,9 @@ export type AppointmentProcedureOrderByWithRelationInput = {
   appointmentId?: Prisma.SortOrder
   procedureCode?: Prisma.SortOrder
   chargeAmount?: Prisma.SortOrder
+  caseType?: Prisma.SortOrderInput | Prisma.SortOrder
+  payerName?: Prisma.SortOrderInput | Prisma.SortOrder
+  chargeDate?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   appointment?: Prisma.AppointmentOrderByWithRelationInput
 }
@@ -236,6 +263,9 @@ export type AppointmentProcedureWhereUniqueInput = Prisma.AtLeast<{
   appointmentId?: Prisma.StringFilter<"AppointmentProcedure"> | string
   procedureCode?: Prisma.StringFilter<"AppointmentProcedure"> | string
   chargeAmount?: Prisma.FloatFilter<"AppointmentProcedure"> | number
+  caseType?: Prisma.StringNullableFilter<"AppointmentProcedure"> | string | null
+  payerName?: Prisma.StringNullableFilter<"AppointmentProcedure"> | string | null
+  chargeDate?: Prisma.DateTimeNullableFilter<"AppointmentProcedure"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"AppointmentProcedure"> | Date | string
   appointment?: Prisma.XOR<Prisma.AppointmentScalarRelationFilter, Prisma.AppointmentWhereInput>
 }, "id">
@@ -245,6 +275,9 @@ export type AppointmentProcedureOrderByWithAggregationInput = {
   appointmentId?: Prisma.SortOrder
   procedureCode?: Prisma.SortOrder
   chargeAmount?: Prisma.SortOrder
+  caseType?: Prisma.SortOrderInput | Prisma.SortOrder
+  payerName?: Prisma.SortOrderInput | Prisma.SortOrder
+  chargeDate?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.AppointmentProcedureCountOrderByAggregateInput
   _avg?: Prisma.AppointmentProcedureAvgOrderByAggregateInput
@@ -261,6 +294,9 @@ export type AppointmentProcedureScalarWhereWithAggregatesInput = {
   appointmentId?: Prisma.StringWithAggregatesFilter<"AppointmentProcedure"> | string
   procedureCode?: Prisma.StringWithAggregatesFilter<"AppointmentProcedure"> | string
   chargeAmount?: Prisma.FloatWithAggregatesFilter<"AppointmentProcedure"> | number
+  caseType?: Prisma.StringNullableWithAggregatesFilter<"AppointmentProcedure"> | string | null
+  payerName?: Prisma.StringNullableWithAggregatesFilter<"AppointmentProcedure"> | string | null
+  chargeDate?: Prisma.DateTimeNullableWithAggregatesFilter<"AppointmentProcedure"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"AppointmentProcedure"> | Date | string
 }
 
@@ -268,6 +304,9 @@ export type AppointmentProcedureCreateInput = {
   id?: string
   procedureCode: string
   chargeAmount: number
+  caseType?: string | null
+  payerName?: string | null
+  chargeDate?: Date | string | null
   createdAt?: Date | string
   appointment: Prisma.AppointmentCreateNestedOneWithoutProceduresInput
 }
@@ -277,6 +316,9 @@ export type AppointmentProcedureUncheckedCreateInput = {
   appointmentId: string
   procedureCode: string
   chargeAmount: number
+  caseType?: string | null
+  payerName?: string | null
+  chargeDate?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -284,6 +326,9 @@ export type AppointmentProcedureUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   procedureCode?: Prisma.StringFieldUpdateOperationsInput | string
   chargeAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  caseType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointment?: Prisma.AppointmentUpdateOneRequiredWithoutProceduresNestedInput
 }
@@ -293,6 +338,9 @@ export type AppointmentProcedureUncheckedUpdateInput = {
   appointmentId?: Prisma.StringFieldUpdateOperationsInput | string
   procedureCode?: Prisma.StringFieldUpdateOperationsInput | string
   chargeAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  caseType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -301,6 +349,9 @@ export type AppointmentProcedureCreateManyInput = {
   appointmentId: string
   procedureCode: string
   chargeAmount: number
+  caseType?: string | null
+  payerName?: string | null
+  chargeDate?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -308,6 +359,9 @@ export type AppointmentProcedureUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   procedureCode?: Prisma.StringFieldUpdateOperationsInput | string
   chargeAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  caseType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -316,6 +370,9 @@ export type AppointmentProcedureUncheckedUpdateManyInput = {
   appointmentId?: Prisma.StringFieldUpdateOperationsInput | string
   procedureCode?: Prisma.StringFieldUpdateOperationsInput | string
   chargeAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  caseType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -334,6 +391,9 @@ export type AppointmentProcedureCountOrderByAggregateInput = {
   appointmentId?: Prisma.SortOrder
   procedureCode?: Prisma.SortOrder
   chargeAmount?: Prisma.SortOrder
+  caseType?: Prisma.SortOrder
+  payerName?: Prisma.SortOrder
+  chargeDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -346,6 +406,9 @@ export type AppointmentProcedureMaxOrderByAggregateInput = {
   appointmentId?: Prisma.SortOrder
   procedureCode?: Prisma.SortOrder
   chargeAmount?: Prisma.SortOrder
+  caseType?: Prisma.SortOrder
+  payerName?: Prisma.SortOrder
+  chargeDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -354,6 +417,9 @@ export type AppointmentProcedureMinOrderByAggregateInput = {
   appointmentId?: Prisma.SortOrder
   procedureCode?: Prisma.SortOrder
   chargeAmount?: Prisma.SortOrder
+  caseType?: Prisma.SortOrder
+  payerName?: Prisma.SortOrder
+  chargeDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -407,6 +473,9 @@ export type AppointmentProcedureCreateWithoutAppointmentInput = {
   id?: string
   procedureCode: string
   chargeAmount: number
+  caseType?: string | null
+  payerName?: string | null
+  chargeDate?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -414,6 +483,9 @@ export type AppointmentProcedureUncheckedCreateWithoutAppointmentInput = {
   id?: string
   procedureCode: string
   chargeAmount: number
+  caseType?: string | null
+  payerName?: string | null
+  chargeDate?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -451,6 +523,9 @@ export type AppointmentProcedureScalarWhereInput = {
   appointmentId?: Prisma.StringFilter<"AppointmentProcedure"> | string
   procedureCode?: Prisma.StringFilter<"AppointmentProcedure"> | string
   chargeAmount?: Prisma.FloatFilter<"AppointmentProcedure"> | number
+  caseType?: Prisma.StringNullableFilter<"AppointmentProcedure"> | string | null
+  payerName?: Prisma.StringNullableFilter<"AppointmentProcedure"> | string | null
+  chargeDate?: Prisma.DateTimeNullableFilter<"AppointmentProcedure"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"AppointmentProcedure"> | Date | string
 }
 
@@ -458,6 +533,9 @@ export type AppointmentProcedureCreateManyAppointmentInput = {
   id?: string
   procedureCode: string
   chargeAmount: number
+  caseType?: string | null
+  payerName?: string | null
+  chargeDate?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -465,6 +543,9 @@ export type AppointmentProcedureUpdateWithoutAppointmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   procedureCode?: Prisma.StringFieldUpdateOperationsInput | string
   chargeAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  caseType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -472,6 +553,9 @@ export type AppointmentProcedureUncheckedUpdateWithoutAppointmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   procedureCode?: Prisma.StringFieldUpdateOperationsInput | string
   chargeAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  caseType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -479,6 +563,9 @@ export type AppointmentProcedureUncheckedUpdateManyWithoutAppointmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   procedureCode?: Prisma.StringFieldUpdateOperationsInput | string
   chargeAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  caseType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -489,6 +576,9 @@ export type AppointmentProcedureSelect<ExtArgs extends runtime.Types.Extensions.
   appointmentId?: boolean
   procedureCode?: boolean
   chargeAmount?: boolean
+  caseType?: boolean
+  payerName?: boolean
+  chargeDate?: boolean
   createdAt?: boolean
   appointment?: boolean | Prisma.AppointmentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["appointmentProcedure"]>
@@ -498,6 +588,9 @@ export type AppointmentProcedureSelectCreateManyAndReturn<ExtArgs extends runtim
   appointmentId?: boolean
   procedureCode?: boolean
   chargeAmount?: boolean
+  caseType?: boolean
+  payerName?: boolean
+  chargeDate?: boolean
   createdAt?: boolean
   appointment?: boolean | Prisma.AppointmentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["appointmentProcedure"]>
@@ -507,6 +600,9 @@ export type AppointmentProcedureSelectUpdateManyAndReturn<ExtArgs extends runtim
   appointmentId?: boolean
   procedureCode?: boolean
   chargeAmount?: boolean
+  caseType?: boolean
+  payerName?: boolean
+  chargeDate?: boolean
   createdAt?: boolean
   appointment?: boolean | Prisma.AppointmentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["appointmentProcedure"]>
@@ -516,10 +612,13 @@ export type AppointmentProcedureSelectScalar = {
   appointmentId?: boolean
   procedureCode?: boolean
   chargeAmount?: boolean
+  caseType?: boolean
+  payerName?: boolean
+  chargeDate?: boolean
   createdAt?: boolean
 }
 
-export type AppointmentProcedureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "appointmentId" | "procedureCode" | "chargeAmount" | "createdAt", ExtArgs["result"]["appointmentProcedure"]>
+export type AppointmentProcedureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "appointmentId" | "procedureCode" | "chargeAmount" | "caseType" | "payerName" | "chargeDate" | "createdAt", ExtArgs["result"]["appointmentProcedure"]>
 export type AppointmentProcedureInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   appointment?: boolean | Prisma.AppointmentDefaultArgs<ExtArgs>
 }
@@ -540,6 +639,9 @@ export type $AppointmentProcedurePayload<ExtArgs extends runtime.Types.Extension
     appointmentId: string
     procedureCode: string
     chargeAmount: number
+    caseType: string | null
+    payerName: string | null
+    chargeDate: Date | null
     createdAt: Date
   }, ExtArgs["result"]["appointmentProcedure"]>
   composites: {}
@@ -969,6 +1071,9 @@ export interface AppointmentProcedureFieldRefs {
   readonly appointmentId: Prisma.FieldRef<"AppointmentProcedure", 'String'>
   readonly procedureCode: Prisma.FieldRef<"AppointmentProcedure", 'String'>
   readonly chargeAmount: Prisma.FieldRef<"AppointmentProcedure", 'Float'>
+  readonly caseType: Prisma.FieldRef<"AppointmentProcedure", 'String'>
+  readonly payerName: Prisma.FieldRef<"AppointmentProcedure", 'String'>
+  readonly chargeDate: Prisma.FieldRef<"AppointmentProcedure", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"AppointmentProcedure", 'DateTime'>
 }
     

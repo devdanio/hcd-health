@@ -140,13 +140,11 @@ function ContactsPage() {
           )
         },
         cell: ({ row }) => (
-          <div className="capitalize">
-            {row.original.ghlContact?.firstName || '-'}
-          </div>
+          <div className="capitalize">{row.original.firstName || '-'}</div>
         ),
       },
       {
-        accessorFn: (row) => row.ghlContact?.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
         header: ({ column }) => {
           return (
@@ -162,13 +160,11 @@ function ContactsPage() {
           )
         },
         cell: ({ row }) => (
-          <div className="capitalize">
-            {row.original.ghlContact?.lastName || '-'}
-          </div>
+          <div className="capitalize">{row.original.lastName || '-'}</div>
         ),
       },
       {
-        accessorFn: (row) => row.ghlContact?.email,
+        accessorFn: (row) => row.email,
         id: 'email',
         header: ({ column }) => {
           return (
@@ -184,16 +180,14 @@ function ContactsPage() {
           )
         },
         cell: ({ row }) => (
-          <div className="lowercase">
-            {row.original.ghlContact?.email || '-'}
-          </div>
+          <div className="lowercase">{row.original.email || '-'}</div>
         ),
       },
       {
-        accessorFn: (row) => row.ghlContact?.phone,
+        accessorFn: (row) => row.phone,
         id: 'phone',
         header: 'Phone',
-        cell: ({ row }) => <div>{row.original.ghlContact?.phone || '-'}</div>,
+        cell: ({ row }) => <div>{row.original.phone || '-'}</div>,
       },
       {
         accessorFn: (row) => row.createdAt,
@@ -212,7 +206,7 @@ function ContactsPage() {
           )
         },
         cell: ({ row }) => {
-          const dateAdded = row.original.ghlContact?.dateAdded
+          const dateAdded = row.original.createdAt
           if (!dateAdded) return <div>-</div>
           const date =
             dateAdded instanceof Date ? dateAdded : new Date(dateAdded)

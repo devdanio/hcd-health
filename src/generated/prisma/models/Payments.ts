@@ -41,7 +41,7 @@ export type PaymentsMinAggregateOutputType = {
   amount_in_cents: number | null
   posted_date: Date | null
   status: $Enums.PaymentStatus | null
-  patientId: string | null
+  contactId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -53,7 +53,7 @@ export type PaymentsMaxAggregateOutputType = {
   amount_in_cents: number | null
   posted_date: Date | null
   status: $Enums.PaymentStatus | null
-  patientId: string | null
+  contactId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -65,7 +65,7 @@ export type PaymentsCountAggregateOutputType = {
   amount_in_cents: number
   posted_date: number
   status: number
-  patientId: number
+  contactId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -87,7 +87,7 @@ export type PaymentsMinAggregateInputType = {
   amount_in_cents?: true
   posted_date?: true
   status?: true
-  patientId?: true
+  contactId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -99,7 +99,7 @@ export type PaymentsMaxAggregateInputType = {
   amount_in_cents?: true
   posted_date?: true
   status?: true
-  patientId?: true
+  contactId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -111,7 +111,7 @@ export type PaymentsCountAggregateInputType = {
   amount_in_cents?: true
   posted_date?: true
   status?: true
-  patientId?: true
+  contactId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -210,7 +210,7 @@ export type PaymentsGroupByOutputType = {
   amount_in_cents: number
   posted_date: Date
   status: $Enums.PaymentStatus
-  patientId: string
+  contactId: string
   createdAt: Date
   updatedAt: Date
   _count: PaymentsCountAggregateOutputType | null
@@ -245,11 +245,11 @@ export type PaymentsWhereInput = {
   amount_in_cents?: Prisma.IntFilter<"Payments"> | number
   posted_date?: Prisma.DateTimeFilter<"Payments"> | Date | string
   status?: Prisma.EnumPaymentStatusFilter<"Payments"> | $Enums.PaymentStatus
-  patientId?: Prisma.StringFilter<"Payments"> | string
+  contactId?: Prisma.StringFilter<"Payments"> | string
   createdAt?: Prisma.DateTimeFilter<"Payments"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Payments"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
-  patient?: Prisma.XOR<Prisma.PatientScalarRelationFilter, Prisma.PatientWhereInput>
+  contact?: Prisma.XOR<Prisma.ContactScalarRelationFilter, Prisma.ContactWhereInput>
 }
 
 export type PaymentsOrderByWithRelationInput = {
@@ -259,11 +259,11 @@ export type PaymentsOrderByWithRelationInput = {
   amount_in_cents?: Prisma.SortOrder
   posted_date?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  patientId?: Prisma.SortOrder
+  contactId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   company?: Prisma.CompanyOrderByWithRelationInput
-  patient?: Prisma.PatientOrderByWithRelationInput
+  contact?: Prisma.ContactOrderByWithRelationInput
 }
 
 export type PaymentsWhereUniqueInput = Prisma.AtLeast<{
@@ -276,11 +276,11 @@ export type PaymentsWhereUniqueInput = Prisma.AtLeast<{
   amount_in_cents?: Prisma.IntFilter<"Payments"> | number
   posted_date?: Prisma.DateTimeFilter<"Payments"> | Date | string
   status?: Prisma.EnumPaymentStatusFilter<"Payments"> | $Enums.PaymentStatus
-  patientId?: Prisma.StringFilter<"Payments"> | string
+  contactId?: Prisma.StringFilter<"Payments"> | string
   createdAt?: Prisma.DateTimeFilter<"Payments"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Payments"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
-  patient?: Prisma.XOR<Prisma.PatientScalarRelationFilter, Prisma.PatientWhereInput>
+  contact?: Prisma.XOR<Prisma.ContactScalarRelationFilter, Prisma.ContactWhereInput>
 }, "id" | "externalId">
 
 export type PaymentsOrderByWithAggregationInput = {
@@ -290,7 +290,7 @@ export type PaymentsOrderByWithAggregationInput = {
   amount_in_cents?: Prisma.SortOrder
   posted_date?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  patientId?: Prisma.SortOrder
+  contactId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.PaymentsCountOrderByAggregateInput
@@ -310,7 +310,7 @@ export type PaymentsScalarWhereWithAggregatesInput = {
   amount_in_cents?: Prisma.IntWithAggregatesFilter<"Payments"> | number
   posted_date?: Prisma.DateTimeWithAggregatesFilter<"Payments"> | Date | string
   status?: Prisma.EnumPaymentStatusWithAggregatesFilter<"Payments"> | $Enums.PaymentStatus
-  patientId?: Prisma.StringWithAggregatesFilter<"Payments"> | string
+  contactId?: Prisma.StringWithAggregatesFilter<"Payments"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Payments"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Payments"> | Date | string
 }
@@ -324,7 +324,7 @@ export type PaymentsCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutPaymentsInput
-  patient: Prisma.PatientCreateNestedOneWithoutPaymentsInput
+  contact: Prisma.ContactCreateNestedOneWithoutPaymentsInput
 }
 
 export type PaymentsUncheckedCreateInput = {
@@ -334,7 +334,7 @@ export type PaymentsUncheckedCreateInput = {
   amount_in_cents: number
   posted_date: Date | string
   status: $Enums.PaymentStatus
-  patientId: string
+  contactId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -348,7 +348,7 @@ export type PaymentsUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutPaymentsNestedInput
-  patient?: Prisma.PatientUpdateOneRequiredWithoutPaymentsNestedInput
+  contact?: Prisma.ContactUpdateOneRequiredWithoutPaymentsNestedInput
 }
 
 export type PaymentsUncheckedUpdateInput = {
@@ -358,7 +358,7 @@ export type PaymentsUncheckedUpdateInput = {
   amount_in_cents?: Prisma.IntFieldUpdateOperationsInput | number
   posted_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
-  patientId?: Prisma.StringFieldUpdateOperationsInput | string
+  contactId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -370,7 +370,7 @@ export type PaymentsCreateManyInput = {
   amount_in_cents: number
   posted_date: Date | string
   status: $Enums.PaymentStatus
-  patientId: string
+  contactId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -392,7 +392,7 @@ export type PaymentsUncheckedUpdateManyInput = {
   amount_in_cents?: Prisma.IntFieldUpdateOperationsInput | number
   posted_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
-  patientId?: Prisma.StringFieldUpdateOperationsInput | string
+  contactId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -414,7 +414,7 @@ export type PaymentsCountOrderByAggregateInput = {
   amount_in_cents?: Prisma.SortOrder
   posted_date?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  patientId?: Prisma.SortOrder
+  contactId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -430,7 +430,7 @@ export type PaymentsMaxOrderByAggregateInput = {
   amount_in_cents?: Prisma.SortOrder
   posted_date?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  patientId?: Prisma.SortOrder
+  contactId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -442,7 +442,7 @@ export type PaymentsMinOrderByAggregateInput = {
   amount_in_cents?: Prisma.SortOrder
   posted_date?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  patientId?: Prisma.SortOrder
+  contactId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -493,50 +493,50 @@ export type PaymentsUncheckedUpdateManyWithoutCompanyNestedInput = {
   deleteMany?: Prisma.PaymentsScalarWhereInput | Prisma.PaymentsScalarWhereInput[]
 }
 
+export type PaymentsCreateNestedManyWithoutContactInput = {
+  create?: Prisma.XOR<Prisma.PaymentsCreateWithoutContactInput, Prisma.PaymentsUncheckedCreateWithoutContactInput> | Prisma.PaymentsCreateWithoutContactInput[] | Prisma.PaymentsUncheckedCreateWithoutContactInput[]
+  connectOrCreate?: Prisma.PaymentsCreateOrConnectWithoutContactInput | Prisma.PaymentsCreateOrConnectWithoutContactInput[]
+  createMany?: Prisma.PaymentsCreateManyContactInputEnvelope
+  connect?: Prisma.PaymentsWhereUniqueInput | Prisma.PaymentsWhereUniqueInput[]
+}
+
+export type PaymentsUncheckedCreateNestedManyWithoutContactInput = {
+  create?: Prisma.XOR<Prisma.PaymentsCreateWithoutContactInput, Prisma.PaymentsUncheckedCreateWithoutContactInput> | Prisma.PaymentsCreateWithoutContactInput[] | Prisma.PaymentsUncheckedCreateWithoutContactInput[]
+  connectOrCreate?: Prisma.PaymentsCreateOrConnectWithoutContactInput | Prisma.PaymentsCreateOrConnectWithoutContactInput[]
+  createMany?: Prisma.PaymentsCreateManyContactInputEnvelope
+  connect?: Prisma.PaymentsWhereUniqueInput | Prisma.PaymentsWhereUniqueInput[]
+}
+
+export type PaymentsUpdateManyWithoutContactNestedInput = {
+  create?: Prisma.XOR<Prisma.PaymentsCreateWithoutContactInput, Prisma.PaymentsUncheckedCreateWithoutContactInput> | Prisma.PaymentsCreateWithoutContactInput[] | Prisma.PaymentsUncheckedCreateWithoutContactInput[]
+  connectOrCreate?: Prisma.PaymentsCreateOrConnectWithoutContactInput | Prisma.PaymentsCreateOrConnectWithoutContactInput[]
+  upsert?: Prisma.PaymentsUpsertWithWhereUniqueWithoutContactInput | Prisma.PaymentsUpsertWithWhereUniqueWithoutContactInput[]
+  createMany?: Prisma.PaymentsCreateManyContactInputEnvelope
+  set?: Prisma.PaymentsWhereUniqueInput | Prisma.PaymentsWhereUniqueInput[]
+  disconnect?: Prisma.PaymentsWhereUniqueInput | Prisma.PaymentsWhereUniqueInput[]
+  delete?: Prisma.PaymentsWhereUniqueInput | Prisma.PaymentsWhereUniqueInput[]
+  connect?: Prisma.PaymentsWhereUniqueInput | Prisma.PaymentsWhereUniqueInput[]
+  update?: Prisma.PaymentsUpdateWithWhereUniqueWithoutContactInput | Prisma.PaymentsUpdateWithWhereUniqueWithoutContactInput[]
+  updateMany?: Prisma.PaymentsUpdateManyWithWhereWithoutContactInput | Prisma.PaymentsUpdateManyWithWhereWithoutContactInput[]
+  deleteMany?: Prisma.PaymentsScalarWhereInput | Prisma.PaymentsScalarWhereInput[]
+}
+
+export type PaymentsUncheckedUpdateManyWithoutContactNestedInput = {
+  create?: Prisma.XOR<Prisma.PaymentsCreateWithoutContactInput, Prisma.PaymentsUncheckedCreateWithoutContactInput> | Prisma.PaymentsCreateWithoutContactInput[] | Prisma.PaymentsUncheckedCreateWithoutContactInput[]
+  connectOrCreate?: Prisma.PaymentsCreateOrConnectWithoutContactInput | Prisma.PaymentsCreateOrConnectWithoutContactInput[]
+  upsert?: Prisma.PaymentsUpsertWithWhereUniqueWithoutContactInput | Prisma.PaymentsUpsertWithWhereUniqueWithoutContactInput[]
+  createMany?: Prisma.PaymentsCreateManyContactInputEnvelope
+  set?: Prisma.PaymentsWhereUniqueInput | Prisma.PaymentsWhereUniqueInput[]
+  disconnect?: Prisma.PaymentsWhereUniqueInput | Prisma.PaymentsWhereUniqueInput[]
+  delete?: Prisma.PaymentsWhereUniqueInput | Prisma.PaymentsWhereUniqueInput[]
+  connect?: Prisma.PaymentsWhereUniqueInput | Prisma.PaymentsWhereUniqueInput[]
+  update?: Prisma.PaymentsUpdateWithWhereUniqueWithoutContactInput | Prisma.PaymentsUpdateWithWhereUniqueWithoutContactInput[]
+  updateMany?: Prisma.PaymentsUpdateManyWithWhereWithoutContactInput | Prisma.PaymentsUpdateManyWithWhereWithoutContactInput[]
+  deleteMany?: Prisma.PaymentsScalarWhereInput | Prisma.PaymentsScalarWhereInput[]
+}
+
 export type EnumPaymentStatusFieldUpdateOperationsInput = {
   set?: $Enums.PaymentStatus
-}
-
-export type PaymentsCreateNestedManyWithoutPatientInput = {
-  create?: Prisma.XOR<Prisma.PaymentsCreateWithoutPatientInput, Prisma.PaymentsUncheckedCreateWithoutPatientInput> | Prisma.PaymentsCreateWithoutPatientInput[] | Prisma.PaymentsUncheckedCreateWithoutPatientInput[]
-  connectOrCreate?: Prisma.PaymentsCreateOrConnectWithoutPatientInput | Prisma.PaymentsCreateOrConnectWithoutPatientInput[]
-  createMany?: Prisma.PaymentsCreateManyPatientInputEnvelope
-  connect?: Prisma.PaymentsWhereUniqueInput | Prisma.PaymentsWhereUniqueInput[]
-}
-
-export type PaymentsUncheckedCreateNestedManyWithoutPatientInput = {
-  create?: Prisma.XOR<Prisma.PaymentsCreateWithoutPatientInput, Prisma.PaymentsUncheckedCreateWithoutPatientInput> | Prisma.PaymentsCreateWithoutPatientInput[] | Prisma.PaymentsUncheckedCreateWithoutPatientInput[]
-  connectOrCreate?: Prisma.PaymentsCreateOrConnectWithoutPatientInput | Prisma.PaymentsCreateOrConnectWithoutPatientInput[]
-  createMany?: Prisma.PaymentsCreateManyPatientInputEnvelope
-  connect?: Prisma.PaymentsWhereUniqueInput | Prisma.PaymentsWhereUniqueInput[]
-}
-
-export type PaymentsUpdateManyWithoutPatientNestedInput = {
-  create?: Prisma.XOR<Prisma.PaymentsCreateWithoutPatientInput, Prisma.PaymentsUncheckedCreateWithoutPatientInput> | Prisma.PaymentsCreateWithoutPatientInput[] | Prisma.PaymentsUncheckedCreateWithoutPatientInput[]
-  connectOrCreate?: Prisma.PaymentsCreateOrConnectWithoutPatientInput | Prisma.PaymentsCreateOrConnectWithoutPatientInput[]
-  upsert?: Prisma.PaymentsUpsertWithWhereUniqueWithoutPatientInput | Prisma.PaymentsUpsertWithWhereUniqueWithoutPatientInput[]
-  createMany?: Prisma.PaymentsCreateManyPatientInputEnvelope
-  set?: Prisma.PaymentsWhereUniqueInput | Prisma.PaymentsWhereUniqueInput[]
-  disconnect?: Prisma.PaymentsWhereUniqueInput | Prisma.PaymentsWhereUniqueInput[]
-  delete?: Prisma.PaymentsWhereUniqueInput | Prisma.PaymentsWhereUniqueInput[]
-  connect?: Prisma.PaymentsWhereUniqueInput | Prisma.PaymentsWhereUniqueInput[]
-  update?: Prisma.PaymentsUpdateWithWhereUniqueWithoutPatientInput | Prisma.PaymentsUpdateWithWhereUniqueWithoutPatientInput[]
-  updateMany?: Prisma.PaymentsUpdateManyWithWhereWithoutPatientInput | Prisma.PaymentsUpdateManyWithWhereWithoutPatientInput[]
-  deleteMany?: Prisma.PaymentsScalarWhereInput | Prisma.PaymentsScalarWhereInput[]
-}
-
-export type PaymentsUncheckedUpdateManyWithoutPatientNestedInput = {
-  create?: Prisma.XOR<Prisma.PaymentsCreateWithoutPatientInput, Prisma.PaymentsUncheckedCreateWithoutPatientInput> | Prisma.PaymentsCreateWithoutPatientInput[] | Prisma.PaymentsUncheckedCreateWithoutPatientInput[]
-  connectOrCreate?: Prisma.PaymentsCreateOrConnectWithoutPatientInput | Prisma.PaymentsCreateOrConnectWithoutPatientInput[]
-  upsert?: Prisma.PaymentsUpsertWithWhereUniqueWithoutPatientInput | Prisma.PaymentsUpsertWithWhereUniqueWithoutPatientInput[]
-  createMany?: Prisma.PaymentsCreateManyPatientInputEnvelope
-  set?: Prisma.PaymentsWhereUniqueInput | Prisma.PaymentsWhereUniqueInput[]
-  disconnect?: Prisma.PaymentsWhereUniqueInput | Prisma.PaymentsWhereUniqueInput[]
-  delete?: Prisma.PaymentsWhereUniqueInput | Prisma.PaymentsWhereUniqueInput[]
-  connect?: Prisma.PaymentsWhereUniqueInput | Prisma.PaymentsWhereUniqueInput[]
-  update?: Prisma.PaymentsUpdateWithWhereUniqueWithoutPatientInput | Prisma.PaymentsUpdateWithWhereUniqueWithoutPatientInput[]
-  updateMany?: Prisma.PaymentsUpdateManyWithWhereWithoutPatientInput | Prisma.PaymentsUpdateManyWithWhereWithoutPatientInput[]
-  deleteMany?: Prisma.PaymentsScalarWhereInput | Prisma.PaymentsScalarWhereInput[]
 }
 
 export type PaymentsCreateWithoutCompanyInput = {
@@ -547,7 +547,7 @@ export type PaymentsCreateWithoutCompanyInput = {
   status: $Enums.PaymentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  patient: Prisma.PatientCreateNestedOneWithoutPaymentsInput
+  contact: Prisma.ContactCreateNestedOneWithoutPaymentsInput
 }
 
 export type PaymentsUncheckedCreateWithoutCompanyInput = {
@@ -556,7 +556,7 @@ export type PaymentsUncheckedCreateWithoutCompanyInput = {
   amount_in_cents: number
   posted_date: Date | string
   status: $Enums.PaymentStatus
-  patientId: string
+  contactId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -597,12 +597,12 @@ export type PaymentsScalarWhereInput = {
   amount_in_cents?: Prisma.IntFilter<"Payments"> | number
   posted_date?: Prisma.DateTimeFilter<"Payments"> | Date | string
   status?: Prisma.EnumPaymentStatusFilter<"Payments"> | $Enums.PaymentStatus
-  patientId?: Prisma.StringFilter<"Payments"> | string
+  contactId?: Prisma.StringFilter<"Payments"> | string
   createdAt?: Prisma.DateTimeFilter<"Payments"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Payments"> | Date | string
 }
 
-export type PaymentsCreateWithoutPatientInput = {
+export type PaymentsCreateWithoutContactInput = {
   id?: string
   externalId: string
   amount_in_cents: number
@@ -613,7 +613,7 @@ export type PaymentsCreateWithoutPatientInput = {
   company: Prisma.CompanyCreateNestedOneWithoutPaymentsInput
 }
 
-export type PaymentsUncheckedCreateWithoutPatientInput = {
+export type PaymentsUncheckedCreateWithoutContactInput = {
   id?: string
   externalId: string
   companyId: string
@@ -624,30 +624,30 @@ export type PaymentsUncheckedCreateWithoutPatientInput = {
   updatedAt?: Date | string
 }
 
-export type PaymentsCreateOrConnectWithoutPatientInput = {
+export type PaymentsCreateOrConnectWithoutContactInput = {
   where: Prisma.PaymentsWhereUniqueInput
-  create: Prisma.XOR<Prisma.PaymentsCreateWithoutPatientInput, Prisma.PaymentsUncheckedCreateWithoutPatientInput>
+  create: Prisma.XOR<Prisma.PaymentsCreateWithoutContactInput, Prisma.PaymentsUncheckedCreateWithoutContactInput>
 }
 
-export type PaymentsCreateManyPatientInputEnvelope = {
-  data: Prisma.PaymentsCreateManyPatientInput | Prisma.PaymentsCreateManyPatientInput[]
+export type PaymentsCreateManyContactInputEnvelope = {
+  data: Prisma.PaymentsCreateManyContactInput | Prisma.PaymentsCreateManyContactInput[]
   skipDuplicates?: boolean
 }
 
-export type PaymentsUpsertWithWhereUniqueWithoutPatientInput = {
+export type PaymentsUpsertWithWhereUniqueWithoutContactInput = {
   where: Prisma.PaymentsWhereUniqueInput
-  update: Prisma.XOR<Prisma.PaymentsUpdateWithoutPatientInput, Prisma.PaymentsUncheckedUpdateWithoutPatientInput>
-  create: Prisma.XOR<Prisma.PaymentsCreateWithoutPatientInput, Prisma.PaymentsUncheckedCreateWithoutPatientInput>
+  update: Prisma.XOR<Prisma.PaymentsUpdateWithoutContactInput, Prisma.PaymentsUncheckedUpdateWithoutContactInput>
+  create: Prisma.XOR<Prisma.PaymentsCreateWithoutContactInput, Prisma.PaymentsUncheckedCreateWithoutContactInput>
 }
 
-export type PaymentsUpdateWithWhereUniqueWithoutPatientInput = {
+export type PaymentsUpdateWithWhereUniqueWithoutContactInput = {
   where: Prisma.PaymentsWhereUniqueInput
-  data: Prisma.XOR<Prisma.PaymentsUpdateWithoutPatientInput, Prisma.PaymentsUncheckedUpdateWithoutPatientInput>
+  data: Prisma.XOR<Prisma.PaymentsUpdateWithoutContactInput, Prisma.PaymentsUncheckedUpdateWithoutContactInput>
 }
 
-export type PaymentsUpdateManyWithWhereWithoutPatientInput = {
+export type PaymentsUpdateManyWithWhereWithoutContactInput = {
   where: Prisma.PaymentsScalarWhereInput
-  data: Prisma.XOR<Prisma.PaymentsUpdateManyMutationInput, Prisma.PaymentsUncheckedUpdateManyWithoutPatientInput>
+  data: Prisma.XOR<Prisma.PaymentsUpdateManyMutationInput, Prisma.PaymentsUncheckedUpdateManyWithoutContactInput>
 }
 
 export type PaymentsCreateManyCompanyInput = {
@@ -656,7 +656,7 @@ export type PaymentsCreateManyCompanyInput = {
   amount_in_cents: number
   posted_date: Date | string
   status: $Enums.PaymentStatus
-  patientId: string
+  contactId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -669,7 +669,7 @@ export type PaymentsUpdateWithoutCompanyInput = {
   status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  patient?: Prisma.PatientUpdateOneRequiredWithoutPaymentsNestedInput
+  contact?: Prisma.ContactUpdateOneRequiredWithoutPaymentsNestedInput
 }
 
 export type PaymentsUncheckedUpdateWithoutCompanyInput = {
@@ -678,7 +678,7 @@ export type PaymentsUncheckedUpdateWithoutCompanyInput = {
   amount_in_cents?: Prisma.IntFieldUpdateOperationsInput | number
   posted_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
-  patientId?: Prisma.StringFieldUpdateOperationsInput | string
+  contactId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -689,12 +689,12 @@ export type PaymentsUncheckedUpdateManyWithoutCompanyInput = {
   amount_in_cents?: Prisma.IntFieldUpdateOperationsInput | number
   posted_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
-  patientId?: Prisma.StringFieldUpdateOperationsInput | string
+  contactId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type PaymentsCreateManyPatientInput = {
+export type PaymentsCreateManyContactInput = {
   id?: string
   externalId: string
   companyId: string
@@ -705,7 +705,7 @@ export type PaymentsCreateManyPatientInput = {
   updatedAt?: Date | string
 }
 
-export type PaymentsUpdateWithoutPatientInput = {
+export type PaymentsUpdateWithoutContactInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   externalId?: Prisma.StringFieldUpdateOperationsInput | string
   amount_in_cents?: Prisma.IntFieldUpdateOperationsInput | number
@@ -716,7 +716,7 @@ export type PaymentsUpdateWithoutPatientInput = {
   company?: Prisma.CompanyUpdateOneRequiredWithoutPaymentsNestedInput
 }
 
-export type PaymentsUncheckedUpdateWithoutPatientInput = {
+export type PaymentsUncheckedUpdateWithoutContactInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   externalId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -727,7 +727,7 @@ export type PaymentsUncheckedUpdateWithoutPatientInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type PaymentsUncheckedUpdateManyWithoutPatientInput = {
+export type PaymentsUncheckedUpdateManyWithoutContactInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   externalId?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -747,11 +747,11 @@ export type PaymentsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   amount_in_cents?: boolean
   posted_date?: boolean
   status?: boolean
-  patientId?: boolean
+  contactId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+  contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["payments"]>
 
 export type PaymentsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -761,11 +761,11 @@ export type PaymentsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   amount_in_cents?: boolean
   posted_date?: boolean
   status?: boolean
-  patientId?: boolean
+  contactId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+  contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["payments"]>
 
 export type PaymentsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -775,11 +775,11 @@ export type PaymentsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   amount_in_cents?: boolean
   posted_date?: boolean
   status?: boolean
-  patientId?: boolean
+  contactId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+  contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["payments"]>
 
 export type PaymentsSelectScalar = {
@@ -789,30 +789,30 @@ export type PaymentsSelectScalar = {
   amount_in_cents?: boolean
   posted_date?: boolean
   status?: boolean
-  patientId?: boolean
+  contactId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PaymentsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "externalId" | "companyId" | "amount_in_cents" | "posted_date" | "status" | "patientId" | "createdAt" | "updatedAt", ExtArgs["result"]["payments"]>
+export type PaymentsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "externalId" | "companyId" | "amount_in_cents" | "posted_date" | "status" | "contactId" | "createdAt" | "updatedAt", ExtArgs["result"]["payments"]>
 export type PaymentsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+  contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
 }
 export type PaymentsIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+  contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
 }
 export type PaymentsIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+  contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
 }
 
 export type $PaymentsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Payments"
   objects: {
     company: Prisma.$CompanyPayload<ExtArgs>
-    patient: Prisma.$PatientPayload<ExtArgs>
+    contact: Prisma.$ContactPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -821,7 +821,7 @@ export type $PaymentsPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     amount_in_cents: number
     posted_date: Date
     status: $Enums.PaymentStatus
-    patientId: string
+    contactId: string
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["payments"]>
@@ -1219,7 +1219,7 @@ readonly fields: PaymentsFieldRefs;
 export interface Prisma__PaymentsClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   company<T extends Prisma.CompanyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyDefaultArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  patient<T extends Prisma.PatientDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PatientDefaultArgs<ExtArgs>>): Prisma.Prisma__PatientClient<runtime.Types.Result.GetResult<Prisma.$PatientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  contact<T extends Prisma.ContactDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContactDefaultArgs<ExtArgs>>): Prisma.Prisma__ContactClient<runtime.Types.Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1255,7 +1255,7 @@ export interface PaymentsFieldRefs {
   readonly amount_in_cents: Prisma.FieldRef<"Payments", 'Int'>
   readonly posted_date: Prisma.FieldRef<"Payments", 'DateTime'>
   readonly status: Prisma.FieldRef<"Payments", 'PaymentStatus'>
-  readonly patientId: Prisma.FieldRef<"Payments", 'String'>
+  readonly contactId: Prisma.FieldRef<"Payments", 'String'>
   readonly createdAt: Prisma.FieldRef<"Payments", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Payments", 'DateTime'>
 }

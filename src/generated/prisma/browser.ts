@@ -78,11 +78,6 @@ export type Appointment = Prisma.AppointmentModel
  */
 export type AppointmentProcedure = Prisma.AppointmentProcedureModel
 /**
- * Model Patient
- * 
- */
-export type Patient = Prisma.PatientModel
-/**
  * Model OAuthState
  * 
  */

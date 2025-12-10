@@ -63,7 +63,6 @@ export const ModelName = {
   Provider: 'Provider',
   Appointment: 'Appointment',
   AppointmentProcedure: 'AppointmentProcedure',
-  Patient: 'Patient',
   OAuthState: 'OAuthState',
   CmsPage: 'CmsPage'
 } as const
@@ -151,6 +150,12 @@ export const ContactScalarFieldEnum = {
   lastName: 'lastName',
   gender: 'gender',
   dateOfBirth: 'dateOfBirth',
+  externalId: 'externalId',
+  address1: 'address1',
+  address2: 'address2',
+  zip: 'zip',
+  city: 'city',
+  state: 'state',
   ghlContactId: 'ghlContactId',
   chirotouchAccountId: 'chirotouchAccountId'
 } as const
@@ -241,7 +246,7 @@ export const PaymentsScalarFieldEnum = {
   amount_in_cents: 'amount_in_cents',
   posted_date: 'posted_date',
   status: 'status',
-  patientId: 'patientId',
+  contactId: 'contactId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -264,7 +269,7 @@ export type ProviderScalarFieldEnum = (typeof ProviderScalarFieldEnum)[keyof typ
 export const AppointmentScalarFieldEnum = {
   id: 'id',
   companyId: 'companyId',
-  patientId: 'patientId',
+  contactId: 'contactId',
   dateOfService: 'dateOfService',
   service: 'service',
   serviceId: 'serviceId',
@@ -281,26 +286,13 @@ export const AppointmentProcedureScalarFieldEnum = {
   appointmentId: 'appointmentId',
   procedureCode: 'procedureCode',
   chargeAmount: 'chargeAmount',
+  caseType: 'caseType',
+  payerName: 'payerName',
+  chargeDate: 'chargeDate',
   createdAt: 'createdAt'
 } as const
 
 export type AppointmentProcedureScalarFieldEnum = (typeof AppointmentProcedureScalarFieldEnum)[keyof typeof AppointmentProcedureScalarFieldEnum]
-
-
-export const PatientScalarFieldEnum = {
-  id: 'id',
-  contactId: 'contactId',
-  externalId: 'externalId',
-  address1: 'address1',
-  address2: 'address2',
-  zip: 'zip',
-  city: 'city',
-  state: 'state',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type PatientScalarFieldEnum = (typeof PatientScalarFieldEnum)[keyof typeof PatientScalarFieldEnum]
 
 
 export const OAuthStateScalarFieldEnum = {

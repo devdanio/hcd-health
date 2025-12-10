@@ -85,7 +85,7 @@ export const getAppointments = createServerFn({ method: 'GET' })
     return await prisma.appointment.findMany({
       where: { companyId: data.companyId },
       include: {
-        patient: true,
+        contact: true,
         provider: {
           select: { name: true },
         },
@@ -185,24 +185,33 @@ export const getRevenueByService = createServerFn({ method: 'GET' })
     })
 
     // Group revenue by service
-    const revenueByService = new Map<string, number>()
+    const revenueByService = new Map<
+      string,
+      { serviceId: string; revenue: number }
+    >()
 
     for (const appointment of appointments) {
       const serviceName = appointment.serviceRel?.name || 'Unknown'
+      const serviceId = appointment.serviceId || 'unknown'
       const revenue = appointment.procedures.reduce(
         (sum, proc) => sum + proc.chargeAmount,
         0,
       )
-      revenueByService.set(
-        serviceName,
-        (revenueByService.get(serviceName) || 0) + revenue,
-      )
+
+      const existing = revenueByService.get(serviceName)
+      revenueByService.set(serviceName, {
+        serviceId,
+        revenue: (existing?.revenue || 0) + revenue,
+      })
     }
 
-    return Array.from(revenueByService.entries()).map(([service, revenue]) => ({
-      service,
-      revenue,
-    }))
+    return Array.from(revenueByService.entries()).map(
+      ([service, { serviceId, revenue }]) => ({
+        service,
+        serviceId,
+        revenue,
+      }),
+    )
   })
 
 /**

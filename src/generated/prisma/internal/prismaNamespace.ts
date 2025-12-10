@@ -396,7 +396,6 @@ export const ModelName = {
   Provider: 'Provider',
   Appointment: 'Appointment',
   AppointmentProcedure: 'AppointmentProcedure',
-  Patient: 'Patient',
   OAuthState: 'OAuthState',
   CmsPage: 'CmsPage'
 } as const
@@ -414,7 +413,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "cityLatLng" | "leadCalculator" | "company" | "contact" | "ghlContact" | "session" | "event" | "service" | "payments" | "provider" | "appointment" | "appointmentProcedure" | "patient" | "oAuthState" | "cmsPage"
+    modelProps: "cityLatLng" | "leadCalculator" | "company" | "contact" | "ghlContact" | "session" | "event" | "service" | "payments" | "provider" | "appointment" | "appointmentProcedure" | "oAuthState" | "cmsPage"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1306,80 +1305,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    Patient: {
-      payload: Prisma.$PatientPayload<ExtArgs>
-      fields: Prisma.PatientFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.PatientFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PatientPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.PatientFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PatientPayload>
-        }
-        findFirst: {
-          args: Prisma.PatientFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PatientPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.PatientFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PatientPayload>
-        }
-        findMany: {
-          args: Prisma.PatientFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PatientPayload>[]
-        }
-        create: {
-          args: Prisma.PatientCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PatientPayload>
-        }
-        createMany: {
-          args: Prisma.PatientCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.PatientCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PatientPayload>[]
-        }
-        delete: {
-          args: Prisma.PatientDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PatientPayload>
-        }
-        update: {
-          args: Prisma.PatientUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PatientPayload>
-        }
-        deleteMany: {
-          args: Prisma.PatientDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.PatientUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.PatientUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PatientPayload>[]
-        }
-        upsert: {
-          args: Prisma.PatientUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PatientPayload>
-        }
-        aggregate: {
-          args: Prisma.PatientAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregatePatient>
-        }
-        groupBy: {
-          args: Prisma.PatientGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.PatientGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.PatientCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.PatientCountAggregateOutputType> | number
-        }
-      }
-    }
     OAuthState: {
       payload: Prisma.$OAuthStatePayload<ExtArgs>
       fields: Prisma.OAuthStateFieldRefs
@@ -1634,6 +1559,12 @@ export const ContactScalarFieldEnum = {
   lastName: 'lastName',
   gender: 'gender',
   dateOfBirth: 'dateOfBirth',
+  externalId: 'externalId',
+  address1: 'address1',
+  address2: 'address2',
+  zip: 'zip',
+  city: 'city',
+  state: 'state',
   ghlContactId: 'ghlContactId',
   chirotouchAccountId: 'chirotouchAccountId'
 } as const
@@ -1724,7 +1655,7 @@ export const PaymentsScalarFieldEnum = {
   amount_in_cents: 'amount_in_cents',
   posted_date: 'posted_date',
   status: 'status',
-  patientId: 'patientId',
+  contactId: 'contactId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1747,7 +1678,7 @@ export type ProviderScalarFieldEnum = (typeof ProviderScalarFieldEnum)[keyof typ
 export const AppointmentScalarFieldEnum = {
   id: 'id',
   companyId: 'companyId',
-  patientId: 'patientId',
+  contactId: 'contactId',
   dateOfService: 'dateOfService',
   service: 'service',
   serviceId: 'serviceId',
@@ -1764,26 +1695,13 @@ export const AppointmentProcedureScalarFieldEnum = {
   appointmentId: 'appointmentId',
   procedureCode: 'procedureCode',
   chargeAmount: 'chargeAmount',
+  caseType: 'caseType',
+  payerName: 'payerName',
+  chargeDate: 'chargeDate',
   createdAt: 'createdAt'
 } as const
 
 export type AppointmentProcedureScalarFieldEnum = (typeof AppointmentProcedureScalarFieldEnum)[keyof typeof AppointmentProcedureScalarFieldEnum]
-
-
-export const PatientScalarFieldEnum = {
-  id: 'id',
-  contactId: 'contactId',
-  externalId: 'externalId',
-  address1: 'address1',
-  address2: 'address2',
-  zip: 'zip',
-  city: 'city',
-  state: 'state',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type PatientScalarFieldEnum = (typeof PatientScalarFieldEnum)[keyof typeof PatientScalarFieldEnum]
 
 
 export const OAuthStateScalarFieldEnum = {
@@ -2083,7 +2001,6 @@ export type GlobalOmitConfig = {
   provider?: Prisma.ProviderOmit
   appointment?: Prisma.AppointmentOmit
   appointmentProcedure?: Prisma.AppointmentProcedureOmit
-  patient?: Prisma.PatientOmit
   oAuthState?: Prisma.OAuthStateOmit
   cmsPage?: Prisma.CmsPageOmit
 }
