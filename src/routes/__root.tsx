@@ -110,11 +110,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <QueryClientProvider client={queryClient}>
           <CollectionsContext.Provider value={collections}>
             <header className="bg-white py-4 px-6">
-              <img
-                src="/images/high-country-health-logo.svg"
-                alt="High Country Health"
-                className="w-24 h-auto"
-              />
+              <div className="max-w-7xl mx-auto px-6">
+                <img
+                  src="/images/high-country-health-logo.svg"
+                  alt="High Country Health"
+                  className="w-24 h-auto"
+                />
+              </div>
             </header>
             {children}
             {/* <TanStackDevtools

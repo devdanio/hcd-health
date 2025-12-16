@@ -19,14 +19,24 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import {
-  TrendingUp,
+  ChartContainer,
+  ChartLegend,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '@/components/ui/chart'
+import { PieChart, Pie, Label as RechartsLabel, Cell } from 'recharts'
+import {
   DollarSign,
   Users,
-  PieChart,
   Building2,
   User,
   Calendar,
   Save,
+  UserPlus,
+  Megaphone,
+  Stethoscope,
+  Home,
+  CalendarCheck,
 } from 'lucide-react'
 import { createLeadCalculator } from '@/server/functions/lead-calculator'
 import { useRouter } from '@tanstack/react-router'
@@ -42,13 +52,13 @@ interface PracticeCalculatorProps {
 }
 
 export function PracticeCalculator({
-  initialRevenue = 1000000,
-  initialPatients = 500,
-  initialNewPatients = 250,
-  initialAvgVisits = 6.3,
-  initialMarketingCosts = 60000,
-  initialDirectCareCosts = 500000,
-  initialOverheadCosts = 60000,
+  initialRevenue = 1500000,
+  initialPatients = 200,
+  initialNewPatients = 100,
+  initialAvgVisits = 8,
+  initialMarketingCosts = 130000,
+  initialDirectCareCosts = 200000,
+  initialOverheadCosts = 20000,
 }: PracticeCalculatorProps = {}) {
   const router = useRouter()
   const [revenue, setRevenue] = useState(initialRevenue)
@@ -147,6 +157,75 @@ export function PracticeCalculator({
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(value)
+  }
+
+  const formatCurrencyShort = (value: number) => {
+    if (value >= 1000000) {
+      const millions = value / 1000000
+      return `$${millions % 1 === 0 ? millions : millions.toFixed(1)}m`
+    } else if (value >= 1000) {
+      const thousands = value / 1000
+      return `$${thousands % 1 === 0 ? thousands : thousands.toFixed(1)}k`
+    }
+    return formatCurrency(value)
+  }
+
+  // Chart data and config
+  const chartData = useMemo(() => {
+    const total =
+      marketingCosts + directCareCosts + overheadCosts + metrics.netProfit
+    return [
+      {
+        category: 'marketing',
+        value: marketingCosts,
+        fill: 'var(--color-marketing)',
+        percentage:
+          total > 0 ? ((marketingCosts / total) * 100).toFixed(1) : '0',
+      },
+      {
+        category: 'directCare',
+        value: directCareCosts,
+        fill: 'var(--color-directCare)',
+        percentage:
+          total > 0 ? ((directCareCosts / total) * 100).toFixed(1) : '0',
+      },
+      {
+        category: 'overhead',
+        value: overheadCosts,
+        fill: 'var(--color-overhead)',
+        percentage:
+          total > 0 ? ((overheadCosts / total) * 100).toFixed(1) : '0',
+      },
+      {
+        category: 'netProfit',
+        value: metrics.netProfit,
+        fill: 'var(--color-netProfit)',
+        percentage:
+          total > 0 ? ((metrics.netProfit / total) * 100).toFixed(1) : '0',
+      },
+    ]
+  }, [marketingCosts, directCareCosts, overheadCosts, metrics.netProfit])
+
+  const chartConfig = {
+    value: {
+      label: 'Amount',
+    },
+    marketing: {
+      label: 'Marketing',
+      color: '#3b82f6',
+    },
+    directCare: {
+      label: 'Direct Care',
+      color: '#f97316',
+    },
+    overhead: {
+      label: 'Overhead',
+      color: '#ef4444',
+    },
+    netProfit: {
+      label: 'Net Profit',
+      color: '#22c55e',
+    },
   }
 
   const formatNumberWithCommas = (value: string) => {
@@ -301,7 +380,7 @@ export function PracticeCalculator({
                 Total New Patients Acquired
               </Label>
               <div className="relative">
-                <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <UserPlus className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <Input
                   id="newPatients"
                   type="text"
@@ -327,7 +406,7 @@ export function PracticeCalculator({
                 Total Marketing Spend(ads, agency fees, etc.)
               </Label>
               <div className="relative">
-                <TrendingUp className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Megaphone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <Input
                   id="marketing"
                   type="text"
@@ -353,7 +432,7 @@ export function PracticeCalculator({
                 Direct Care Costs (clinical staff, supplies, etc.)
               </Label>
               <div className="relative">
-                <PieChart className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Stethoscope className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <Input
                   id="directCare"
                   type="text"
@@ -379,7 +458,7 @@ export function PracticeCalculator({
                 Overhead Costs (rent, insurance, equipment, admin staff, etc.)
               </Label>
               <div className="relative">
-                <PieChart className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Home className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <Input
                   id="overhead"
                   type="text"
@@ -405,7 +484,7 @@ export function PracticeCalculator({
                 Average Visits per Patient per Year
               </Label>
               <div className="relative">
-                <TrendingUp className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <CalendarCheck className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <Input
                   id="avgVisits"
                   type="number"
@@ -423,273 +502,289 @@ export function PracticeCalculator({
 
       {/* Results Section */}
       <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 md:col-span-4">
-          {/* Practice Overview */}
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <Building2 className="w-6 h-6 text-teal-600" />
-              <h4 className="text-2xl  text-gray-800">Practice Overview</h4>
-            </div>
-            <div className="grid md:grid-cols-2  gap-6">
-              {/* Revenue per Patient */}
-              <Card className="border-2 border-teal-100 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-in fade-in slide-in-from-bottom-4 delay-100">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-gray-600">
-                    Revenue per Patient
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-4xl font-bold text-teal-600 mb-2">
-                    {formatCurrency(metrics.revenuePerPatient)}
-                  </div>
-                  <p className="text-sm text-gray-500">
-                    Average revenue per patient
-                  </p>
-                </CardContent>
-              </Card>
-
-              {/* CAC */}
-              <Card className="border-2 border-blue-100 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-in fade-in slide-in-from-bottom-4 delay-200">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-gray-600">
-                    Customer Acquisition Cost (CAC)
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-4xl font-bold text-blue-600 mb-2">
-                    {formatCurrency(metrics.cac)}
-                  </div>
-                  <p className="text-sm text-gray-500">
-                    Cost to acquire each new patient
-                  </p>
-                </CardContent>
-              </Card>
-
-              {/* Gross Profit */}
-              <Card className="border-2 border-emerald-100 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-in fade-in slide-in-from-bottom-4 delay-300">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-gray-600">
-                    Gross Profit Margin
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-4xl font-bold text-emerald-600 mb-2">
-                    {metrics.grossProfitMargin.toFixed(1)}%
-                  </div>
-                  <p className="text-sm text-gray-500">
-                    {formatCurrency(metrics.grossProfit)}
-                  </p>
-                </CardContent>
-              </Card>
-
-              {/* Net Profit */}
-              <Card className="border-2 border-pink-100 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-in fade-in slide-in-from-bottom-4 delay-400">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-gray-600">
-                    Net Profit Margin
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-4xl font-bold text-pink-600 mb-2">
-                    {metrics.netProfitMargin.toFixed(1)}%
-                  </div>
-                  <p className="text-sm text-gray-500">
-                    {formatCurrency(metrics.netProfit)}
-                  </p>
-                </CardContent>
-              </Card>
-
-              {/* LTV:CAC Ratio */}
-              <Card className="border-2 border-orange-100 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-in fade-in slide-in-from-bottom-4 delay-500">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-gray-600">
-                    LTV:CAC Ratio
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-4xl font-bold text-orange-600 mb-2">
-                    {metrics.ltvCacRatio.toFixed(2)}x
-                  </div>
-                  <p className="text-sm text-gray-500">
-                    Lifetime value to acquisition cost
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
+        {/* Financial Breakdown Chart */}
+        <Card className="animate-in fade-in slide-in-from-bottom-4 delay-100 rounded-3xl">
+          <CardHeader>
+            <CardTitle className="text-xl">Financial Breakdown</CardTitle>
+            <CardDescription>
+              Distribution of costs and net profit
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer
+              config={chartConfig}
+              className="mx-auto aspect-square max-h-[300px]"
+            >
+              <PieChart>
+                <ChartTooltip
+                  cursor={false}
+                  content={
+                    <ChartTooltipContent
+                      hideLabel
+                      formatter={(value) => formatCurrency(Number(value))}
+                    />
+                  }
+                />
+                <Pie
+                  data={chartData}
+                  dataKey="value"
+                  nameKey="category"
+                  innerRadius={60}
+                  strokeWidth={5}
+                >
+                  {chartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.fill} />
+                  ))}
+                  <RechartsLabel
+                    content={({ viewBox }) => {
+                      if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
+                        const total = chartData.reduce(
+                          (acc, curr) => acc + curr.value,
+                          0,
+                        )
+                        return (
+                          <text
+                            x={viewBox.cx}
+                            y={viewBox.cy}
+                            textAnchor="middle"
+                            dominantBaseline="middle"
+                          >
+                            <tspan
+                              x={viewBox.cx}
+                              y={viewBox.cy}
+                              className="fill-foreground text-3xl font-bold"
+                            >
+                              {formatCurrencyShort(total)}
+                            </tspan>
+                            <tspan
+                              x={viewBox.cx}
+                              y={(viewBox.cy || 0) + 24}
+                              className="fill-muted-foreground"
+                            >
+                              Total
+                            </tspan>
+                          </text>
+                        )
+                      }
+                    }}
+                  />
+                </Pie>
+                <ChartLegend
+                  content={({ payload }) => {
+                    if (!payload?.length) return null
+                    return (
+                      <div className="grid grid-cols-2 gap-2 pt-3">
+                        {payload.map((entry, index) => {
+                          const dataEntry = chartData.find(
+                            (d) => d.category === entry.value,
+                          )
+                          return (
+                            <div
+                              key={`legend-${index}`}
+                              className="flex items-center gap-1.5"
+                            >
+                              <div
+                                className="h-2 w-2 shrink-0 rounded-[2px]"
+                                style={{ backgroundColor: entry.color }}
+                              />
+                              <span className="text-sm text-muted-foreground">
+                                {
+                                  chartConfig[
+                                    entry.value as keyof typeof chartConfig
+                                  ]?.label
+                                }{' '}
+                                ({dataEntry?.percentage}%)
+                              </span>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )
+                  }}
+                />
+              </PieChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+        {/* Practice Overview */}
+        <div>
+          <div className="flex items-center gap-2 mb-4">
+            <Building2 className="w-6 h-6 text-teal-600" />
+            <h4 className="text-2xl  text-gray-800">Practice Overview</h4>
           </div>
+          <div className="grid   gap-6">
+            {/* Revenue per Patient */}
+            <Card className="border-2 border-teal-100 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-in fade-in slide-in-from-bottom-4 delay-100">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-gray-600">
+                  Revenue per Patient
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-4xl font-bold text-teal-600 mb-2">
+                  {formatCurrency(metrics.revenuePerPatient)}
+                </div>
+                <p className="text-sm text-gray-500">
+                  Average revenue per patient
+                </p>
+              </CardContent>
+            </Card>
 
-          {/* Patient Overview */}
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <User className="w-6 h-6 text-green-600" />
-              <h4 className="text-2xl  text-gray-800">Patient Overview</h4>
-            </div>
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Profit per Patient */}
-              <Card className="border-2 border-green-100 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-in fade-in slide-in-from-bottom-4 delay-500">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-gray-600">
-                    Profit per Patient
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-4xl font-bold text-green-600 mb-2">
-                    {formatCurrency(metrics.profitPerPatient)}
-                  </div>
-                  <p className="text-sm text-gray-500">
-                    Net profit after operating costs
-                  </p>
-                </CardContent>
-              </Card>
+            {/* CAC */}
+            <Card className="border-2 border-blue-100 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-in fade-in slide-in-from-bottom-4 delay-200">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-gray-600">
+                  Customer Acquisition Cost (CAC)
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-4xl font-bold text-blue-600 mb-2">
+                  {formatCurrency(metrics.cac)}
+                </div>
+                <p className="text-sm text-gray-500">
+                  Cost to acquire each new patient
+                </p>
+              </CardContent>
+            </Card>
 
-              {/* Cost to Serve per Patient */}
-              <Card className="border-2 border-purple-100 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-in fade-in slide-in-from-bottom-4 delay-600">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-gray-600">
-                    Cost to Serve per Patient
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-4xl font-bold text-purple-600 mb-2">
-                    {formatCurrency(metrics.costToServe)}
-                  </div>
-                  <p className="text-sm text-gray-500">
-                    Operating cost per patient
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
+            {/* Gross Profit */}
+            <Card className="border-2 border-emerald-100 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-in fade-in slide-in-from-bottom-4 delay-300">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-gray-600">
+                  Gross Profit Margin
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-4xl font-bold text-emerald-600 mb-2">
+                  {metrics.grossProfitMargin.toFixed(1)}%
+                </div>
+                <p className="text-sm text-gray-500">
+                  {formatCurrency(metrics.grossProfit)}
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Net Profit */}
+            <Card className="border-2 border-pink-100 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-in fade-in slide-in-from-bottom-4 delay-400">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-gray-600">
+                  Net Profit Margin
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-4xl font-bold text-pink-600 mb-2">
+                  {metrics.netProfitMargin.toFixed(1)}%
+                </div>
+                <p className="text-sm text-gray-500">
+                  {formatCurrency(metrics.netProfit)}
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* LTV:CAC Ratio */}
+            <Card className="border-2 border-orange-100 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-in fade-in slide-in-from-bottom-4 delay-500">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-gray-600">
+                  LTV:CAC Ratio
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-4xl font-bold text-orange-600 mb-2">
+                  {metrics.ltvCacRatio.toFixed(2)}x
+                </div>
+                <p className="text-sm text-gray-500">
+                  Lifetime value to acquisition cost
+                </p>
+              </CardContent>
+            </Card>
           </div>
+        </div>
 
-          {/* Visit Overview */}
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <Calendar className="w-6 h-6 text-emerald-600" />
-              <h4 className="text-2xl  text-gray-800">Visit Overview</h4>
-            </div>
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Profit per Visit */}
-              <Card className="border-2 border-emerald-100 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-in fade-in slide-in-from-bottom-4 delay-700">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-gray-600">
-                    Profit per Visit
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-4xl font-bold text-emerald-600 mb-2">
-                    {formatCurrency(metrics.profitPerVisit)}
-                  </div>
-                  <p className="text-sm text-gray-500">
-                    Profit earned per patient visit
-                  </p>
-                </CardContent>
-              </Card>
-
-              {/* Cost to Serve per Visit */}
-              <Card className="border-2 border-indigo-100 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-in fade-in slide-in-from-bottom-4 delay-800">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-gray-600">
-                    Cost to Serve per Visit
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-4xl font-bold text-indigo-600 mb-2">
-                    {formatCurrency(metrics.costToServePerVisit)}
-                  </div>
-                  <p className="text-sm text-gray-500">
-                    Operating cost per visit
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
+        {/* Patient Overview */}
+        <div>
+          <div className="flex items-center gap-2 mb-4">
+            <User className="w-6 h-6 text-green-600" />
+            <h4 className="text-2xl  text-gray-800">Patient Overview</h4>
           </div>
-
-          {/* Visual Breakdown */}
-          <Card className="border-2 border-gray-200 shadow-lg mt-8 animate-in fade-in slide-in-from-bottom-4 delay-700">
-            <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100">
-              <CardTitle className="text-2xl text-gray-900">
-                Financial Breakdown
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="space-y-6">
-                {/* Revenue Breakdown Bar */}
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm  text-gray-700">
-                      Revenue Distribution
-                    </span>
-                    <span className="text-sm  text-gray-900">
-                      {formatCurrency(revenue)}
-                    </span>
-                  </div>
-                  <div className="h-8 bg-gray-200 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-teal-500 to-teal-600 transition-all duration-1000 ease-out"
-                      style={{ width: '100%' }}
-                    />
-                  </div>
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Profit per Patient */}
+            <Card className="border-2 border-green-100 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-in fade-in slide-in-from-bottom-4 delay-500">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-gray-600">
+                  Profit per Patient
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-4xl font-bold text-green-600 mb-2">
+                  {formatCurrency(metrics.profitPerPatient)}
                 </div>
+                <p className="text-sm text-gray-500">
+                  Net profit after operating costs
+                </p>
+              </CardContent>
+            </Card>
 
-                {/* Costs Breakdown */}
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm  text-gray-700">Total Costs</span>
-                    <span className="text-sm  text-gray-900">
-                      {formatCurrency(
-                        marketingCosts + directCareCosts + overheadCosts,
-                      )}
-                    </span>
-                  </div>
-                  <div className="h-8 bg-gray-200 rounded-full overflow-hidden flex">
-                    <div
-                      className="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-1000 ease-out"
-                      style={{
-                        width: `${(marketingCosts / (marketingCosts + directCareCosts + overheadCosts)) * 100 || 0}%`,
-                      }}
-                      title={`Marketing: ${formatCurrency(marketingCosts)}`}
-                    />
-                    <div
-                      className="h-full bg-gradient-to-r from-purple-500 to-purple-600 transition-all duration-1000 ease-out"
-                      style={{
-                        width: `${(directCareCosts / (marketingCosts + directCareCosts + overheadCosts)) * 100 || 0}%`,
-                      }}
-                      title={`Direct Care: ${formatCurrency(directCareCosts)}`}
-                    />
-                    <div
-                      className="h-full bg-gradient-to-r from-indigo-500 to-indigo-600 transition-all duration-1000 ease-out"
-                      style={{
-                        width: `${(overheadCosts / (marketingCosts + directCareCosts + overheadCosts)) * 100 || 0}%`,
-                      }}
-                      title={`Overhead: ${formatCurrency(overheadCosts)}`}
-                    />
-                  </div>
-                  <div className="flex justify-between mt-2 text-xs text-gray-600">
-                    <span>Marketing: {formatCurrency(marketingCosts)}</span>
-                    <span>Direct Care: {formatCurrency(directCareCosts)}</span>
-                    <span>Overhead: {formatCurrency(overheadCosts)}</span>
-                  </div>
+            {/* Cost to Serve per Patient */}
+            <Card className="border-2 border-purple-100 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-in fade-in slide-in-from-bottom-4 delay-600">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-gray-600">
+                  Cost to Serve per Patient
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-4xl font-bold text-purple-600 mb-2">
+                  {formatCurrency(metrics.costToServe)}
                 </div>
+                <p className="text-sm text-gray-500">
+                  Operating cost per patient
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
 
-                {/* Net Profit */}
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm  text-gray-700">Net Profit</span>
-                    <span className="text-sm  text-green-600">
-                      {formatCurrency(metrics.netProfit)}
-                    </span>
-                  </div>
-                  <div className="h-8 bg-gray-200 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-green-500 to-green-600 transition-all duration-1000 ease-out"
-                      style={{
-                        width: `${Math.max(0, Math.min(100, revenue > 0 ? (metrics.netProfit / revenue) * 100 : 0))}%`,
-                      }}
-                    />
-                  </div>
+        {/* Visit Overview */}
+        <div>
+          <div className="flex items-center gap-2 mb-4">
+            <Calendar className="w-6 h-6 text-emerald-600" />
+            <h4 className="text-2xl  text-gray-800">Visit Overview</h4>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Profit per Visit */}
+            <Card className="border-2 border-emerald-100 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-in fade-in slide-in-from-bottom-4 delay-700">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-gray-600">
+                  Profit per Visit
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-4xl font-bold text-emerald-600 mb-2">
+                  {formatCurrency(metrics.profitPerVisit)}
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+                <p className="text-sm text-gray-500">
+                  Profit earned per patient visit
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Cost to Serve per Visit */}
+            <Card className="border-2 border-indigo-100 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-in fade-in slide-in-from-bottom-4 delay-800">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-gray-600">
+                  Cost to Serve per Visit
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-4xl font-bold text-indigo-600 mb-2">
+                  {formatCurrency(metrics.costToServePerVisit)}
+                </div>
+                <p className="text-sm text-gray-500">
+                  Operating cost per visit
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
 
       {/* Floating Save Button */}
