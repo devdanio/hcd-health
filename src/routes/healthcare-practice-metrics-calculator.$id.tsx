@@ -3,7 +3,9 @@ import { PracticeCalculator } from '@/components/practice-calculator'
 import { getLeadCalculator } from '@/server/functions/lead-calculator'
 import { notFound } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/healthcare-practice-metrics-calculator/$id')({
+export const Route = createFileRoute(
+  '/healthcare-practice-metrics-calculator/$id',
+)({
   component: SavedReport,
   loader: async ({ params }) => {
     const report = await getLeadCalculator({ data: { id: params.id } })
@@ -18,7 +20,7 @@ function SavedReport() {
   const { report } = Route.useLoaderData()
 
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="">
       <div className="max-w-7xl mx-auto px-6">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">

@@ -102,31 +102,20 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const collections = useMemo(() => createCollections(queryClient), [])
 
   return (
-    <html lang="en">
+    <html lang="en ">
       <head>
         <HeadContent />
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
-              html, body {
-                background-color: oklch(1 0 0);
-                margin: 0;
-              }
-              @media (prefers-color-scheme: dark) {
-                html, body {
-                  background-color: oklch(0.2046 0 0);
-                }
-              }
-              .dark html, .dark body {
-                background-color: oklch(0.2046 0 0);
-              }
-            `,
-          }}
-        />
       </head>
-      <body>
+      <body className="bg-background text-foreground">
         <QueryClientProvider client={queryClient}>
           <CollectionsContext.Provider value={collections}>
+            <header className="bg-white py-4 px-6">
+              <img
+                src="/images/high-country-health-logo.svg"
+                alt="High Country Health"
+                className="w-24 h-auto"
+              />
+            </header>
             {children}
             {/* <TanStackDevtools
               config={{

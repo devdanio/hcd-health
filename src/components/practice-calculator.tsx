@@ -1,7 +1,13 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
@@ -36,13 +42,13 @@ interface PracticeCalculatorProps {
 }
 
 export function PracticeCalculator({
-  initialRevenue = 0,
-  initialPatients = 0,
-  initialNewPatients = 0,
-  initialAvgVisits = 0,
-  initialMarketingCosts = 0,
-  initialDirectCareCosts = 0,
-  initialOverheadCosts = 0,
+  initialRevenue = 1000000,
+  initialPatients = 500,
+  initialNewPatients = 250,
+  initialAvgVisits = 6.3,
+  initialMarketingCosts = 60000,
+  initialDirectCareCosts = 500000,
+  initialOverheadCosts = 60000,
 }: PracticeCalculatorProps = {}) {
   const router = useRouter()
   const [revenue, setRevenue] = useState(initialRevenue)
@@ -155,15 +161,6 @@ export function PracticeCalculator({
     setter(Number(numericValue))
   }
 
-  const hasInputs =
-    revenue > 0 ||
-    patients > 0 ||
-    newPatients > 0 ||
-    avgVisits > 0 ||
-    marketingCosts > 0 ||
-    directCareCosts > 0 ||
-    overheadCosts > 0
-
   // Check if all required fields are filled (for showing save button)
   const allFieldsFilled =
     revenue > 0 &&
@@ -217,29 +214,41 @@ export function PracticeCalculator({
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto">
-      <div className="text-center mb-12">
-        <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-          Healthcare Practice Metrics Calculator
-        </h2>
-        <p className="text-lg text-gray-600">
-          Understand your practice's financial health with key metrics
-        </p>
-      </div>
-
-      {/* Input Section */}
-      <Card className="mb-8 border-2 border-gray-200 shadow-lg">
-        <CardHeader className="bg-gradient-to-r from-teal-50 to-blue-50">
-          <CardTitle className="text-2xl text-gray-900">
-            Enter your practice's yearly data
+    <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6">
+      <Card className="col-span-8 rounded-3xl order-1 md:order-0">
+        <CardHeader>
+          <CardTitle className="text-4xl font-normal">
+            Calculate your practice's metrics in minutes
           </CardTitle>
+          <CardDescription>
+            <div className="flex flex-wrap gap-2 mt-2">
+              <span className="px-3 py-1.5 bg-teal-50 text-teal-700 rounded-full text-sm font-medium">
+                Revenue/Patient
+              </span>
+              <span className="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
+                Customer Acquisition Cost (CAC)
+              </span>
+              <span className="px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-full text-sm font-medium">
+                Gross Profit Margin
+              </span>
+              <span className="px-3 py-1.5 bg-pink-50 text-pink-700 rounded-full text-sm font-medium">
+                Net Profit Margin
+              </span>
+              <span className="px-3 py-1.5 bg-orange-50 text-orange-700 rounded-full text-sm font-medium">
+                LTV:CAC Ratio
+              </span>
+              <span className="px-3 py-1.5 bg-gray-50 text-gray-700 rounded-full text-sm font-medium">
+                And more...
+              </span>
+            </div>
+          </CardDescription>
         </CardHeader>
         <CardContent className="pt-6">
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6">
             <div className="space-y-2">
               <Label
                 htmlFor="revenue"
-                className="text-base font-semibold text-gray-700"
+                className="text-base text-card-foreground"
               >
                 Total Annual Revenue
               </Label>
@@ -263,7 +272,7 @@ export function PracticeCalculator({
             <div className="space-y-2">
               <Label
                 htmlFor="patients"
-                className="text-base font-semibold text-gray-700"
+                className="text-base  text-card-foreground"
               >
                 Total Patients Served
               </Label>
@@ -287,7 +296,7 @@ export function PracticeCalculator({
             <div className="space-y-2">
               <Label
                 htmlFor="newPatients"
-                className="text-base font-semibold text-gray-700"
+                className="text-base  text-card-foreground"
               >
                 Total New Patients Acquired
               </Label>
@@ -313,7 +322,7 @@ export function PracticeCalculator({
             <div className="space-y-2">
               <Label
                 htmlFor="marketing"
-                className="text-base font-semibold text-gray-700"
+                className="text-base  text-card-foreground"
               >
                 Total Marketing Spend(ads, agency fees, etc.)
               </Label>
@@ -339,7 +348,7 @@ export function PracticeCalculator({
             <div className="space-y-2">
               <Label
                 htmlFor="directCare"
-                className="text-base font-semibold text-gray-700"
+                className="text-base  text-card-foreground"
               >
                 Direct Care Costs (clinical staff, supplies, etc.)
               </Label>
@@ -365,7 +374,7 @@ export function PracticeCalculator({
             <div className="space-y-2">
               <Label
                 htmlFor="overhead"
-                className="text-base font-semibold text-gray-700"
+                className="text-base  text-card-foreground"
               >
                 Overhead Costs (rent, insurance, equipment, admin staff, etc.)
               </Label>
@@ -391,7 +400,7 @@ export function PracticeCalculator({
             <div className="space-y-2">
               <Label
                 htmlFor="avgVisits"
-                className="text-base font-semibold text-gray-700"
+                className="text-base  text-card-foreground"
               >
                 Average Visits per Patient per Year
               </Label>
@@ -413,21 +422,14 @@ export function PracticeCalculator({
       </Card>
 
       {/* Results Section */}
-      {hasInputs && (
-        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <h3 className="text-3xl font-bold text-gray-900">
-            Your Practice Metrics
-          </h3>
-
+      <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 md:col-span-4">
           {/* Practice Overview */}
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Building2 className="w-6 h-6 text-teal-600" />
-              <h4 className="text-2xl font-semibold text-gray-800">
-                Practice Overview
-              </h4>
+              <h4 className="text-2xl  text-gray-800">Practice Overview</h4>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid md:grid-cols-2  gap-6">
               {/* Revenue per Patient */}
               <Card className="border-2 border-teal-100 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-in fade-in slide-in-from-bottom-4 delay-100">
                 <CardHeader className="pb-3">
@@ -519,9 +521,7 @@ export function PracticeCalculator({
           <div>
             <div className="flex items-center gap-2 mb-4">
               <User className="w-6 h-6 text-green-600" />
-              <h4 className="text-2xl font-semibold text-gray-800">
-                Patient Overview
-              </h4>
+              <h4 className="text-2xl  text-gray-800">Patient Overview</h4>
             </div>
             <div className="grid md:grid-cols-2 gap-6">
               {/* Profit per Patient */}
@@ -564,9 +564,7 @@ export function PracticeCalculator({
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Calendar className="w-6 h-6 text-emerald-600" />
-              <h4 className="text-2xl font-semibold text-gray-800">
-                Visit Overview
-              </h4>
+              <h4 className="text-2xl  text-gray-800">Visit Overview</h4>
             </div>
             <div className="grid md:grid-cols-2 gap-6">
               {/* Profit per Visit */}
@@ -617,10 +615,10 @@ export function PracticeCalculator({
                 {/* Revenue Breakdown Bar */}
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-semibold text-gray-700">
+                    <span className="text-sm  text-gray-700">
                       Revenue Distribution
                     </span>
-                    <span className="text-sm font-semibold text-gray-900">
+                    <span className="text-sm  text-gray-900">
                       {formatCurrency(revenue)}
                     </span>
                   </div>
@@ -635,10 +633,8 @@ export function PracticeCalculator({
                 {/* Costs Breakdown */}
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-semibold text-gray-700">
-                      Total Costs
-                    </span>
-                    <span className="text-sm font-semibold text-gray-900">
+                    <span className="text-sm  text-gray-700">Total Costs</span>
+                    <span className="text-sm  text-gray-900">
                       {formatCurrency(
                         marketingCosts + directCareCosts + overheadCosts,
                       )}
@@ -677,10 +673,8 @@ export function PracticeCalculator({
                 {/* Net Profit */}
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-semibold text-gray-700">
-                      Net Profit
-                    </span>
-                    <span className="text-sm font-semibold text-green-600">
+                    <span className="text-sm  text-gray-700">Net Profit</span>
+                    <span className="text-sm  text-green-600">
                       {formatCurrency(metrics.netProfit)}
                     </span>
                   </div>
@@ -696,27 +690,15 @@ export function PracticeCalculator({
               </div>
             </CardContent>
           </Card>
-        </div>
-      )}
-
-      {!hasInputs && (
-        <div className="text-center py-16">
-          <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <PieChart className="w-12 h-12 text-gray-400" />
-          </div>
-          <p className="text-lg text-gray-500">
-            Enter your practice data above to see your metrics
-          </p>
-        </div>
-      )}
+      </div>
 
       {/* Floating Save Button */}
       {allFieldsFilled && (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-4 duration-500 col-span-4">
           <Button
             onClick={() => setShowSaveModal(true)}
             size="lg"
-            className="bg-teal-600 hover:bg-teal-700 text-white shadow-xl hover:shadow-2xl transition-all duration-300 px-8 py-6 text-lg font-semibold"
+            className="bg-teal-600 hover:bg-teal-700 text-white shadow-xl hover:shadow-2xl transition-all duration-300 px-8 py-6 text-lg "
           >
             <Save className="w-5 h-5 mr-2" />
             Save Report

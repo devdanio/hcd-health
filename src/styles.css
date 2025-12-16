@@ -2,14 +2,88 @@
 
 @import 'tw-animate-css';
 @import 'react-big-calendar/lib/css/react-big-calendar.css';
-@import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'; 
+@import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 @custom-variant dark (&:is(.dark *));
+
+/* AkkuratLLCyr Font Family */
+@font-face {
+  font-family: 'AkkuratLLCyr';
+  src: url('/fonts/AkkuratLLCyr-Thin.otf') format('opentype');
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'AkkuratLLCyr';
+  src: url('/fonts/AkkuratLLCyr-ThinItalic.otf') format('opentype');
+  font-weight: 100;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'AkkuratLLCyr';
+  src: url('/fonts/AkkuratLLCyr-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'AkkuratLLCyr';
+  src: url('/fonts/AkkuratLLCyr-LightItalic.otf') format('opentype');
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'AkkuratLLCyr';
+  src: url('/fonts/AkkuratLLCyr-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'AkkuratLLCyr';
+  src: url('/fonts/AkkuratLLCyr-RegularItalic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'AkkuratLLCyr';
+  src: url('/fonts/AkkuratLLCyr-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'AkkuratLLCyr';
+  src: url('/fonts/AkkuratLLCyr-BoldItalic.otf') format('opentype');
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'AkkuratLLCyr';
+  src: url('/fonts/AkkuratLLCyr-Black.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'AkkuratLLCyr';
+  src: url('/fonts/AkkuratLLCyr-BlackItalic.otf') format('opentype');
+  font-weight: 900;
+  font-style: italic;
+}
 
 body {
   @apply m-0;
   font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
-    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    'AkkuratLLCyr',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -20,10 +94,10 @@ code {
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.3211 0 0);
+  --background: #f5f8f8;
+  --foreground: rgb(0, 58, 67);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.3211 0 0);
+  --card-foreground: rgb(0, 58, 67);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.3211 0 0);
   --primary: oklch(59.565% 0.14565 153.657);
@@ -52,7 +126,8 @@ code {
   --sidebar-border: oklch(0.9276 0.0058 264.5313);
   --sidebar-ring: oklch(0.6231 0.188 259.8145);
 
-  --font-sans: Inter, sans-serif;
+  --font-sans:
+    'AkkuratLLCyr', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-serif: Source Serif 4, serif;
   --font-mono: JetBrains Mono, monospace;
 
@@ -83,10 +158,10 @@ code {
 }
 
 .dark {
-  --background: oklch(0.2046 0 0);
-  --foreground: oklch(0.9219 0 0);
+  --background: #f5f8f8;
+  --foreground: rgb(0, 58, 67);
   --card: oklch(0.2686 0 0);
-  --card-foreground: oklch(0.9219 0 0);
+  --card-foreground: rgb(0, 58, 67);
   --popover: oklch(0.2686 0 0);
   --popover-foreground: oklch(0.9219 0 0);
   --primary: oklch(58.767% 0.10781 177.609);
@@ -129,7 +204,8 @@ code {
   --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
   --destructive-foreground: oklch(1 0 0);
   --radius: 0.375rem;
-  --font-sans: Inter, sans-serif;
+  --font-sans:
+    'AkkuratLLCyr', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-serif: Source Serif 4, serif;
   --font-mono: JetBrains Mono, monospace;
   --shadow-color: oklch(0 0 0);
@@ -175,7 +251,8 @@ code {
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --font-sans: Inter, sans-serif;
+  --font-sans:
+    'AkkuratLLCyr', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: JetBrains Mono, monospace;
   --font-serif: Source Serif 4, serif;
 
@@ -261,9 +338,13 @@ code {
     oklch(0.6231 0.188 259.8145 / 0.2)
   );
   background-size: 300% 300%;
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   mask-composite: exclude;
   opacity: 0;
   transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
