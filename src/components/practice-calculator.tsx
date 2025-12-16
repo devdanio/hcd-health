@@ -294,7 +294,7 @@ export function PracticeCalculator({
 
   return (
     <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6">
-      <Card className="col-span-8 rounded-3xl order-1 md:order-0">
+      <Card className="md:col-span-8 rounded-3xl order-1 md:order-0">
         <CardHeader>
           <CardTitle className="text-4xl font-normal">
             Calculate your practice's metrics in minutes
@@ -612,7 +612,7 @@ export function PracticeCalculator({
             <Building2 className="w-6 h-6 text-teal-600" />
             <h4 className="text-2xl  text-gray-800">Practice Overview</h4>
           </div>
-          <div className="grid   gap-6">
+          <div className="flex gap-6 overflow-x-auto md:grid md:grid-cols-3 md:grid-flow-row">
             {/* Revenue per Patient */}
             <Card className="border-2 border-teal-100 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-in fade-in slide-in-from-bottom-4 delay-100">
               <CardHeader className="pb-3">
