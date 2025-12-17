@@ -1,4 +1,4 @@
-# Leadalytics - Quick Start Guide
+# High Country Health - Quick Start Guide
 
 Get up and running with attribution tracking in 5 minutes.
 
@@ -89,7 +89,7 @@ http://localhost:3000/test-page.html?utm_source=facebook&utm_medium=cpc&utm_camp
 
 **Expected Results:**
 1. Open browser console (F12 → Console)
-2. You should see: "🎯 Leadalytics Test Page"
+2. You should see: "🎯 High Country Health Test Page"
 3. Session info should display with visitor ID and session ID
 4. URL parameters should show Facebook attribution
 

@@ -13,7 +13,7 @@ export const Route = createFileRoute('/companies')({
 
 function CompaniesLayout() {
   return (
-    <ThemeProvider defaultTheme="system" storageKey="leadalytics-ui-theme">
+    <ThemeProvider defaultTheme="system" storageKey="hch-ui-theme">
       <Outlet />
     </ThemeProvider>
   )

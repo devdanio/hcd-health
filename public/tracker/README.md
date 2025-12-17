@@ -1,4 +1,4 @@
-# Leadalytics Attribution Tracker
+# High Country Health Attribution Tracker
 
 JavaScript tracking scripts for attribution tracking and conversion analytics.
 
@@ -46,10 +46,10 @@ Track custom events anywhere in your code:
 
 ```javascript
 // Simple event
-Leadalytics.trackEvent('button_clicked')
+HCH.trackEvent('button_clicked')
 
 // Event with metadata
-Leadalytics.trackEvent('video_watched', {
+HCH.trackEvent('video_watched', {
   videoId: '12345',
   duration: 120,
   completed: true
@@ -89,7 +89,7 @@ From within an iframe:
 
 ```javascript
 // Wait for session data from parent (optional but recommended)
-await Leadalytics.waitForReady()
+await HCH.waitForReady()
 
 // Track conversion
 trackConversion('form_submit', {
@@ -103,7 +103,7 @@ trackConversion('form_submit', {
 ### Get Session Info
 
 ```javascript
-const info = Leadalytics.getSessionInfo()
+const info = HCH.getSessionInfo()
 console.log(info)
 // {
 //   visitorId: "uuid-here",
@@ -166,8 +166,8 @@ For tracking across multiple domains (e.g., landing page → checkout):
 
 1. Pass session ID via URL parameter:
    ```javascript
-   const sessionInfo = Leadalytics.getSessionInfo()
-   const checkoutUrl = `https://checkout.com/cart?_la_sid=${sessionInfo.sessionId}`
+   const sessionInfo = HCH.getSessionInfo()
+   const checkoutUrl = `https://checkout.com/cart?_hch_sid=${sessionInfo.sessionId}`
    ```
 
 2. On destination page, initialize with session ID (feature to be added).
@@ -196,10 +196,10 @@ For tracking across multiple domains (e.g., landing page → checkout):
 <html>
 <head>
   <title>My Landing Page</title>
-  <!-- Leadalytics Tracker -->
+  <!-- High Country Health Tracker -->
   <script
     src="/tracker/tracker.js"
-    data-api-key="la_abc123..."
+    data-api-key="hch_abc123..."
     data-api-url="https://your-app.convex.cloud"
   ></script>
 </head>
@@ -216,7 +216,7 @@ For tracking across multiple domains (e.g., landing page → checkout):
 <html>
 <head>
   <title>Contact Form</title>
-  <!-- Leadalytics Iframe Tracker -->
+  <!-- High Country Health Iframe Tracker -->
   <script src="/tracker/iframe-tracker.js"></script>
 </head>
 <body>
@@ -231,7 +231,7 @@ For tracking across multiple domains (e.g., landing page → checkout):
       e.preventDefault()
 
       // Wait for session data
-      await Leadalytics.waitForReady()
+      await HCH.waitForReady()
 
       // Track conversion
       trackConversion('lead', {
@@ -255,13 +255,13 @@ Check console for debug messages:
 
 ```javascript
 // Check if tracker is loaded
-console.log(window.Leadalytics)
+console.log(window.HCH)
 
 // Get session info
-console.log(Leadalytics.getSessionInfo())
+console.log(HCH.getSessionInfo())
 
 // For iframe tracker, check if ready
-console.log(Leadalytics.isReady())
+console.log(HCH.isReady())
 ```
 
 ## Support

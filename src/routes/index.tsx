@@ -13,7 +13,7 @@ export const Route = createFileRoute('/')({ component: App })
 //             <div className="w-8 h-8 bg-teal-500 rounded-lg flex items-center justify-center">
 //               <span className="text-white font-bold text-xl">L</span>
 //             </div>
-//             <span className="text-xl font-semibold text-gray-900">Leadalytics</span>
+//             <span className="text-xl font-semibold text-gray-900">High Country Health</span>
 //           </div>
 //           <button className="text-gray-700 hover:text-gray-900 underline">
 //             Contact us
@@ -234,7 +234,7 @@ export const Route = createFileRoute('/')({ component: App })
 //             <div className="w-10 h-10 bg-lime-200 rounded-lg flex items-center justify-center">
 //               <span className="text-xl">✉️</span>
 //             </div>
-//             <span className="text-gray-700">hi@leadalytics.com</span>
+//             <span className="text-gray-700">hi@highcountryhealth.ai</span>
 //           </div>
 
 //           <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-12">
@@ -434,7 +434,7 @@ export const Route = createFileRoute('/')({ component: App })
 //             <div className="w-8 h-8 bg-teal-500 rounded-lg flex items-center justify-center">
 //               <span className="text-white font-bold text-xl">L</span>
 //             </div>
-//             <span className="text-xl font-semibold">Leadalytics</span>
+//             <span className="text-xl font-semibold">High Country Health</span>
 //           </div>
 //           <p className="text-gray-400">
 //             Modern data solutions for your healthcare practice

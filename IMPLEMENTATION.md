@@ -1,4 +1,4 @@
-# Leadalytics - Attribution Tracking Implementation
+# High Country Health - Attribution Tracking Implementation
 
 ## Overview
 
@@ -179,7 +179,7 @@ trackConversion('purchase', {
     e.preventDefault()
 
     // Wait for session data from parent
-    await Leadalytics.waitForReady()
+    await HCH.waitForReady()
 
     // Track conversion
     trackConversion('lead', {
@@ -415,13 +415,13 @@ Open browser console to see tracking activity:
 
 ```javascript
 // Check tracker status
-console.log(window.Leadalytics)
+console.log(window.HCH)
 
 // Get session info
-console.log(Leadalytics.getSessionInfo())
+console.log(HCH.getSessionInfo())
 
 // For iframe tracker, check if ready
-console.log(Leadalytics.isReady())
+console.log(HCH.isReady())
 ```
 
 ---

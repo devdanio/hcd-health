@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import {
   Card,
   CardContent,
@@ -82,6 +82,27 @@ export function PracticeCalculator({
   const [email, setEmail] = useState('')
   const [isSaving, setIsSaving] = useState(false)
   const [saveError, setSaveError] = useState('')
+
+  // Carousel state
+  const [carouselApi, setCarouselApi] = useState<any>(null)
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const totalSlides = 4
+
+  // Track carousel slide changes
+  useEffect(() => {
+    if (!carouselApi) return
+
+    const onSelect = () => {
+      setCurrentSlide(carouselApi.selectedScrollSnap())
+    }
+
+    carouselApi.on('select', onSelect)
+    onSelect()
+
+    return () => {
+      carouselApi.off('select', onSelect)
+    }
+  }, [carouselApi])
 
   const metrics = useMemo(() => {
     if (patients === 0 || newPatients === 0 || avgVisits === 0) {
@@ -302,8 +323,8 @@ export function PracticeCalculator({
   return (
     <div className="w-full h-screen max-w-7xl mx-auto flex flex-col gap-2 p-2">
       {/* Carousel Section - Top 50% */}
-      <div className="h-1/2 overflow-hidden">
-        <Carousel className="w-full h-full">
+      <div className="h-1/2 overflow-hidden relative">
+        <Carousel className="w-full h-full" setApi={setCarouselApi}>
           <CarouselContent className="h-full">
             {/* Slide 1: Financial Breakdown */}
             <CarouselItem className="h-full">
@@ -312,15 +333,12 @@ export function PracticeCalculator({
                   <CardTitle className="text-base">
                     Financial Breakdown
                   </CardTitle>
-                  <CardDescription className="text-xs">
-                    Distribution of costs and net profit
-                  </CardDescription>
                 </CardHeader>
-                <CardContent className="p-3">
-                  <div className="flex items-center gap-4">
+                <CardContent className="p-3 flex flex-col items-center justify-center h-[calc(100%-5rem)]">
+                  <div className="flex flex-col items-center gap-4">
                     <ChartContainer
                       config={chartConfig}
-                      className="shrink-0 aspect-square h-[120px] w-[120px]"
+                      className="shrink-0 aspect-square h-[200px] w-[200px]"
                     >
                       <PieChart>
                         <ChartTooltip
@@ -338,8 +356,8 @@ export function PracticeCalculator({
                           data={chartData}
                           dataKey="value"
                           nameKey="category"
-                          innerRadius={34}
-                          outerRadius={56}
+                          innerRadius={60}
+                          outerRadius={96}
                           strokeWidth={4}
                         >
                           {chartData.map((entry, index) => (
@@ -366,14 +384,14 @@ export function PracticeCalculator({
                                     <tspan
                                       x={viewBox.cx}
                                       y={viewBox.cy}
-                                      className="fill-foreground text-xl font-bold"
+                                      className="fill-foreground text-2xl font-bold"
                                     >
                                       {formatCurrencyShort(total)}
                                     </tspan>
                                     <tspan
                                       x={viewBox.cx}
-                                      y={(viewBox.cy || 0) + 20}
-                                      className="fill-muted-foreground text-xs"
+                                      y={(viewBox.cy || 0) + 24}
+                                      className="fill-muted-foreground text-sm"
                                     >
                                       Total
                                     </tspan>
@@ -386,28 +404,26 @@ export function PracticeCalculator({
                         <ChartLegend content={() => null} />
                       </PieChart>
                     </ChartContainer>
-                    <div className="flex-1">
-                      <div className="grid grid-cols-1 gap-1.5">
-                        {chartData.map((entry, index) => (
+                    <div className="grid grid-cols-2 gap-x-6 gap-y-1.5">
+                      {chartData.map((entry, index) => (
+                        <div
+                          key={`legend-${index}`}
+                          className="flex items-center gap-2"
+                        >
                           <div
-                            key={`legend-${index}`}
-                            className="flex items-center gap-1"
-                          >
-                            <div
-                              className="h-1.5 w-1.5 shrink-0 rounded-[2px]"
-                              style={{ backgroundColor: entry.fill }}
-                            />
-                            <span className="text-xs text-muted-foreground">
-                              {
-                                chartConfig[
-                                  entry.category as keyof typeof chartConfig
-                                ]?.label
-                              }{' '}
-                              ({entry.percentage}%)
-                            </span>
-                          </div>
-                        ))}
-                      </div>
+                            className="h-2 w-2 shrink-0 rounded-[2px]"
+                            style={{ backgroundColor: entry.fill }}
+                          />
+                          <span className="text-xs text-muted-foreground">
+                            {
+                              chartConfig[
+                                entry.category as keyof typeof chartConfig
+                              ]?.label
+                            }{' '}
+                            ({entry.percentage}%)
+                          </span>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </CardContent>
@@ -428,80 +444,75 @@ export function PracticeCalculator({
                 <CardContent className="p-3">
                   <div className="grid grid-cols-2 gap-3">
                     {/* Revenue per Patient */}
-                    <Card className="border border-teal-100 shadow">
-                      <CardHeader className="p-2">
-                        <CardTitle className="text-xs font-medium text-gray-600">
-                          Revenue/Patient
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-2">
-                        <div className="text-xl font-bold text-teal-600">
+                    <div className="flex gap-3 bg-white rounded-lg p-3">
+                      <div className="w-1.5 bg-teal-600 rounded-full" />
+                      <div className="flex-1">
+                        <div className="text-xs font-medium text-gray-600 mb-1">
+                          Revenue/patient
+                        </div>
+                        <div className="text-3xl font-bold text-teal-600">
                           {formatCurrencyShort(metrics.revenuePerPatient)}
                         </div>
-                      </CardContent>
-                    </Card>
+                      </div>
+                    </div>
 
                     {/* CAC */}
-                    <Card className="border border-blue-100 shadow">
-                      <CardHeader className="p-2">
-                        <CardTitle className="text-xs font-medium text-gray-600">
+                    <div className="flex gap-3 bg-white rounded-lg p-3">
+                      <div className="w-1.5 bg-blue-600 rounded-full" />
+                      <div className="flex-1">
+                        <div className="text-xs font-medium text-gray-600 mb-1">
                           CAC
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-2">
-                        <div className="text-xl font-bold text-blue-600">
+                        </div>
+                        <div className="text-3xl font-bold text-blue-600">
                           {formatCurrencyShort(metrics.cac)}
                         </div>
-                      </CardContent>
-                    </Card>
+                      </div>
+                    </div>
 
                     {/* Gross Profit */}
-                    <Card className="border border-emerald-100 shadow">
-                      <CardHeader className="p-2">
-                        <CardTitle className="text-xs font-medium text-gray-600">
-                          Gross Profit
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-2">
-                        <div className="text-xl font-bold text-emerald-600">
+                    <div className="flex gap-3 bg-white rounded-lg p-3">
+                      <div className="w-1.5 bg-emerald-600 rounded-full" />
+                      <div className="flex-1">
+                        <div className="text-xs font-medium text-gray-600 mb-1">
+                          Gross profit
+                        </div>
+                        <div className="text-3xl font-bold text-emerald-600">
                           {metrics.grossProfitMargin.toFixed(1)}%
                         </div>
-                        <p className="text-xs text-gray-500">
+                        <div className="text-xs text-gray-500 mt-0.5">
                           {formatCurrencyShort(metrics.grossProfit)}
-                        </p>
-                      </CardContent>
-                    </Card>
+                        </div>
+                      </div>
+                    </div>
 
                     {/* Net Profit */}
-                    <Card className="border border-pink-100 shadow">
-                      <CardHeader className="p-2">
-                        <CardTitle className="text-xs font-medium text-gray-600">
-                          Net Profit
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-2">
-                        <div className="text-xl font-bold text-pink-600">
+                    <div className="flex gap-3 bg-white rounded-lg p-3">
+                      <div className="w-1.5 bg-pink-600 rounded-full" />
+                      <div className="flex-1">
+                        <div className="text-xs font-medium text-gray-600 mb-1">
+                          Net profit
+                        </div>
+                        <div className="text-3xl font-bold text-pink-600">
                           {metrics.netProfitMargin.toFixed(1)}%
                         </div>
-                        <p className="text-xs text-gray-500">
+                        <div className="text-xs text-gray-500 mt-0.5">
                           {formatCurrencyShort(metrics.netProfit)}
-                        </p>
-                      </CardContent>
-                    </Card>
+                        </div>
+                      </div>
+                    </div>
 
                     {/* LTV:CAC Ratio */}
-                    <Card className="border border-orange-100 shadow col-span-2">
-                      <CardHeader className="p-2">
-                        <CardTitle className="text-xs font-medium text-gray-600">
+                    <div className="flex gap-3 bg-white rounded-lg p-3 col-span-2">
+                      <div className="w-1.5 bg-orange-600 rounded-full" />
+                      <div className="flex-1">
+                        <div className="text-xs font-medium text-gray-600 mb-1">
                           LTV:CAC Ratio
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-2">
-                        <div className="text-xl font-bold text-orange-600">
+                        </div>
+                        <div className="text-3xl font-bold text-orange-600">
                           {metrics.ltvCacRatio.toFixed(2)}x
                         </div>
-                      </CardContent>
-                    </Card>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -521,36 +532,36 @@ export function PracticeCalculator({
                 <CardContent className="p-3">
                   <div className="grid grid-cols-2 gap-3">
                     {/* Profit per Patient */}
-                    <Card className="border border-green-100 shadow">
-                      <CardHeader className="p-2">
-                        <CardTitle className="text-xs font-medium text-gray-600">
-                          Profit per Patient
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-2">
-                        <div className="text-xl font-bold text-green-600">
+                    <div className="flex gap-3 bg-white rounded-lg p-3">
+                      <div className="w-1.5 bg-green-600 rounded-full" />
+                      <div className="flex-1">
+                        <div className="text-xs font-medium text-gray-600 mb-1">
+                          Profit per patient
+                        </div>
+                        <div className="text-3xl font-bold text-green-600">
                           {formatCurrencyShort(metrics.profitPerPatient)}
                         </div>
-                        <p className="text-xs text-gray-500">
+                        <div className="text-xs text-gray-500 mt-0.5">
                           Net profit after costs
-                        </p>
-                      </CardContent>
-                    </Card>
+                        </div>
+                      </div>
+                    </div>
 
                     {/* Cost to Serve per Patient */}
-                    <Card className="border border-purple-100 shadow">
-                      <CardHeader className="p-2">
-                        <CardTitle className="text-xs font-medium text-gray-600">
-                          Cost to Serve
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-2">
-                        <div className="text-xl font-bold text-purple-600">
+                    <div className="flex gap-3 bg-white rounded-lg p-3">
+                      <div className="w-1.5 bg-purple-600 rounded-full" />
+                      <div className="flex-1">
+                        <div className="text-xs font-medium text-gray-600 mb-1">
+                          Cost to serve
+                        </div>
+                        <div className="text-3xl font-bold text-purple-600">
                           {formatCurrencyShort(metrics.costToServe)}
                         </div>
-                        <p className="text-xs text-gray-500">Operating cost</p>
-                      </CardContent>
-                    </Card>
+                        <div className="text-xs text-gray-500 mt-0.5">
+                          Operating cost
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -568,36 +579,33 @@ export function PracticeCalculator({
                 <CardContent className="p-3">
                   <div className="grid grid-cols-2 gap-3">
                     {/* Profit per Visit */}
-                    <Card className="border border-emerald-100 shadow">
-                      <CardHeader className="p-2">
-                        <CardTitle className="text-xs font-medium text-gray-600">
-                          Profit per Visit
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-2">
-                        <div className="text-xl font-bold text-emerald-600">
+                    <div className="flex gap-3 bg-white rounded-lg p-3">
+                      <div className="w-1.5 bg-emerald-600 rounded-full" />
+                      <div className="flex-1">
+                        <div className="text-xs font-medium text-gray-600 mb-1">
+                          Profit per visit
+                        </div>
+                        <div className="text-3xl font-bold text-emerald-600">
                           {formatCurrencyShort(metrics.profitPerVisit)}
                         </div>
-                        <p className="text-xs text-gray-500">
-                          Profit per visit
-                        </p>
-                      </CardContent>
-                    </Card>
+                      </div>
+                    </div>
 
                     {/* Cost to Serve per Visit */}
-                    <Card className="border border-indigo-100 shadow">
-                      <CardHeader className="p-2">
-                        <CardTitle className="text-xs font-medium text-gray-600">
-                          Cost per Visit
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-2">
-                        <div className="text-xl font-bold text-indigo-600">
+                    <div className="flex gap-3 bg-white rounded-lg p-3">
+                      <div className="w-1.5 bg-indigo-600 rounded-full" />
+                      <div className="flex-1">
+                        <div className="text-xs font-medium text-gray-600 mb-1">
+                          Cost per visit
+                        </div>
+                        <div className="text-3xl font-bold text-indigo-600">
                           {formatCurrencyShort(metrics.costToServePerVisit)}
                         </div>
-                        <p className="text-xs text-gray-500">Operating cost</p>
-                      </CardContent>
-                    </Card>
+                        <div className="text-xs text-gray-500 mt-0.5">
+                          Operating cost
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -605,6 +613,22 @@ export function PracticeCalculator({
           </CarouselContent>
           <CarouselPrevious className="left-2" />
           <CarouselNext className="right-2" />
+
+          {/* Carousel Dot Indicators */}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+            {Array.from({ length: totalSlides }).map((_, index) => (
+              <button
+                key={index}
+                onClick={() => carouselApi?.scrollTo(index)}
+                className={`h-2 w-2 rounded-full transition-all ${
+                  currentSlide === index
+                    ? 'bg-primary w-6'
+                    : 'bg-primary/30 hover:bg-primary/50'
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
         </Carousel>
       </div>
 

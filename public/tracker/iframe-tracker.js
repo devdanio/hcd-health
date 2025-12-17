@@ -1,11 +1,11 @@
 /**
- * Leadalytics Iframe Tracker
+ * High Country Health Iframe Tracker
  * Lightweight script for tracking conversions from within iframes
  */
 (function () {
   'use strict'
 
-  class LeadalyticsIframeTracker {
+  class HCHIframeTracker {
     constructor() {
       this.sessionData = null
       this.parentOrigin = '*' // Will be set when we receive session data
@@ -16,7 +16,7 @@
     requestSessionData() {
       if (window.parent === window) {
         console.warn(
-          'Leadalytics Iframe Tracker: Not running in an iframe context'
+          'HCH Iframe Tracker: Not running in an iframe context'
         )
         return
       }
@@ -25,14 +25,14 @@
       window.parent.postMessage(
         {
           type: 'REQUEST_SESSION',
-          leadalytics: true,
+          hch: true,
         },
         '*'
       )
 
       // Listen for response
       window.addEventListener('message', (event) => {
-        if (!event.data || !event.data.leadalytics) return
+        if (!event.data || !event.data.hch) return
 
         if (event.data.type === 'SESSION_DATA') {
           this.sessionData = {
@@ -42,7 +42,7 @@
             apiUrl: event.data.apiUrl,
           }
           this.parentOrigin = event.origin
-          console.log('Leadalytics: Session data received from parent')
+          console.log('HCH: Session data received from parent')
         }
       })
     }
@@ -51,7 +51,7 @@
     trackConversion(eventName, options = {}) {
       if (!this.sessionData) {
         console.error(
-          'Leadalytics: Session data not available. Ensure parent page has Leadalytics tracker installed.'
+          'HCH: Session data not available. Ensure parent page has HCH tracker installed.'
         )
         return
       }
@@ -60,7 +60,7 @@
       window.parent.postMessage(
         {
           type: 'CONVERSION',
-          leadalytics: true,
+          hch: true,
           eventName,
           revenue: options.revenue,
           metadata: options.metadata,
@@ -76,7 +76,7 @@
     trackEvent(eventName, metadata = {}) {
       if (!this.sessionData) {
         console.error(
-          'Leadalytics: Session data not available. Ensure parent page has Leadalytics tracker installed.'
+          'HCH: Session data not available. Ensure parent page has HCH tracker installed.'
         )
         return
       }
@@ -85,7 +85,7 @@
       window.parent.postMessage(
         {
           type: 'EVENT',
-          leadalytics: true,
+          hch: true,
           eventName,
           metadata,
         },
@@ -100,7 +100,7 @@
     identify(options = {}) {
       if (!this.sessionData) {
         console.error(
-          'Leadalytics: Session data not available. Ensure parent page has Leadalytics tracker installed.'
+          'HCH: Session data not available. Ensure parent page has HCH tracker installed.'
         )
         return
       }
@@ -109,7 +109,7 @@
       window.parent.postMessage(
         {
           type: 'IDENTIFY',
-          leadalytics: true,
+          hch: true,
           email: options.email,
           phone: options.phone,
           userId: options.userId,
@@ -140,7 +140,7 @@
           }),
         })
       } catch (error) {
-        console.error('Leadalytics: Error tracking conversion directly', error)
+        console.error('HCH: Error tracking conversion directly', error)
       }
     }
 
@@ -162,7 +162,7 @@
           }),
         })
       } catch (error) {
-        console.error('Leadalytics: Error tracking event directly', error)
+        console.error('HCH: Error tracking event directly', error)
       }
     }
 
@@ -175,7 +175,7 @@
       // Validate that at least one identifier is provided
       if (!email && !phone && !userId) {
         console.error(
-          'Leadalytics: identify() requires at least one of: email, phone, or userId'
+          'HCH: identify() requires at least one of: email, phone, or userId'
         )
         return
       }
@@ -195,7 +195,7 @@
           }),
         })
       } catch (error) {
-        console.error('Leadalytics: Error identifying contact directly', error)
+        console.error('HCH: Error identifying contact directly', error)
       }
     }
 
@@ -220,10 +220,10 @@
   }
 
   // Initialize iframe tracker
-  const iframeTracker = new LeadalyticsIframeTracker()
+  const iframeTracker = new HCHIframeTracker()
 
   // Expose global API
-  window.Leadalytics = {
+  window.HCH = {
     trackEvent: (eventName, metadata) =>
       iframeTracker.trackEvent(eventName, metadata),
     trackConversion: (eventName, options) =>
@@ -235,6 +235,6 @@
   }
 
   // Also expose simplified methods
-  window.trackConversion = window.Leadalytics.trackConversion
-  window.identify = window.Leadalytics.identify
+  window.trackConversion = window.HCH.trackConversion
+  window.identify = window.HCH.identify
 })()

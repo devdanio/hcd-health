@@ -3,7 +3,7 @@ import { ChatWidget } from './ChatWidget'
 import styles from './index.css?inline'
 
 // Create a container for the widget
-const containerId = 'leadalytics-chat-widget'
+const containerId = 'hch-chat-widget'
 let container = document.getElementById(containerId)
 
 if (!container) {

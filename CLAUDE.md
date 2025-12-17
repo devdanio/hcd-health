@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a TanStack Start application using React 19, Vite, Prisma (PostgreSQL), and Tailwind CSS. The project is focused on building an attribution tracking system (Leadalytics) for healthcare/chiropractic practices.
+This is a TanStack Start application using React 19, Vite, Prisma (PostgreSQL), and Tailwind CSS. The project is focused on building an attribution tracking system (High Country Health) for healthcare/chiropractic practices.
 
 ## Commands
 

@@ -143,15 +143,15 @@ function RouteComponent() {
                   {`<!-- Chat Widget Configuration -->
 <script>
   window.chatWidgetConfig = {
-    avatarUrl: "https://app.leadalytics.ai${selectedAvatar.src}"
+    avatarUrl: "https://app.highcountryhealth.ai${selectedAvatar.src}"
   };
 </script>
 
-<!-- Leadalytics Tracker & Chat Widget -->
+<!-- High Country Health Tracker & Chat Widget -->
 <!-- Note: CSS is embedded in chat-widget.js and injected into Shadow DOM -->
-<script src="https://app.leadalytics.ai/chat-widget.js"></script>
+<script src="https://app.highcountryhealth.ai/chat-widget.js"></script>
 <script
-  src="https://app.leadalytics.ai/tracker/tracker.js"
+  src="https://app.highcountryhealth.ai/tracker/tracker.js"
   data-api-key="${company?.apiKey}"
   data-api-url="${import.meta.env.VITE_CONVEX_URL}/http"
 ></script>`}
@@ -164,15 +164,15 @@ function RouteComponent() {
                     const code = `<!-- Chat Widget Configuration -->
 <script>
   window.chatWidgetConfig = {
-    avatarUrl: "https://app.leadalytics.ai${selectedAvatar.src}"
+    avatarUrl: "https://app.highcountryhealth.ai${selectedAvatar.src}"
   };
 </script>
 
-<!-- Leadalytics Tracker & Chat Widget -->
+<!-- High Country Health Tracker & Chat Widget -->
 <!-- Note: CSS is embedded in chat-widget.js and injected into Shadow DOM -->
-<script src="https://app.leadalytics.ai/chat-widget.js"></script>
+<script src="https://app.highcountryhealth.ai/chat-widget.js"></script>
 <script
-  src="https://app.leadalytics.ai/tracker/tracker.js"
+  src="https://app.highcountryhealth.ai/tracker/tracker.js"
   data-api-key="${company?.apiKey}"
   data-api-url="${import.meta.env.VITE_CONVEX_URL}/http"
 ></script>`

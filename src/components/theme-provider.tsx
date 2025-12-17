@@ -25,7 +25,7 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 export function ThemeProvider({
   children,
   defaultTheme = 'system',
-  storageKey = 'leadalytics-ui-theme',
+  storageKey = 'hch-ui-theme',
   ...props
 }: ThemeProviderProps) {
   const [_, setTheme] = useState<Theme>(

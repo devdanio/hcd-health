@@ -18,7 +18,7 @@ export default function Header() {
         </button>
         <h1 className="ml-4 text-xl font-semibold">
           <Link to="/" className="hover:text-cyan-400 transition-colors">
-            Leadalytics
+            High Country Health
           </Link>
         </h1>
       </header>

@@ -1,5 +1,5 @@
 /**
- * Leadalytics Attribution Tracker
+ * High Country Health Attribution Tracker
  * Lightweight attribution tracking with automatic pageview tracking
  */
 ;(function () {
@@ -7,17 +7,17 @@
 
   // Configuration
   const STORAGE_KEYS = {
-    VISITOR_ID: '_la_vid',
-    SESSION_ID: '_la_sid',
-    SESSION_START: '_la_sst',
-    LAST_URL: '_la_last_url',
-    LAST_SESSION_ID: '_la_last_session_id',
+    VISITOR_ID: '_hch_vid',
+    SESSION_ID: '_hch_sid',
+    SESSION_START: '_hch_sst',
+    LAST_URL: '_hch_last_url',
+    LAST_SESSION_ID: '_hch_last_session_id',
   }
 
   const SESSION_TIMEOUT = 30 * 60 * 1000 // 30 minutes in milliseconds
 
   // Initialize tracker
-  class LeadalyticsTracker {
+  class HCHTracker {
     constructor() {
       this.apiKey = null
       this.apiUrl = null
@@ -33,7 +33,7 @@
       if (this.apiKey && this.apiUrl) {
         this.init()
       } else {
-        console.error('Leadalytics: Missing apiKey or apiUrl configuration')
+        console.error('HCH: Missing apiKey or apiUrl configuration')
       }
     }
 
@@ -51,7 +51,7 @@
         if (
           script.src &&
           (script.src.includes('tracker.js') ||
-            script.src.includes('leadalytics'))
+            script.src.includes('hch'))
         ) {
           return script
         }
@@ -180,7 +180,7 @@
         // Update deduplication tracking
         this.updateLastTrackedUrl(url)
       } catch (error) {
-        console.error('Leadalytics: Error tracking page view', error)
+        console.error('HCH: Error tracking page view', error)
       }
     }
 
@@ -217,7 +217,7 @@
         // Update session timestamp
         this.updateSessionTimestamp()
       } catch (error) {
-        console.error('Leadalytics: Error tracking page view', error)
+        console.error('HCH: Error tracking page view', error)
       }
     }
 
@@ -325,10 +325,10 @@
   }
 
   // Initialize tracker
-  const tracker = new LeadalyticsTracker()
+  const tracker = new HCHTracker()
 
   // Expose minimal read-only API
-  window.Leadalytics = {
+  window.HCH = {
     getSessionInfo: () => tracker.getSessionInfo(),
   }
 })()
