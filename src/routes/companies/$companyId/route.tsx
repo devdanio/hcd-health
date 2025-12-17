@@ -10,13 +10,15 @@ export const Route = createFileRoute('/companies/$companyId')({
 
 function RouteComponent() {
   const company = useCompany()
-  return <SidebarProvider>
-        <AppSidebar />
-        <div className="flex flex-col flex-1 w-full">
-          <SiteHeader title={company?.name || ''} />
-          <main className="flex-1">
-              <Outlet />
-          </main>
-        </div>
-      </SidebarProvider>
+  return (
+    <SidebarProvider>
+      <AppSidebar />
+      <div className="flex flex-col flex-1 w-full">
+        <SiteHeader title={company?.name || ''} />
+        <main className="flex-1">
+          <Outlet />
+        </main>
+      </div>
+    </SidebarProvider>
+  )
 }

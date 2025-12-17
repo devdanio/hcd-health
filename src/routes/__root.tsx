@@ -128,37 +128,14 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const collections = useMemo(() => createCollections(queryClient), [])
 
   return (
-    <html lang="en ">
+    <html lang="en" className="light">
       <head>
         <HeadContent />
       </head>
       <body className="bg-background text-foreground">
         <QueryClientProvider client={queryClient}>
           <CollectionsContext.Provider value={collections}>
-            <div className="flex flex-col h-screen overflow-hidden">
-              <header className="bg-white py-2 md:py-4 ">
-                <div className="max-w-7xl mx-auto px-2 md:px-6">
-                  <img
-                    src="/images/high-country-health-logo.svg"
-                    alt="High Country Health"
-                    className="w-20 md:w-24 h-auto"
-                  />
-                </div>
-              </header>
-
-              {children}
-            </div>
-            {/* <TanStackDevtools
-              config={{
-                position: 'bottom-right',
-              }}
-              plugins={[
-                {
-                  name: 'Tanstack Router',
-                  render: <TanStackRouterDevtoolsPanel />,
-                },
-              ]}
-            /> */}
+            {children}
           </CollectionsContext.Provider>
         </QueryClientProvider>
         <Scripts />

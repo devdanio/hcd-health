@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext } from 'react'
 
 type Theme = 'dark' | 'light' | 'system'
 
@@ -24,43 +24,25 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
 export function ThemeProvider({
   children,
-  defaultTheme = 'system',
+  defaultTheme = 'light',
   storageKey = 'hch-ui-theme',
   ...props
 }: ThemeProviderProps) {
-  const [_, setTheme] = useState<Theme>(
-    () => /*(localStorage.getItem(storageKey) as Theme) ||*/ defaultTheme,
-  )
-  const theme = defaultTheme
-
-  const [resolvedTheme, setResolvedTheme] = useState<'dark' | 'light'>('light')
-
-  useEffect(() => {
-    if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
-        .matches
-        ? 'dark'
-        : 'light'
-      setResolvedTheme(systemTheme)
-    } else {
-      setResolvedTheme(theme)
-    }
-  }, [theme])
+  // Force light mode - dark mode disabled
+  const theme = 'light'
+  const resolvedTheme = 'light'
 
   const value = {
     theme,
     resolvedTheme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme)
-      setTheme(theme)
+    setTheme: () => {
+      // Theme switching disabled - always use light mode
     },
   }
 
   return (
     <ThemeProviderContext.Provider {...props} value={value}>
-      <div
-        className={`${resolvedTheme === 'dark' ? 'dark' : ''} min-h-screen w-full bg-background text-foreground`}
-      >
+      <div className="min-h-screen w-full bg-background text-foreground">
         {children}
       </div>
     </ThemeProviderContext.Provider>
