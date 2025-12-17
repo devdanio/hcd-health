@@ -321,7 +321,7 @@ export function PracticeCalculator({
   }
 
   return (
-    <div className="w-full h-screen max-w-7xl mx-auto flex flex-col gap-2 p-2">
+    <div className="w-full flex-1 max-w-7xl  flex flex-col gap-2 p-2 h-full">
       {/* Carousel Section - Top 50% */}
       <div className="h-1/2 overflow-hidden relative">
         <Carousel className="w-full h-full" setApi={setCarouselApi}>
@@ -335,10 +335,10 @@ export function PracticeCalculator({
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-3 flex flex-col items-center justify-center h-[calc(100%-5rem)]">
-                  <div className="flex flex-col items-center gap-4">
+                  <div className="flex flex-col items-center gap-2 md:gap-4 w-full max-w-xs">
                     <ChartContainer
                       config={chartConfig}
-                      className="shrink-0 aspect-square h-[200px] w-[200px]"
+                      className="shrink-0 aspect-square w-[clamp(140px,40vw,200px)] h-[clamp(140px,40vw,200px)]"
                     >
                       <PieChart>
                         <ChartTooltip
@@ -356,9 +356,9 @@ export function PracticeCalculator({
                           data={chartData}
                           dataKey="value"
                           nameKey="category"
-                          innerRadius={60}
-                          outerRadius={96}
-                          strokeWidth={4}
+                          innerRadius="30%"
+                          outerRadius="48%"
+                          strokeWidth={3}
                         >
                           {chartData.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={entry.fill} />
@@ -384,14 +384,14 @@ export function PracticeCalculator({
                                     <tspan
                                       x={viewBox.cx}
                                       y={viewBox.cy}
-                                      className="fill-foreground text-2xl font-bold"
+                                      className="fill-foreground text-lg sm:text-xl md:text-2xl font-bold"
                                     >
                                       {formatCurrencyShort(total)}
                                     </tspan>
                                     <tspan
                                       x={viewBox.cx}
-                                      y={(viewBox.cy || 0) + 24}
-                                      className="fill-muted-foreground text-sm"
+                                      y={(viewBox.cy || 0) + 18}
+                                      className="fill-muted-foreground text-xs sm:text-sm"
                                     >
                                       Total
                                     </tspan>
@@ -404,17 +404,17 @@ export function PracticeCalculator({
                         <ChartLegend content={() => null} />
                       </PieChart>
                     </ChartContainer>
-                    <div className="grid grid-cols-2 gap-x-6 gap-y-1.5">
+                    <div className="grid grid-cols-2 gap-x-3 gap-y-1 sm:gap-x-4 md:gap-x-6 md:gap-y-1.5">
                       {chartData.map((entry, index) => (
                         <div
                           key={`legend-${index}`}
-                          className="flex items-center gap-2"
+                          className="flex items-center gap-1.5 md:gap-2"
                         >
                           <div
-                            className="h-2 w-2 shrink-0 rounded-[2px]"
+                            className="h-1.5 w-1.5 sm:h-2 sm:w-2 shrink-0 rounded-[2px]"
                             style={{ backgroundColor: entry.fill }}
                           />
-                          <span className="text-xs text-muted-foreground">
+                          <span className="text-[10px] sm:text-xs text-muted-foreground">
                             {
                               chartConfig[
                                 entry.category as keyof typeof chartConfig
@@ -633,32 +633,13 @@ export function PracticeCalculator({
       </div>
 
       {/* Form Section - Bottom 50% */}
-      <Card className="h-1/2 rounded-xl overflow-y-auto shadow-xl">
+      <Card className="flex-1 rounded-xl overflow-y-auto shadow-xl h-fit pb-42">
         <CardHeader className="p-4 md:p-6">
           <CardTitle className="text-2xl md:text-4xl font-normal">
             Calculate your practice's metrics in minutes
           </CardTitle>
           <CardDescription>
-            <div className="flex flex-wrap gap-1.5 md:gap-2 mt-2">
-              <span className="px-2 py-1 md:px-3 md:py-1.5 bg-teal-50 text-teal-700 rounded-full text-xs md:text-sm font-medium">
-                Revenue/Patient
-              </span>
-              <span className="px-2 py-1 md:px-3 md:py-1.5 bg-blue-50 text-blue-700 rounded-full text-xs md:text-sm font-medium">
-                CAC
-              </span>
-              <span className="px-2 py-1 md:px-3 md:py-1.5 bg-emerald-50 text-emerald-700 rounded-full text-xs md:text-sm font-medium">
-                Gross Profit
-              </span>
-              <span className="px-2 py-1 md:px-3 md:py-1.5 bg-pink-50 text-pink-700 rounded-full text-xs md:text-sm font-medium">
-                Net Profit
-              </span>
-              <span className="px-2 py-1 md:px-3 md:py-1.5 bg-orange-50 text-orange-700 rounded-full text-xs md:text-sm font-medium">
-                LTV:CAC
-              </span>
-              <span className="px-2 py-1 md:px-3 md:py-1.5 bg-gray-50 text-gray-700 rounded-full text-xs md:text-sm font-medium">
-                +More
-              </span>
-            </div>
+            Enter your practice's info below to get real time metrics.
           </CardDescription>
         </CardHeader>
         <CardContent className="p-4 md:pt-6">
