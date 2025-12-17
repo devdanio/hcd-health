@@ -109,12 +109,12 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body className="bg-background text-foreground">
         <QueryClientProvider client={queryClient}>
           <CollectionsContext.Provider value={collections}>
-            <header className="bg-white py-4 px-6">
-              <div className="max-w-7xl mx-auto px-6">
+            <header className="bg-white py-2 md:py-4 ">
+              <div className="max-w-7xl mx-auto px-2 md:px-6">
                 <img
                   src="/images/high-country-health-logo.svg"
                   alt="High Country Health"
-                  className="w-24 h-auto"
+                  className="w-20 md:w-24 h-auto"
                 />
               </div>
             </header>

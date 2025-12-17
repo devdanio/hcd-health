@@ -1,7 +1,4 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Check, Heart, Clock, Smartphone } from 'lucide-react'
 import { PracticeCalculator } from '@/components/practice-calculator'
 
 export const Route = createFileRoute('/')({ component: App })
@@ -449,11 +446,5 @@ export const Route = createFileRoute('/')({ component: App })
 // }
 
 function App() {
-  return (
-    <section className="py-12">
-      <div className="max-w-7xl mx-auto px-6">
-        <PracticeCalculator />
-      </div>
-    </section>
-  )
+  return <PracticeCalculator />
 }

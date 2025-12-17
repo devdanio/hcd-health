@@ -66,6 +66,7 @@
     "csv-parser": "^3.2.0",
     "dayjs": "^1.11.19",
     "dotenv": "^17.2.3",
+    "embla-carousel-react": "^8.6.0",
     "google-ads-api": "^21.0.1",
     "lucide-react": "^0.544.0",
     "mapbox-gl": "^3.16.0",

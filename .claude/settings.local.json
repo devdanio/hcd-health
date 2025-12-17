@@ -18,7 +18,8 @@
       "Bash(PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION=\"you can continue\" npx prisma migrate reset:*)",
       "WebSearch",
       "Bash(pnpm remove:*)",
-      "WebFetch(domain:frontendatscale.com)"
+      "WebFetch(domain:frontendatscale.com)",
+      "Bash(pnpx shadcn@latest add:*)"
     ],
     "deny": [],
     "ask": []
