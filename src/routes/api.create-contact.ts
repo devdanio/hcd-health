@@ -1,11 +1,16 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
 import { z } from 'zod'
 import { prisma } from '@/server/db/client'
 
 const createContactSchema = z.object({
   apiKey: z.string(),
 })
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+}
 
 export const Route = createFileRoute('/api/create-contact')({
   server: {
@@ -21,7 +26,13 @@ export const Route = createFileRoute('/api/create-contact')({
           })
 
           if (!company) {
-            return json({ error: 'Invalid API key' }, { status: 401 })
+            return new Response(JSON.stringify({ error: 'Invalid API key' }), {
+              status: 401,
+              headers: {
+                'Content-Type': 'application/json',
+                ...corsHeaders,
+              },
+            })
           }
 
           // Create anonymous contact
@@ -29,19 +40,34 @@ export const Route = createFileRoute('/api/create-contact')({
             data: { companyId: company.id },
           })
 
-          return json({
-            contactId: contact.id,
-          })
+          return new Response(
+            JSON.stringify({
+              contactId: contact.id,
+            }),
+            {
+              status: 200,
+              headers: {
+                'Content-Type': 'application/json',
+                ...corsHeaders,
+              },
+            },
+          )
         } catch (error) {
           console.error('[API] Create contact error:', error)
-          return json(
-            {
+          return new Response(
+            JSON.stringify({
               error:
                 error instanceof Error
                   ? error.message
                   : 'Internal server error',
+            }),
+            {
+              status: 500,
+              headers: {
+                'Content-Type': 'application/json',
+                ...corsHeaders,
+              },
             },
-            { status: 500 },
           )
         }
       },
@@ -49,11 +75,7 @@ export const Route = createFileRoute('/api/create-contact')({
       OPTIONS: async () => {
         return new Response(null, {
           status: 204,
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type',
-          },
+          headers: corsHeaders,
         })
       },
     },
