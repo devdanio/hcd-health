@@ -14,6 +14,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CompaniesIndexRouteImport } from './routes/companies/index'
 import { Route as UsersSignInRouteImport } from './routes/users/sign-in'
 import { Route as HealthcarePracticeMetricsCalculatorIdRouteImport } from './routes/healthcare-practice-metrics-calculator.$id'
+import { Route as ApiValidateHchUuidRouteImport } from './routes/api.validate-hch-uuid'
+import { Route as ApiCreateContactRouteImport } from './routes/api.create-contact'
 import { Route as CompaniesCompanyIdRouteRouteImport } from './routes/companies/$companyId/route'
 import { Route as CompaniesCompanyIdIndexRouteImport } from './routes/companies/$companyId/index'
 import { Route as CompaniesCompanyIdSettingsRouteRouteImport } from './routes/companies/$companyId/settings/route'
@@ -26,6 +28,7 @@ import { Route as CompaniesCompanyIdCmsPagesIndexRouteImport } from './routes/co
 import { Route as CompaniesCompanyIdPatientsPatientIdRouteImport } from './routes/companies/$companyId/patients/$patientId'
 import { Route as CompaniesCompanyIdCmsPagesCreateRouteImport } from './routes/companies/$companyId/cms-pages/create'
 import { Route as CompaniesCompanyIdCmsPagesPageIdRouteImport } from './routes/companies/$companyId/cms-pages/$pageId'
+import { Route as ApiWebhooksGhlCompanyIdRouteImport } from './routes/api.webhooks.ghl.$companyId'
 import { Route as CompaniesCompanyIdSettingsServicesIndexRouteImport } from './routes/companies/$companyId/settings/services/index'
 import { Route as CompaniesCompanyIdSettingsProvidersIndexRouteImport } from './routes/companies/$companyId/settings/providers/index'
 import { Route as CompaniesCompanyIdSettingsIntegrationsIndexRouteImport } from './routes/companies/$companyId/settings/integrations/index'
@@ -63,6 +66,16 @@ const HealthcarePracticeMetricsCalculatorIdRoute =
     path: '/healthcare-practice-metrics-calculator/$id',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiValidateHchUuidRoute = ApiValidateHchUuidRouteImport.update({
+  id: '/api/validate-hch-uuid',
+  path: '/api/validate-hch-uuid',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCreateContactRoute = ApiCreateContactRouteImport.update({
+  id: '/api/create-contact',
+  path: '/api/create-contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CompaniesCompanyIdRouteRoute = CompaniesCompanyIdRouteRouteImport.update({
   id: '/$companyId',
   path: '/$companyId',
@@ -133,6 +146,11 @@ const CompaniesCompanyIdCmsPagesPageIdRoute =
     path: '/cms-pages/$pageId',
     getParentRoute: () => CompaniesCompanyIdRouteRoute,
   } as any)
+const ApiWebhooksGhlCompanyIdRoute = ApiWebhooksGhlCompanyIdRouteImport.update({
+  id: '/api/webhooks/ghl/$companyId',
+  path: '/api/webhooks/ghl/$companyId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CompaniesCompanyIdSettingsServicesIndexRoute =
   CompaniesCompanyIdSettingsServicesIndexRouteImport.update({
     id: '/services/',
@@ -198,11 +216,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/companies': typeof CompaniesRouteWithChildren
   '/companies/$companyId': typeof CompaniesCompanyIdRouteRouteWithChildren
+  '/api/create-contact': typeof ApiCreateContactRoute
+  '/api/validate-hch-uuid': typeof ApiValidateHchUuidRoute
   '/healthcare-practice-metrics-calculator/$id': typeof HealthcarePracticeMetricsCalculatorIdRoute
   '/users/sign-in': typeof UsersSignInRoute
   '/companies/': typeof CompaniesIndexRoute
   '/companies/$companyId/settings': typeof CompaniesCompanyIdSettingsRouteRouteWithChildren
   '/companies/$companyId/': typeof CompaniesCompanyIdIndexRoute
+  '/api/webhooks/ghl/$companyId': typeof ApiWebhooksGhlCompanyIdRoute
   '/companies/$companyId/cms-pages/$pageId': typeof CompaniesCompanyIdCmsPagesPageIdRoute
   '/companies/$companyId/cms-pages/create': typeof CompaniesCompanyIdCmsPagesCreateRoute
   '/companies/$companyId/patients/$patientId': typeof CompaniesCompanyIdPatientsPatientIdRoute
@@ -225,10 +246,13 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/create-contact': typeof ApiCreateContactRoute
+  '/api/validate-hch-uuid': typeof ApiValidateHchUuidRoute
   '/healthcare-practice-metrics-calculator/$id': typeof HealthcarePracticeMetricsCalculatorIdRoute
   '/users/sign-in': typeof UsersSignInRoute
   '/companies': typeof CompaniesIndexRoute
   '/companies/$companyId': typeof CompaniesCompanyIdIndexRoute
+  '/api/webhooks/ghl/$companyId': typeof ApiWebhooksGhlCompanyIdRoute
   '/companies/$companyId/cms-pages/$pageId': typeof CompaniesCompanyIdCmsPagesPageIdRoute
   '/companies/$companyId/cms-pages/create': typeof CompaniesCompanyIdCmsPagesCreateRoute
   '/companies/$companyId/patients/$patientId': typeof CompaniesCompanyIdPatientsPatientIdRoute
@@ -254,11 +278,14 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/companies': typeof CompaniesRouteWithChildren
   '/companies/$companyId': typeof CompaniesCompanyIdRouteRouteWithChildren
+  '/api/create-contact': typeof ApiCreateContactRoute
+  '/api/validate-hch-uuid': typeof ApiValidateHchUuidRoute
   '/healthcare-practice-metrics-calculator/$id': typeof HealthcarePracticeMetricsCalculatorIdRoute
   '/users/sign-in': typeof UsersSignInRoute
   '/companies/': typeof CompaniesIndexRoute
   '/companies/$companyId/settings': typeof CompaniesCompanyIdSettingsRouteRouteWithChildren
   '/companies/$companyId/': typeof CompaniesCompanyIdIndexRoute
+  '/api/webhooks/ghl/$companyId': typeof ApiWebhooksGhlCompanyIdRoute
   '/companies/$companyId/cms-pages/$pageId': typeof CompaniesCompanyIdCmsPagesPageIdRoute
   '/companies/$companyId/cms-pages/create': typeof CompaniesCompanyIdCmsPagesCreateRoute
   '/companies/$companyId/patients/$patientId': typeof CompaniesCompanyIdPatientsPatientIdRoute
@@ -285,11 +312,14 @@ export interface FileRouteTypes {
     | '/'
     | '/companies'
     | '/companies/$companyId'
+    | '/api/create-contact'
+    | '/api/validate-hch-uuid'
     | '/healthcare-practice-metrics-calculator/$id'
     | '/users/sign-in'
     | '/companies/'
     | '/companies/$companyId/settings'
     | '/companies/$companyId/'
+    | '/api/webhooks/ghl/$companyId'
     | '/companies/$companyId/cms-pages/$pageId'
     | '/companies/$companyId/cms-pages/create'
     | '/companies/$companyId/patients/$patientId'
@@ -312,10 +342,13 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/api/create-contact'
+    | '/api/validate-hch-uuid'
     | '/healthcare-practice-metrics-calculator/$id'
     | '/users/sign-in'
     | '/companies'
     | '/companies/$companyId'
+    | '/api/webhooks/ghl/$companyId'
     | '/companies/$companyId/cms-pages/$pageId'
     | '/companies/$companyId/cms-pages/create'
     | '/companies/$companyId/patients/$patientId'
@@ -340,11 +373,14 @@ export interface FileRouteTypes {
     | '/'
     | '/companies'
     | '/companies/$companyId'
+    | '/api/create-contact'
+    | '/api/validate-hch-uuid'
     | '/healthcare-practice-metrics-calculator/$id'
     | '/users/sign-in'
     | '/companies/'
     | '/companies/$companyId/settings'
     | '/companies/$companyId/'
+    | '/api/webhooks/ghl/$companyId'
     | '/companies/$companyId/cms-pages/$pageId'
     | '/companies/$companyId/cms-pages/create'
     | '/companies/$companyId/patients/$patientId'
@@ -369,8 +405,11 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CompaniesRoute: typeof CompaniesRouteWithChildren
+  ApiCreateContactRoute: typeof ApiCreateContactRoute
+  ApiValidateHchUuidRoute: typeof ApiValidateHchUuidRoute
   HealthcarePracticeMetricsCalculatorIdRoute: typeof HealthcarePracticeMetricsCalculatorIdRoute
   UsersSignInRoute: typeof UsersSignInRoute
+  ApiWebhooksGhlCompanyIdRoute: typeof ApiWebhooksGhlCompanyIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -408,6 +447,20 @@ declare module '@tanstack/react-router' {
       path: '/healthcare-practice-metrics-calculator/$id'
       fullPath: '/healthcare-practice-metrics-calculator/$id'
       preLoaderRoute: typeof HealthcarePracticeMetricsCalculatorIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/validate-hch-uuid': {
+      id: '/api/validate-hch-uuid'
+      path: '/api/validate-hch-uuid'
+      fullPath: '/api/validate-hch-uuid'
+      preLoaderRoute: typeof ApiValidateHchUuidRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/create-contact': {
+      id: '/api/create-contact'
+      path: '/api/create-contact'
+      fullPath: '/api/create-contact'
+      preLoaderRoute: typeof ApiCreateContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/companies/$companyId': {
@@ -493,6 +546,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/companies/$companyId/cms-pages/$pageId'
       preLoaderRoute: typeof CompaniesCompanyIdCmsPagesPageIdRouteImport
       parentRoute: typeof CompaniesCompanyIdRouteRoute
+    }
+    '/api/webhooks/ghl/$companyId': {
+      id: '/api/webhooks/ghl/$companyId'
+      path: '/api/webhooks/ghl/$companyId'
+      fullPath: '/api/webhooks/ghl/$companyId'
+      preLoaderRoute: typeof ApiWebhooksGhlCompanyIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/companies/$companyId/settings/services/': {
       id: '/companies/$companyId/settings/services/'
@@ -664,9 +724,12 @@ const CompaniesRouteWithChildren = CompaniesRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CompaniesRoute: CompaniesRouteWithChildren,
+  ApiCreateContactRoute: ApiCreateContactRoute,
+  ApiValidateHchUuidRoute: ApiValidateHchUuidRoute,
   HealthcarePracticeMetricsCalculatorIdRoute:
     HealthcarePracticeMetricsCalculatorIdRoute,
   UsersSignInRoute: UsersSignInRoute,
+  ApiWebhooksGhlCompanyIdRoute: ApiWebhooksGhlCompanyIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

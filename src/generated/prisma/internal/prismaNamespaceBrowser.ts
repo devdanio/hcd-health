@@ -55,6 +55,7 @@ export const ModelName = {
   LeadCalculator: 'LeadCalculator',
   Company: 'Company',
   Contact: 'Contact',
+  ExternalId: 'ExternalId',
   GhlContact: 'GhlContact',
   Session: 'Session',
   Event: 'Event',
@@ -150,7 +151,6 @@ export const ContactScalarFieldEnum = {
   lastName: 'lastName',
   gender: 'gender',
   dateOfBirth: 'dateOfBirth',
-  externalId: 'externalId',
   address1: 'address1',
   address2: 'address2',
   zip: 'zip',
@@ -161,6 +161,17 @@ export const ContactScalarFieldEnum = {
 } as const
 
 export type ContactScalarFieldEnum = (typeof ContactScalarFieldEnum)[keyof typeof ContactScalarFieldEnum]
+
+
+export const ExternalIdScalarFieldEnum = {
+  contactId: 'contactId',
+  externalId: 'externalId',
+  source: 'source',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExternalIdScalarFieldEnum = (typeof ExternalIdScalarFieldEnum)[keyof typeof ExternalIdScalarFieldEnum]
 
 
 export const GhlContactScalarFieldEnum = {

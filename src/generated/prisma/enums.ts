@@ -18,6 +18,18 @@ export const EhrType = {
 export type EhrType = (typeof EhrType)[keyof typeof EhrType]
 
 
+export const ExternalIdSource = {
+  POSTHOG: 'POSTHOG',
+  GHL: 'GHL',
+  CHIROTOUCH: 'CHIROTOUCH',
+  SHOPIFY: 'SHOPIFY',
+  UNIFIED_PRACTICE: 'UNIFIED_PRACTICE',
+  JASMINE: 'JASMINE'
+} as const
+
+export type ExternalIdSource = (typeof ExternalIdSource)[keyof typeof ExternalIdSource]
+
+
 export const EventType = {
   pageview: 'pageview',
   conversion: 'conversion',

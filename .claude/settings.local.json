@@ -19,7 +19,8 @@
       "WebSearch",
       "Bash(pnpm remove:*)",
       "WebFetch(domain:frontendatscale.com)",
-      "Bash(pnpx shadcn@latest add:*)"
+      "Bash(pnpx shadcn@latest add:*)",
+      "Bash(ls:*)"
     ],
     "deny": [],
     "ask": []

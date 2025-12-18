@@ -9,7 +9,7 @@ import {
   getPatientsByServiceCount,
   getPatientServiceJourney,
 } from '@/collections'
-import Plot from 'react-plotly.js'
+// import Plot from 'react-plotly.js'
 import {
   Area,
   AreaChart,
@@ -604,7 +604,7 @@ function RouteComponent() {
               </div>
             ) : (
               <div className="w-full">
-                <Plot
+                {/* <Plot
                   data={[
                     {
                       type: 'sankey',
@@ -672,7 +672,7 @@ function RouteComponent() {
                     displayModeBar: false,
                   }}
                   style={{ width: '100%' }}
-                />
+                /> */}
               </div>
             )}
           </CardContent>

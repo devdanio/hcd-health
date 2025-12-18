@@ -27,3 +27,7 @@ To get access token: https://developers.facebook.com/tools/explorer/839548005120
 ## TODOS
 
 For all agg\_ tables we are going to run cron jobs that periodically update the database. We can eventually add manual interaction to regernnate the data
+
+## Tracking script
+
+new HCHTracker({ apiKey:'756e492d359a44b5c86c28eaff272d599043d14a1de8dcc476f49acf0b6b6058', apiUrl:'http://localhost:3000' })

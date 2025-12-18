@@ -60,6 +60,11 @@ export type Company = Prisma.CompanyModel
  */
 export type Contact = Prisma.ContactModel
 /**
+ * Model ExternalId
+ * 
+ */
+export type ExternalId = Prisma.ExternalIdModel
+/**
  * Model GhlContact
  * 
  */

@@ -36,7 +36,6 @@ export type ContactMinAggregateOutputType = {
   lastName: string | null
   gender: string | null
   dateOfBirth: Date | null
-  externalId: string | null
   address1: string | null
   address2: string | null
   zip: string | null
@@ -58,7 +57,6 @@ export type ContactMaxAggregateOutputType = {
   lastName: string | null
   gender: string | null
   dateOfBirth: Date | null
-  externalId: string | null
   address1: string | null
   address2: string | null
   zip: string | null
@@ -80,7 +78,6 @@ export type ContactCountAggregateOutputType = {
   lastName: number
   gender: number
   dateOfBirth: number
-  externalId: number
   address1: number
   address2: number
   zip: number
@@ -104,7 +101,6 @@ export type ContactMinAggregateInputType = {
   lastName?: true
   gender?: true
   dateOfBirth?: true
-  externalId?: true
   address1?: true
   address2?: true
   zip?: true
@@ -126,7 +122,6 @@ export type ContactMaxAggregateInputType = {
   lastName?: true
   gender?: true
   dateOfBirth?: true
-  externalId?: true
   address1?: true
   address2?: true
   zip?: true
@@ -148,7 +143,6 @@ export type ContactCountAggregateInputType = {
   lastName?: true
   gender?: true
   dateOfBirth?: true
-  externalId?: true
   address1?: true
   address2?: true
   zip?: true
@@ -243,7 +237,6 @@ export type ContactGroupByOutputType = {
   lastName: string | null
   gender: string | null
   dateOfBirth: Date | null
-  externalId: string | null
   address1: string | null
   address2: string | null
   zip: string | null
@@ -286,7 +279,6 @@ export type ContactWhereInput = {
   lastName?: Prisma.StringNullableFilter<"Contact"> | string | null
   gender?: Prisma.StringNullableFilter<"Contact"> | string | null
   dateOfBirth?: Prisma.DateTimeNullableFilter<"Contact"> | Date | string | null
-  externalId?: Prisma.StringNullableFilter<"Contact"> | string | null
   address1?: Prisma.StringNullableFilter<"Contact"> | string | null
   address2?: Prisma.StringNullableFilter<"Contact"> | string | null
   zip?: Prisma.StringNullableFilter<"Contact"> | string | null
@@ -295,6 +287,7 @@ export type ContactWhereInput = {
   ghlContactId?: Prisma.StringNullableFilter<"Contact"> | string | null
   chirotouchAccountId?: Prisma.StringNullableFilter<"Contact"> | string | null
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
+  externalIds?: Prisma.ExternalIdListRelationFilter
   payments?: Prisma.PaymentsListRelationFilter
   appointments?: Prisma.AppointmentListRelationFilter
   ghlContact?: Prisma.XOR<Prisma.GhlContactNullableScalarRelationFilter, Prisma.GhlContactWhereInput> | null
@@ -313,7 +306,6 @@ export type ContactOrderByWithRelationInput = {
   lastName?: Prisma.SortOrderInput | Prisma.SortOrder
   gender?: Prisma.SortOrderInput | Prisma.SortOrder
   dateOfBirth?: Prisma.SortOrderInput | Prisma.SortOrder
-  externalId?: Prisma.SortOrderInput | Prisma.SortOrder
   address1?: Prisma.SortOrderInput | Prisma.SortOrder
   address2?: Prisma.SortOrderInput | Prisma.SortOrder
   zip?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -322,6 +314,7 @@ export type ContactOrderByWithRelationInput = {
   ghlContactId?: Prisma.SortOrderInput | Prisma.SortOrder
   chirotouchAccountId?: Prisma.SortOrderInput | Prisma.SortOrder
   company?: Prisma.CompanyOrderByWithRelationInput
+  externalIds?: Prisma.ExternalIdOrderByRelationAggregateInput
   payments?: Prisma.PaymentsOrderByRelationAggregateInput
   appointments?: Prisma.AppointmentOrderByRelationAggregateInput
   ghlContact?: Prisma.GhlContactOrderByWithRelationInput
@@ -330,7 +323,6 @@ export type ContactOrderByWithRelationInput = {
 
 export type ContactWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  externalId?: string
   ghlContactId?: string
   chirotouchAccountId?: string
   AND?: Prisma.ContactWhereInput | Prisma.ContactWhereInput[]
@@ -352,11 +344,12 @@ export type ContactWhereUniqueInput = Prisma.AtLeast<{
   city?: Prisma.StringNullableFilter<"Contact"> | string | null
   state?: Prisma.StringNullableFilter<"Contact"> | string | null
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
+  externalIds?: Prisma.ExternalIdListRelationFilter
   payments?: Prisma.PaymentsListRelationFilter
   appointments?: Prisma.AppointmentListRelationFilter
   ghlContact?: Prisma.XOR<Prisma.GhlContactNullableScalarRelationFilter, Prisma.GhlContactWhereInput> | null
   sessions?: Prisma.SessionListRelationFilter
-}, "id" | "externalId" | "ghlContactId" | "chirotouchAccountId">
+}, "id" | "ghlContactId" | "chirotouchAccountId">
 
 export type ContactOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -370,7 +363,6 @@ export type ContactOrderByWithAggregationInput = {
   lastName?: Prisma.SortOrderInput | Prisma.SortOrder
   gender?: Prisma.SortOrderInput | Prisma.SortOrder
   dateOfBirth?: Prisma.SortOrderInput | Prisma.SortOrder
-  externalId?: Prisma.SortOrderInput | Prisma.SortOrder
   address1?: Prisma.SortOrderInput | Prisma.SortOrder
   address2?: Prisma.SortOrderInput | Prisma.SortOrder
   zip?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -398,7 +390,6 @@ export type ContactScalarWhereWithAggregatesInput = {
   lastName?: Prisma.StringNullableWithAggregatesFilter<"Contact"> | string | null
   gender?: Prisma.StringNullableWithAggregatesFilter<"Contact"> | string | null
   dateOfBirth?: Prisma.DateTimeNullableWithAggregatesFilter<"Contact"> | Date | string | null
-  externalId?: Prisma.StringNullableWithAggregatesFilter<"Contact"> | string | null
   address1?: Prisma.StringNullableWithAggregatesFilter<"Contact"> | string | null
   address2?: Prisma.StringNullableWithAggregatesFilter<"Contact"> | string | null
   zip?: Prisma.StringNullableWithAggregatesFilter<"Contact"> | string | null
@@ -419,7 +410,6 @@ export type ContactCreateInput = {
   lastName?: string | null
   gender?: string | null
   dateOfBirth?: Date | string | null
-  externalId?: string | null
   address1?: string | null
   address2?: string | null
   zip?: string | null
@@ -427,6 +417,7 @@ export type ContactCreateInput = {
   state?: string | null
   chirotouchAccountId?: string | null
   company: Prisma.CompanyCreateNestedOneWithoutContactsInput
+  externalIds?: Prisma.ExternalIdCreateNestedManyWithoutContactInput
   payments?: Prisma.PaymentsCreateNestedManyWithoutContactInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutContactInput
   ghlContact?: Prisma.GhlContactCreateNestedOneWithoutContactInput
@@ -445,7 +436,6 @@ export type ContactUncheckedCreateInput = {
   lastName?: string | null
   gender?: string | null
   dateOfBirth?: Date | string | null
-  externalId?: string | null
   address1?: string | null
   address2?: string | null
   zip?: string | null
@@ -453,6 +443,7 @@ export type ContactUncheckedCreateInput = {
   state?: string | null
   ghlContactId?: string | null
   chirotouchAccountId?: string | null
+  externalIds?: Prisma.ExternalIdUncheckedCreateNestedManyWithoutContactInput
   payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutContactInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutContactInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutContactInput
@@ -469,7 +460,6 @@ export type ContactUpdateInput = {
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -477,6 +467,7 @@ export type ContactUpdateInput = {
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.CompanyUpdateOneRequiredWithoutContactsNestedInput
+  externalIds?: Prisma.ExternalIdUpdateManyWithoutContactNestedInput
   payments?: Prisma.PaymentsUpdateManyWithoutContactNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutContactNestedInput
   ghlContact?: Prisma.GhlContactUpdateOneWithoutContactNestedInput
@@ -495,7 +486,6 @@ export type ContactUncheckedUpdateInput = {
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -503,6 +493,7 @@ export type ContactUncheckedUpdateInput = {
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ghlContactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalIds?: Prisma.ExternalIdUncheckedUpdateManyWithoutContactNestedInput
   payments?: Prisma.PaymentsUncheckedUpdateManyWithoutContactNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutContactNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutContactNestedInput
@@ -520,7 +511,6 @@ export type ContactCreateManyInput = {
   lastName?: string | null
   gender?: string | null
   dateOfBirth?: Date | string | null
-  externalId?: string | null
   address1?: string | null
   address2?: string | null
   zip?: string | null
@@ -541,7 +531,6 @@ export type ContactUpdateManyMutationInput = {
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -562,7 +551,6 @@ export type ContactUncheckedUpdateManyInput = {
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -594,7 +582,6 @@ export type ContactCountOrderByAggregateInput = {
   lastName?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   dateOfBirth?: Prisma.SortOrder
-  externalId?: Prisma.SortOrder
   address1?: Prisma.SortOrder
   address2?: Prisma.SortOrder
   zip?: Prisma.SortOrder
@@ -616,7 +603,6 @@ export type ContactMaxOrderByAggregateInput = {
   lastName?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   dateOfBirth?: Prisma.SortOrder
-  externalId?: Prisma.SortOrder
   address1?: Prisma.SortOrder
   address2?: Prisma.SortOrder
   zip?: Prisma.SortOrder
@@ -638,7 +624,6 @@ export type ContactMinOrderByAggregateInput = {
   lastName?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   dateOfBirth?: Prisma.SortOrder
-  externalId?: Prisma.SortOrder
   address1?: Prisma.SortOrder
   address2?: Prisma.SortOrder
   zip?: Prisma.SortOrder
@@ -648,14 +633,14 @@ export type ContactMinOrderByAggregateInput = {
   chirotouchAccountId?: Prisma.SortOrder
 }
 
-export type ContactNullableScalarRelationFilter = {
-  is?: Prisma.ContactWhereInput | null
-  isNot?: Prisma.ContactWhereInput | null
-}
-
 export type ContactScalarRelationFilter = {
   is?: Prisma.ContactWhereInput
   isNot?: Prisma.ContactWhereInput
+}
+
+export type ContactNullableScalarRelationFilter = {
+  is?: Prisma.ContactWhereInput | null
+  isNot?: Prisma.ContactWhereInput | null
 }
 
 export type ContactCreateNestedManyWithoutCompanyInput = {
@@ -698,6 +683,20 @@ export type ContactUncheckedUpdateManyWithoutCompanyNestedInput = {
   update?: Prisma.ContactUpdateWithWhereUniqueWithoutCompanyInput | Prisma.ContactUpdateWithWhereUniqueWithoutCompanyInput[]
   updateMany?: Prisma.ContactUpdateManyWithWhereWithoutCompanyInput | Prisma.ContactUpdateManyWithWhereWithoutCompanyInput[]
   deleteMany?: Prisma.ContactScalarWhereInput | Prisma.ContactScalarWhereInput[]
+}
+
+export type ContactCreateNestedOneWithoutExternalIdsInput = {
+  create?: Prisma.XOR<Prisma.ContactCreateWithoutExternalIdsInput, Prisma.ContactUncheckedCreateWithoutExternalIdsInput>
+  connectOrCreate?: Prisma.ContactCreateOrConnectWithoutExternalIdsInput
+  connect?: Prisma.ContactWhereUniqueInput
+}
+
+export type ContactUpdateOneRequiredWithoutExternalIdsNestedInput = {
+  create?: Prisma.XOR<Prisma.ContactCreateWithoutExternalIdsInput, Prisma.ContactUncheckedCreateWithoutExternalIdsInput>
+  connectOrCreate?: Prisma.ContactCreateOrConnectWithoutExternalIdsInput
+  upsert?: Prisma.ContactUpsertWithoutExternalIdsInput
+  connect?: Prisma.ContactWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ContactUpdateToOneWithWhereWithoutExternalIdsInput, Prisma.ContactUpdateWithoutExternalIdsInput>, Prisma.ContactUncheckedUpdateWithoutExternalIdsInput>
 }
 
 export type ContactCreateNestedOneWithoutGhlContactInput = {
@@ -785,13 +784,13 @@ export type ContactCreateWithoutCompanyInput = {
   lastName?: string | null
   gender?: string | null
   dateOfBirth?: Date | string | null
-  externalId?: string | null
   address1?: string | null
   address2?: string | null
   zip?: string | null
   city?: string | null
   state?: string | null
   chirotouchAccountId?: string | null
+  externalIds?: Prisma.ExternalIdCreateNestedManyWithoutContactInput
   payments?: Prisma.PaymentsCreateNestedManyWithoutContactInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutContactInput
   ghlContact?: Prisma.GhlContactCreateNestedOneWithoutContactInput
@@ -809,7 +808,6 @@ export type ContactUncheckedCreateWithoutCompanyInput = {
   lastName?: string | null
   gender?: string | null
   dateOfBirth?: Date | string | null
-  externalId?: string | null
   address1?: string | null
   address2?: string | null
   zip?: string | null
@@ -817,6 +815,7 @@ export type ContactUncheckedCreateWithoutCompanyInput = {
   state?: string | null
   ghlContactId?: string | null
   chirotouchAccountId?: string | null
+  externalIds?: Prisma.ExternalIdUncheckedCreateNestedManyWithoutContactInput
   payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutContactInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutContactInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutContactInput
@@ -863,7 +862,6 @@ export type ContactScalarWhereInput = {
   lastName?: Prisma.StringNullableFilter<"Contact"> | string | null
   gender?: Prisma.StringNullableFilter<"Contact"> | string | null
   dateOfBirth?: Prisma.DateTimeNullableFilter<"Contact"> | Date | string | null
-  externalId?: Prisma.StringNullableFilter<"Contact"> | string | null
   address1?: Prisma.StringNullableFilter<"Contact"> | string | null
   address2?: Prisma.StringNullableFilter<"Contact"> | string | null
   zip?: Prisma.StringNullableFilter<"Contact"> | string | null
@@ -871,6 +869,118 @@ export type ContactScalarWhereInput = {
   state?: Prisma.StringNullableFilter<"Contact"> | string | null
   ghlContactId?: Prisma.StringNullableFilter<"Contact"> | string | null
   chirotouchAccountId?: Prisma.StringNullableFilter<"Contact"> | string | null
+}
+
+export type ContactCreateWithoutExternalIdsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  email?: string | null
+  phone?: string | null
+  fullName?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  gender?: string | null
+  dateOfBirth?: Date | string | null
+  address1?: string | null
+  address2?: string | null
+  zip?: string | null
+  city?: string | null
+  state?: string | null
+  chirotouchAccountId?: string | null
+  company: Prisma.CompanyCreateNestedOneWithoutContactsInput
+  payments?: Prisma.PaymentsCreateNestedManyWithoutContactInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutContactInput
+  ghlContact?: Prisma.GhlContactCreateNestedOneWithoutContactInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutContactInput
+}
+
+export type ContactUncheckedCreateWithoutExternalIdsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  companyId: string
+  email?: string | null
+  phone?: string | null
+  fullName?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  gender?: string | null
+  dateOfBirth?: Date | string | null
+  address1?: string | null
+  address2?: string | null
+  zip?: string | null
+  city?: string | null
+  state?: string | null
+  ghlContactId?: string | null
+  chirotouchAccountId?: string | null
+  payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutContactInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutContactInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutContactInput
+}
+
+export type ContactCreateOrConnectWithoutExternalIdsInput = {
+  where: Prisma.ContactWhereUniqueInput
+  create: Prisma.XOR<Prisma.ContactCreateWithoutExternalIdsInput, Prisma.ContactUncheckedCreateWithoutExternalIdsInput>
+}
+
+export type ContactUpsertWithoutExternalIdsInput = {
+  update: Prisma.XOR<Prisma.ContactUpdateWithoutExternalIdsInput, Prisma.ContactUncheckedUpdateWithoutExternalIdsInput>
+  create: Prisma.XOR<Prisma.ContactCreateWithoutExternalIdsInput, Prisma.ContactUncheckedCreateWithoutExternalIdsInput>
+  where?: Prisma.ContactWhereInput
+}
+
+export type ContactUpdateToOneWithWhereWithoutExternalIdsInput = {
+  where?: Prisma.ContactWhereInput
+  data: Prisma.XOR<Prisma.ContactUpdateWithoutExternalIdsInput, Prisma.ContactUncheckedUpdateWithoutExternalIdsInput>
+}
+
+export type ContactUpdateWithoutExternalIdsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  company?: Prisma.CompanyUpdateOneRequiredWithoutContactsNestedInput
+  payments?: Prisma.PaymentsUpdateManyWithoutContactNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutContactNestedInput
+  ghlContact?: Prisma.GhlContactUpdateOneWithoutContactNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutContactNestedInput
+}
+
+export type ContactUncheckedUpdateWithoutExternalIdsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ghlContactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payments?: Prisma.PaymentsUncheckedUpdateManyWithoutContactNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutContactNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutContactNestedInput
 }
 
 export type ContactCreateWithoutGhlContactInput = {
@@ -884,7 +994,6 @@ export type ContactCreateWithoutGhlContactInput = {
   lastName?: string | null
   gender?: string | null
   dateOfBirth?: Date | string | null
-  externalId?: string | null
   address1?: string | null
   address2?: string | null
   zip?: string | null
@@ -892,6 +1001,7 @@ export type ContactCreateWithoutGhlContactInput = {
   state?: string | null
   chirotouchAccountId?: string | null
   company: Prisma.CompanyCreateNestedOneWithoutContactsInput
+  externalIds?: Prisma.ExternalIdCreateNestedManyWithoutContactInput
   payments?: Prisma.PaymentsCreateNestedManyWithoutContactInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutContactInput
   sessions?: Prisma.SessionCreateNestedManyWithoutContactInput
@@ -909,13 +1019,13 @@ export type ContactUncheckedCreateWithoutGhlContactInput = {
   lastName?: string | null
   gender?: string | null
   dateOfBirth?: Date | string | null
-  externalId?: string | null
   address1?: string | null
   address2?: string | null
   zip?: string | null
   city?: string | null
   state?: string | null
   chirotouchAccountId?: string | null
+  externalIds?: Prisma.ExternalIdUncheckedCreateNestedManyWithoutContactInput
   payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutContactInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutContactInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutContactInput
@@ -948,7 +1058,6 @@ export type ContactUpdateWithoutGhlContactInput = {
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -956,6 +1065,7 @@ export type ContactUpdateWithoutGhlContactInput = {
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.CompanyUpdateOneRequiredWithoutContactsNestedInput
+  externalIds?: Prisma.ExternalIdUpdateManyWithoutContactNestedInput
   payments?: Prisma.PaymentsUpdateManyWithoutContactNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutContactNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutContactNestedInput
@@ -973,13 +1083,13 @@ export type ContactUncheckedUpdateWithoutGhlContactInput = {
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalIds?: Prisma.ExternalIdUncheckedUpdateManyWithoutContactNestedInput
   payments?: Prisma.PaymentsUncheckedUpdateManyWithoutContactNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutContactNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutContactNestedInput
@@ -996,7 +1106,6 @@ export type ContactCreateWithoutSessionsInput = {
   lastName?: string | null
   gender?: string | null
   dateOfBirth?: Date | string | null
-  externalId?: string | null
   address1?: string | null
   address2?: string | null
   zip?: string | null
@@ -1004,6 +1113,7 @@ export type ContactCreateWithoutSessionsInput = {
   state?: string | null
   chirotouchAccountId?: string | null
   company: Prisma.CompanyCreateNestedOneWithoutContactsInput
+  externalIds?: Prisma.ExternalIdCreateNestedManyWithoutContactInput
   payments?: Prisma.PaymentsCreateNestedManyWithoutContactInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutContactInput
   ghlContact?: Prisma.GhlContactCreateNestedOneWithoutContactInput
@@ -1021,7 +1131,6 @@ export type ContactUncheckedCreateWithoutSessionsInput = {
   lastName?: string | null
   gender?: string | null
   dateOfBirth?: Date | string | null
-  externalId?: string | null
   address1?: string | null
   address2?: string | null
   zip?: string | null
@@ -1029,6 +1138,7 @@ export type ContactUncheckedCreateWithoutSessionsInput = {
   state?: string | null
   ghlContactId?: string | null
   chirotouchAccountId?: string | null
+  externalIds?: Prisma.ExternalIdUncheckedCreateNestedManyWithoutContactInput
   payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutContactInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutContactInput
 }
@@ -1060,7 +1170,6 @@ export type ContactUpdateWithoutSessionsInput = {
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1068,6 +1177,7 @@ export type ContactUpdateWithoutSessionsInput = {
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.CompanyUpdateOneRequiredWithoutContactsNestedInput
+  externalIds?: Prisma.ExternalIdUpdateManyWithoutContactNestedInput
   payments?: Prisma.PaymentsUpdateManyWithoutContactNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutContactNestedInput
   ghlContact?: Prisma.GhlContactUpdateOneWithoutContactNestedInput
@@ -1085,7 +1195,6 @@ export type ContactUncheckedUpdateWithoutSessionsInput = {
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1093,6 +1202,7 @@ export type ContactUncheckedUpdateWithoutSessionsInput = {
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ghlContactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalIds?: Prisma.ExternalIdUncheckedUpdateManyWithoutContactNestedInput
   payments?: Prisma.PaymentsUncheckedUpdateManyWithoutContactNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutContactNestedInput
 }
@@ -1108,7 +1218,6 @@ export type ContactCreateWithoutPaymentsInput = {
   lastName?: string | null
   gender?: string | null
   dateOfBirth?: Date | string | null
-  externalId?: string | null
   address1?: string | null
   address2?: string | null
   zip?: string | null
@@ -1116,6 +1225,7 @@ export type ContactCreateWithoutPaymentsInput = {
   state?: string | null
   chirotouchAccountId?: string | null
   company: Prisma.CompanyCreateNestedOneWithoutContactsInput
+  externalIds?: Prisma.ExternalIdCreateNestedManyWithoutContactInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutContactInput
   ghlContact?: Prisma.GhlContactCreateNestedOneWithoutContactInput
   sessions?: Prisma.SessionCreateNestedManyWithoutContactInput
@@ -1133,7 +1243,6 @@ export type ContactUncheckedCreateWithoutPaymentsInput = {
   lastName?: string | null
   gender?: string | null
   dateOfBirth?: Date | string | null
-  externalId?: string | null
   address1?: string | null
   address2?: string | null
   zip?: string | null
@@ -1141,6 +1250,7 @@ export type ContactUncheckedCreateWithoutPaymentsInput = {
   state?: string | null
   ghlContactId?: string | null
   chirotouchAccountId?: string | null
+  externalIds?: Prisma.ExternalIdUncheckedCreateNestedManyWithoutContactInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutContactInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutContactInput
 }
@@ -1172,7 +1282,6 @@ export type ContactUpdateWithoutPaymentsInput = {
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1180,6 +1289,7 @@ export type ContactUpdateWithoutPaymentsInput = {
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.CompanyUpdateOneRequiredWithoutContactsNestedInput
+  externalIds?: Prisma.ExternalIdUpdateManyWithoutContactNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutContactNestedInput
   ghlContact?: Prisma.GhlContactUpdateOneWithoutContactNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutContactNestedInput
@@ -1197,7 +1307,6 @@ export type ContactUncheckedUpdateWithoutPaymentsInput = {
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1205,6 +1314,7 @@ export type ContactUncheckedUpdateWithoutPaymentsInput = {
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ghlContactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalIds?: Prisma.ExternalIdUncheckedUpdateManyWithoutContactNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutContactNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutContactNestedInput
 }
@@ -1220,7 +1330,6 @@ export type ContactCreateWithoutAppointmentsInput = {
   lastName?: string | null
   gender?: string | null
   dateOfBirth?: Date | string | null
-  externalId?: string | null
   address1?: string | null
   address2?: string | null
   zip?: string | null
@@ -1228,6 +1337,7 @@ export type ContactCreateWithoutAppointmentsInput = {
   state?: string | null
   chirotouchAccountId?: string | null
   company: Prisma.CompanyCreateNestedOneWithoutContactsInput
+  externalIds?: Prisma.ExternalIdCreateNestedManyWithoutContactInput
   payments?: Prisma.PaymentsCreateNestedManyWithoutContactInput
   ghlContact?: Prisma.GhlContactCreateNestedOneWithoutContactInput
   sessions?: Prisma.SessionCreateNestedManyWithoutContactInput
@@ -1245,7 +1355,6 @@ export type ContactUncheckedCreateWithoutAppointmentsInput = {
   lastName?: string | null
   gender?: string | null
   dateOfBirth?: Date | string | null
-  externalId?: string | null
   address1?: string | null
   address2?: string | null
   zip?: string | null
@@ -1253,6 +1362,7 @@ export type ContactUncheckedCreateWithoutAppointmentsInput = {
   state?: string | null
   ghlContactId?: string | null
   chirotouchAccountId?: string | null
+  externalIds?: Prisma.ExternalIdUncheckedCreateNestedManyWithoutContactInput
   payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutContactInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutContactInput
 }
@@ -1284,7 +1394,6 @@ export type ContactUpdateWithoutAppointmentsInput = {
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1292,6 +1401,7 @@ export type ContactUpdateWithoutAppointmentsInput = {
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.CompanyUpdateOneRequiredWithoutContactsNestedInput
+  externalIds?: Prisma.ExternalIdUpdateManyWithoutContactNestedInput
   payments?: Prisma.PaymentsUpdateManyWithoutContactNestedInput
   ghlContact?: Prisma.GhlContactUpdateOneWithoutContactNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutContactNestedInput
@@ -1309,7 +1419,6 @@ export type ContactUncheckedUpdateWithoutAppointmentsInput = {
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1317,6 +1426,7 @@ export type ContactUncheckedUpdateWithoutAppointmentsInput = {
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ghlContactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalIds?: Prisma.ExternalIdUncheckedUpdateManyWithoutContactNestedInput
   payments?: Prisma.PaymentsUncheckedUpdateManyWithoutContactNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutContactNestedInput
 }
@@ -1332,7 +1442,6 @@ export type ContactCreateManyCompanyInput = {
   lastName?: string | null
   gender?: string | null
   dateOfBirth?: Date | string | null
-  externalId?: string | null
   address1?: string | null
   address2?: string | null
   zip?: string | null
@@ -1353,13 +1462,13 @@ export type ContactUpdateWithoutCompanyInput = {
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalIds?: Prisma.ExternalIdUpdateManyWithoutContactNestedInput
   payments?: Prisma.PaymentsUpdateManyWithoutContactNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutContactNestedInput
   ghlContact?: Prisma.GhlContactUpdateOneWithoutContactNestedInput
@@ -1377,7 +1486,6 @@ export type ContactUncheckedUpdateWithoutCompanyInput = {
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1385,6 +1493,7 @@ export type ContactUncheckedUpdateWithoutCompanyInput = {
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ghlContactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chirotouchAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalIds?: Prisma.ExternalIdUncheckedUpdateManyWithoutContactNestedInput
   payments?: Prisma.PaymentsUncheckedUpdateManyWithoutContactNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutContactNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutContactNestedInput
@@ -1401,7 +1510,6 @@ export type ContactUncheckedUpdateManyWithoutCompanyInput = {
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1417,12 +1525,14 @@ export type ContactUncheckedUpdateManyWithoutCompanyInput = {
  */
 
 export type ContactCountOutputType = {
+  externalIds: number
   payments: number
   appointments: number
   sessions: number
 }
 
 export type ContactCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  externalIds?: boolean | ContactCountOutputTypeCountExternalIdsArgs
   payments?: boolean | ContactCountOutputTypeCountPaymentsArgs
   appointments?: boolean | ContactCountOutputTypeCountAppointmentsArgs
   sessions?: boolean | ContactCountOutputTypeCountSessionsArgs
@@ -1436,6 +1546,13 @@ export type ContactCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
    * Select specific fields to fetch from the ContactCountOutputType
    */
   select?: Prisma.ContactCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ContactCountOutputType without action
+ */
+export type ContactCountOutputTypeCountExternalIdsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExternalIdWhereInput
 }
 
 /**
@@ -1472,7 +1589,6 @@ export type ContactSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   lastName?: boolean
   gender?: boolean
   dateOfBirth?: boolean
-  externalId?: boolean
   address1?: boolean
   address2?: boolean
   zip?: boolean
@@ -1481,6 +1597,7 @@ export type ContactSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   ghlContactId?: boolean
   chirotouchAccountId?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
+  externalIds?: boolean | Prisma.Contact$externalIdsArgs<ExtArgs>
   payments?: boolean | Prisma.Contact$paymentsArgs<ExtArgs>
   appointments?: boolean | Prisma.Contact$appointmentsArgs<ExtArgs>
   ghlContact?: boolean | Prisma.Contact$ghlContactArgs<ExtArgs>
@@ -1500,7 +1617,6 @@ export type ContactSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   lastName?: boolean
   gender?: boolean
   dateOfBirth?: boolean
-  externalId?: boolean
   address1?: boolean
   address2?: boolean
   zip?: boolean
@@ -1524,7 +1640,6 @@ export type ContactSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   lastName?: boolean
   gender?: boolean
   dateOfBirth?: boolean
-  externalId?: boolean
   address1?: boolean
   address2?: boolean
   zip?: boolean
@@ -1548,7 +1663,6 @@ export type ContactSelectScalar = {
   lastName?: boolean
   gender?: boolean
   dateOfBirth?: boolean
-  externalId?: boolean
   address1?: boolean
   address2?: boolean
   zip?: boolean
@@ -1558,9 +1672,10 @@ export type ContactSelectScalar = {
   chirotouchAccountId?: boolean
 }
 
-export type ContactOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "companyId" | "email" | "phone" | "fullName" | "firstName" | "lastName" | "gender" | "dateOfBirth" | "externalId" | "address1" | "address2" | "zip" | "city" | "state" | "ghlContactId" | "chirotouchAccountId", ExtArgs["result"]["contact"]>
+export type ContactOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "companyId" | "email" | "phone" | "fullName" | "firstName" | "lastName" | "gender" | "dateOfBirth" | "address1" | "address2" | "zip" | "city" | "state" | "ghlContactId" | "chirotouchAccountId", ExtArgs["result"]["contact"]>
 export type ContactInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
+  externalIds?: boolean | Prisma.Contact$externalIdsArgs<ExtArgs>
   payments?: boolean | Prisma.Contact$paymentsArgs<ExtArgs>
   appointments?: boolean | Prisma.Contact$appointmentsArgs<ExtArgs>
   ghlContact?: boolean | Prisma.Contact$ghlContactArgs<ExtArgs>
@@ -1580,6 +1695,7 @@ export type $ContactPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   name: "Contact"
   objects: {
     company: Prisma.$CompanyPayload<ExtArgs>
+    externalIds: Prisma.$ExternalIdPayload<ExtArgs>[]
     payments: Prisma.$PaymentsPayload<ExtArgs>[]
     appointments: Prisma.$AppointmentPayload<ExtArgs>[]
     ghlContact: Prisma.$GhlContactPayload<ExtArgs> | null
@@ -1597,7 +1713,6 @@ export type $ContactPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     lastName: string | null
     gender: string | null
     dateOfBirth: Date | null
-    externalId: string | null
     address1: string | null
     address2: string | null
     zip: string | null
@@ -2000,6 +2115,7 @@ readonly fields: ContactFieldRefs;
 export interface Prisma__ContactClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   company<T extends Prisma.CompanyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyDefaultArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  externalIds<T extends Prisma.Contact$externalIdsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contact$externalIdsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExternalIdPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.Contact$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contact$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   appointments<T extends Prisma.Contact$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contact$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   ghlContact<T extends Prisma.Contact$ghlContactArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contact$ghlContactArgs<ExtArgs>>): Prisma.Prisma__GhlContactClient<runtime.Types.Result.GetResult<Prisma.$GhlContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -2044,7 +2160,6 @@ export interface ContactFieldRefs {
   readonly lastName: Prisma.FieldRef<"Contact", 'String'>
   readonly gender: Prisma.FieldRef<"Contact", 'String'>
   readonly dateOfBirth: Prisma.FieldRef<"Contact", 'DateTime'>
-  readonly externalId: Prisma.FieldRef<"Contact", 'String'>
   readonly address1: Prisma.FieldRef<"Contact", 'String'>
   readonly address2: Prisma.FieldRef<"Contact", 'String'>
   readonly zip: Prisma.FieldRef<"Contact", 'String'>
@@ -2445,6 +2560,30 @@ export type ContactDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Contacts to delete.
    */
   limit?: number
+}
+
+/**
+ * Contact.externalIds
+ */
+export type Contact$externalIdsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExternalId
+   */
+  select?: Prisma.ExternalIdSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ExternalId
+   */
+  omit?: Prisma.ExternalIdOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExternalIdInclude<ExtArgs> | null
+  where?: Prisma.ExternalIdWhereInput
+  orderBy?: Prisma.ExternalIdOrderByWithRelationInput | Prisma.ExternalIdOrderByWithRelationInput[]
+  cursor?: Prisma.ExternalIdWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExternalIdScalarFieldEnum | Prisma.ExternalIdScalarFieldEnum[]
 }
 
 /**

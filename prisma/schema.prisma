@@ -95,7 +95,7 @@ model Contact {
   gender    String?
   dateOfBirth DateTime?
 
-  externalId String? @unique
+  externalIds ExternalId[]
   address1 String?
   address2 String?
   zip String?
@@ -120,6 +120,26 @@ model Contact {
   @@index([companyId])
   @@index([ghlContactId])
   @@index([chirotouchAccountId])
+}
+
+
+enum ExternalIdSource {
+  POSTHOG
+  GHL
+  CHIROTOUCH
+  SHOPIFY
+  UNIFIED_PRACTICE
+  JASMINE
+}
+
+model ExternalId {
+  contactId String
+  contact Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  externalId String @unique
+  source String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
+  @@index([contactId, externalId])
 }
 
 // GHL Contacts - External CRM sync

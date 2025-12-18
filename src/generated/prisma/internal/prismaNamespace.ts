@@ -388,6 +388,7 @@ export const ModelName = {
   LeadCalculator: 'LeadCalculator',
   Company: 'Company',
   Contact: 'Contact',
+  ExternalId: 'ExternalId',
   GhlContact: 'GhlContact',
   Session: 'Session',
   Event: 'Event',
@@ -413,7 +414,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "cityLatLng" | "leadCalculator" | "company" | "contact" | "ghlContact" | "session" | "event" | "service" | "payments" | "provider" | "appointment" | "appointmentProcedure" | "oAuthState" | "cmsPage"
+    modelProps: "cityLatLng" | "leadCalculator" | "company" | "contact" | "externalId" | "ghlContact" | "session" | "event" | "service" | "payments" | "provider" | "appointment" | "appointmentProcedure" | "oAuthState" | "cmsPage"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -710,6 +711,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ContactCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ContactCountAggregateOutputType> | number
+        }
+      }
+    }
+    ExternalId: {
+      payload: Prisma.$ExternalIdPayload<ExtArgs>
+      fields: Prisma.ExternalIdFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ExternalIdFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalIdPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ExternalIdFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalIdPayload>
+        }
+        findFirst: {
+          args: Prisma.ExternalIdFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalIdPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ExternalIdFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalIdPayload>
+        }
+        findMany: {
+          args: Prisma.ExternalIdFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalIdPayload>[]
+        }
+        create: {
+          args: Prisma.ExternalIdCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalIdPayload>
+        }
+        createMany: {
+          args: Prisma.ExternalIdCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ExternalIdCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalIdPayload>[]
+        }
+        delete: {
+          args: Prisma.ExternalIdDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalIdPayload>
+        }
+        update: {
+          args: Prisma.ExternalIdUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalIdPayload>
+        }
+        deleteMany: {
+          args: Prisma.ExternalIdDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ExternalIdUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ExternalIdUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalIdPayload>[]
+        }
+        upsert: {
+          args: Prisma.ExternalIdUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExternalIdPayload>
+        }
+        aggregate: {
+          args: Prisma.ExternalIdAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateExternalId>
+        }
+        groupBy: {
+          args: Prisma.ExternalIdGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExternalIdGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ExternalIdCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExternalIdCountAggregateOutputType> | number
         }
       }
     }
@@ -1559,7 +1634,6 @@ export const ContactScalarFieldEnum = {
   lastName: 'lastName',
   gender: 'gender',
   dateOfBirth: 'dateOfBirth',
-  externalId: 'externalId',
   address1: 'address1',
   address2: 'address2',
   zip: 'zip',
@@ -1570,6 +1644,17 @@ export const ContactScalarFieldEnum = {
 } as const
 
 export type ContactScalarFieldEnum = (typeof ContactScalarFieldEnum)[keyof typeof ContactScalarFieldEnum]
+
+
+export const ExternalIdScalarFieldEnum = {
+  contactId: 'contactId',
+  externalId: 'externalId',
+  source: 'source',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExternalIdScalarFieldEnum = (typeof ExternalIdScalarFieldEnum)[keyof typeof ExternalIdScalarFieldEnum]
 
 
 export const GhlContactScalarFieldEnum = {
@@ -1993,6 +2078,7 @@ export type GlobalOmitConfig = {
   leadCalculator?: Prisma.LeadCalculatorOmit
   company?: Prisma.CompanyOmit
   contact?: Prisma.ContactOmit
+  externalId?: Prisma.ExternalIdOmit
   ghlContact?: Prisma.GhlContactOmit
   session?: Prisma.SessionOmit
   event?: Prisma.EventOmit
