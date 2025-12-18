@@ -178,7 +178,14 @@ class HCHTracker {
 
     const expires = new Date()
     expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000)
-    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax`
+
+    // Extract root domain (e.g., "root.com" from "foo.root.com")
+    const hostname = window.location.hostname
+    const domain = hostname.includes('.')
+      ? '.' + hostname.split('.').slice(-2).join('.') // e.g., ".root.com"
+      : hostname // fallback for localhost
+
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;domain=${domain};SameSite=Lax`
   }
 
   /**
