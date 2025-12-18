@@ -1,4 +1,3 @@
-import { json } from '@tanstack/react-start'
 import { z } from 'zod'
 import { prisma } from '@/server/db/client'
 import { createFileRoute } from '@tanstack/react-router'
@@ -7,6 +6,12 @@ const validateHchUuidSchema = z.object({
   apiKey: z.string(),
   hchUuid: z.string(),
 })
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+}
 
 export const Route = createFileRoute('/api/validate-hch-uuid')({
   server: {
@@ -22,7 +27,13 @@ export const Route = createFileRoute('/api/validate-hch-uuid')({
           })
 
           if (!company) {
-            return json({ error: 'Invalid API key' }, { status: 401 })
+            return new Response(JSON.stringify({ error: 'Invalid API key' }), {
+              status: 401,
+              headers: {
+                'Content-Type': 'application/json',
+                ...corsHeaders,
+              },
+            })
           }
 
           // Check if contact exists for this company
@@ -33,21 +44,36 @@ export const Route = createFileRoute('/api/validate-hch-uuid')({
             },
           })
 
-          return json({
-            valid: !!contact,
-            contactId: contact?.id,
-          })
+          return new Response(
+            JSON.stringify({
+              valid: !!contact,
+              contactId: contact?.id,
+            }),
+            {
+              status: 200,
+              headers: {
+                'Content-Type': 'application/json',
+                ...corsHeaders,
+              },
+            },
+          )
         } catch (error) {
           console.error('[API] Validate hch_uuid error:', error)
-          return json(
-            {
+          return new Response(
+            JSON.stringify({
               error:
                 error instanceof Error
                   ? error.message
                   : 'Internal server error',
               valid: false,
+            }),
+            {
+              status: 500,
+              headers: {
+                'Content-Type': 'application/json',
+                ...corsHeaders,
+              },
             },
-            { status: 500 },
           )
         }
       },
@@ -55,11 +81,7 @@ export const Route = createFileRoute('/api/validate-hch-uuid')({
       OPTIONS: async () => {
         return new Response(null, {
           status: 204,
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type',
-          },
+          headers: corsHeaders,
         })
       },
     },
