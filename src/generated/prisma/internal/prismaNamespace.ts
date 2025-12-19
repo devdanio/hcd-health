@@ -387,7 +387,9 @@ export const ModelName = {
   CityLatLng: 'CityLatLng',
   LeadCalculator: 'LeadCalculator',
   Company: 'Company',
+  GHLEvent: 'GHLEvent',
   Contact: 'Contact',
+  ContactEvent: 'ContactEvent',
   ExternalId: 'ExternalId',
   GhlContact: 'GhlContact',
   Session: 'Session',
@@ -414,7 +416,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "cityLatLng" | "leadCalculator" | "company" | "contact" | "externalId" | "ghlContact" | "session" | "event" | "service" | "payments" | "provider" | "appointment" | "appointmentProcedure" | "oAuthState" | "cmsPage"
+    modelProps: "cityLatLng" | "leadCalculator" | "company" | "gHLEvent" | "contact" | "contactEvent" | "externalId" | "ghlContact" | "session" | "event" | "service" | "payments" | "provider" | "appointment" | "appointmentProcedure" | "oAuthState" | "cmsPage"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -640,6 +642,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    GHLEvent: {
+      payload: Prisma.$GHLEventPayload<ExtArgs>
+      fields: Prisma.GHLEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GHLEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GHLEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GHLEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GHLEventPayload>
+        }
+        findFirst: {
+          args: Prisma.GHLEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GHLEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GHLEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GHLEventPayload>
+        }
+        findMany: {
+          args: Prisma.GHLEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GHLEventPayload>[]
+        }
+        create: {
+          args: Prisma.GHLEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GHLEventPayload>
+        }
+        createMany: {
+          args: Prisma.GHLEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GHLEventCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GHLEventPayload>[]
+        }
+        delete: {
+          args: Prisma.GHLEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GHLEventPayload>
+        }
+        update: {
+          args: Prisma.GHLEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GHLEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.GHLEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GHLEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GHLEventUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GHLEventPayload>[]
+        }
+        upsert: {
+          args: Prisma.GHLEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GHLEventPayload>
+        }
+        aggregate: {
+          args: Prisma.GHLEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGHLEvent>
+        }
+        groupBy: {
+          args: Prisma.GHLEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GHLEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GHLEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GHLEventCountAggregateOutputType> | number
+        }
+      }
+    }
     Contact: {
       payload: Prisma.$ContactPayload<ExtArgs>
       fields: Prisma.ContactFieldRefs
@@ -711,6 +787,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ContactCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ContactCountAggregateOutputType> | number
+        }
+      }
+    }
+    ContactEvent: {
+      payload: Prisma.$ContactEventPayload<ExtArgs>
+      fields: Prisma.ContactEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ContactEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ContactEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactEventPayload>
+        }
+        findFirst: {
+          args: Prisma.ContactEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ContactEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactEventPayload>
+        }
+        findMany: {
+          args: Prisma.ContactEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactEventPayload>[]
+        }
+        create: {
+          args: Prisma.ContactEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactEventPayload>
+        }
+        createMany: {
+          args: Prisma.ContactEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ContactEventCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactEventPayload>[]
+        }
+        delete: {
+          args: Prisma.ContactEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactEventPayload>
+        }
+        update: {
+          args: Prisma.ContactEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.ContactEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ContactEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ContactEventUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactEventPayload>[]
+        }
+        upsert: {
+          args: Prisma.ContactEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactEventPayload>
+        }
+        aggregate: {
+          args: Prisma.ContactEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateContactEvent>
+        }
+        groupBy: {
+          args: Prisma.ContactEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ContactEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ContactEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ContactEventCountAggregateOutputType> | number
         }
       }
     }
@@ -1622,6 +1772,16 @@ export const CompanyScalarFieldEnum = {
 export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeof CompanyScalarFieldEnum]
 
 
+export const GHLEventScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  data: 'data',
+  createdAt: 'createdAt'
+} as const
+
+export type GHLEventScalarFieldEnum = (typeof GHLEventScalarFieldEnum)[keyof typeof GHLEventScalarFieldEnum]
+
+
 export const ContactScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -1644,6 +1804,18 @@ export const ContactScalarFieldEnum = {
 } as const
 
 export type ContactScalarFieldEnum = (typeof ContactScalarFieldEnum)[keyof typeof ContactScalarFieldEnum]
+
+
+export const ContactEventScalarFieldEnum = {
+  id: 'id',
+  contactId: 'contactId',
+  companyId: 'companyId',
+  eventType: 'eventType',
+  data: 'data',
+  createdAt: 'createdAt'
+} as const
+
+export type ContactEventScalarFieldEnum = (typeof ContactEventScalarFieldEnum)[keyof typeof ContactEventScalarFieldEnum]
 
 
 export const ExternalIdScalarFieldEnum = {
@@ -1824,19 +1996,19 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
 export const NullableJsonNullValueInput = {
   DbNull: DbNull,
   JsonNull: JsonNull
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
-
-
-export const JsonNullValueInput = {
-  JsonNull: JsonNull
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -1941,13 +2113,6 @@ export type ListEnumEhrTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$Pris
 
 
 /**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-/**
  * Reference to a field of type 'Json'
  */
 export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -1958,6 +2123,13 @@ export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'J
  * Reference to a field of type 'QueryMode'
  */
 export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -2077,7 +2249,9 @@ export type GlobalOmitConfig = {
   cityLatLng?: Prisma.CityLatLngOmit
   leadCalculator?: Prisma.LeadCalculatorOmit
   company?: Prisma.CompanyOmit
+  gHLEvent?: Prisma.GHLEventOmit
   contact?: Prisma.ContactOmit
+  contactEvent?: Prisma.ContactEventOmit
   externalId?: Prisma.ExternalIdOmit
   ghlContact?: Prisma.GhlContactOmit
   session?: Prisma.SessionOmit

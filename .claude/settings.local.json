@@ -20,7 +20,13 @@
       "Bash(pnpm remove:*)",
       "WebFetch(domain:frontendatscale.com)",
       "Bash(pnpx shadcn@latest add:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(npx prisma:*)",
+      "Bash(echo:*)",
+      "Bash(python3:*)",
+      "Bash(while IFS= read -r line)",
+      "Bash(do echo \"$line\")",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []

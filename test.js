@@ -1,79 +1,30 @@
-// login-up.js
-import 'dotenv/config' // optional, if using .env
-// Node 18+ has fetch globally; if you're on an older version, see the node-fetch example below.
-
-const BASE_URL = 'https://staging.unifiedpractice.com/API'
-
-async function loginUnifiedPractice(username, password) {
-  const url = `${BASE_URL}/api/Account/Login`
-
-  //   const payload = {
-  //     UserName: username,
-  //     Password: password,
-  //   }
-
-  const payload = {
-    Parameter: {
-      UserName: username,
-      Password: password,
-      Token: '6ecc26c8-33c6-4618-ae25-559a3ff595dd',
-      //   IgnoreTokenExpiryDate: true,
-      //   RedirectToMetabaseDashboard: true,
-      //   ClientDevice: {
-      //     ClientSoftwareVersion: 'sample string 1',
-      //     DeviceId: 2,
-      //     Id: '6a19cd8d-92eb-4b35-b166-195f2b7e9a50',
-      //     Type: 1,
-      //     Name: 'sample string 4',
-      //     Information: 'sample string 5',
-      //     Client: 'sample string 6',
-      //   },
-      //   RememberMe: true,
-      //   ReturnUrl: 'sample string 4',
-      //   IPAddress: 'sample string 5',
-      //   IsEhrLogin: true,
-      //   HasPushNotifications: true,
-    },
-  }
-
-  const res = await fetch(BASE_URL + '/api/Account/GetEhrAuthorizationToken')
-  console.log('dan', res)
-  //   const a = await res.json().catch(() => null)
-  //   const res = await fetch(url, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       // If your browser sends additional headers on login (like X-Requested-With),
-  //       // copy those here too.
-  //     },
-  //     body: JSON.stringify(payload),
-  //     redirect: 'manual',
-  //   })
-
-  if (!res.ok) {
-    const text = await res.text().catch(() => '')
-    throw new Error(`Login failed: ${res.status} ${res.statusText} - ${text}`)
-  }
-
-  const data = await res.json().catch(() => null)
-  console.log('Login response:', data)
-
-  // IMPORTANT: Node’s fetch DOES NOT persist cookies by default.
-  // If the app uses auth cookies, you’ll need a cookie jar implementation
-  // (e.g. undici + tough-cookie, or fetch-cookie + node-fetch) to reuse
-  // the session for follow-up API calls.
-
-  return { data, headers: res.headers }
-}
-
-;(async () => {
-  try {
-    const username = 'steve@pa-om.com'
-    const password = 'DeNise246!'
-
-    await loginUnifiedPractice(username, password)
-  } catch (err) {
-    console.error(err)
-    process.exit(1)
-  }
-})()
+fetch('https://services.leadconnectorhq.com/contacts/96if2SXMInxvFw6QeiPN', {
+  headers: {
+    version: '2021-07-28',
+    accept: 'application/json, text/plain, */*',
+    'accept-language': 'en-US,en;q=0.9',
+    baggage:
+      'sentry-environment=production,sentry-release=d2256107ffbacc251fc18d9f1236df3bd6b4bb84,sentry-public_key=c67431ff70d6440fb529c2705792425f,sentry-trace_id=7e234d2da23a4516919b03b39ea3d384,sentry-org_id=176457,sentry-transaction=contact_detail-v2,sentry-sampled=false,sentry-sample_rand=0.6960025521824562,sentry-sample_rate=0.02',
+    'cache-control': 'max-age=0',
+    channel: 'APP',
+    'if-none-match': 'W/"b0b-yhUZsadNZWwChDZsPtBlBsQrchc"',
+    priority: 'u=1, i',
+    'sec-ch-ua': '"Chromium";v="143", "Not A(Brand";v="24"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"macOS"',
+    'sec-fetch-dest': 'empty',
+    'sec-fetch-mode': 'cors',
+    'sec-fetch-site': 'cross-site',
+    'sentry-trace': '7e234d2da23a4516919b03b39ea3d384-807db3196a632f01-0',
+    source: 'WEB_USER',
+    'token-id':
+      'eyJhbGciOiJSUzI1NiIsImtpZCI6Ijk4OGQ1YTM3OWI3OGJkZjFlNTBhNDA5MTEzZjJiMGM3NWU0NTJlNDciLCJ0eXAiOiJKV1QifQ.eyJ1c2VyX2lkIjoicXNaQUlPUVkyMXY2UFVEQjBETGEiLCJjb21wYW55X2lkIjoibWpVSlJjM1ZiODY5d2RCcVB0UEUiLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWdlbmN5IiwibG9jYXRpb25zIjpbImhSS2FibFpjMk5VZE5RaEQ1cW15IiwiclBJdXBJa2hSQ2hBRG1aWG1sZFQiLCI5cGw3TktxSmU5YzBOSXMzcWRvZCIsIndKVnJUYlNBaXZ4SHY4QmFiU1paIiwiWGxNazdIdzRkakx2RXhsdjBkVEsiXSwidmVyc2lvbiI6MiwicGVybWlzc2lvbnMiOnsid29ya2Zsb3dzX2VuYWJsZWQiOnRydWUsIndvcmtmbG93c19yZWFkX29ubHkiOmZhbHNlfSwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2hpZ2hsZXZlbC1iYWNrZW5kIiwiYXVkIjoiaGlnaGxldmVsLWJhY2tlbmQiLCJhdXRoX3RpbWUiOjE3NjYxNjM0MTIsInN1YiI6InFzWkFJT1FZMjF2NlBVREIwRExhIiwiaWF0IjoxNzY2MTYzNDEyLCJleHAiOjE3NjYxNjcwMTIsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnt9LCJzaWduX2luX3Byb3ZpZGVyIjoiY3VzdG9tIn19.QTwRSc24qkKoIw771J7XPNcEhBBHGJ5Kjg5hqkK9KJbWt66TownsJj1LjCU9bIHPYX4P1z7NjzuC3r1FhNueEKSEVA2FOEGxoky21NB72DdyQqznPSp-D17LKeadyayFioGPnCI2m2ExFRNfzeH12k5NjOsCLbdnRGhFdDIYKEaGn9k_WijdsnA0NfVUdfxenkMoodxVmedTcyIVq9fqKELJVOZxNdwH1Bi1twrumoYT1hokhqA84RssUwzX3XxfEyv82jSHcqbsnCZjjxyG9JZs4hRDQUykzPmzuGW9uer5Po2L6TyaGqbLrAiJ-a2rS45i6NCCjTJ4bCE3gnrtUw',
+    Referer: 'https://app.highcountrydigital.io/',
+  },
+  body: null,
+  method: 'GET',
+})
+  .then((res) => res.json())
+  .then((data) => {
+    console.log(data)
+  })

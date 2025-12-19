@@ -78,6 +78,13 @@ enum EhrType {
   ghl
 }
 
+model GHLEvent{
+  id String @id @default(cuid())
+  companyId String
+  data      Json
+  createdAt DateTime @default(now())
+}
+
 // Contacts - Unified visitor/patient identity
 model Contact {
   id        String   @id @default(cuid())
@@ -113,6 +120,7 @@ model Contact {
   chirotouchAccountId String? @unique
 
   sessions Session[]
+  contactEvents ContactEvent[]
 
   @@index([companyId, email])
   @@index([companyId, phone])
@@ -122,6 +130,23 @@ model Contact {
   @@index([chirotouchAccountId])
 }
 
+// Contact Events - Custom events associated with contacts
+model ContactEvent {
+  id        String   @id @default(cuid())
+  contactId String
+  contact   Contact  @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  companyId String
+
+  eventType String
+  data      Json
+
+  createdAt DateTime @default(now())
+
+  @@index([contactId])
+  @@index([companyId])
+  @@index([eventType])
+}
 
 enum ExternalIdSource {
   POSTHOG

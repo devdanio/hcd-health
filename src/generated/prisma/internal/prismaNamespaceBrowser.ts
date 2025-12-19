@@ -54,7 +54,9 @@ export const ModelName = {
   CityLatLng: 'CityLatLng',
   LeadCalculator: 'LeadCalculator',
   Company: 'Company',
+  GHLEvent: 'GHLEvent',
   Contact: 'Contact',
+  ContactEvent: 'ContactEvent',
   ExternalId: 'ExternalId',
   GhlContact: 'GhlContact',
   Session: 'Session',
@@ -139,6 +141,16 @@ export const CompanyScalarFieldEnum = {
 export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeof CompanyScalarFieldEnum]
 
 
+export const GHLEventScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  data: 'data',
+  createdAt: 'createdAt'
+} as const
+
+export type GHLEventScalarFieldEnum = (typeof GHLEventScalarFieldEnum)[keyof typeof GHLEventScalarFieldEnum]
+
+
 export const ContactScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -161,6 +173,18 @@ export const ContactScalarFieldEnum = {
 } as const
 
 export type ContactScalarFieldEnum = (typeof ContactScalarFieldEnum)[keyof typeof ContactScalarFieldEnum]
+
+
+export const ContactEventScalarFieldEnum = {
+  id: 'id',
+  contactId: 'contactId',
+  companyId: 'companyId',
+  eventType: 'eventType',
+  data: 'data',
+  createdAt: 'createdAt'
+} as const
+
+export type ContactEventScalarFieldEnum = (typeof ContactEventScalarFieldEnum)[keyof typeof ContactEventScalarFieldEnum]
 
 
 export const ExternalIdScalarFieldEnum = {
@@ -341,19 +365,19 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const JsonNullValueInput = {
+  JsonNull: 'JsonNull'
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
 export const NullableJsonNullValueInput = {
   DbNull: 'DbNull',
   JsonNull: 'JsonNull'
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
-
-
-export const JsonNullValueInput = {
-  JsonNull: 'JsonNull'
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {

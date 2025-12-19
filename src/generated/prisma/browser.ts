@@ -33,10 +33,20 @@ export type LeadCalculator = Prisma.LeadCalculatorModel
  */
 export type Company = Prisma.CompanyModel
 /**
+ * Model GHLEvent
+ * 
+ */
+export type GHLEvent = Prisma.GHLEventModel
+/**
  * Model Contact
  * 
  */
 export type Contact = Prisma.ContactModel
+/**
+ * Model ContactEvent
+ * 
+ */
+export type ContactEvent = Prisma.ContactEventModel
 /**
  * Model ExternalId
  * 
