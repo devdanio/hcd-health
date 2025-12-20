@@ -1,0 +1,40 @@
+SELECT 
+  gc.attributionSource_campaign,
+  gc.attributionSource_sessionSource,
+  COUNT(*) AS count
+FROM `leadalytics-471218`.`thrive`.`chirotouch_patients` AS cp
+LEFT JOIN `leadalytics-471218`.`thrive`.`ghl_contacts` AS gc
+  ON cp.Phone = CAST(REGEXP_REPLACE(CAST(gc.phone AS STRING), r'^\+?1', '') AS INT64)
+  OR LOWER(cp.Email) = gc.emailLowerCase
+GROUP BY gc.attributionSource_campaign, gc.attributionSource_sessionSource
+ORDER BY count DESC;
+
+
+
+SELECT
+  FORMAT_DATE('%Y-%m', DATE(gc.dateAdded)) AS month,
+  gc.attributionSource_campaign,
+  COUNT(*) AS count
+FROM `leadalytics-471218`.`thrive`.`chirotouch_patients` AS cp
+LEFT JOIN `leadalytics-471218`.`thrive`.`ghl_contacts` AS gc
+  ON
+    cp.Phone
+      = CAST(REGEXP_REPLACE(CAST(gc.phone AS STRING), r'^\+?1', '') AS INT64)
+    OR LOWER(cp.Email) = gc.emailLowerCase
+WHERE gc.dateAdded >= TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 16 MONTH))
+GROUP BY month, gc.attributionSource_campaign
+ORDER BY gc.attributionSource_campaign, month;
+
+
+
+
+
+SELECT 
+  gc.attributionSource_campaign,
+  COUNT(*) AS count
+FROM `leadalytics-471218`.`thrive`.`chirotouch_patients` AS cp
+LEFT JOIN `leadalytics-471218`.`thrive`.`ghl_contacts` AS gc
+  ON cp.Phone = CAST(REGEXP_REPLACE(CAST(gc.phone AS STRING), r'^\+?1', '') AS INT64)
+  OR LOWER(cp.Email) = gc.emailLowerCase
+GROUP BY gc.attributionSource_campaign
+ORDER BY count DESC;

@@ -32,18 +32,32 @@ For all agg\_ tables we are going to run cron jobs that periodically update the 
 
 new HCHTracker({ apiKey:'756e492d359a44b5c86c28eaff272d599043d14a1de8dcc476f49acf0b6b6058', apiUrl:'http://localhost:3000' })
 
-## How it works
+## DEPRECTATED SEE EDCGECASESE BELOW
 
 - High Country Health is the singular source of truth
-- GHL will send "events" (new contacts, form submissions, phone calls). These events will include a payload that also has the first and last attribution source
--
+- New contact created in GHL sends a webhook req to /api/$locationID/ghl-event = stores the raw payload w/ attributation data
+  - upserts into Contact using Contact.ExternalId. ExternalId.source = ExternalIdSource.GHL
+
+- Posthog will identify with custom Thrive chat widget and Shopify
+- EHRs will upsert contacts based upon phone/email
+
+EDGECASES
+
+- When contacts come from Thrive chat or Shopify we are missing attribution data. BUT we can identify this via posthog
+- Contact is created w/ organic, but they click on an ad, book
+
+## how it works 2.0
+
+- We just use our own tracking script (posthog is overkill, i just need the data i'll probably use meta base for create reports)
+- DOES NOT work with GHL chat widget, i'll provide my own
+- I'll recreate DNI by replicating
 
 ## As a service
 
-1. Export all the GHL contacts
+<!-- 1. Export all the GHL contacts
 2. Run the contact details script to get all of the attribution data for each contact
 3. Insert them into Contact and Session
 4. Pull the data from the EHR starting from the first created date in GHL
 5. Use bigquery/metabase to compare this data
 
-PROFIT - !see how we can analyze this data and if it make sense before we go building a full saas!
+PROFIT - !see how we can analyze this data and if it make sense before we go building a full saas! -->

@@ -16,3 +16,5 @@ todos.json
 *.csv
 /src/generated/prisma
 /generated/prisma
+*.xls
+*.jsonld
