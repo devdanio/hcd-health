@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { z } from 'zod'
@@ -19,6 +20,9 @@ import {
   Youtube,
   Github,
   FileText,
+  Phone,
+  MessageSquare,
+  DollarSign,
 } from 'lucide-react'
 
 import { SocialIcon } from 'react-social-icons'
@@ -39,15 +43,26 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useState, useMemo } from 'react'
-import { getCompany, getSessions, getSessionPageViews, getLast24HoursVisitors, getTopPages } from '@/collections'
+import {
+  getCompany,
+  getSessions,
+  getSessionPageViews,
+  getLast24HoursVisitors,
+  getTopPages,
+} from '@/collections'
 import { ChartAreaInteractive } from '@/components/chart-area-interactive'
 import { ChartCategories } from '@/components/chart-categories'
+import { LeadsPatientsChart } from '@/components/leads-patients-chart'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 
 const searchParamsSchema = z.object({
   timeRange: z.enum(['24h', '7d', '30d', '90d']).optional().default('30d'),
@@ -94,7 +109,10 @@ const extractSourceInfo = (
 
   if (mediumLower.includes('cpc') || mediumLower.includes('ppc')) {
     category = 'paid_search'
-  } else if (mediumLower.includes('organic') || sourceLower.includes('google')) {
+  } else if (
+    mediumLower.includes('organic') ||
+    sourceLower.includes('google')
+  ) {
     category = 'organic_search'
   } else if (mediumLower.includes('social')) {
     category = mediumLower.includes('paid') ? 'paid_social' : 'organic_social'
@@ -162,12 +180,218 @@ const extractPathname = (url: string | undefined): string => {
   }
 }
 
+// Category badge component with icons
+type CategoryType =
+  | 'direct social'
+  | 'paid social'
+  | 'organic search'
+  | 'paid search'
+  | 'email'
+  | 'phone'
+  | 'chat'
+
+function CategoryBadge({ category }: { category: CategoryType }) {
+  const categoryConfig: Record<
+    CategoryType,
+    { label: string; icon: React.ElementType; className: string }
+  > = {
+    'direct social': {
+      label: 'Direct Social',
+      icon: Users,
+      className:
+        'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+    },
+    'paid social': {
+      label: 'Paid Social',
+      icon: Users,
+      className:
+        'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
+    },
+    'organic search': {
+      label: 'Organic Search',
+      icon: Search,
+      className:
+        'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+    },
+    'paid search': {
+      label: 'Paid Search',
+      icon: Search,
+      className:
+        'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+    },
+    email: {
+      label: 'Email',
+      icon: Mail,
+      className:
+        'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200',
+    },
+    phone: {
+      label: 'Phone',
+      icon: Phone,
+      className:
+        'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200',
+    },
+    chat: {
+      label: 'Chat',
+      icon: MessageSquare,
+      className:
+        'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200',
+    },
+  }
+
+  const config = categoryConfig[category]
+  const Icon = config.icon
+
+  return (
+    <Badge variant="outline" className={`${config.className} text-[10px] px-1`}>
+      <Icon className="h-2.5 w-2.5" />
+      {config.label}
+    </Badge>
+  )
+}
+
+// Channel badge component with icons
+type ChannelType = 'instagram' | 'tiktok' | 'youtube' | 'meta' | 'google'
+
+function ChannelBadge({ channel }: { channel: ChannelType }) {
+  const channelConfig: Record<
+    ChannelType,
+    { label: string; icon: React.ElementType; className: string }
+  > = {
+    instagram: {
+      label: 'Instagram',
+      icon: Instagram,
+      className:
+        'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200',
+    },
+    tiktok: {
+      label: 'TikTok',
+      icon: Video,
+      className: 'bg-black text-white dark:bg-gray-800 dark:text-white',
+    },
+    youtube: {
+      label: 'YouTube',
+      icon: Youtube,
+      className: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+    },
+    meta: {
+      label: 'Meta',
+      icon: Facebook,
+      className:
+        'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+    },
+    google: {
+      label: 'Google',
+      icon: Search,
+      className:
+        'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+    },
+  }
+
+  const config = channelConfig[channel]
+  const Icon = config.icon
+
+  return (
+    <Badge variant="outline" className={`${config.className} text-[10px] px-1`}>
+      <Icon className="h-2.5 w-2.5" />
+      {config.label}
+    </Badge>
+  )
+}
+
+// Generate fake contacts data
+function generateFakeContacts() {
+  const names = [
+    'John Smith',
+    'Sarah Johnson',
+    'Michael Chen',
+    'Emily Davis',
+    'David Wilson',
+    'Jessica Martinez',
+    'Robert Taylor',
+    'Amanda Brown',
+    'Christopher Lee',
+    'Jennifer White',
+  ]
+
+  const locations = ['Princeton', 'Bridgewater']
+
+  const categories: CategoryType[] = [
+    'direct social',
+    'paid social',
+    'organic search',
+    'paid search',
+    'email',
+    'phone',
+    'chat',
+  ]
+
+  const channels: ChannelType[] = [
+    'instagram',
+    'tiktok',
+    'youtube',
+    'meta',
+    'google',
+  ]
+
+  const campaigns = [
+    'Summer Wellness',
+    'Back Pain Relief',
+    'New Patient Special',
+    'Holiday Promotion',
+    'Fitness Challenge',
+  ]
+
+  const contactTypes: ('Lead' | 'Patient')[] = ['Lead', 'Patient']
+
+  return Array.from({ length: 10 }, (_, i) => {
+    const numCampaigns = Math.floor(Math.random() * 3) + 1
+    const selectedCampaigns = Array.from({ length: numCampaigns }, () => {
+      return campaigns[Math.floor(Math.random() * campaigns.length)]
+    })
+
+    const speedToLeadDays = Math.floor(Math.random() * 13) // 0-12 days
+    const speedToLeadHours = Math.floor(Math.random() * 24)
+    const speedToLeadMinutes = Math.floor(Math.random() * 60)
+    const speedToLeadSeconds = Math.floor(Math.random() * 60)
+
+    let speedToLead = ''
+    if (speedToLeadDays > 0) {
+      speedToLead = `${speedToLeadDays}d ${speedToLeadHours}h`
+    } else if (speedToLeadHours > 0) {
+      speedToLead = `${speedToLeadHours}h ${speedToLeadMinutes}m`
+    } else if (speedToLeadMinutes > 0) {
+      speedToLead = `${speedToLeadMinutes}m ${speedToLeadSeconds}s`
+    } else {
+      speedToLead = `${speedToLeadSeconds}s`
+    }
+
+    return {
+      name: names[i],
+      location: locations[Math.floor(Math.random() * locations.length)],
+      category: categories[
+        Math.floor(Math.random() * categories.length)
+      ] as CategoryType,
+      channel: channels[
+        Math.floor(Math.random() * channels.length)
+      ] as ChannelType,
+      campaigns: [...new Set(selectedCampaigns)],
+      speedToLead,
+      contactType: contactTypes[
+        Math.floor(Math.random() * contactTypes.length)
+      ] as 'Lead' | 'Patient',
+    }
+  })
+}
+
 function CompanyDetailsPage() {
   const { companyId } = Route.useParams()
   const navigate = Route.useNavigate()
   const searchParams = Route.useSearch()
   const timeRange = searchParams.timeRange
-  const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null)
+  const [selectedSessionId, setSelectedSessionId] = useState<string | null>(
+    null,
+  )
 
   const handleTimeRangeChange = (value: string) => {
     navigate({
@@ -190,7 +414,8 @@ function CompanyDetailsPage() {
 
   const { data: pageViews } = useQuery({
     queryKey: ['pageViews', selectedSessionId],
-    queryFn: () => getSessionPageViews({ data: { sessionId: selectedSessionId! } }),
+    queryFn: () =>
+      getSessionPageViews({ data: { sessionId: selectedSessionId! } }),
     enabled: !!selectedSessionId,
   })
 
@@ -330,271 +555,173 @@ function CompanyDetailsPage() {
         </Link>
       </div>
 
-      {/* Visitors in Last 24 Hours */}
-      <div className="mb-6">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-muted rounded-lg">
-          <Users className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">Visitors (24h):</span>
-          <span className="text-2xl font-semibold">
-            {last24HoursVisitors === undefined
-              ? '...'
-              : last24HoursVisitors}
-          </span>
+      <div className="grid grid-cols-4 mb-4 gap-4">
+        <Card>
+          <CardHeader>Leads</CardHeader>
+          <CardContent className="flex items-center justify-center">
+            <span className="text-2xl font-semibold">62</span>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>New Patients</CardHeader>
+          <CardContent className="flex items-center justify-center">
+            <span className="text-2xl font-semibold">13</span>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>Time to lead</CardHeader>
+          <CardContent className="flex items-center justify-center">
+            <span className="text-2xl font-semibold">1hr 31min</span>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>Revnue/patient</CardHeader>
+          <CardContent className="flex items-center justify-center">
+            <span className="text-2xl font-semibold">$1,251</span>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-4 gap-4">
+        <div className="col-span-3">
+          <LeadsPatientsChart />
         </div>
-      </div>
-
-      {/* Time Range Selector */}
-      <div className="mb-6 flex items-center gap-3">
-        <span className="text-sm font-medium">Time Range:</span>
-        <Select value={timeRange} onValueChange={handleTimeRangeChange}>
-          <SelectTrigger className="w-[180px]" size="sm">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent className="rounded-xl">
-            <SelectItem value="24h" className="rounded-lg">
-              Last 24 hours
-            </SelectItem>
-            <SelectItem value="7d" className="rounded-lg">
-              Last 7 days
-            </SelectItem>
-            <SelectItem value="30d" className="rounded-lg">
-              Last 30 days
-            </SelectItem>
-            <SelectItem value="90d" className="rounded-lg">
-              Last 3 months
-            </SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Top 3 Pages */}
-      <div className="grid gap-4 md:grid-cols-3 mb-8">
-        {topPages === undefined ? (
-          // Loading state
-          Array(3)
-            .fill(0)
-            .map((_, i) => (
-              <Card key={i} className="animate-pulse">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <div className="h-4 w-24 bg-muted rounded" />
-                </CardHeader>
-                <CardContent>
-                  <div className="h-8 w-16 bg-muted rounded mb-2" />
-                  <div className="h-3 w-32 bg-muted rounded" />
-                </CardContent>
-              </Card>
-            ))
-        ) : topPages.length === 0 ? (
-          <div className="col-span-3 text-center py-8 text-muted-foreground border rounded-xl bg-card">
-            No page views recorded in this time range
-          </div>
-        ) : (
-          topPages.map((page, index) => (
-            <Card key={page.pathname}>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Top Page #{index + 1}
-                </CardTitle>
-                <FileText className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{page.sessions}</div>
-                <p
-                  className="text-xs text-muted-foreground truncate"
-                  title={page.pathname}
-                >
-                  {page.pathname}
-                </p>
-              </CardContent>
-            </Card>
-          ))
-        )}
-      </div>
-
-      {/* Charts Grid */}
-      <div className="grid gap-4 md:grid-cols-4 mb-8">
-        <div className="md:col-span-3">
-          <ChartAreaInteractive
-            companyId={companyId as Id<'companies'>}
-            timeRange={timeRange}
-          />
-        </div>
-        <div className="md:col-span-1">
-          <ChartCategories
-            companyId={companyId as Id<'companies'>}
-            timeRange={timeRange}
-          />
-        </div>
-      </div>
-
-      {/* Sessions Table */}
-      <div>
-        <h2 className="text-2xl font-semibold mb-4">Recent Sessions</h2>
-        {sortedSessions.length === 0 ? (
-          <div className="text-center py-12 border rounded-lg">
-            <p className="text-muted-foreground">No sessions yet</p>
-          </div>
-        ) : (
-          <div className="border rounded-lg overflow-hidden">
-            <table className="w-full">
-              <thead className="bg-muted">
-                <tr>
-                  <th className="text-left p-4 font-medium w-12">Source</th>
-                  <th className="text-left p-4 font-medium">Session ID</th>
-                  <th className="text-left p-4 font-medium">User Identity</th>
-                  <th className="text-left p-4 font-medium">Current Page</th>
-                  <th className="text-left p-4 font-medium">Page Views</th>
-                  <th className="text-left p-4 font-medium">Duration</th>
-                  <th className="text-left p-4 font-medium">Last Activity</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedSessions.map((session) => {
-                  const { source, category} = extractSourceInfo(
-                    session.lastSessionAttribution,
-                  )
-                  const IconComponent = getIconForSource(source, category)
-
-                  // Determine user identity display
-                  const getContactIdentity = () => {
-                    if (!session.contact) return 'Anonymous'
-                    const { email, fullName, firstName, lastName } =
-                      session.contact
-                    if (email) return email
-                    if (fullName) return fullName
-                    if (firstName || lastName) {
-                      return [firstName, lastName].filter(Boolean).join(' ')
-                    }
-                    return 'Anonymous'
-                  }
-
-                  return (
-                    <tr
-                      key={session.id}
-                      className="border-t hover:bg-muted/50"
-                    >
-                      <td className="p-4">
-                        <IconComponent className="h-5 w-5 text-muted-foreground" />
-                      </td>
-                      <td className="p-4">
-                        <button
-                          onClick={() => setSelectedSessionId(session.id)}
-                          className="text-xs text-primary hover:underline cursor-pointer font-mono"
-                        >
-                          {session.browserSessionId.slice(0, 8)}...
-                        </button>
-                      </td>
-                      <td className="p-4 text-sm">
-                        <span
-                          className={
-                            getContactIdentity() === 'Anonymous'
-                              ? 'text-muted-foreground italic'
-                              : ''
-                          }
-                        >
-                          {getContactIdentity()}
-                        </span>
-                      </td>
-                      <td className="p-4 text-sm max-w-xs truncate">
-                        {extractPathname(session.lastSessionAttribution?.url)}
-                      </td>
-                      <td className="p-4 text-center">{session.eventsCount}</td>
-                      <td className="p-4 text-sm">-</td>
-                      <td className="p-4 text-sm text-muted-foreground">
-                        {new Date(session.lastActivity).toLocaleString()}
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-
-      {/* Session Pages Modal */}
-      <Dialog
-        open={selectedSessionId !== null}
-        onOpenChange={(open) => !open && setSelectedSessionId(null)}
-      >
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Pages Visited</DialogTitle>
-            <DialogDescription>
-              Session ID: {selectedSession?.browserSessionId.slice(0, 8)}...
-              {pageViews !== undefined && (
-                <span className="ml-2">
-                  ({pageViews?.length || 0} page views)
-                </span>
-              )}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="mt-4">
-            {pageViews === undefined ? (
-              <p className="text-muted-foreground text-center py-8">
-                Loading page views...
-              </p>
-            ) : pageViews.length === 0 ? (
-              <p className="text-muted-foreground text-center py-8">
-                No pages tracked for this session
-              </p>
-            ) : (
-              <div className="space-y-2">
-                {pageViews.map((pageView: any, index) => {
-                  const PageIconComponent = pageView.channel
-                    ? getIconForSource(
-                        pageView.channel.source,
-                        pageView.channel.category,
-                      )
-                    : Globe
-
-                  return (
-                    <div
-                      key={pageView.id}
-                      className="p-4 border rounded-lg hover:bg-muted/50"
-                    >
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-1 rounded">
-                              #{index + 1}
-                            </span>
-                            <span className="text-xs text-muted-foreground">
-                              {new Date(
-                                pageView.createdAt,
-                              ).toLocaleString()}
-                            </span>
-                            {pageView.channel && (
-                              <>
-                                <span className="text-xs text-muted-foreground">
-                                  •
-                                </span>
-                                <PageIconComponent className="h-4 w-4 text-muted-foreground" />
-                                <span className="text-xs font-medium">
-                                  {pageView.channel.source}
-                                </span>
-                                {getCategoryBadge(pageView.channel.category)}
-                              </>
-                            )}
-                          </div>
-                          <a
-                            href={pageView.url || '#'}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-sm font-medium text-primary hover:underline break-all"
-                          >
-                            {pageView.url || 'Unknown URL'}
-                          </a>
-                        </div>
-                      </div>
+        <div className="col-span-1">
+          <Card>
+            <CardHeader>ROI by Service</CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {/* Acupuncture */}
+                <div className="border-b pb-3 last:border-b-0">
+                  <h4 className="font-semibold text-sm mb-2">Acupuncture</h4>
+                  <div className="space-y-1 text-xs">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">CAC:</span>
+                      <span className="font-medium">$125</span>
                     </div>
-                  )
-                })}
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Revenue:</span>
+                      <span className="font-medium">$2,450</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">
+                        Expected Revenue:
+                      </span>
+                      <span className="font-medium">$3,200</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* PT */}
+                <div className="border-b pb-3 last:border-b-0">
+                  <h4 className="font-semibold text-sm mb-2">PT</h4>
+                  <div className="space-y-1 text-xs">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">CAC:</span>
+                      <span className="font-medium">$180</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Revenue:</span>
+                      <span className="font-medium">$4,320</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">
+                        Expected Revenue:
+                      </span>
+                      <span className="font-medium">$5,400</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Chiro */}
+                <div className="pb-3">
+                  <h4 className="font-semibold text-sm mb-2">Chiro</h4>
+                  <div className="space-y-1 text-xs">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">CAC:</span>
+                      <span className="font-medium">$95</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Revenue:</span>
+                      <span className="font-medium">$1,900</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">
+                        Expected Revenue:
+                      </span>
+                      <span className="font-medium">$2,850</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+      <div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Contacts</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Location</TableHead>
+                  <TableHead>Category</TableHead>
+                  <TableHead>Channel</TableHead>
+                  <TableHead>Campaigns</TableHead>
+                  <TableHead>Speed to Lead</TableHead>
+                  <TableHead>Contact Type</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {generateFakeContacts().map((contact, index) => (
+                  <TableRow key={index}>
+                    <TableCell className="font-medium">
+                      {contact.name}
+                    </TableCell>
+                    <TableCell>{contact.location}</TableCell>
+                    <TableCell>
+                      <CategoryBadge category={contact.category} />
+                    </TableCell>
+                    <TableCell>
+                      <ChannelBadge channel={contact.channel} />
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap gap-1">
+                        {contact.campaigns.map((campaign, i) => (
+                          <Badge
+                            key={i}
+                            variant="outline"
+                            className="text-[10px] px-1"
+                          >
+                            {campaign}
+                          </Badge>
+                        ))}
+                      </div>
+                    </TableCell>
+                    <TableCell>{contact.speedToLead}</TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={
+                          contact.contactType === 'Patient'
+                            ? 'default'
+                            : 'secondary'
+                        }
+                        className="text-[10px] px-1"
+                      >
+                        {contact.contactType}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }

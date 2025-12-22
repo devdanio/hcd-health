@@ -45,19 +45,3 @@ EDGECASES
 
 - When contacts come from Thrive chat or Shopify we are missing attribution data. BUT we can identify this via posthog
 - Contact is created w/ organic, but they click on an ad, book
-
-## how it works 2.0
-
-- We just use our own tracking script (posthog is overkill, i just need the data i'll probably use meta base for create reports)
-- DOES NOT work with GHL chat widget, i'll provide my own
-- I'll recreate DNI by replicating
-
-## As a service
-
-<!-- 1. Export all the GHL contacts
-2. Run the contact details script to get all of the attribution data for each contact
-3. Insert them into Contact and Session
-4. Pull the data from the EHR starting from the first created date in GHL
-5. Use bigquery/metabase to compare this data
-
-PROFIT - !see how we can analyze this data and if it make sense before we go building a full saas! -->

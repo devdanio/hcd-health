@@ -20,7 +20,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'Content-Type',
 }
 
-export const Route = createFileRoute('/api/$locationID/event')({
+export const Route = createFileRoute('/api/$locationID/ghl-event')({
   server: {
     handlers: {
       POST: async ({ request, params }) => {

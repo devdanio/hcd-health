@@ -117,8 +117,5 @@
     "overrides": {
       "srvx": "0.8.15"
     }
-  },
-  "resolutions": {
-    "cookie": "0.7.2"
   }
 }

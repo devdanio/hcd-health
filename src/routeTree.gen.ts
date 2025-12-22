@@ -18,6 +18,7 @@ import { Route as ApiValidateHchUuidRouteImport } from './routes/api.validate-hc
 import { Route as ApiCreateContactRouteImport } from './routes/api.create-contact'
 import { Route as CompaniesCompanyIdRouteRouteImport } from './routes/companies/$companyId/route'
 import { Route as CompaniesCompanyIdIndexRouteImport } from './routes/companies/$companyId/index'
+import { Route as ApiLocationIDGhlEventRouteImport } from './routes/api.$locationID.ghl-event'
 import { Route as ApiLocationIDEventRouteImport } from './routes/api.$locationID.event'
 import { Route as CompaniesCompanyIdSettingsRouteRouteImport } from './routes/companies/$companyId/settings/route'
 import { Route as CompaniesCompanyIdVisitorsIndexRouteImport } from './routes/companies/$companyId/visitors/index'
@@ -86,6 +87,11 @@ const CompaniesCompanyIdIndexRoute = CompaniesCompanyIdIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => CompaniesCompanyIdRouteRoute,
+} as any)
+const ApiLocationIDGhlEventRoute = ApiLocationIDGhlEventRouteImport.update({
+  id: '/api/$locationID/ghl-event',
+  path: '/api/$locationID/ghl-event',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiLocationIDEventRoute = ApiLocationIDEventRouteImport.update({
   id: '/api/$locationID/event',
@@ -229,6 +235,7 @@ export interface FileRoutesByFullPath {
   '/companies/': typeof CompaniesIndexRoute
   '/companies/$companyId/settings': typeof CompaniesCompanyIdSettingsRouteRouteWithChildren
   '/api/$locationID/event': typeof ApiLocationIDEventRoute
+  '/api/$locationID/ghl-event': typeof ApiLocationIDGhlEventRoute
   '/companies/$companyId/': typeof CompaniesCompanyIdIndexRoute
   '/api/webhooks/ghl/$companyId': typeof ApiWebhooksGhlCompanyIdRoute
   '/companies/$companyId/cms-pages/$pageId': typeof CompaniesCompanyIdCmsPagesPageIdRoute
@@ -259,6 +266,7 @@ export interface FileRoutesByTo {
   '/users/sign-in': typeof UsersSignInRoute
   '/companies': typeof CompaniesIndexRoute
   '/api/$locationID/event': typeof ApiLocationIDEventRoute
+  '/api/$locationID/ghl-event': typeof ApiLocationIDGhlEventRoute
   '/companies/$companyId': typeof CompaniesCompanyIdIndexRoute
   '/api/webhooks/ghl/$companyId': typeof ApiWebhooksGhlCompanyIdRoute
   '/companies/$companyId/cms-pages/$pageId': typeof CompaniesCompanyIdCmsPagesPageIdRoute
@@ -293,6 +301,7 @@ export interface FileRoutesById {
   '/companies/': typeof CompaniesIndexRoute
   '/companies/$companyId/settings': typeof CompaniesCompanyIdSettingsRouteRouteWithChildren
   '/api/$locationID/event': typeof ApiLocationIDEventRoute
+  '/api/$locationID/ghl-event': typeof ApiLocationIDGhlEventRoute
   '/companies/$companyId/': typeof CompaniesCompanyIdIndexRoute
   '/api/webhooks/ghl/$companyId': typeof ApiWebhooksGhlCompanyIdRoute
   '/companies/$companyId/cms-pages/$pageId': typeof CompaniesCompanyIdCmsPagesPageIdRoute
@@ -328,6 +337,7 @@ export interface FileRouteTypes {
     | '/companies/'
     | '/companies/$companyId/settings'
     | '/api/$locationID/event'
+    | '/api/$locationID/ghl-event'
     | '/companies/$companyId/'
     | '/api/webhooks/ghl/$companyId'
     | '/companies/$companyId/cms-pages/$pageId'
@@ -358,6 +368,7 @@ export interface FileRouteTypes {
     | '/users/sign-in'
     | '/companies'
     | '/api/$locationID/event'
+    | '/api/$locationID/ghl-event'
     | '/companies/$companyId'
     | '/api/webhooks/ghl/$companyId'
     | '/companies/$companyId/cms-pages/$pageId'
@@ -391,6 +402,7 @@ export interface FileRouteTypes {
     | '/companies/'
     | '/companies/$companyId/settings'
     | '/api/$locationID/event'
+    | '/api/$locationID/ghl-event'
     | '/companies/$companyId/'
     | '/api/webhooks/ghl/$companyId'
     | '/companies/$companyId/cms-pages/$pageId'
@@ -422,6 +434,7 @@ export interface RootRouteChildren {
   HealthcarePracticeMetricsCalculatorIdRoute: typeof HealthcarePracticeMetricsCalculatorIdRoute
   UsersSignInRoute: typeof UsersSignInRoute
   ApiLocationIDEventRoute: typeof ApiLocationIDEventRoute
+  ApiLocationIDGhlEventRoute: typeof ApiLocationIDGhlEventRoute
   ApiWebhooksGhlCompanyIdRoute: typeof ApiWebhooksGhlCompanyIdRoute
 }
 
@@ -489,6 +502,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/companies/$companyId/'
       preLoaderRoute: typeof CompaniesCompanyIdIndexRouteImport
       parentRoute: typeof CompaniesCompanyIdRouteRoute
+    }
+    '/api/$locationID/ghl-event': {
+      id: '/api/$locationID/ghl-event'
+      path: '/api/$locationID/ghl-event'
+      fullPath: '/api/$locationID/ghl-event'
+      preLoaderRoute: typeof ApiLocationIDGhlEventRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/$locationID/event': {
       id: '/api/$locationID/event'
@@ -750,6 +770,7 @@ const rootRouteChildren: RootRouteChildren = {
     HealthcarePracticeMetricsCalculatorIdRoute,
   UsersSignInRoute: UsersSignInRoute,
   ApiLocationIDEventRoute: ApiLocationIDEventRoute,
+  ApiLocationIDGhlEventRoute: ApiLocationIDGhlEventRoute,
   ApiWebhooksGhlCompanyIdRoute: ApiWebhooksGhlCompanyIdRoute,
 }
 export const routeTree = rootRouteImport
