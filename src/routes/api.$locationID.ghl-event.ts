@@ -1,7 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
 import { prisma } from '@/server/db/client'
-import { EventType } from '@/generated/prisma/enums'
+import {
+  EventType,
+  ExternalIdSource,
+  EventSource,
+} from '@/generated/prisma/enums'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -90,45 +94,46 @@ export const Route = createFileRoute('/api/$locationID/ghl-event')({
             )
           }
 
-          let contact = await prisma.contact.findFirst({
+          // Find contact by GHL external ID
+          const existingExternalId = await prisma.externalId.findUnique({
             where: {
-              OR: [
-                {
-                  externalIds: {
-                    some: {
-                      externalId: ghlContactId,
-                      source: 'GHL',
-                    },
-                  },
-                  companyId: company.id,
-                },
-                {
-                  email: email,
-                  companyId: company.id,
-                },
-                {
-                  phone: phone,
-                  companyId: company.id,
-                },
-              ],
+              externalId: ghlContactId,
             },
             include: {
-              events: true,
+              contact: true,
             },
           })
 
-          // const previouslyCreatedContact = contact?.events.find(
-          //   (event) => event.type === 'CONTACT_CREATED',
-          // )
-          // if (previouslyCreatedContact) {
-          //   console.log('[API] Contact already created:', ghlContactId)
-          //   return new Response(
-          //     JSON.stringify({ error: 'Contact already created' }),
-          //     { status: 400 },
-          //   )
-          // }
+          let contact
 
-          if (!contact) {
+          if (
+            existingExternalId &&
+            existingExternalId.source === ExternalIdSource.GHL &&
+            existingExternalId.contact.companyId === company.id
+          ) {
+            // Contact exists - update it
+            console.log('[API] Updating existing contact:', ghlContactId)
+            contact = await prisma.contact.update({
+              where: { id: existingExternalId.contactId },
+              data: {
+                email,
+                phone,
+                firstName,
+                lastName,
+                events: {
+                  create: {
+                    eventSource: EventSource.GHL,
+                    type: eventType,
+                    data: body,
+                  },
+                },
+              },
+              include: {
+                events: true,
+              },
+            })
+          } else {
+            // Contact doesn't exist - create it
             console.log('[API] Creating new contact:', ghlContactId)
             contact = await prisma.contact.create({
               data: {
@@ -145,44 +150,16 @@ export const Route = createFileRoute('/api/$locationID/ghl-event')({
                 externalIds: {
                   create: {
                     externalId: ghlContactId,
-                    source: 'GHL',
+                    source: ExternalIdSource.GHL,
                   },
                 },
-
                 events: {
                   create: {
-                    eventSource: 'GHL',
+                    eventSource: EventSource.GHL,
                     type: eventType,
                     data: body,
                   },
                 },
-              },
-              include: {
-                events: true,
-              },
-            })
-          } else {
-            console.log('[API] Updating existing contact:', ghlContactId)
-            contact = await prisma.contact.update({
-              where: { id: contact.id },
-              data: {
-                events: {
-                  create: {
-                    eventSource: 'GHL',
-                    type: eventType,
-                    data: body,
-                  },
-                },
-                externalIds: {
-                  create: {
-                    externalId: ghlContactId,
-                    source: 'GHL',
-                  },
-                },
-                email,
-                phone,
-                firstName,
-                lastName,
               },
               include: {
                 events: true,

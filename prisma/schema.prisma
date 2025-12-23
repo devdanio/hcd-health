@@ -139,6 +139,8 @@ model ExternalId {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt 
   @@index([contactId, externalId])
+  @@index([source, externalId])
+  @@index([source, contactId])
 }
 
 
