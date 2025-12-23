@@ -26,7 +26,6 @@ const createEventSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   ghlContactId: z.string(),
-  dateCreated: z.date(),
 })
 
 export const Route = createFileRoute('/api/$locationID/ghl-event')({
