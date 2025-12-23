@@ -21,7 +21,7 @@ function sanitizePhone(phone: string | undefined | null): string | undefined {
 
 const createEventSchema = z.object({
   eventType: z.enum(EventType),
-  email: z.email().optional(),
+  email: z.string().optional(),
   phone: z.string().optional(),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
@@ -47,7 +47,7 @@ export const Route = createFileRoute('/api/$locationID/ghl-event')({
           const validatedData = createEventSchema.parse(body.customData)
 
           const {
-            email,
+            email: rawEmail,
             phone: rawPhone,
             eventType,
             ghlContactId,
@@ -56,6 +56,14 @@ export const Route = createFileRoute('/api/$locationID/ghl-event')({
           } = validatedData
 
           const phone = sanitizePhone(rawPhone)
+          let email: string | undefined = undefined
+          if (rawEmail && rawEmail.trim() !== '') {
+            const trimmedEmail = rawEmail.trim()
+            // Use zod to check email validity
+            if (z.email().safeParse(trimmedEmail).success) {
+              email = trimmedEmail
+            }
+          }
 
           if (!email && !phone) {
             return new Response(
