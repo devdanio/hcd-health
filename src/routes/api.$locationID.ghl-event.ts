@@ -9,6 +9,16 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'Content-Type',
 }
 
+/**
+ * Removes all non-numerical characters from a phone number string
+ * @param phone - The phone number string to sanitize
+ * @returns The phone number with only digits, or undefined if input is undefined/null
+ */
+function sanitizePhone(phone: string | undefined | null): string | undefined {
+  if (!phone) return undefined
+  return phone.replace(/\D/g, '')
+}
+
 const createEventSchema = z.object({
   eventType: z.enum(EventType),
   email: z.email().optional(),
@@ -39,13 +49,14 @@ export const Route = createFileRoute('/api/$locationID/ghl-event')({
 
           const {
             email,
-            phone,
+            phone: rawPhone,
             eventType,
             ghlContactId,
             firstName,
             lastName,
-            dateCreated,
           } = validatedData
+
+          const phone = sanitizePhone(rawPhone)
 
           if (!email && !phone) {
             return new Response(
@@ -118,7 +129,7 @@ export const Route = createFileRoute('/api/$locationID/ghl-event')({
                 phone,
                 firstName,
                 lastName,
-                firstSeenAt: dateCreated,
+                firstSeenAt: body.date_created,
                 company: {
                   connect: {
                     id: company.id,

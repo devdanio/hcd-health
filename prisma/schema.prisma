@@ -113,10 +113,6 @@ model Contact {
 
   payments Payments[]
   appointments Appointment[]
-
-
-
-
   // sessions Session[]
   events Event[]
 
