@@ -117,16 +117,16 @@ export const Route = createFileRoute('/api/$locationID/ghl-event')({
             },
           })
 
-          const previouslyCreatedContact = contact?.events.find(
-            (event) => event.type === 'CONTACT_CREATED',
-          )
-          if (previouslyCreatedContact) {
-            console.log('[API] Contact already created:', ghlContactId)
-            return new Response(
-              JSON.stringify({ error: 'Contact already created' }),
-              { status: 400 },
-            )
-          }
+          // const previouslyCreatedContact = contact?.events.find(
+          //   (event) => event.type === 'CONTACT_CREATED',
+          // )
+          // if (previouslyCreatedContact) {
+          //   console.log('[API] Contact already created:', ghlContactId)
+          //   return new Response(
+          //     JSON.stringify({ error: 'Contact already created' }),
+          //     { status: 400 },
+          //   )
+          // }
 
           if (!contact) {
             console.log('[API] Creating new contact:', ghlContactId)
