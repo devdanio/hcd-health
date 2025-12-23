@@ -658,7 +658,7 @@ function CompanyDetailsPage() {
           </Card>
         </div>
       </div>
-      <div>
+      <div className="mt-4">
         <Card>
           <CardHeader>
             <CardTitle>Contacts</CardTitle>
