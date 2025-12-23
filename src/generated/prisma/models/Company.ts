@@ -311,14 +311,11 @@ export type CompanyWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Company"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Company"> | Date | string
   contacts?: Prisma.ContactListRelationFilter
-  sessions?: Prisma.SessionListRelationFilter
-  events?: Prisma.EventListRelationFilter
   services?: Prisma.ServiceListRelationFilter
   providers?: Prisma.ProviderListRelationFilter
   appointments?: Prisma.AppointmentListRelationFilter
   oauthStates?: Prisma.OAuthStateListRelationFilter
   cmsPages?: Prisma.CmsPageListRelationFilter
-  ghlContacts?: Prisma.GhlContactListRelationFilter
   payments?: Prisma.PaymentsListRelationFilter
 }
 
@@ -345,14 +342,11 @@ export type CompanyOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   contacts?: Prisma.ContactOrderByRelationAggregateInput
-  sessions?: Prisma.SessionOrderByRelationAggregateInput
-  events?: Prisma.EventOrderByRelationAggregateInput
   services?: Prisma.ServiceOrderByRelationAggregateInput
   providers?: Prisma.ProviderOrderByRelationAggregateInput
   appointments?: Prisma.AppointmentOrderByRelationAggregateInput
   oauthStates?: Prisma.OAuthStateOrderByRelationAggregateInput
   cmsPages?: Prisma.CmsPageOrderByRelationAggregateInput
-  ghlContacts?: Prisma.GhlContactOrderByRelationAggregateInput
   payments?: Prisma.PaymentsOrderByRelationAggregateInput
 }
 
@@ -382,14 +376,11 @@ export type CompanyWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Company"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Company"> | Date | string
   contacts?: Prisma.ContactListRelationFilter
-  sessions?: Prisma.SessionListRelationFilter
-  events?: Prisma.EventListRelationFilter
   services?: Prisma.ServiceListRelationFilter
   providers?: Prisma.ProviderListRelationFilter
   appointments?: Prisma.AppointmentListRelationFilter
   oauthStates?: Prisma.OAuthStateListRelationFilter
   cmsPages?: Prisma.CmsPageListRelationFilter
-  ghlContacts?: Prisma.GhlContactListRelationFilter
   payments?: Prisma.PaymentsListRelationFilter
 }, "id" | "apiKey">
 
@@ -470,14 +461,11 @@ export type CompanyCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactCreateNestedManyWithoutCompanyInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutCompanyInput
-  events?: Prisma.EventCreateNestedManyWithoutCompanyInput
   services?: Prisma.ServiceCreateNestedManyWithoutCompanyInput
   providers?: Prisma.ProviderCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
-  ghlContacts?: Prisma.GhlContactCreateNestedManyWithoutCompanyInput
   payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
 }
 
@@ -504,14 +492,11 @@ export type CompanyUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutCompanyInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutCompanyInput
-  events?: Prisma.EventUncheckedCreateNestedManyWithoutCompanyInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCompanyInput
   providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
-  ghlContacts?: Prisma.GhlContactUncheckedCreateNestedManyWithoutCompanyInput
   payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
 }
 
@@ -538,14 +523,11 @@ export type CompanyUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUpdateManyWithoutCompanyNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutCompanyNestedInput
-  events?: Prisma.EventUpdateManyWithoutCompanyNestedInput
   services?: Prisma.ServiceUpdateManyWithoutCompanyNestedInput
   providers?: Prisma.ProviderUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
-  ghlContacts?: Prisma.GhlContactUpdateManyWithoutCompanyNestedInput
   payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
 }
 
@@ -572,14 +554,11 @@ export type CompanyUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUncheckedUpdateManyWithoutCompanyNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutCompanyNestedInput
-  events?: Prisma.EventUncheckedUpdateManyWithoutCompanyNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutCompanyNestedInput
   providers?: Prisma.ProviderUncheckedUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUncheckedUpdateManyWithoutCompanyNestedInput
-  ghlContacts?: Prisma.GhlContactUncheckedUpdateManyWithoutCompanyNestedInput
   payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
@@ -732,11 +711,6 @@ export type CompanyScalarRelationFilter = {
   isNot?: Prisma.CompanyWhereInput
 }
 
-export type CompanyNullableScalarRelationFilter = {
-  is?: Prisma.CompanyWhereInput | null
-  isNot?: Prisma.CompanyWhereInput | null
-}
-
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
@@ -761,50 +735,6 @@ export type CompanyUpdateOneRequiredWithoutContactsNestedInput = {
   upsert?: Prisma.CompanyUpsertWithoutContactsInput
   connect?: Prisma.CompanyWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutContactsInput, Prisma.CompanyUpdateWithoutContactsInput>, Prisma.CompanyUncheckedUpdateWithoutContactsInput>
-}
-
-export type CompanyCreateNestedOneWithoutGhlContactsInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutGhlContactsInput, Prisma.CompanyUncheckedCreateWithoutGhlContactsInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutGhlContactsInput
-  connect?: Prisma.CompanyWhereUniqueInput
-}
-
-export type CompanyUpdateOneRequiredWithoutGhlContactsNestedInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutGhlContactsInput, Prisma.CompanyUncheckedCreateWithoutGhlContactsInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutGhlContactsInput
-  upsert?: Prisma.CompanyUpsertWithoutGhlContactsInput
-  connect?: Prisma.CompanyWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutGhlContactsInput, Prisma.CompanyUpdateWithoutGhlContactsInput>, Prisma.CompanyUncheckedUpdateWithoutGhlContactsInput>
-}
-
-export type CompanyCreateNestedOneWithoutSessionsInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutSessionsInput, Prisma.CompanyUncheckedCreateWithoutSessionsInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutSessionsInput
-  connect?: Prisma.CompanyWhereUniqueInput
-}
-
-export type CompanyUpdateOneWithoutSessionsNestedInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutSessionsInput, Prisma.CompanyUncheckedCreateWithoutSessionsInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutSessionsInput
-  upsert?: Prisma.CompanyUpsertWithoutSessionsInput
-  disconnect?: Prisma.CompanyWhereInput | boolean
-  delete?: Prisma.CompanyWhereInput | boolean
-  connect?: Prisma.CompanyWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutSessionsInput, Prisma.CompanyUpdateWithoutSessionsInput>, Prisma.CompanyUncheckedUpdateWithoutSessionsInput>
-}
-
-export type CompanyCreateNestedOneWithoutEventsInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutEventsInput, Prisma.CompanyUncheckedCreateWithoutEventsInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutEventsInput
-  connect?: Prisma.CompanyWhereUniqueInput
-}
-
-export type CompanyUpdateOneRequiredWithoutEventsNestedInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutEventsInput, Prisma.CompanyUncheckedCreateWithoutEventsInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutEventsInput
-  upsert?: Prisma.CompanyUpsertWithoutEventsInput
-  connect?: Prisma.CompanyWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutEventsInput, Prisma.CompanyUpdateWithoutEventsInput>, Prisma.CompanyUncheckedUpdateWithoutEventsInput>
 }
 
 export type CompanyCreateNestedOneWithoutServicesInput = {
@@ -913,14 +843,11 @@ export type CompanyCreateWithoutContactsInput = {
   googleAdsLastErrorAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutCompanyInput
-  events?: Prisma.EventCreateNestedManyWithoutCompanyInput
   services?: Prisma.ServiceCreateNestedManyWithoutCompanyInput
   providers?: Prisma.ProviderCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
-  ghlContacts?: Prisma.GhlContactCreateNestedManyWithoutCompanyInput
   payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
 }
 
@@ -946,14 +873,11 @@ export type CompanyUncheckedCreateWithoutContactsInput = {
   googleAdsLastErrorAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutCompanyInput
-  events?: Prisma.EventUncheckedCreateNestedManyWithoutCompanyInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCompanyInput
   providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
-  ghlContacts?: Prisma.GhlContactUncheckedCreateNestedManyWithoutCompanyInput
   payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
 }
 
@@ -995,14 +919,11 @@ export type CompanyUpdateWithoutContactsInput = {
   googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUpdateManyWithoutCompanyNestedInput
-  events?: Prisma.EventUpdateManyWithoutCompanyNestedInput
   services?: Prisma.ServiceUpdateManyWithoutCompanyNestedInput
   providers?: Prisma.ProviderUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
-  ghlContacts?: Prisma.GhlContactUpdateManyWithoutCompanyNestedInput
   payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
 }
 
@@ -1028,458 +949,11 @@ export type CompanyUncheckedUpdateWithoutContactsInput = {
   googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutCompanyNestedInput
-  events?: Prisma.EventUncheckedUpdateManyWithoutCompanyNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutCompanyNestedInput
   providers?: Prisma.ProviderUncheckedUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUncheckedUpdateManyWithoutCompanyNestedInput
-  ghlContacts?: Prisma.GhlContactUncheckedUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
-}
-
-export type CompanyCreateWithoutGhlContactsInput = {
-  id?: string
-  name: string
-  domain: string
-  companyBrief?: string | null
-  apiKey: string
-  ehr?: $Enums.EhrType | null
-  address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contacts?: Prisma.ContactCreateNestedManyWithoutCompanyInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutCompanyInput
-  events?: Prisma.EventCreateNestedManyWithoutCompanyInput
-  services?: Prisma.ServiceCreateNestedManyWithoutCompanyInput
-  providers?: Prisma.ProviderCreateNestedManyWithoutCompanyInput
-  appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
-  oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
-  cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
-}
-
-export type CompanyUncheckedCreateWithoutGhlContactsInput = {
-  id?: string
-  name: string
-  domain: string
-  companyBrief?: string | null
-  apiKey: string
-  ehr?: $Enums.EhrType | null
-  address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutCompanyInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutCompanyInput
-  events?: Prisma.EventUncheckedCreateNestedManyWithoutCompanyInput
-  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCompanyInput
-  providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutCompanyInput
-  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
-  oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
-  cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
-}
-
-export type CompanyCreateOrConnectWithoutGhlContactsInput = {
-  where: Prisma.CompanyWhereUniqueInput
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutGhlContactsInput, Prisma.CompanyUncheckedCreateWithoutGhlContactsInput>
-}
-
-export type CompanyUpsertWithoutGhlContactsInput = {
-  update: Prisma.XOR<Prisma.CompanyUpdateWithoutGhlContactsInput, Prisma.CompanyUncheckedUpdateWithoutGhlContactsInput>
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutGhlContactsInput, Prisma.CompanyUncheckedCreateWithoutGhlContactsInput>
-  where?: Prisma.CompanyWhereInput
-}
-
-export type CompanyUpdateToOneWithWhereWithoutGhlContactsInput = {
-  where?: Prisma.CompanyWhereInput
-  data: Prisma.XOR<Prisma.CompanyUpdateWithoutGhlContactsInput, Prisma.CompanyUncheckedUpdateWithoutGhlContactsInput>
-}
-
-export type CompanyUpdateWithoutGhlContactsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
-  ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contacts?: Prisma.ContactUpdateManyWithoutCompanyNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutCompanyNestedInput
-  events?: Prisma.EventUpdateManyWithoutCompanyNestedInput
-  services?: Prisma.ServiceUpdateManyWithoutCompanyNestedInput
-  providers?: Prisma.ProviderUpdateManyWithoutCompanyNestedInput
-  appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
-  oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
-  cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
-}
-
-export type CompanyUncheckedUpdateWithoutGhlContactsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
-  ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contacts?: Prisma.ContactUncheckedUpdateManyWithoutCompanyNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutCompanyNestedInput
-  events?: Prisma.EventUncheckedUpdateManyWithoutCompanyNestedInput
-  services?: Prisma.ServiceUncheckedUpdateManyWithoutCompanyNestedInput
-  providers?: Prisma.ProviderUncheckedUpdateManyWithoutCompanyNestedInput
-  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
-  oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
-  cmsPages?: Prisma.CmsPageUncheckedUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
-}
-
-export type CompanyCreateWithoutSessionsInput = {
-  id?: string
-  name: string
-  domain: string
-  companyBrief?: string | null
-  apiKey: string
-  ehr?: $Enums.EhrType | null
-  address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contacts?: Prisma.ContactCreateNestedManyWithoutCompanyInput
-  events?: Prisma.EventCreateNestedManyWithoutCompanyInput
-  services?: Prisma.ServiceCreateNestedManyWithoutCompanyInput
-  providers?: Prisma.ProviderCreateNestedManyWithoutCompanyInput
-  appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
-  oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
-  cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
-  ghlContacts?: Prisma.GhlContactCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
-}
-
-export type CompanyUncheckedCreateWithoutSessionsInput = {
-  id?: string
-  name: string
-  domain: string
-  companyBrief?: string | null
-  apiKey: string
-  ehr?: $Enums.EhrType | null
-  address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutCompanyInput
-  events?: Prisma.EventUncheckedCreateNestedManyWithoutCompanyInput
-  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCompanyInput
-  providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutCompanyInput
-  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
-  oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
-  cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
-  ghlContacts?: Prisma.GhlContactUncheckedCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
-}
-
-export type CompanyCreateOrConnectWithoutSessionsInput = {
-  where: Prisma.CompanyWhereUniqueInput
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutSessionsInput, Prisma.CompanyUncheckedCreateWithoutSessionsInput>
-}
-
-export type CompanyUpsertWithoutSessionsInput = {
-  update: Prisma.XOR<Prisma.CompanyUpdateWithoutSessionsInput, Prisma.CompanyUncheckedUpdateWithoutSessionsInput>
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutSessionsInput, Prisma.CompanyUncheckedCreateWithoutSessionsInput>
-  where?: Prisma.CompanyWhereInput
-}
-
-export type CompanyUpdateToOneWithWhereWithoutSessionsInput = {
-  where?: Prisma.CompanyWhereInput
-  data: Prisma.XOR<Prisma.CompanyUpdateWithoutSessionsInput, Prisma.CompanyUncheckedUpdateWithoutSessionsInput>
-}
-
-export type CompanyUpdateWithoutSessionsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
-  ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contacts?: Prisma.ContactUpdateManyWithoutCompanyNestedInput
-  events?: Prisma.EventUpdateManyWithoutCompanyNestedInput
-  services?: Prisma.ServiceUpdateManyWithoutCompanyNestedInput
-  providers?: Prisma.ProviderUpdateManyWithoutCompanyNestedInput
-  appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
-  oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
-  cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
-  ghlContacts?: Prisma.GhlContactUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
-}
-
-export type CompanyUncheckedUpdateWithoutSessionsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
-  ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contacts?: Prisma.ContactUncheckedUpdateManyWithoutCompanyNestedInput
-  events?: Prisma.EventUncheckedUpdateManyWithoutCompanyNestedInput
-  services?: Prisma.ServiceUncheckedUpdateManyWithoutCompanyNestedInput
-  providers?: Prisma.ProviderUncheckedUpdateManyWithoutCompanyNestedInput
-  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
-  oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
-  cmsPages?: Prisma.CmsPageUncheckedUpdateManyWithoutCompanyNestedInput
-  ghlContacts?: Prisma.GhlContactUncheckedUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
-}
-
-export type CompanyCreateWithoutEventsInput = {
-  id?: string
-  name: string
-  domain: string
-  companyBrief?: string | null
-  apiKey: string
-  ehr?: $Enums.EhrType | null
-  address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contacts?: Prisma.ContactCreateNestedManyWithoutCompanyInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutCompanyInput
-  services?: Prisma.ServiceCreateNestedManyWithoutCompanyInput
-  providers?: Prisma.ProviderCreateNestedManyWithoutCompanyInput
-  appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
-  oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
-  cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
-  ghlContacts?: Prisma.GhlContactCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
-}
-
-export type CompanyUncheckedCreateWithoutEventsInput = {
-  id?: string
-  name: string
-  domain: string
-  companyBrief?: string | null
-  apiKey: string
-  ehr?: $Enums.EhrType | null
-  address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutCompanyInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutCompanyInput
-  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCompanyInput
-  providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutCompanyInput
-  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
-  oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
-  cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
-  ghlContacts?: Prisma.GhlContactUncheckedCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
-}
-
-export type CompanyCreateOrConnectWithoutEventsInput = {
-  where: Prisma.CompanyWhereUniqueInput
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutEventsInput, Prisma.CompanyUncheckedCreateWithoutEventsInput>
-}
-
-export type CompanyUpsertWithoutEventsInput = {
-  update: Prisma.XOR<Prisma.CompanyUpdateWithoutEventsInput, Prisma.CompanyUncheckedUpdateWithoutEventsInput>
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutEventsInput, Prisma.CompanyUncheckedCreateWithoutEventsInput>
-  where?: Prisma.CompanyWhereInput
-}
-
-export type CompanyUpdateToOneWithWhereWithoutEventsInput = {
-  where?: Prisma.CompanyWhereInput
-  data: Prisma.XOR<Prisma.CompanyUpdateWithoutEventsInput, Prisma.CompanyUncheckedUpdateWithoutEventsInput>
-}
-
-export type CompanyUpdateWithoutEventsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
-  ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contacts?: Prisma.ContactUpdateManyWithoutCompanyNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutCompanyNestedInput
-  services?: Prisma.ServiceUpdateManyWithoutCompanyNestedInput
-  providers?: Prisma.ProviderUpdateManyWithoutCompanyNestedInput
-  appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
-  oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
-  cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
-  ghlContacts?: Prisma.GhlContactUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
-}
-
-export type CompanyUncheckedUpdateWithoutEventsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
-  ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contacts?: Prisma.ContactUncheckedUpdateManyWithoutCompanyNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutCompanyNestedInput
-  services?: Prisma.ServiceUncheckedUpdateManyWithoutCompanyNestedInput
-  providers?: Prisma.ProviderUncheckedUpdateManyWithoutCompanyNestedInput
-  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
-  oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
-  cmsPages?: Prisma.CmsPageUncheckedUpdateManyWithoutCompanyNestedInput
-  ghlContacts?: Prisma.GhlContactUncheckedUpdateManyWithoutCompanyNestedInput
   payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
@@ -1506,13 +980,10 @@ export type CompanyCreateWithoutServicesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactCreateNestedManyWithoutCompanyInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutCompanyInput
-  events?: Prisma.EventCreateNestedManyWithoutCompanyInput
   providers?: Prisma.ProviderCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
-  ghlContacts?: Prisma.GhlContactCreateNestedManyWithoutCompanyInput
   payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
 }
 
@@ -1539,13 +1010,10 @@ export type CompanyUncheckedCreateWithoutServicesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutCompanyInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutCompanyInput
-  events?: Prisma.EventUncheckedCreateNestedManyWithoutCompanyInput
   providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
-  ghlContacts?: Prisma.GhlContactUncheckedCreateNestedManyWithoutCompanyInput
   payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
 }
 
@@ -1588,13 +1056,10 @@ export type CompanyUpdateWithoutServicesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUpdateManyWithoutCompanyNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutCompanyNestedInput
-  events?: Prisma.EventUpdateManyWithoutCompanyNestedInput
   providers?: Prisma.ProviderUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
-  ghlContacts?: Prisma.GhlContactUpdateManyWithoutCompanyNestedInput
   payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
 }
 
@@ -1621,13 +1086,10 @@ export type CompanyUncheckedUpdateWithoutServicesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUncheckedUpdateManyWithoutCompanyNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutCompanyNestedInput
-  events?: Prisma.EventUncheckedUpdateManyWithoutCompanyNestedInput
   providers?: Prisma.ProviderUncheckedUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUncheckedUpdateManyWithoutCompanyNestedInput
-  ghlContacts?: Prisma.GhlContactUncheckedUpdateManyWithoutCompanyNestedInput
   payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
@@ -1654,14 +1116,11 @@ export type CompanyCreateWithoutPaymentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactCreateNestedManyWithoutCompanyInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutCompanyInput
-  events?: Prisma.EventCreateNestedManyWithoutCompanyInput
   services?: Prisma.ServiceCreateNestedManyWithoutCompanyInput
   providers?: Prisma.ProviderCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
-  ghlContacts?: Prisma.GhlContactCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutPaymentsInput = {
@@ -1687,14 +1146,11 @@ export type CompanyUncheckedCreateWithoutPaymentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutCompanyInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutCompanyInput
-  events?: Prisma.EventUncheckedCreateNestedManyWithoutCompanyInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCompanyInput
   providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
-  ghlContacts?: Prisma.GhlContactUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutPaymentsInput = {
@@ -1736,14 +1192,11 @@ export type CompanyUpdateWithoutPaymentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUpdateManyWithoutCompanyNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutCompanyNestedInput
-  events?: Prisma.EventUpdateManyWithoutCompanyNestedInput
   services?: Prisma.ServiceUpdateManyWithoutCompanyNestedInput
   providers?: Prisma.ProviderUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
-  ghlContacts?: Prisma.GhlContactUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutPaymentsInput = {
@@ -1769,14 +1222,11 @@ export type CompanyUncheckedUpdateWithoutPaymentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUncheckedUpdateManyWithoutCompanyNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutCompanyNestedInput
-  events?: Prisma.EventUncheckedUpdateManyWithoutCompanyNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutCompanyNestedInput
   providers?: Prisma.ProviderUncheckedUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUncheckedUpdateManyWithoutCompanyNestedInput
-  ghlContacts?: Prisma.GhlContactUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutProvidersInput = {
@@ -1802,13 +1252,10 @@ export type CompanyCreateWithoutProvidersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactCreateNestedManyWithoutCompanyInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutCompanyInput
-  events?: Prisma.EventCreateNestedManyWithoutCompanyInput
   services?: Prisma.ServiceCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
-  ghlContacts?: Prisma.GhlContactCreateNestedManyWithoutCompanyInput
   payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
 }
 
@@ -1835,13 +1282,10 @@ export type CompanyUncheckedCreateWithoutProvidersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutCompanyInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutCompanyInput
-  events?: Prisma.EventUncheckedCreateNestedManyWithoutCompanyInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
-  ghlContacts?: Prisma.GhlContactUncheckedCreateNestedManyWithoutCompanyInput
   payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
 }
 
@@ -1884,13 +1328,10 @@ export type CompanyUpdateWithoutProvidersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUpdateManyWithoutCompanyNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutCompanyNestedInput
-  events?: Prisma.EventUpdateManyWithoutCompanyNestedInput
   services?: Prisma.ServiceUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
-  ghlContacts?: Prisma.GhlContactUpdateManyWithoutCompanyNestedInput
   payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
 }
 
@@ -1917,13 +1358,10 @@ export type CompanyUncheckedUpdateWithoutProvidersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUncheckedUpdateManyWithoutCompanyNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutCompanyNestedInput
-  events?: Prisma.EventUncheckedUpdateManyWithoutCompanyNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUncheckedUpdateManyWithoutCompanyNestedInput
-  ghlContacts?: Prisma.GhlContactUncheckedUpdateManyWithoutCompanyNestedInput
   payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
@@ -1950,13 +1388,10 @@ export type CompanyCreateWithoutAppointmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactCreateNestedManyWithoutCompanyInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutCompanyInput
-  events?: Prisma.EventCreateNestedManyWithoutCompanyInput
   services?: Prisma.ServiceCreateNestedManyWithoutCompanyInput
   providers?: Prisma.ProviderCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
-  ghlContacts?: Prisma.GhlContactCreateNestedManyWithoutCompanyInput
   payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
 }
 
@@ -1983,13 +1418,10 @@ export type CompanyUncheckedCreateWithoutAppointmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutCompanyInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutCompanyInput
-  events?: Prisma.EventUncheckedCreateNestedManyWithoutCompanyInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCompanyInput
   providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
-  ghlContacts?: Prisma.GhlContactUncheckedCreateNestedManyWithoutCompanyInput
   payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
 }
 
@@ -2032,13 +1464,10 @@ export type CompanyUpdateWithoutAppointmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUpdateManyWithoutCompanyNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutCompanyNestedInput
-  events?: Prisma.EventUpdateManyWithoutCompanyNestedInput
   services?: Prisma.ServiceUpdateManyWithoutCompanyNestedInput
   providers?: Prisma.ProviderUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
-  ghlContacts?: Prisma.GhlContactUpdateManyWithoutCompanyNestedInput
   payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
 }
 
@@ -2065,13 +1494,10 @@ export type CompanyUncheckedUpdateWithoutAppointmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUncheckedUpdateManyWithoutCompanyNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutCompanyNestedInput
-  events?: Prisma.EventUncheckedUpdateManyWithoutCompanyNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutCompanyNestedInput
   providers?: Prisma.ProviderUncheckedUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUncheckedUpdateManyWithoutCompanyNestedInput
-  ghlContacts?: Prisma.GhlContactUncheckedUpdateManyWithoutCompanyNestedInput
   payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
@@ -2098,13 +1524,10 @@ export type CompanyCreateWithoutOauthStatesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactCreateNestedManyWithoutCompanyInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutCompanyInput
-  events?: Prisma.EventCreateNestedManyWithoutCompanyInput
   services?: Prisma.ServiceCreateNestedManyWithoutCompanyInput
   providers?: Prisma.ProviderCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
-  ghlContacts?: Prisma.GhlContactCreateNestedManyWithoutCompanyInput
   payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
 }
 
@@ -2131,13 +1554,10 @@ export type CompanyUncheckedCreateWithoutOauthStatesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutCompanyInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutCompanyInput
-  events?: Prisma.EventUncheckedCreateNestedManyWithoutCompanyInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCompanyInput
   providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
-  ghlContacts?: Prisma.GhlContactUncheckedCreateNestedManyWithoutCompanyInput
   payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
 }
 
@@ -2180,13 +1600,10 @@ export type CompanyUpdateWithoutOauthStatesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUpdateManyWithoutCompanyNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutCompanyNestedInput
-  events?: Prisma.EventUpdateManyWithoutCompanyNestedInput
   services?: Prisma.ServiceUpdateManyWithoutCompanyNestedInput
   providers?: Prisma.ProviderUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
-  ghlContacts?: Prisma.GhlContactUpdateManyWithoutCompanyNestedInput
   payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
 }
 
@@ -2213,13 +1630,10 @@ export type CompanyUncheckedUpdateWithoutOauthStatesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUncheckedUpdateManyWithoutCompanyNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutCompanyNestedInput
-  events?: Prisma.EventUncheckedUpdateManyWithoutCompanyNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutCompanyNestedInput
   providers?: Prisma.ProviderUncheckedUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUncheckedUpdateManyWithoutCompanyNestedInput
-  ghlContacts?: Prisma.GhlContactUncheckedUpdateManyWithoutCompanyNestedInput
   payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
@@ -2246,13 +1660,10 @@ export type CompanyCreateWithoutCmsPagesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactCreateNestedManyWithoutCompanyInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutCompanyInput
-  events?: Prisma.EventCreateNestedManyWithoutCompanyInput
   services?: Prisma.ServiceCreateNestedManyWithoutCompanyInput
   providers?: Prisma.ProviderCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
-  ghlContacts?: Prisma.GhlContactCreateNestedManyWithoutCompanyInput
   payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
 }
 
@@ -2279,13 +1690,10 @@ export type CompanyUncheckedCreateWithoutCmsPagesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutCompanyInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutCompanyInput
-  events?: Prisma.EventUncheckedCreateNestedManyWithoutCompanyInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCompanyInput
   providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
-  ghlContacts?: Prisma.GhlContactUncheckedCreateNestedManyWithoutCompanyInput
   payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
 }
 
@@ -2328,13 +1736,10 @@ export type CompanyUpdateWithoutCmsPagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUpdateManyWithoutCompanyNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutCompanyNestedInput
-  events?: Prisma.EventUpdateManyWithoutCompanyNestedInput
   services?: Prisma.ServiceUpdateManyWithoutCompanyNestedInput
   providers?: Prisma.ProviderUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
-  ghlContacts?: Prisma.GhlContactUpdateManyWithoutCompanyNestedInput
   payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
 }
 
@@ -2361,13 +1766,10 @@ export type CompanyUncheckedUpdateWithoutCmsPagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUncheckedUpdateManyWithoutCompanyNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutCompanyNestedInput
-  events?: Prisma.EventUncheckedUpdateManyWithoutCompanyNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutCompanyNestedInput
   providers?: Prisma.ProviderUncheckedUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
-  ghlContacts?: Prisma.GhlContactUncheckedUpdateManyWithoutCompanyNestedInput
   payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
@@ -2378,27 +1780,21 @@ export type CompanyUncheckedUpdateWithoutCmsPagesInput = {
 
 export type CompanyCountOutputType = {
   contacts: number
-  sessions: number
-  events: number
   services: number
   providers: number
   appointments: number
   oauthStates: number
   cmsPages: number
-  ghlContacts: number
   payments: number
 }
 
 export type CompanyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   contacts?: boolean | CompanyCountOutputTypeCountContactsArgs
-  sessions?: boolean | CompanyCountOutputTypeCountSessionsArgs
-  events?: boolean | CompanyCountOutputTypeCountEventsArgs
   services?: boolean | CompanyCountOutputTypeCountServicesArgs
   providers?: boolean | CompanyCountOutputTypeCountProvidersArgs
   appointments?: boolean | CompanyCountOutputTypeCountAppointmentsArgs
   oauthStates?: boolean | CompanyCountOutputTypeCountOauthStatesArgs
   cmsPages?: boolean | CompanyCountOutputTypeCountCmsPagesArgs
-  ghlContacts?: boolean | CompanyCountOutputTypeCountGhlContactsArgs
   payments?: boolean | CompanyCountOutputTypeCountPaymentsArgs
 }
 
@@ -2417,20 +1813,6 @@ export type CompanyCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
  */
 export type CompanyCountOutputTypeCountContactsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ContactWhereInput
-}
-
-/**
- * CompanyCountOutputType without action
- */
-export type CompanyCountOutputTypeCountSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.SessionWhereInput
-}
-
-/**
- * CompanyCountOutputType without action
- */
-export type CompanyCountOutputTypeCountEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.EventWhereInput
 }
 
 /**
@@ -2471,13 +1853,6 @@ export type CompanyCountOutputTypeCountCmsPagesArgs<ExtArgs extends runtime.Type
 /**
  * CompanyCountOutputType without action
  */
-export type CompanyCountOutputTypeCountGhlContactsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.GhlContactWhereInput
-}
-
-/**
- * CompanyCountOutputType without action
- */
 export type CompanyCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PaymentsWhereInput
 }
@@ -2506,14 +1881,11 @@ export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   createdAt?: boolean
   updatedAt?: boolean
   contacts?: boolean | Prisma.Company$contactsArgs<ExtArgs>
-  sessions?: boolean | Prisma.Company$sessionsArgs<ExtArgs>
-  events?: boolean | Prisma.Company$eventsArgs<ExtArgs>
   services?: boolean | Prisma.Company$servicesArgs<ExtArgs>
   providers?: boolean | Prisma.Company$providersArgs<ExtArgs>
   appointments?: boolean | Prisma.Company$appointmentsArgs<ExtArgs>
   oauthStates?: boolean | Prisma.Company$oauthStatesArgs<ExtArgs>
   cmsPages?: boolean | Prisma.Company$cmsPagesArgs<ExtArgs>
-  ghlContacts?: boolean | Prisma.Company$ghlContactsArgs<ExtArgs>
   payments?: boolean | Prisma.Company$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.CompanyCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["company"]>
@@ -2593,14 +1965,11 @@ export type CompanySelectScalar = {
 export type CompanyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "domain" | "companyBrief" | "apiKey" | "ehr" | "address" | "googleAdsAccessToken" | "googleAdsRefreshToken" | "googleAdsTokenExpiresAt" | "googleAdsCustomerId" | "googleAdsAccountName" | "googleAdsCurrencyCode" | "googleAdsTimeZone" | "googleAdsConnectedAt" | "googleAdsAccountSelectedAt" | "googleAdsLastSyncedAt" | "googleAdsLastError" | "googleAdsLastErrorAt" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
 export type CompanyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   contacts?: boolean | Prisma.Company$contactsArgs<ExtArgs>
-  sessions?: boolean | Prisma.Company$sessionsArgs<ExtArgs>
-  events?: boolean | Prisma.Company$eventsArgs<ExtArgs>
   services?: boolean | Prisma.Company$servicesArgs<ExtArgs>
   providers?: boolean | Prisma.Company$providersArgs<ExtArgs>
   appointments?: boolean | Prisma.Company$appointmentsArgs<ExtArgs>
   oauthStates?: boolean | Prisma.Company$oauthStatesArgs<ExtArgs>
   cmsPages?: boolean | Prisma.Company$cmsPagesArgs<ExtArgs>
-  ghlContacts?: boolean | Prisma.Company$ghlContactsArgs<ExtArgs>
   payments?: boolean | Prisma.Company$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.CompanyCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -2611,14 +1980,11 @@ export type $CompanyPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   name: "Company"
   objects: {
     contacts: Prisma.$ContactPayload<ExtArgs>[]
-    sessions: Prisma.$SessionPayload<ExtArgs>[]
-    events: Prisma.$EventPayload<ExtArgs>[]
     services: Prisma.$ServicePayload<ExtArgs>[]
     providers: Prisma.$ProviderPayload<ExtArgs>[]
     appointments: Prisma.$AppointmentPayload<ExtArgs>[]
     oauthStates: Prisma.$OAuthStatePayload<ExtArgs>[]
     cmsPages: Prisma.$CmsPagePayload<ExtArgs>[]
-    ghlContacts: Prisma.$GhlContactPayload<ExtArgs>[]
     payments: Prisma.$PaymentsPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -3038,14 +2404,11 @@ readonly fields: CompanyFieldRefs;
 export interface Prisma__CompanyClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   contacts<T extends Prisma.Company$contactsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$contactsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  sessions<T extends Prisma.Company$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  events<T extends Prisma.Company$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   services<T extends Prisma.Company$servicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$servicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   providers<T extends Prisma.Company$providersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$providersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   appointments<T extends Prisma.Company$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   oauthStates<T extends Prisma.Company$oauthStatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$oauthStatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OAuthStatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cmsPages<T extends Prisma.Company$cmsPagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$cmsPagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CmsPagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  ghlContacts<T extends Prisma.Company$ghlContactsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$ghlContactsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GhlContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.Company$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -3509,54 +2872,6 @@ export type Company$contactsArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
- * Company.sessions
- */
-export type Company$sessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Session
-   */
-  select?: Prisma.SessionSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Session
-   */
-  omit?: Prisma.SessionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SessionInclude<ExtArgs> | null
-  where?: Prisma.SessionWhereInput
-  orderBy?: Prisma.SessionOrderByWithRelationInput | Prisma.SessionOrderByWithRelationInput[]
-  cursor?: Prisma.SessionWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.SessionScalarFieldEnum | Prisma.SessionScalarFieldEnum[]
-}
-
-/**
- * Company.events
- */
-export type Company$eventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Event
-   */
-  select?: Prisma.EventSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Event
-   */
-  omit?: Prisma.EventOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.EventInclude<ExtArgs> | null
-  where?: Prisma.EventWhereInput
-  orderBy?: Prisma.EventOrderByWithRelationInput | Prisma.EventOrderByWithRelationInput[]
-  cursor?: Prisma.EventWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.EventScalarFieldEnum | Prisma.EventScalarFieldEnum[]
-}
-
-/**
  * Company.services
  */
 export type Company$servicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3674,30 +2989,6 @@ export type Company$cmsPagesArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.CmsPageScalarFieldEnum | Prisma.CmsPageScalarFieldEnum[]
-}
-
-/**
- * Company.ghlContacts
- */
-export type Company$ghlContactsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the GhlContact
-   */
-  select?: Prisma.GhlContactSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the GhlContact
-   */
-  omit?: Prisma.GhlContactOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.GhlContactInclude<ExtArgs> | null
-  where?: Prisma.GhlContactWhereInput
-  orderBy?: Prisma.GhlContactOrderByWithRelationInput | Prisma.GhlContactOrderByWithRelationInput[]
-  cursor?: Prisma.GhlContactWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.GhlContactScalarFieldEnum | Prisma.GhlContactScalarFieldEnum[]
 }
 
 /**

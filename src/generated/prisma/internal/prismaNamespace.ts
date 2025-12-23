@@ -389,10 +389,7 @@ export const ModelName = {
   Company: 'Company',
   GHLEvent: 'GHLEvent',
   Contact: 'Contact',
-  ContactEvent: 'ContactEvent',
   ExternalId: 'ExternalId',
-  GhlContact: 'GhlContact',
-  Session: 'Session',
   Event: 'Event',
   Service: 'Service',
   Payments: 'Payments',
@@ -416,7 +413,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "cityLatLng" | "leadCalculator" | "company" | "gHLEvent" | "contact" | "contactEvent" | "externalId" | "ghlContact" | "session" | "event" | "service" | "payments" | "provider" | "appointment" | "appointmentProcedure" | "oAuthState" | "cmsPage"
+    modelProps: "cityLatLng" | "leadCalculator" | "company" | "gHLEvent" | "contact" | "externalId" | "event" | "service" | "payments" | "provider" | "appointment" | "appointmentProcedure" | "oAuthState" | "cmsPage"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -790,80 +787,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    ContactEvent: {
-      payload: Prisma.$ContactEventPayload<ExtArgs>
-      fields: Prisma.ContactEventFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.ContactEventFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactEventPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.ContactEventFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactEventPayload>
-        }
-        findFirst: {
-          args: Prisma.ContactEventFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactEventPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.ContactEventFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactEventPayload>
-        }
-        findMany: {
-          args: Prisma.ContactEventFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactEventPayload>[]
-        }
-        create: {
-          args: Prisma.ContactEventCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactEventPayload>
-        }
-        createMany: {
-          args: Prisma.ContactEventCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.ContactEventCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactEventPayload>[]
-        }
-        delete: {
-          args: Prisma.ContactEventDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactEventPayload>
-        }
-        update: {
-          args: Prisma.ContactEventUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactEventPayload>
-        }
-        deleteMany: {
-          args: Prisma.ContactEventDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.ContactEventUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.ContactEventUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactEventPayload>[]
-        }
-        upsert: {
-          args: Prisma.ContactEventUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactEventPayload>
-        }
-        aggregate: {
-          args: Prisma.ContactEventAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateContactEvent>
-        }
-        groupBy: {
-          args: Prisma.ContactEventGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ContactEventGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.ContactEventCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ContactEventCountAggregateOutputType> | number
-        }
-      }
-    }
     ExternalId: {
       payload: Prisma.$ExternalIdPayload<ExtArgs>
       fields: Prisma.ExternalIdFieldRefs
@@ -935,154 +858,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ExternalIdCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ExternalIdCountAggregateOutputType> | number
-        }
-      }
-    }
-    GhlContact: {
-      payload: Prisma.$GhlContactPayload<ExtArgs>
-      fields: Prisma.GhlContactFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.GhlContactFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$GhlContactPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.GhlContactFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$GhlContactPayload>
-        }
-        findFirst: {
-          args: Prisma.GhlContactFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$GhlContactPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.GhlContactFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$GhlContactPayload>
-        }
-        findMany: {
-          args: Prisma.GhlContactFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$GhlContactPayload>[]
-        }
-        create: {
-          args: Prisma.GhlContactCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$GhlContactPayload>
-        }
-        createMany: {
-          args: Prisma.GhlContactCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.GhlContactCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$GhlContactPayload>[]
-        }
-        delete: {
-          args: Prisma.GhlContactDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$GhlContactPayload>
-        }
-        update: {
-          args: Prisma.GhlContactUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$GhlContactPayload>
-        }
-        deleteMany: {
-          args: Prisma.GhlContactDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.GhlContactUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.GhlContactUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$GhlContactPayload>[]
-        }
-        upsert: {
-          args: Prisma.GhlContactUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$GhlContactPayload>
-        }
-        aggregate: {
-          args: Prisma.GhlContactAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateGhlContact>
-        }
-        groupBy: {
-          args: Prisma.GhlContactGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.GhlContactGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.GhlContactCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.GhlContactCountAggregateOutputType> | number
-        }
-      }
-    }
-    Session: {
-      payload: Prisma.$SessionPayload<ExtArgs>
-      fields: Prisma.SessionFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.SessionFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.SessionFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionPayload>
-        }
-        findFirst: {
-          args: Prisma.SessionFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.SessionFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionPayload>
-        }
-        findMany: {
-          args: Prisma.SessionFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionPayload>[]
-        }
-        create: {
-          args: Prisma.SessionCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionPayload>
-        }
-        createMany: {
-          args: Prisma.SessionCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.SessionCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionPayload>[]
-        }
-        delete: {
-          args: Prisma.SessionDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionPayload>
-        }
-        update: {
-          args: Prisma.SessionUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionPayload>
-        }
-        deleteMany: {
-          args: Prisma.SessionDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.SessionUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.SessionUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionPayload>[]
-        }
-        upsert: {
-          args: Prisma.SessionUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionPayload>
-        }
-        aggregate: {
-          args: Prisma.SessionAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateSession>
-        }
-        groupBy: {
-          args: Prisma.SessionGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.SessionGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.SessionCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.SessionCountAggregateOutputType> | number
         }
       }
     }
@@ -1786,6 +1561,7 @@ export const ContactScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  firstSeenAt: 'firstSeenAt',
   companyId: 'companyId',
   email: 'email',
   phone: 'phone',
@@ -1798,24 +1574,10 @@ export const ContactScalarFieldEnum = {
   address2: 'address2',
   zip: 'zip',
   city: 'city',
-  state: 'state',
-  ghlContactId: 'ghlContactId',
-  chirotouchAccountId: 'chirotouchAccountId'
+  state: 'state'
 } as const
 
 export type ContactScalarFieldEnum = (typeof ContactScalarFieldEnum)[keyof typeof ContactScalarFieldEnum]
-
-
-export const ContactEventScalarFieldEnum = {
-  id: 'id',
-  contactId: 'contactId',
-  companyId: 'companyId',
-  eventType: 'eventType',
-  data: 'data',
-  createdAt: 'createdAt'
-} as const
-
-export type ContactEventScalarFieldEnum = (typeof ContactEventScalarFieldEnum)[keyof typeof ContactEventScalarFieldEnum]
 
 
 export const ExternalIdScalarFieldEnum = {
@@ -1829,63 +1591,10 @@ export const ExternalIdScalarFieldEnum = {
 export type ExternalIdScalarFieldEnum = (typeof ExternalIdScalarFieldEnum)[keyof typeof ExternalIdScalarFieldEnum]
 
 
-export const GhlContactScalarFieldEnum = {
-  id: 'id',
-  locationId: 'locationId',
-  contactName: 'contactName',
-  firstName: 'firstName',
-  lastName: 'lastName',
-  companyName: 'companyName',
-  email: 'email',
-  phone: 'phone',
-  dnd: 'dnd',
-  type: 'type',
-  source: 'source',
-  assignedTo: 'assignedTo',
-  city: 'city',
-  state: 'state',
-  postalCode: 'postalCode',
-  address1: 'address1',
-  dateAdded: 'dateAdded',
-  dateUpdated: 'dateUpdated',
-  dateOfBirth: 'dateOfBirth',
-  tags: 'tags',
-  country: 'country',
-  website: 'website',
-  timezone: 'timezone',
-  lastActivity: 'lastActivity',
-  customField: 'customField',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  companyId: 'companyId'
-} as const
-
-export type GhlContactScalarFieldEnum = (typeof GhlContactScalarFieldEnum)[keyof typeof GhlContactScalarFieldEnum]
-
-
-export const SessionScalarFieldEnum = {
-  id: 'id',
-  browserSessionId: 'browserSessionId',
-  contactId: 'contactId',
-  userAgent: 'userAgent',
-  ipAddress: 'ipAddress',
-  screenResolution: 'screenResolution',
-  timezone: 'timezone',
-  firstSessionAttribution: 'firstSessionAttribution',
-  lastSessionAttribution: 'lastSessionAttribution',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  companyId: 'companyId'
-} as const
-
-export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
-
-
 export const EventScalarFieldEnum = {
   id: 'id',
-  companyId: 'companyId',
   contactId: 'contactId',
-  sessionId: 'sessionId',
+  eventSource: 'eventSource',
   type: 'type',
   data: 'data',
   createdAt: 'createdAt'
@@ -2127,16 +1836,16 @@ export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$Prisma
 
 
 /**
- * Reference to a field of type 'Boolean'
+ * Reference to a field of type 'EventSource'
  */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+export type EnumEventSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EventSource'>
     
 
 
 /**
- * Reference to a field of type 'Json[]'
+ * Reference to a field of type 'EventSource[]'
  */
-export type ListJsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json[]'>
+export type ListEnumEventSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EventSource[]'>
     
 
 
@@ -2251,10 +1960,7 @@ export type GlobalOmitConfig = {
   company?: Prisma.CompanyOmit
   gHLEvent?: Prisma.GHLEventOmit
   contact?: Prisma.ContactOmit
-  contactEvent?: Prisma.ContactEventOmit
   externalId?: Prisma.ExternalIdOmit
-  ghlContact?: Prisma.GhlContactOmit
-  session?: Prisma.SessionOmit
   event?: Prisma.EventOmit
   service?: Prisma.ServiceOmit
   payments?: Prisma.PaymentsOmit

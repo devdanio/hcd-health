@@ -60,14 +60,12 @@ model Company {
   updatedAt DateTime @updatedAt
 
   contacts     Contact[]
-  sessions     Session[]
-  events       Event[]
+  // sessions     Session[]
   services     Service[]
   providers    Provider[]
   appointments Appointment[]
   oauthStates  OAuthState[]
   cmsPages     CmsPage[]
-  ghlContacts  GhlContact[]
   payments Payments[]
   @@index([apiKey])
 }
@@ -78,6 +76,7 @@ enum EhrType {
   ghl
 }
 
+// Deprecated - use Event instead
 model GHLEvent{
   id String @id @default(cuid())
   companyId String
@@ -85,11 +84,13 @@ model GHLEvent{
   createdAt DateTime @default(now())
 }
 
-// Contacts - Unified visitor/patient identity
 model Contact {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // First time we ever saw this contact, usually maps to the EHR's createdAt if we're doing a backfill
+  firstSeenAt DateTime @default(now())
 
   companyId String
   company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
@@ -114,39 +115,16 @@ model Contact {
   appointments Appointment[]
 
 
-  ghlContactId String?     @unique
-  ghlContact   GhlContact? @relation(fields: [ghlContactId], references: [id])
 
-  chirotouchAccountId String? @unique
 
-  sessions Session[]
-  contactEvents ContactEvent[]
+  // sessions Session[]
+  events Event[]
 
   @@index([companyId, email])
   @@index([companyId, phone])
-  @@index([companyId, ghlContactId])
   @@index([companyId])
-  @@index([ghlContactId])
-  @@index([chirotouchAccountId])
 }
 
-// Contact Events - Custom events associated with contacts
-model ContactEvent {
-  id        String   @id @default(cuid())
-  contactId String
-  contact   Contact  @relation(fields: [contactId], references: [id], onDelete: Cascade)
-
-  companyId String
-
-  eventType String
-  data      Json
-
-  createdAt DateTime @default(now())
-
-  @@index([contactId])
-  @@index([companyId])
-  @@index([eventType])
-}
 
 enum ExternalIdSource {
   POSTHOG
@@ -161,99 +139,70 @@ model ExternalId {
   contactId String
   contact Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
   externalId String @unique
-  source String
+  source ExternalIdSource
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt 
   @@index([contactId, externalId])
 }
 
-// GHL Contacts - External CRM sync
-model GhlContact {
-  id           String    @id
-  locationId   String
-  contactName  String?
-  firstName    String?
-  lastName     String?
-  companyName  String?
-  email        String?
-  phone        String?
-  dnd          Boolean   @default(false)
-  type         String?
-  source       String?
-  assignedTo   String?
-  city         String?
-  state        String?
-  postalCode   String?
-  address1     String?
-  dateAdded    DateTime
-  dateUpdated  DateTime
-  dateOfBirth  Json?
-  tags         String[]
-  country      String?
-  website      String?
-  timezone     String?
-  lastActivity DateTime?
-  customField  Json[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  companyId String
-  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-
-  contact Contact?
-}
 
 // Sessions - Browser sessions with attribution
-model Session {
-  id               String  @id @default(cuid())
-  browserSessionId String  @unique
-  contactId        String
-  contact          Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+// model Session {
+//   id               String  @id @default(cuid())
+//   browserSessionId String  @unique
+//   contactId        String
+//   contact          Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
 
-  userAgent        String?
-  ipAddress        String?
-  screenResolution String?
-  timezone         String?
+//   userAgent        String?
+//   ipAddress        String?
+//   screenResolution String?
+//   timezone         String?
 
-  // Attribution stored as JSON (UTM params + click IDs)
-  firstSessionAttribution Json
-  lastSessionAttribution  Json
+//   // Attribution stored as JSON (UTM params + click IDs)
+//   firstSessionAttribution Json
+//   lastSessionAttribution  Json
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
 
-  events    Event[]
-  company   Company? @relation(fields: [companyId], references: [id])
-  companyId String?
+//   events    Event[]
+//   company   Company? @relation(fields: [companyId], references: [id])
+//   companyId String?
 
-  @@index([contactId])
-  @@index([browserSessionId])
+//   @@index([contactId])
+//   @@index([browserSessionId])
+// }
+
+enum EventSource {
+  GHL
+  // WEBSITE
+  // POSTHOG
+  // SHOPIFY
 }
 
-// Events - Tracking events (pageviews, conversions)
 model Event {
   id        String  @id @default(cuid())
-  companyId String
-  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
   contactId String
-  sessionId String
-  session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  eventSource EventSource
 
   type     EventType
   data Json
 
   createdAt DateTime @default(now())
 
-  @@index([sessionId])
-  @@index([companyId, type])
-  @@index([companyId])
-  @@index([createdAt])
+  @@index([contactId])
 }
 
 enum EventType {
-  pageview
-  conversion
-  custom_event
+  PAGE_VIEW
+  CONTACT_CREATED
+  CALL_RECEIVED
+  CHAT
+  FB_FORM_SUBMISSION
+  // Used for data imports where we have attribution data but no events
+  UNKNOWN
 }
 
 // Services

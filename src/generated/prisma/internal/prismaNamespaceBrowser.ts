@@ -56,10 +56,7 @@ export const ModelName = {
   Company: 'Company',
   GHLEvent: 'GHLEvent',
   Contact: 'Contact',
-  ContactEvent: 'ContactEvent',
   ExternalId: 'ExternalId',
-  GhlContact: 'GhlContact',
-  Session: 'Session',
   Event: 'Event',
   Service: 'Service',
   Payments: 'Payments',
@@ -155,6 +152,7 @@ export const ContactScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  firstSeenAt: 'firstSeenAt',
   companyId: 'companyId',
   email: 'email',
   phone: 'phone',
@@ -167,24 +165,10 @@ export const ContactScalarFieldEnum = {
   address2: 'address2',
   zip: 'zip',
   city: 'city',
-  state: 'state',
-  ghlContactId: 'ghlContactId',
-  chirotouchAccountId: 'chirotouchAccountId'
+  state: 'state'
 } as const
 
 export type ContactScalarFieldEnum = (typeof ContactScalarFieldEnum)[keyof typeof ContactScalarFieldEnum]
-
-
-export const ContactEventScalarFieldEnum = {
-  id: 'id',
-  contactId: 'contactId',
-  companyId: 'companyId',
-  eventType: 'eventType',
-  data: 'data',
-  createdAt: 'createdAt'
-} as const
-
-export type ContactEventScalarFieldEnum = (typeof ContactEventScalarFieldEnum)[keyof typeof ContactEventScalarFieldEnum]
 
 
 export const ExternalIdScalarFieldEnum = {
@@ -198,63 +182,10 @@ export const ExternalIdScalarFieldEnum = {
 export type ExternalIdScalarFieldEnum = (typeof ExternalIdScalarFieldEnum)[keyof typeof ExternalIdScalarFieldEnum]
 
 
-export const GhlContactScalarFieldEnum = {
-  id: 'id',
-  locationId: 'locationId',
-  contactName: 'contactName',
-  firstName: 'firstName',
-  lastName: 'lastName',
-  companyName: 'companyName',
-  email: 'email',
-  phone: 'phone',
-  dnd: 'dnd',
-  type: 'type',
-  source: 'source',
-  assignedTo: 'assignedTo',
-  city: 'city',
-  state: 'state',
-  postalCode: 'postalCode',
-  address1: 'address1',
-  dateAdded: 'dateAdded',
-  dateUpdated: 'dateUpdated',
-  dateOfBirth: 'dateOfBirth',
-  tags: 'tags',
-  country: 'country',
-  website: 'website',
-  timezone: 'timezone',
-  lastActivity: 'lastActivity',
-  customField: 'customField',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  companyId: 'companyId'
-} as const
-
-export type GhlContactScalarFieldEnum = (typeof GhlContactScalarFieldEnum)[keyof typeof GhlContactScalarFieldEnum]
-
-
-export const SessionScalarFieldEnum = {
-  id: 'id',
-  browserSessionId: 'browserSessionId',
-  contactId: 'contactId',
-  userAgent: 'userAgent',
-  ipAddress: 'ipAddress',
-  screenResolution: 'screenResolution',
-  timezone: 'timezone',
-  firstSessionAttribution: 'firstSessionAttribution',
-  lastSessionAttribution: 'lastSessionAttribution',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  companyId: 'companyId'
-} as const
-
-export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
-
-
 export const EventScalarFieldEnum = {
   id: 'id',
-  companyId: 'companyId',
   contactId: 'contactId',
-  sessionId: 'sessionId',
+  eventSource: 'eventSource',
   type: 'type',
   data: 'data',
   createdAt: 'createdAt'

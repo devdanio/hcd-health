@@ -30,10 +30,19 @@ export const ExternalIdSource = {
 export type ExternalIdSource = (typeof ExternalIdSource)[keyof typeof ExternalIdSource]
 
 
+export const EventSource = {
+  GHL: 'GHL'
+} as const
+
+export type EventSource = (typeof EventSource)[keyof typeof EventSource]
+
+
 export const EventType = {
-  pageview: 'pageview',
-  conversion: 'conversion',
-  custom_event: 'custom_event'
+  PAGE_VIEW: 'PAGE_VIEW',
+  CONTACT_CREATED: 'CONTACT_CREATED',
+  CALL_RECEIVED: 'CALL_RECEIVED',
+  CHAT: 'CHAT',
+  FB_FORM_SUBMISSION: 'FB_FORM_SUBMISSION'
 } as const
 
 export type EventType = (typeof EventType)[keyof typeof EventType]

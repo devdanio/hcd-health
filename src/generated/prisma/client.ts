@@ -65,25 +65,10 @@ export type GHLEvent = Prisma.GHLEventModel
  */
 export type Contact = Prisma.ContactModel
 /**
- * Model ContactEvent
- * 
- */
-export type ContactEvent = Prisma.ContactEventModel
-/**
  * Model ExternalId
  * 
  */
 export type ExternalId = Prisma.ExternalIdModel
-/**
- * Model GhlContact
- * 
- */
-export type GhlContact = Prisma.GhlContactModel
-/**
- * Model Session
- * 
- */
-export type Session = Prisma.SessionModel
 /**
  * Model Event
  * 

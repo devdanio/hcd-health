@@ -26,27 +26,24 @@ export type AggregateEvent = {
 
 export type EventMinAggregateOutputType = {
   id: string | null
-  companyId: string | null
   contactId: string | null
-  sessionId: string | null
+  eventSource: $Enums.EventSource | null
   type: $Enums.EventType | null
   createdAt: Date | null
 }
 
 export type EventMaxAggregateOutputType = {
   id: string | null
-  companyId: string | null
   contactId: string | null
-  sessionId: string | null
+  eventSource: $Enums.EventSource | null
   type: $Enums.EventType | null
   createdAt: Date | null
 }
 
 export type EventCountAggregateOutputType = {
   id: number
-  companyId: number
   contactId: number
-  sessionId: number
+  eventSource: number
   type: number
   data: number
   createdAt: number
@@ -56,27 +53,24 @@ export type EventCountAggregateOutputType = {
 
 export type EventMinAggregateInputType = {
   id?: true
-  companyId?: true
   contactId?: true
-  sessionId?: true
+  eventSource?: true
   type?: true
   createdAt?: true
 }
 
 export type EventMaxAggregateInputType = {
   id?: true
-  companyId?: true
   contactId?: true
-  sessionId?: true
+  eventSource?: true
   type?: true
   createdAt?: true
 }
 
 export type EventCountAggregateInputType = {
   id?: true
-  companyId?: true
   contactId?: true
-  sessionId?: true
+  eventSource?: true
   type?: true
   data?: true
   createdAt?: true
@@ -157,9 +151,8 @@ export type EventGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 
 export type EventGroupByOutputType = {
   id: string
-  companyId: string
   contactId: string
-  sessionId: string
+  eventSource: $Enums.EventSource
   type: $Enums.EventType
   data: runtime.JsonValue
   createdAt: Date
@@ -188,26 +181,22 @@ export type EventWhereInput = {
   OR?: Prisma.EventWhereInput[]
   NOT?: Prisma.EventWhereInput | Prisma.EventWhereInput[]
   id?: Prisma.StringFilter<"Event"> | string
-  companyId?: Prisma.StringFilter<"Event"> | string
   contactId?: Prisma.StringFilter<"Event"> | string
-  sessionId?: Prisma.StringFilter<"Event"> | string
+  eventSource?: Prisma.EnumEventSourceFilter<"Event"> | $Enums.EventSource
   type?: Prisma.EnumEventTypeFilter<"Event"> | $Enums.EventType
   data?: Prisma.JsonFilter<"Event">
   createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
-  company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
-  session?: Prisma.XOR<Prisma.SessionScalarRelationFilter, Prisma.SessionWhereInput>
+  contact?: Prisma.XOR<Prisma.ContactScalarRelationFilter, Prisma.ContactWhereInput>
 }
 
 export type EventOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  companyId?: Prisma.SortOrder
   contactId?: Prisma.SortOrder
-  sessionId?: Prisma.SortOrder
+  eventSource?: Prisma.SortOrder
   type?: Prisma.SortOrder
   data?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  company?: Prisma.CompanyOrderByWithRelationInput
-  session?: Prisma.SessionOrderByWithRelationInput
+  contact?: Prisma.ContactOrderByWithRelationInput
 }
 
 export type EventWhereUniqueInput = Prisma.AtLeast<{
@@ -215,21 +204,18 @@ export type EventWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.EventWhereInput | Prisma.EventWhereInput[]
   OR?: Prisma.EventWhereInput[]
   NOT?: Prisma.EventWhereInput | Prisma.EventWhereInput[]
-  companyId?: Prisma.StringFilter<"Event"> | string
   contactId?: Prisma.StringFilter<"Event"> | string
-  sessionId?: Prisma.StringFilter<"Event"> | string
+  eventSource?: Prisma.EnumEventSourceFilter<"Event"> | $Enums.EventSource
   type?: Prisma.EnumEventTypeFilter<"Event"> | $Enums.EventType
   data?: Prisma.JsonFilter<"Event">
   createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
-  company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
-  session?: Prisma.XOR<Prisma.SessionScalarRelationFilter, Prisma.SessionWhereInput>
+  contact?: Prisma.XOR<Prisma.ContactScalarRelationFilter, Prisma.ContactWhereInput>
 }, "id">
 
 export type EventOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  companyId?: Prisma.SortOrder
   contactId?: Prisma.SortOrder
-  sessionId?: Prisma.SortOrder
+  eventSource?: Prisma.SortOrder
   type?: Prisma.SortOrder
   data?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -243,9 +229,8 @@ export type EventScalarWhereWithAggregatesInput = {
   OR?: Prisma.EventScalarWhereWithAggregatesInput[]
   NOT?: Prisma.EventScalarWhereWithAggregatesInput | Prisma.EventScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Event"> | string
-  companyId?: Prisma.StringWithAggregatesFilter<"Event"> | string
   contactId?: Prisma.StringWithAggregatesFilter<"Event"> | string
-  sessionId?: Prisma.StringWithAggregatesFilter<"Event"> | string
+  eventSource?: Prisma.EnumEventSourceWithAggregatesFilter<"Event"> | $Enums.EventSource
   type?: Prisma.EnumEventTypeWithAggregatesFilter<"Event"> | $Enums.EventType
   data?: Prisma.JsonWithAggregatesFilter<"Event">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Event"> | Date | string
@@ -253,19 +238,17 @@ export type EventScalarWhereWithAggregatesInput = {
 
 export type EventCreateInput = {
   id?: string
-  contactId: string
+  eventSource: $Enums.EventSource
   type: $Enums.EventType
   data: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
-  company: Prisma.CompanyCreateNestedOneWithoutEventsInput
-  session: Prisma.SessionCreateNestedOneWithoutEventsInput
+  contact: Prisma.ContactCreateNestedOneWithoutEventsInput
 }
 
 export type EventUncheckedCreateInput = {
   id?: string
-  companyId: string
   contactId: string
-  sessionId: string
+  eventSource: $Enums.EventSource
   type: $Enums.EventType
   data: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -273,19 +256,17 @@ export type EventUncheckedCreateInput = {
 
 export type EventUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  contactId?: Prisma.StringFieldUpdateOperationsInput | string
+  eventSource?: Prisma.EnumEventSourceFieldUpdateOperationsInput | $Enums.EventSource
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  company?: Prisma.CompanyUpdateOneRequiredWithoutEventsNestedInput
-  session?: Prisma.SessionUpdateOneRequiredWithoutEventsNestedInput
+  contact?: Prisma.ContactUpdateOneRequiredWithoutEventsNestedInput
 }
 
 export type EventUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
   contactId?: Prisma.StringFieldUpdateOperationsInput | string
-  sessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  eventSource?: Prisma.EnumEventSourceFieldUpdateOperationsInput | $Enums.EventSource
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -293,9 +274,8 @@ export type EventUncheckedUpdateInput = {
 
 export type EventCreateManyInput = {
   id?: string
-  companyId: string
   contactId: string
-  sessionId: string
+  eventSource: $Enums.EventSource
   type: $Enums.EventType
   data: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -303,7 +283,7 @@ export type EventCreateManyInput = {
 
 export type EventUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  contactId?: Prisma.StringFieldUpdateOperationsInput | string
+  eventSource?: Prisma.EnumEventSourceFieldUpdateOperationsInput | $Enums.EventSource
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -311,9 +291,8 @@ export type EventUpdateManyMutationInput = {
 
 export type EventUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
   contactId?: Prisma.StringFieldUpdateOperationsInput | string
-  sessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  eventSource?: Prisma.EnumEventSourceFieldUpdateOperationsInput | $Enums.EventSource
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -331,9 +310,8 @@ export type EventOrderByRelationAggregateInput = {
 
 export type EventCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  companyId?: Prisma.SortOrder
   contactId?: Prisma.SortOrder
-  sessionId?: Prisma.SortOrder
+  eventSource?: Prisma.SortOrder
   type?: Prisma.SortOrder
   data?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -341,152 +319,110 @@ export type EventCountOrderByAggregateInput = {
 
 export type EventMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  companyId?: Prisma.SortOrder
   contactId?: Prisma.SortOrder
-  sessionId?: Prisma.SortOrder
+  eventSource?: Prisma.SortOrder
   type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type EventMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  companyId?: Prisma.SortOrder
   contactId?: Prisma.SortOrder
-  sessionId?: Prisma.SortOrder
+  eventSource?: Prisma.SortOrder
   type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
-export type EventCreateNestedManyWithoutCompanyInput = {
-  create?: Prisma.XOR<Prisma.EventCreateWithoutCompanyInput, Prisma.EventUncheckedCreateWithoutCompanyInput> | Prisma.EventCreateWithoutCompanyInput[] | Prisma.EventUncheckedCreateWithoutCompanyInput[]
-  connectOrCreate?: Prisma.EventCreateOrConnectWithoutCompanyInput | Prisma.EventCreateOrConnectWithoutCompanyInput[]
-  createMany?: Prisma.EventCreateManyCompanyInputEnvelope
+export type EventCreateNestedManyWithoutContactInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutContactInput, Prisma.EventUncheckedCreateWithoutContactInput> | Prisma.EventCreateWithoutContactInput[] | Prisma.EventUncheckedCreateWithoutContactInput[]
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutContactInput | Prisma.EventCreateOrConnectWithoutContactInput[]
+  createMany?: Prisma.EventCreateManyContactInputEnvelope
   connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
 }
 
-export type EventUncheckedCreateNestedManyWithoutCompanyInput = {
-  create?: Prisma.XOR<Prisma.EventCreateWithoutCompanyInput, Prisma.EventUncheckedCreateWithoutCompanyInput> | Prisma.EventCreateWithoutCompanyInput[] | Prisma.EventUncheckedCreateWithoutCompanyInput[]
-  connectOrCreate?: Prisma.EventCreateOrConnectWithoutCompanyInput | Prisma.EventCreateOrConnectWithoutCompanyInput[]
-  createMany?: Prisma.EventCreateManyCompanyInputEnvelope
+export type EventUncheckedCreateNestedManyWithoutContactInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutContactInput, Prisma.EventUncheckedCreateWithoutContactInput> | Prisma.EventCreateWithoutContactInput[] | Prisma.EventUncheckedCreateWithoutContactInput[]
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutContactInput | Prisma.EventCreateOrConnectWithoutContactInput[]
+  createMany?: Prisma.EventCreateManyContactInputEnvelope
   connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
 }
 
-export type EventUpdateManyWithoutCompanyNestedInput = {
-  create?: Prisma.XOR<Prisma.EventCreateWithoutCompanyInput, Prisma.EventUncheckedCreateWithoutCompanyInput> | Prisma.EventCreateWithoutCompanyInput[] | Prisma.EventUncheckedCreateWithoutCompanyInput[]
-  connectOrCreate?: Prisma.EventCreateOrConnectWithoutCompanyInput | Prisma.EventCreateOrConnectWithoutCompanyInput[]
-  upsert?: Prisma.EventUpsertWithWhereUniqueWithoutCompanyInput | Prisma.EventUpsertWithWhereUniqueWithoutCompanyInput[]
-  createMany?: Prisma.EventCreateManyCompanyInputEnvelope
+export type EventUpdateManyWithoutContactNestedInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutContactInput, Prisma.EventUncheckedCreateWithoutContactInput> | Prisma.EventCreateWithoutContactInput[] | Prisma.EventUncheckedCreateWithoutContactInput[]
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutContactInput | Prisma.EventCreateOrConnectWithoutContactInput[]
+  upsert?: Prisma.EventUpsertWithWhereUniqueWithoutContactInput | Prisma.EventUpsertWithWhereUniqueWithoutContactInput[]
+  createMany?: Prisma.EventCreateManyContactInputEnvelope
   set?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
   disconnect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
   delete?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
   connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  update?: Prisma.EventUpdateWithWhereUniqueWithoutCompanyInput | Prisma.EventUpdateWithWhereUniqueWithoutCompanyInput[]
-  updateMany?: Prisma.EventUpdateManyWithWhereWithoutCompanyInput | Prisma.EventUpdateManyWithWhereWithoutCompanyInput[]
+  update?: Prisma.EventUpdateWithWhereUniqueWithoutContactInput | Prisma.EventUpdateWithWhereUniqueWithoutContactInput[]
+  updateMany?: Prisma.EventUpdateManyWithWhereWithoutContactInput | Prisma.EventUpdateManyWithWhereWithoutContactInput[]
   deleteMany?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
 }
 
-export type EventUncheckedUpdateManyWithoutCompanyNestedInput = {
-  create?: Prisma.XOR<Prisma.EventCreateWithoutCompanyInput, Prisma.EventUncheckedCreateWithoutCompanyInput> | Prisma.EventCreateWithoutCompanyInput[] | Prisma.EventUncheckedCreateWithoutCompanyInput[]
-  connectOrCreate?: Prisma.EventCreateOrConnectWithoutCompanyInput | Prisma.EventCreateOrConnectWithoutCompanyInput[]
-  upsert?: Prisma.EventUpsertWithWhereUniqueWithoutCompanyInput | Prisma.EventUpsertWithWhereUniqueWithoutCompanyInput[]
-  createMany?: Prisma.EventCreateManyCompanyInputEnvelope
+export type EventUncheckedUpdateManyWithoutContactNestedInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutContactInput, Prisma.EventUncheckedCreateWithoutContactInput> | Prisma.EventCreateWithoutContactInput[] | Prisma.EventUncheckedCreateWithoutContactInput[]
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutContactInput | Prisma.EventCreateOrConnectWithoutContactInput[]
+  upsert?: Prisma.EventUpsertWithWhereUniqueWithoutContactInput | Prisma.EventUpsertWithWhereUniqueWithoutContactInput[]
+  createMany?: Prisma.EventCreateManyContactInputEnvelope
   set?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
   disconnect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
   delete?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
   connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  update?: Prisma.EventUpdateWithWhereUniqueWithoutCompanyInput | Prisma.EventUpdateWithWhereUniqueWithoutCompanyInput[]
-  updateMany?: Prisma.EventUpdateManyWithWhereWithoutCompanyInput | Prisma.EventUpdateManyWithWhereWithoutCompanyInput[]
+  update?: Prisma.EventUpdateWithWhereUniqueWithoutContactInput | Prisma.EventUpdateWithWhereUniqueWithoutContactInput[]
+  updateMany?: Prisma.EventUpdateManyWithWhereWithoutContactInput | Prisma.EventUpdateManyWithWhereWithoutContactInput[]
   deleteMany?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
 }
 
-export type EventCreateNestedManyWithoutSessionInput = {
-  create?: Prisma.XOR<Prisma.EventCreateWithoutSessionInput, Prisma.EventUncheckedCreateWithoutSessionInput> | Prisma.EventCreateWithoutSessionInput[] | Prisma.EventUncheckedCreateWithoutSessionInput[]
-  connectOrCreate?: Prisma.EventCreateOrConnectWithoutSessionInput | Prisma.EventCreateOrConnectWithoutSessionInput[]
-  createMany?: Prisma.EventCreateManySessionInputEnvelope
-  connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-}
-
-export type EventUncheckedCreateNestedManyWithoutSessionInput = {
-  create?: Prisma.XOR<Prisma.EventCreateWithoutSessionInput, Prisma.EventUncheckedCreateWithoutSessionInput> | Prisma.EventCreateWithoutSessionInput[] | Prisma.EventUncheckedCreateWithoutSessionInput[]
-  connectOrCreate?: Prisma.EventCreateOrConnectWithoutSessionInput | Prisma.EventCreateOrConnectWithoutSessionInput[]
-  createMany?: Prisma.EventCreateManySessionInputEnvelope
-  connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-}
-
-export type EventUpdateManyWithoutSessionNestedInput = {
-  create?: Prisma.XOR<Prisma.EventCreateWithoutSessionInput, Prisma.EventUncheckedCreateWithoutSessionInput> | Prisma.EventCreateWithoutSessionInput[] | Prisma.EventUncheckedCreateWithoutSessionInput[]
-  connectOrCreate?: Prisma.EventCreateOrConnectWithoutSessionInput | Prisma.EventCreateOrConnectWithoutSessionInput[]
-  upsert?: Prisma.EventUpsertWithWhereUniqueWithoutSessionInput | Prisma.EventUpsertWithWhereUniqueWithoutSessionInput[]
-  createMany?: Prisma.EventCreateManySessionInputEnvelope
-  set?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  disconnect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  delete?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  update?: Prisma.EventUpdateWithWhereUniqueWithoutSessionInput | Prisma.EventUpdateWithWhereUniqueWithoutSessionInput[]
-  updateMany?: Prisma.EventUpdateManyWithWhereWithoutSessionInput | Prisma.EventUpdateManyWithWhereWithoutSessionInput[]
-  deleteMany?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
-}
-
-export type EventUncheckedUpdateManyWithoutSessionNestedInput = {
-  create?: Prisma.XOR<Prisma.EventCreateWithoutSessionInput, Prisma.EventUncheckedCreateWithoutSessionInput> | Prisma.EventCreateWithoutSessionInput[] | Prisma.EventUncheckedCreateWithoutSessionInput[]
-  connectOrCreate?: Prisma.EventCreateOrConnectWithoutSessionInput | Prisma.EventCreateOrConnectWithoutSessionInput[]
-  upsert?: Prisma.EventUpsertWithWhereUniqueWithoutSessionInput | Prisma.EventUpsertWithWhereUniqueWithoutSessionInput[]
-  createMany?: Prisma.EventCreateManySessionInputEnvelope
-  set?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  disconnect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  delete?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  update?: Prisma.EventUpdateWithWhereUniqueWithoutSessionInput | Prisma.EventUpdateWithWhereUniqueWithoutSessionInput[]
-  updateMany?: Prisma.EventUpdateManyWithWhereWithoutSessionInput | Prisma.EventUpdateManyWithWhereWithoutSessionInput[]
-  deleteMany?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
+export type EnumEventSourceFieldUpdateOperationsInput = {
+  set?: $Enums.EventSource
 }
 
 export type EnumEventTypeFieldUpdateOperationsInput = {
   set?: $Enums.EventType
 }
 
-export type EventCreateWithoutCompanyInput = {
+export type EventCreateWithoutContactInput = {
   id?: string
-  contactId: string
-  type: $Enums.EventType
-  data: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Date | string
-  session: Prisma.SessionCreateNestedOneWithoutEventsInput
-}
-
-export type EventUncheckedCreateWithoutCompanyInput = {
-  id?: string
-  contactId: string
-  sessionId: string
+  eventSource: $Enums.EventSource
   type: $Enums.EventType
   data: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
-export type EventCreateOrConnectWithoutCompanyInput = {
+export type EventUncheckedCreateWithoutContactInput = {
+  id?: string
+  eventSource: $Enums.EventSource
+  type: $Enums.EventType
+  data: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+}
+
+export type EventCreateOrConnectWithoutContactInput = {
   where: Prisma.EventWhereUniqueInput
-  create: Prisma.XOR<Prisma.EventCreateWithoutCompanyInput, Prisma.EventUncheckedCreateWithoutCompanyInput>
+  create: Prisma.XOR<Prisma.EventCreateWithoutContactInput, Prisma.EventUncheckedCreateWithoutContactInput>
 }
 
-export type EventCreateManyCompanyInputEnvelope = {
-  data: Prisma.EventCreateManyCompanyInput | Prisma.EventCreateManyCompanyInput[]
+export type EventCreateManyContactInputEnvelope = {
+  data: Prisma.EventCreateManyContactInput | Prisma.EventCreateManyContactInput[]
   skipDuplicates?: boolean
 }
 
-export type EventUpsertWithWhereUniqueWithoutCompanyInput = {
+export type EventUpsertWithWhereUniqueWithoutContactInput = {
   where: Prisma.EventWhereUniqueInput
-  update: Prisma.XOR<Prisma.EventUpdateWithoutCompanyInput, Prisma.EventUncheckedUpdateWithoutCompanyInput>
-  create: Prisma.XOR<Prisma.EventCreateWithoutCompanyInput, Prisma.EventUncheckedCreateWithoutCompanyInput>
+  update: Prisma.XOR<Prisma.EventUpdateWithoutContactInput, Prisma.EventUncheckedUpdateWithoutContactInput>
+  create: Prisma.XOR<Prisma.EventCreateWithoutContactInput, Prisma.EventUncheckedCreateWithoutContactInput>
 }
 
-export type EventUpdateWithWhereUniqueWithoutCompanyInput = {
+export type EventUpdateWithWhereUniqueWithoutContactInput = {
   where: Prisma.EventWhereUniqueInput
-  data: Prisma.XOR<Prisma.EventUpdateWithoutCompanyInput, Prisma.EventUncheckedUpdateWithoutCompanyInput>
+  data: Prisma.XOR<Prisma.EventUpdateWithoutContactInput, Prisma.EventUncheckedUpdateWithoutContactInput>
 }
 
-export type EventUpdateManyWithWhereWithoutCompanyInput = {
+export type EventUpdateManyWithWhereWithoutContactInput = {
   where: Prisma.EventScalarWhereInput
-  data: Prisma.XOR<Prisma.EventUpdateManyMutationInput, Prisma.EventUncheckedUpdateManyWithoutCompanyInput>
+  data: Prisma.XOR<Prisma.EventUpdateManyMutationInput, Prisma.EventUncheckedUpdateManyWithoutContactInput>
 }
 
 export type EventScalarWhereInput = {
@@ -494,125 +430,40 @@ export type EventScalarWhereInput = {
   OR?: Prisma.EventScalarWhereInput[]
   NOT?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
   id?: Prisma.StringFilter<"Event"> | string
-  companyId?: Prisma.StringFilter<"Event"> | string
   contactId?: Prisma.StringFilter<"Event"> | string
-  sessionId?: Prisma.StringFilter<"Event"> | string
+  eventSource?: Prisma.EnumEventSourceFilter<"Event"> | $Enums.EventSource
   type?: Prisma.EnumEventTypeFilter<"Event"> | $Enums.EventType
   data?: Prisma.JsonFilter<"Event">
   createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
 }
 
-export type EventCreateWithoutSessionInput = {
+export type EventCreateManyContactInput = {
   id?: string
-  contactId: string
-  type: $Enums.EventType
-  data: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Date | string
-  company: Prisma.CompanyCreateNestedOneWithoutEventsInput
-}
-
-export type EventUncheckedCreateWithoutSessionInput = {
-  id?: string
-  companyId: string
-  contactId: string
+  eventSource: $Enums.EventSource
   type: $Enums.EventType
   data: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
-export type EventCreateOrConnectWithoutSessionInput = {
-  where: Prisma.EventWhereUniqueInput
-  create: Prisma.XOR<Prisma.EventCreateWithoutSessionInput, Prisma.EventUncheckedCreateWithoutSessionInput>
-}
-
-export type EventCreateManySessionInputEnvelope = {
-  data: Prisma.EventCreateManySessionInput | Prisma.EventCreateManySessionInput[]
-  skipDuplicates?: boolean
-}
-
-export type EventUpsertWithWhereUniqueWithoutSessionInput = {
-  where: Prisma.EventWhereUniqueInput
-  update: Prisma.XOR<Prisma.EventUpdateWithoutSessionInput, Prisma.EventUncheckedUpdateWithoutSessionInput>
-  create: Prisma.XOR<Prisma.EventCreateWithoutSessionInput, Prisma.EventUncheckedCreateWithoutSessionInput>
-}
-
-export type EventUpdateWithWhereUniqueWithoutSessionInput = {
-  where: Prisma.EventWhereUniqueInput
-  data: Prisma.XOR<Prisma.EventUpdateWithoutSessionInput, Prisma.EventUncheckedUpdateWithoutSessionInput>
-}
-
-export type EventUpdateManyWithWhereWithoutSessionInput = {
-  where: Prisma.EventScalarWhereInput
-  data: Prisma.XOR<Prisma.EventUpdateManyMutationInput, Prisma.EventUncheckedUpdateManyWithoutSessionInput>
-}
-
-export type EventCreateManyCompanyInput = {
-  id?: string
-  contactId: string
-  sessionId: string
-  type: $Enums.EventType
-  data: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Date | string
-}
-
-export type EventUpdateWithoutCompanyInput = {
+export type EventUpdateWithoutContactInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  contactId?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
-  data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  session?: Prisma.SessionUpdateOneRequiredWithoutEventsNestedInput
-}
-
-export type EventUncheckedUpdateWithoutCompanyInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  contactId?: Prisma.StringFieldUpdateOperationsInput | string
-  sessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  eventSource?: Prisma.EnumEventSourceFieldUpdateOperationsInput | $Enums.EventSource
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type EventUncheckedUpdateManyWithoutCompanyInput = {
+export type EventUncheckedUpdateWithoutContactInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  contactId?: Prisma.StringFieldUpdateOperationsInput | string
-  sessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  eventSource?: Prisma.EnumEventSourceFieldUpdateOperationsInput | $Enums.EventSource
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type EventCreateManySessionInput = {
-  id?: string
-  companyId: string
-  contactId: string
-  type: $Enums.EventType
-  data: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Date | string
-}
-
-export type EventUpdateWithoutSessionInput = {
+export type EventUncheckedUpdateManyWithoutContactInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  contactId?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
-  data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  company?: Prisma.CompanyUpdateOneRequiredWithoutEventsNestedInput
-}
-
-export type EventUncheckedUpdateWithoutSessionInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
-  contactId?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
-  data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type EventUncheckedUpdateManyWithoutSessionInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
-  contactId?: Prisma.StringFieldUpdateOperationsInput | string
+  eventSource?: Prisma.EnumEventSourceFieldUpdateOperationsInput | $Enums.EventSource
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -622,75 +473,63 @@ export type EventUncheckedUpdateManyWithoutSessionInput = {
 
 export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  companyId?: boolean
   contactId?: boolean
-  sessionId?: boolean
+  eventSource?: boolean
   type?: boolean
   data?: boolean
   createdAt?: boolean
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.SessionDefaultArgs<ExtArgs>
+  contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["event"]>
 
 export type EventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  companyId?: boolean
   contactId?: boolean
-  sessionId?: boolean
+  eventSource?: boolean
   type?: boolean
   data?: boolean
   createdAt?: boolean
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.SessionDefaultArgs<ExtArgs>
+  contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["event"]>
 
 export type EventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  companyId?: boolean
   contactId?: boolean
-  sessionId?: boolean
+  eventSource?: boolean
   type?: boolean
   data?: boolean
   createdAt?: boolean
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.SessionDefaultArgs<ExtArgs>
+  contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["event"]>
 
 export type EventSelectScalar = {
   id?: boolean
-  companyId?: boolean
   contactId?: boolean
-  sessionId?: boolean
+  eventSource?: boolean
   type?: boolean
   data?: boolean
   createdAt?: boolean
 }
 
-export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "contactId" | "sessionId" | "type" | "data" | "createdAt", ExtArgs["result"]["event"]>
+export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "contactId" | "eventSource" | "type" | "data" | "createdAt", ExtArgs["result"]["event"]>
 export type EventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.SessionDefaultArgs<ExtArgs>
+  contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
 }
 export type EventIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.SessionDefaultArgs<ExtArgs>
+  contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
 }
 export type EventIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.SessionDefaultArgs<ExtArgs>
+  contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
 }
 
 export type $EventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Event"
   objects: {
-    company: Prisma.$CompanyPayload<ExtArgs>
-    session: Prisma.$SessionPayload<ExtArgs>
+    contact: Prisma.$ContactPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    companyId: string
     contactId: string
-    sessionId: string
+    eventSource: $Enums.EventSource
     type: $Enums.EventType
     data: runtime.JsonValue
     createdAt: Date
@@ -1088,8 +927,7 @@ readonly fields: EventFieldRefs;
  */
 export interface Prisma__EventClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  company<T extends Prisma.CompanyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyDefaultArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  session<T extends Prisma.SessionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SessionDefaultArgs<ExtArgs>>): Prisma.Prisma__SessionClient<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  contact<T extends Prisma.ContactDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContactDefaultArgs<ExtArgs>>): Prisma.Prisma__ContactClient<runtime.Types.Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1120,9 +958,8 @@ export interface Prisma__EventClient<T, Null = never, ExtArgs extends runtime.Ty
  */
 export interface EventFieldRefs {
   readonly id: Prisma.FieldRef<"Event", 'String'>
-  readonly companyId: Prisma.FieldRef<"Event", 'String'>
   readonly contactId: Prisma.FieldRef<"Event", 'String'>
-  readonly sessionId: Prisma.FieldRef<"Event", 'String'>
+  readonly eventSource: Prisma.FieldRef<"Event", 'EventSource'>
   readonly type: Prisma.FieldRef<"Event", 'EventType'>
   readonly data: Prisma.FieldRef<"Event", 'Json'>
   readonly createdAt: Prisma.FieldRef<"Event", 'DateTime'>

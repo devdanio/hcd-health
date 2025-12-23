@@ -45,3 +45,14 @@ EDGECASES
 
 - When contacts come from Thrive chat or Shopify we are missing attribution data. BUT we can identify this via posthog
 - Contact is created w/ organic, but they click on an ad, book
+
+---
+
+GHL Events to be sent with attribution
+These are all the ways that a contact can reach out. Once we have that and the attribution then we pull the data from the CRM and match things up.
+
+- Contact created
+- Call received
+- Chat message received
+- FB form
+- Chat form

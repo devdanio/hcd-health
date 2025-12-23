@@ -1,24 +1,23 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
 import { prisma } from '@/server/db/client'
-
-/**
- * Contact Event API Handler
- *
- * Route: /api/:locationID/event
- * Creates custom events for contacts, creating the contact if needed
- *
- * Request body:
- * - email or phone (at least one required)
- * - eventType: string identifier for the event
- * - data: JSON payload with event details
- */
+import { EventType } from '@/generated/prisma/enums'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
 }
+
+const createEventSchema = z.object({
+  eventType: z.enum(EventType),
+  email: z.email().optional(),
+  phone: z.string().optional(),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  ghlContactId: z.string(),
+  dateCreated: z.date(),
+})
 
 export const Route = createFileRoute('/api/$locationID/ghl-event')({
   server: {
@@ -28,6 +27,32 @@ export const Route = createFileRoute('/api/$locationID/ghl-event')({
 
         try {
           const body = await request.json()
+
+          if (!body.customData) {
+            return new Response(
+              JSON.stringify({ error: 'ghl-event: customData is required' }),
+              { status: 400 },
+            )
+          }
+
+          const validatedData = createEventSchema.parse(body.customData)
+
+          const {
+            email,
+            phone,
+            eventType,
+            ghlContactId,
+            firstName,
+            lastName,
+            dateCreated,
+          } = validatedData
+
+          if (!email && !phone) {
+            return new Response(
+              JSON.stringify({ error: 'Either email or phone is required' }),
+              { status: 400 },
+            )
+          }
 
           // Verify company exists
           const company = await prisma.company.findUnique({
@@ -47,20 +72,100 @@ export const Route = createFileRoute('/api/$locationID/ghl-event')({
             )
           }
 
-          // Create contact event
-          const contactEvent = await prisma.gHLEvent.create({
-            data: {
-              companyId: company.id,
-              data: body as Record<string, any>,
+          let contact = await prisma.contact.findFirst({
+            where: {
+              OR: [
+                {
+                  externalIds: {
+                    some: {
+                      externalId: ghlContactId,
+                      source: 'GHL',
+                    },
+                  },
+                  companyId: company.id,
+                },
+                {
+                  email: email,
+                  companyId: company.id,
+                },
+                {
+                  phone: phone,
+                  companyId: company.id,
+                },
+              ],
+            },
+            include: {
+              events: true,
             },
           })
 
-          console.log('[API] Created contact event:', contactEvent.id)
+          const previouslyCreatedContact = contact?.events.find(
+            (event) => event.type === 'CONTACT_CREATED',
+          )
+          if (previouslyCreatedContact) {
+            console.log('[API] Contact already created:', ghlContactId)
+            return new Response(
+              JSON.stringify({ error: 'Contact already created' }),
+              { status: 400 },
+            )
+          }
+
+          if (!contact) {
+            console.log('[API] Creating new contact:', ghlContactId)
+            contact = await prisma.contact.create({
+              data: {
+                email,
+                phone,
+                firstName,
+                lastName,
+                firstSeenAt: dateCreated,
+                company: {
+                  connect: {
+                    id: company.id,
+                  },
+                },
+                externalIds: {
+                  create: {
+                    externalId: ghlContactId,
+                    source: 'GHL',
+                  },
+                },
+
+                events: {
+                  create: {
+                    eventSource: 'GHL',
+                    type: eventType,
+                    data: body,
+                  },
+                },
+              },
+              include: {
+                events: true,
+              },
+            })
+          } else {
+            console.log('[API] Updating existing contact:', ghlContactId)
+            contact = await prisma.contact.update({
+              where: { id: contact.id },
+              data: {
+                events: {
+                  create: {
+                    eventSource: 'GHL',
+                    type: eventType,
+                    data: body,
+                  },
+                },
+              },
+              include: {
+                events: true,
+              },
+            })
+          }
 
           return new Response(
             JSON.stringify({
               success: true,
-              eventId: contactEvent.id,
+              eventId: contact.id,
             }),
             {
               status: 200,
