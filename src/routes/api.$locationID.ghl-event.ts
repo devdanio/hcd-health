@@ -173,6 +173,16 @@ export const Route = createFileRoute('/api/$locationID/ghl-event')({
                     data: body,
                   },
                 },
+                externalIds: {
+                  create: {
+                    externalId: ghlContactId,
+                    source: 'GHL',
+                  },
+                },
+                email,
+                phone,
+                firstName,
+                lastName,
               },
               include: {
                 events: true,
