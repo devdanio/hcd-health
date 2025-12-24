@@ -257,6 +257,23 @@ export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
   _max?: Prisma.NestedJsonFilter<$PrismaModel>
 }
 
+export type EnumExternalIdSourceFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExternalIdSource | Prisma.EnumExternalIdSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.ExternalIdSource[] | Prisma.ListEnumExternalIdSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ExternalIdSource[] | Prisma.ListEnumExternalIdSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumExternalIdSourceFilter<$PrismaModel> | $Enums.ExternalIdSource
+}
+
+export type EnumExternalIdSourceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExternalIdSource | Prisma.EnumExternalIdSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.ExternalIdSource[] | Prisma.ListEnumExternalIdSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ExternalIdSource[] | Prisma.ListEnumExternalIdSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumExternalIdSourceWithAggregatesFilter<$PrismaModel> | $Enums.ExternalIdSource
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumExternalIdSourceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumExternalIdSourceFilter<$PrismaModel>
+}
+
 export type EnumEventSourceFilter<$PrismaModel = never> = {
   equals?: $Enums.EventSource | Prisma.EnumEventSourceFieldRefInput<$PrismaModel>
   in?: $Enums.EventSource[] | Prisma.ListEnumEventSourceFieldRefInput<$PrismaModel>
@@ -575,6 +592,23 @@ export type NestedJsonFilterBase<$PrismaModel = never> = {
   gt?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
   gte?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
   not?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | Prisma.JsonNullValueFilter
+}
+
+export type NestedEnumExternalIdSourceFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExternalIdSource | Prisma.EnumExternalIdSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.ExternalIdSource[] | Prisma.ListEnumExternalIdSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ExternalIdSource[] | Prisma.ListEnumExternalIdSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumExternalIdSourceFilter<$PrismaModel> | $Enums.ExternalIdSource
+}
+
+export type NestedEnumExternalIdSourceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExternalIdSource | Prisma.EnumExternalIdSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.ExternalIdSource[] | Prisma.ListEnumExternalIdSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ExternalIdSource[] | Prisma.ListEnumExternalIdSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumExternalIdSourceWithAggregatesFilter<$PrismaModel> | $Enums.ExternalIdSource
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumExternalIdSourceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumExternalIdSourceFilter<$PrismaModel>
 }
 
 export type NestedEnumEventSourceFilter<$PrismaModel = never> = {

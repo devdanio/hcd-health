@@ -1617,8 +1617,7 @@ export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeo
 export const PaymentsScalarFieldEnum = {
   id: 'id',
   externalId: 'externalId',
-  companyId: 'companyId',
-  amount_in_cents: 'amount_in_cents',
+  amountInCents: 'amountInCents',
   posted_date: 'posted_date',
   status: 'status',
   contactId: 'contactId',
@@ -1832,6 +1831,20 @@ export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'J
  * Reference to a field of type 'QueryMode'
  */
 export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
+ * Reference to a field of type 'ExternalIdSource'
+ */
+export type EnumExternalIdSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExternalIdSource'>
+    
+
+
+/**
+ * Reference to a field of type 'ExternalIdSource[]'
+ */
+export type ListEnumExternalIdSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExternalIdSource[]'>
     
 
 

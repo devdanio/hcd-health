@@ -42,7 +42,8 @@ export const EventType = {
   CONTACT_CREATED: 'CONTACT_CREATED',
   CALL_RECEIVED: 'CALL_RECEIVED',
   CHAT: 'CHAT',
-  FB_FORM_SUBMISSION: 'FB_FORM_SUBMISSION'
+  FB_FORM_SUBMISSION: 'FB_FORM_SUBMISSION',
+  UNKNOWN: 'UNKNOWN'
 } as const
 
 export type EventType = (typeof EventType)[keyof typeof EventType]

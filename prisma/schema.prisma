@@ -225,13 +225,17 @@ enum PaymentStatus {
 }
 model Payments{
   id String @id @default(cuid())
-  acmountInCents Int
+  externalId String @unique
+  amountInCents Int
   posted_date DateTime
   status PaymentStatus
   contactId String
   contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+
+  @@index([contactId])
 }
 
 

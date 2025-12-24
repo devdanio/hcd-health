@@ -316,7 +316,6 @@ export type CompanyWhereInput = {
   appointments?: Prisma.AppointmentListRelationFilter
   oauthStates?: Prisma.OAuthStateListRelationFilter
   cmsPages?: Prisma.CmsPageListRelationFilter
-  payments?: Prisma.PaymentsListRelationFilter
 }
 
 export type CompanyOrderByWithRelationInput = {
@@ -347,7 +346,6 @@ export type CompanyOrderByWithRelationInput = {
   appointments?: Prisma.AppointmentOrderByRelationAggregateInput
   oauthStates?: Prisma.OAuthStateOrderByRelationAggregateInput
   cmsPages?: Prisma.CmsPageOrderByRelationAggregateInput
-  payments?: Prisma.PaymentsOrderByRelationAggregateInput
 }
 
 export type CompanyWhereUniqueInput = Prisma.AtLeast<{
@@ -381,7 +379,6 @@ export type CompanyWhereUniqueInput = Prisma.AtLeast<{
   appointments?: Prisma.AppointmentListRelationFilter
   oauthStates?: Prisma.OAuthStateListRelationFilter
   cmsPages?: Prisma.CmsPageListRelationFilter
-  payments?: Prisma.PaymentsListRelationFilter
 }, "id" | "apiKey">
 
 export type CompanyOrderByWithAggregationInput = {
@@ -466,7 +463,6 @@ export type CompanyCreateInput = {
   appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateInput = {
@@ -497,7 +493,6 @@ export type CompanyUncheckedCreateInput = {
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUpdateInput = {
@@ -528,7 +523,6 @@ export type CompanyUpdateInput = {
   appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateInput = {
@@ -559,7 +553,6 @@ export type CompanyUncheckedUpdateInput = {
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUncheckedUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateManyInput = {
@@ -751,20 +744,6 @@ export type CompanyUpdateOneRequiredWithoutServicesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutServicesInput, Prisma.CompanyUpdateWithoutServicesInput>, Prisma.CompanyUncheckedUpdateWithoutServicesInput>
 }
 
-export type CompanyCreateNestedOneWithoutPaymentsInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutPaymentsInput, Prisma.CompanyUncheckedCreateWithoutPaymentsInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutPaymentsInput
-  connect?: Prisma.CompanyWhereUniqueInput
-}
-
-export type CompanyUpdateOneRequiredWithoutPaymentsNestedInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutPaymentsInput, Prisma.CompanyUncheckedCreateWithoutPaymentsInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutPaymentsInput
-  upsert?: Prisma.CompanyUpsertWithoutPaymentsInput
-  connect?: Prisma.CompanyWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutPaymentsInput, Prisma.CompanyUpdateWithoutPaymentsInput>, Prisma.CompanyUncheckedUpdateWithoutPaymentsInput>
-}
-
 export type CompanyCreateNestedOneWithoutProvidersInput = {
   create?: Prisma.XOR<Prisma.CompanyCreateWithoutProvidersInput, Prisma.CompanyUncheckedCreateWithoutProvidersInput>
   connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutProvidersInput
@@ -848,7 +827,6 @@ export type CompanyCreateWithoutContactsInput = {
   appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutContactsInput = {
@@ -878,7 +856,6 @@ export type CompanyUncheckedCreateWithoutContactsInput = {
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutContactsInput = {
@@ -924,7 +901,6 @@ export type CompanyUpdateWithoutContactsInput = {
   appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutContactsInput = {
@@ -954,7 +930,6 @@ export type CompanyUncheckedUpdateWithoutContactsInput = {
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUncheckedUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutServicesInput = {
@@ -984,7 +959,6 @@ export type CompanyCreateWithoutServicesInput = {
   appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutServicesInput = {
@@ -1014,7 +988,6 @@ export type CompanyUncheckedCreateWithoutServicesInput = {
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutServicesInput = {
@@ -1060,7 +1033,6 @@ export type CompanyUpdateWithoutServicesInput = {
   appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutServicesInput = {
@@ -1086,143 +1058,6 @@ export type CompanyUncheckedUpdateWithoutServicesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUncheckedUpdateManyWithoutCompanyNestedInput
-  providers?: Prisma.ProviderUncheckedUpdateManyWithoutCompanyNestedInput
-  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
-  oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
-  cmsPages?: Prisma.CmsPageUncheckedUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
-}
-
-export type CompanyCreateWithoutPaymentsInput = {
-  id?: string
-  name: string
-  domain: string
-  companyBrief?: string | null
-  apiKey: string
-  ehr?: $Enums.EhrType | null
-  address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contacts?: Prisma.ContactCreateNestedManyWithoutCompanyInput
-  services?: Prisma.ServiceCreateNestedManyWithoutCompanyInput
-  providers?: Prisma.ProviderCreateNestedManyWithoutCompanyInput
-  appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
-  oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
-  cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
-}
-
-export type CompanyUncheckedCreateWithoutPaymentsInput = {
-  id?: string
-  name: string
-  domain: string
-  companyBrief?: string | null
-  apiKey: string
-  ehr?: $Enums.EhrType | null
-  address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutCompanyInput
-  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCompanyInput
-  providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutCompanyInput
-  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
-  oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
-  cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
-}
-
-export type CompanyCreateOrConnectWithoutPaymentsInput = {
-  where: Prisma.CompanyWhereUniqueInput
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutPaymentsInput, Prisma.CompanyUncheckedCreateWithoutPaymentsInput>
-}
-
-export type CompanyUpsertWithoutPaymentsInput = {
-  update: Prisma.XOR<Prisma.CompanyUpdateWithoutPaymentsInput, Prisma.CompanyUncheckedUpdateWithoutPaymentsInput>
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutPaymentsInput, Prisma.CompanyUncheckedCreateWithoutPaymentsInput>
-  where?: Prisma.CompanyWhereInput
-}
-
-export type CompanyUpdateToOneWithWhereWithoutPaymentsInput = {
-  where?: Prisma.CompanyWhereInput
-  data: Prisma.XOR<Prisma.CompanyUpdateWithoutPaymentsInput, Prisma.CompanyUncheckedUpdateWithoutPaymentsInput>
-}
-
-export type CompanyUpdateWithoutPaymentsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
-  ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contacts?: Prisma.ContactUpdateManyWithoutCompanyNestedInput
-  services?: Prisma.ServiceUpdateManyWithoutCompanyNestedInput
-  providers?: Prisma.ProviderUpdateManyWithoutCompanyNestedInput
-  appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
-  oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
-  cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
-}
-
-export type CompanyUncheckedUpdateWithoutPaymentsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
-  ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contacts?: Prisma.ContactUncheckedUpdateManyWithoutCompanyNestedInput
-  services?: Prisma.ServiceUncheckedUpdateManyWithoutCompanyNestedInput
   providers?: Prisma.ProviderUncheckedUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
@@ -1256,7 +1091,6 @@ export type CompanyCreateWithoutProvidersInput = {
   appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutProvidersInput = {
@@ -1286,7 +1120,6 @@ export type CompanyUncheckedCreateWithoutProvidersInput = {
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutProvidersInput = {
@@ -1332,7 +1165,6 @@ export type CompanyUpdateWithoutProvidersInput = {
   appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutProvidersInput = {
@@ -1362,7 +1194,6 @@ export type CompanyUncheckedUpdateWithoutProvidersInput = {
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUncheckedUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutAppointmentsInput = {
@@ -1392,7 +1223,6 @@ export type CompanyCreateWithoutAppointmentsInput = {
   providers?: Prisma.ProviderCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutAppointmentsInput = {
@@ -1422,7 +1252,6 @@ export type CompanyUncheckedCreateWithoutAppointmentsInput = {
   providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutAppointmentsInput = {
@@ -1468,7 +1297,6 @@ export type CompanyUpdateWithoutAppointmentsInput = {
   providers?: Prisma.ProviderUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutAppointmentsInput = {
@@ -1498,7 +1326,6 @@ export type CompanyUncheckedUpdateWithoutAppointmentsInput = {
   providers?: Prisma.ProviderUncheckedUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUncheckedUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutOauthStatesInput = {
@@ -1528,7 +1355,6 @@ export type CompanyCreateWithoutOauthStatesInput = {
   providers?: Prisma.ProviderCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutOauthStatesInput = {
@@ -1558,7 +1384,6 @@ export type CompanyUncheckedCreateWithoutOauthStatesInput = {
   providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
   cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutOauthStatesInput = {
@@ -1604,7 +1429,6 @@ export type CompanyUpdateWithoutOauthStatesInput = {
   providers?: Prisma.ProviderUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutOauthStatesInput = {
@@ -1634,7 +1458,6 @@ export type CompanyUncheckedUpdateWithoutOauthStatesInput = {
   providers?: Prisma.ProviderUncheckedUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
   cmsPages?: Prisma.CmsPageUncheckedUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutCmsPagesInput = {
@@ -1664,7 +1487,6 @@ export type CompanyCreateWithoutCmsPagesInput = {
   providers?: Prisma.ProviderCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutCmsPagesInput = {
@@ -1694,7 +1516,6 @@ export type CompanyUncheckedCreateWithoutCmsPagesInput = {
   providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
   oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutCmsPagesInput = {
@@ -1740,7 +1561,6 @@ export type CompanyUpdateWithoutCmsPagesInput = {
   providers?: Prisma.ProviderUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutCmsPagesInput = {
@@ -1770,7 +1590,6 @@ export type CompanyUncheckedUpdateWithoutCmsPagesInput = {
   providers?: Prisma.ProviderUncheckedUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
   oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 
@@ -1785,7 +1604,6 @@ export type CompanyCountOutputType = {
   appointments: number
   oauthStates: number
   cmsPages: number
-  payments: number
 }
 
 export type CompanyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1795,7 +1613,6 @@ export type CompanyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   appointments?: boolean | CompanyCountOutputTypeCountAppointmentsArgs
   oauthStates?: boolean | CompanyCountOutputTypeCountOauthStatesArgs
   cmsPages?: boolean | CompanyCountOutputTypeCountCmsPagesArgs
-  payments?: boolean | CompanyCountOutputTypeCountPaymentsArgs
 }
 
 /**
@@ -1850,13 +1667,6 @@ export type CompanyCountOutputTypeCountCmsPagesArgs<ExtArgs extends runtime.Type
   where?: Prisma.CmsPageWhereInput
 }
 
-/**
- * CompanyCountOutputType without action
- */
-export type CompanyCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PaymentsWhereInput
-}
-
 
 export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1886,7 +1696,6 @@ export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   appointments?: boolean | Prisma.Company$appointmentsArgs<ExtArgs>
   oauthStates?: boolean | Prisma.Company$oauthStatesArgs<ExtArgs>
   cmsPages?: boolean | Prisma.Company$cmsPagesArgs<ExtArgs>
-  payments?: boolean | Prisma.Company$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.CompanyCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["company"]>
 
@@ -1970,7 +1779,6 @@ export type CompanyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   appointments?: boolean | Prisma.Company$appointmentsArgs<ExtArgs>
   oauthStates?: boolean | Prisma.Company$oauthStatesArgs<ExtArgs>
   cmsPages?: boolean | Prisma.Company$cmsPagesArgs<ExtArgs>
-  payments?: boolean | Prisma.Company$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.CompanyCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CompanyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1985,7 +1793,6 @@ export type $CompanyPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     appointments: Prisma.$AppointmentPayload<ExtArgs>[]
     oauthStates: Prisma.$OAuthStatePayload<ExtArgs>[]
     cmsPages: Prisma.$CmsPagePayload<ExtArgs>[]
-    payments: Prisma.$PaymentsPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2409,7 +2216,6 @@ export interface Prisma__CompanyClient<T, Null = never, ExtArgs extends runtime.
   appointments<T extends Prisma.Company$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   oauthStates<T extends Prisma.Company$oauthStatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$oauthStatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OAuthStatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cmsPages<T extends Prisma.Company$cmsPagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$cmsPagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CmsPagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  payments<T extends Prisma.Company$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2989,30 +2795,6 @@ export type Company$cmsPagesArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.CmsPageScalarFieldEnum | Prisma.CmsPageScalarFieldEnum[]
-}
-
-/**
- * Company.payments
- */
-export type Company$paymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Payments
-   */
-  select?: Prisma.PaymentsSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Payments
-   */
-  omit?: Prisma.PaymentsOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PaymentsInclude<ExtArgs> | null
-  where?: Prisma.PaymentsWhereInput
-  orderBy?: Prisma.PaymentsOrderByWithRelationInput | Prisma.PaymentsOrderByWithRelationInput[]
-  cursor?: Prisma.PaymentsWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.PaymentsScalarFieldEnum | Prisma.PaymentsScalarFieldEnum[]
 }
 
 /**

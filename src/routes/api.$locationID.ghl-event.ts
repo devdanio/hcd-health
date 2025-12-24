@@ -133,38 +133,86 @@ export const Route = createFileRoute('/api/$locationID/ghl-event')({
               },
             })
           } else {
-            // Contact doesn't exist - create it
-            console.log('[API] Creating new contact:', ghlContactId)
-            contact = await prisma.contact.create({
-              data: {
-                email,
-                phone,
-                firstName,
-                lastName,
-                firstSeenAt: body.date_created,
-                company: {
-                  connect: {
-                    id: company.id,
+            // Try to find existing contact by phone/email
+            const whereConditions = []
+            if (phone) whereConditions.push({ phone })
+            if (email) whereConditions.push({ email })
+
+            if (whereConditions.length > 0) {
+              contact = await prisma.contact.findFirst({
+                where: {
+                  companyId: company.id,
+                  OR: whereConditions,
+                },
+              })
+            }
+
+            if (contact) {
+              // Contact exists - update and add GHL external ID
+              console.log(
+                '[API] Found existing contact by phone/email, adding GHL ID:',
+                ghlContactId,
+              )
+
+              // Purposely leaving out firstName and lastName here.  Assuming theyre coming from Jasmine and are more accurate.
+              contact = await prisma.contact.update({
+                where: { id: contact.id },
+                data: {
+                  email,
+                  phone,
+                  firstSeenAt: body.date_created,
+                  externalIds: {
+                    create: {
+                      externalId: ghlContactId,
+                      source: ExternalIdSource.GHL,
+                    },
+                  },
+                  events: {
+                    create: {
+                      eventSource: EventSource.GHL,
+                      type: eventType,
+                      data: body,
+                    },
                   },
                 },
-                externalIds: {
-                  create: {
-                    externalId: ghlContactId,
-                    source: ExternalIdSource.GHL,
+                include: {
+                  events: true,
+                },
+              })
+            } else {
+              // Contact truly doesn't exist - create it
+              console.log('[API] Creating new contact:', ghlContactId)
+              contact = await prisma.contact.create({
+                data: {
+                  email,
+                  phone,
+                  firstName,
+                  lastName,
+                  firstSeenAt: body.date_created,
+                  company: {
+                    connect: {
+                      id: company.id,
+                    },
+                  },
+                  externalIds: {
+                    create: {
+                      externalId: ghlContactId,
+                      source: ExternalIdSource.GHL,
+                    },
+                  },
+                  events: {
+                    create: {
+                      eventSource: EventSource.GHL,
+                      type: eventType,
+                      data: body,
+                    },
                   },
                 },
-                events: {
-                  create: {
-                    eventSource: EventSource.GHL,
-                    type: eventType,
-                    data: body,
-                  },
+                include: {
+                  events: true,
                 },
-              },
-              include: {
-                events: true,
-              },
-            })
+              })
+            }
           }
 
           return new Response(
