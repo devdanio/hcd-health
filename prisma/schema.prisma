@@ -66,7 +66,6 @@ model Company {
   appointments Appointment[]
   oauthStates  OAuthState[]
   cmsPages     CmsPage[]
-  payments Payments[]
   @@index([apiKey])
 }
 
@@ -226,18 +225,13 @@ enum PaymentStatus {
 }
 model Payments{
   id String @id @default(cuid())
-  externalId String @unique
-  companyId String
-  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  amount_in_cents Int
+  acmountInCents Int
   posted_date DateTime
   status PaymentStatus
   contactId String
   contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  @@index([companyId])
-  @@index([externalId])
 }
 
 

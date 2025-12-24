@@ -57,10 +57,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     </div>
   ),
   beforeLoad: async () => {
-    const startTime = performance.now()
     const { userId } = await fetchClerkAuth()
-    const endTime = performance.now()
-    console.log(`fetchClerkAuth took ${endTime - startTime} ms`)
 
     return {
       userId,
@@ -117,7 +114,6 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 })
 
 function RootComponent() {
-  const startTime = performance.now()
   const root = (
     <ClerkProvider>
       <RootDocument>
@@ -125,18 +121,15 @@ function RootComponent() {
       </RootDocument>
     </ClerkProvider>
   )
-  const endTime = performance.now()
-  console.log(`RootComponent took ${endTime - startTime} ms`)
+
   return root
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   // Create collections once
 
-  const startTime = performance.now()
   const collections = useMemo(() => createCollections(queryClient), [])
-  const endTime = performance.now()
-  console.log(`createCollections took ${endTime - startTime} ms`)
+
   return (
     <html lang="en" className="light">
       <head>
