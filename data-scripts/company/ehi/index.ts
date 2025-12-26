@@ -8,9 +8,9 @@ import { prisma } from '@/server/db/client'
 import { ExternalIdSource, PaymentStatus } from '@/generated/prisma/enums'
 
 // EHI company ID
-// const companyId = 'cmjblu3mh000004kv8seh2wfr'
+const companyId = 'cmjblu3mh000004kv8seh2wfr'
 // Localhost
-const companyId = 'cmjjfxrk900000bap12gn7d4n'
+// const companyId = 'cmjjfxrk900000bap12gn7d4n'
 
 interface CsvRow {
   'Payment: Payment Name': string

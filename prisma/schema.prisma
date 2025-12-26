@@ -198,6 +198,7 @@ enum EventType {
   CALL_RECEIVED
   CHAT
   FB_FORM_SUBMISSION
+  SCHEDULED_CALL
   // Used for data imports where we have attribution data but no events
   UNKNOWN
 }

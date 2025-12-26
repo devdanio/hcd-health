@@ -56,3 +56,14 @@ These are all the ways that a contact can reach out. Once we have that and the a
 - Chat message received
 - FB form
 - Chat form
+
+---
+
+1. HCH does not currently focus on attribution and leaves it all to GHL for first and last touch
+2. GHL will send Events:
+   PAGE_VIEW
+   CONTACT_CREATED
+   CALL_RECEIVED
+   CHAT
+   FB_FORM_SUBMISSION
+3. We will match the EHR and GHL events using GHL attribution to determine the source.
