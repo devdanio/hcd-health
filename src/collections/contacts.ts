@@ -96,14 +96,18 @@ export const upsertContactByChirotouchAccountIdSchema = z.object({
 export const getContacts = createServerFn({ method: 'GET' })
   .inputValidator(getContactsSchema)
   .handler(async ({ data }) => {
-    const limit = data.limit ?? 10000
-    const sortBy = data.sortBy ?? 'createdAt'
+    const limit = data.limit ?? 100000
+    const sortBy = data.sortBy ?? 'firstSeenAt'
     const sortOrder = data.sortOrder ?? 'desc'
 
     const contacts = await prisma.contact.findMany({
       where: { companyId: data.companyId },
       orderBy: { [sortBy]: sortOrder },
       take: limit,
+      include: {
+        externalIds: true,
+        appointments: true,
+      },
     })
 
     return contacts
@@ -391,7 +395,8 @@ export const getPatientServiceJourney = createServerFn({ method: 'GET' })
 
       // Use the earliest charge date from procedures, or appointment date
       const chargeDate =
-        appointment.procedures.length > 0 && appointment.procedures[0].chargeDate
+        appointment.procedures.length > 0 &&
+        appointment.procedures[0].chargeDate
           ? appointment.procedures[0].chargeDate
           : appointment.dateOfService
 
@@ -440,7 +445,10 @@ export const getPatientServiceJourney = createServerFn({ method: 'GET' })
       // Count at each position
       for (let i = 0; i < serviceSequence.length; i++) {
         const positionKey = `${i}-${serviceSequence[i]}`
-        positionCounts.set(positionKey, (positionCounts.get(positionKey) || 0) + 1)
+        positionCounts.set(
+          positionKey,
+          (positionCounts.get(positionKey) || 0) + 1,
+        )
       }
 
       // Count transitions between positions
@@ -449,7 +457,10 @@ export const getPatientServiceJourney = createServerFn({ method: 'GET' })
         const target = `${i + 1}-${serviceSequence[i + 1]}`
         const transitionKey = `${source}|${target}`
 
-        transitions.set(transitionKey, (transitions.get(transitionKey) || 0) + 1)
+        transitions.set(
+          transitionKey,
+          (transitions.get(transitionKey) || 0) + 1,
+        )
       }
     }
 

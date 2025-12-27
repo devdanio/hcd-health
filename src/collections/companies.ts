@@ -20,7 +20,7 @@ export const createCompanySchema = z.object({
   name: z.string().min(1, 'Name is required'),
   domain: z.string().min(1, 'Domain is required'),
   companyBrief: z.string().optional(),
-  ehr: z.enum(['unified_practice', 'ghl']).optional(),
+  ehr: z.enum(['UNIFIED_PRACTICE', 'JASMINE', 'CHIROTOUCH']).optional(),
 })
 
 export const updateCompanySchema = z.object({
@@ -28,7 +28,10 @@ export const updateCompanySchema = z.object({
   name: z.string().min(1).optional(),
   domain: z.string().optional(),
   companyBrief: z.string().optional().nullable(),
-  ehr: z.enum(['unified_practice', 'ghl']).optional().nullable(),
+  ehr: z
+    .enum(['UNIFIED_PRACTICE', 'JASMINE', 'CHIROTOUCH'])
+    .optional()
+    .nullable(),
 })
 
 export const deleteCompanySchema = z.object({

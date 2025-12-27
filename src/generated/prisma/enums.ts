@@ -10,9 +10,9 @@
 */
 
 export const EhrType = {
-  unified_practice: 'unified_practice',
-  chirotouch: 'chirotouch',
-  ghl: 'ghl'
+  UNIFIED_PRACTICE: 'UNIFIED_PRACTICE',
+  JASMINE: 'JASMINE',
+  CHIROTOUCH: 'CHIROTOUCH'
 } as const
 
 export type EhrType = (typeof EhrType)[keyof typeof EhrType]
@@ -43,6 +43,7 @@ export const EventType = {
   CALL_RECEIVED: 'CALL_RECEIVED',
   CHAT: 'CHAT',
   FB_FORM_SUBMISSION: 'FB_FORM_SUBMISSION',
+  SCHEDULED_CALL: 'SCHEDULED_CALL',
   UNKNOWN: 'UNKNOWN'
 } as const
 

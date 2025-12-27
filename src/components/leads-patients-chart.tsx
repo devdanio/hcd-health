@@ -1,7 +1,10 @@
-"use client"
+'use client'
 
-import * as React from "react"
-import { Bar, ComposedChart, CartesianGrid, XAxis, YAxis, Line } from "recharts"
+import * as React from 'react'
+import { Bar, ComposedChart, CartesianGrid, XAxis, YAxis } from 'recharts'
+import { useLiveQuery, eq } from '@tanstack/react-db'
+import { useCollections } from '@/routes/__root'
+import dayjs from 'dayjs'
 
 import {
   Card,
@@ -9,102 +12,148 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from '@/components/ui/card'
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
+} from '@/components/ui/chart'
+import { ExternalIdSource } from '@/generated/prisma/enums'
+import type { TimeRange } from '@/components/timeframe-select'
+
+// Helper function to get date range info from TimeRange
+function getTimeRangeInfo(timeRange: TimeRange): {
+  startDate: dayjs.Dayjs
+  days: number
+  label: string
+} {
+  const now = dayjs()
+  switch (timeRange) {
+    case '24h':
+      return {
+        startDate: now.subtract(24, 'hour'),
+        days: 1,
+        label: 'Last 24 Hours',
+      }
+    case '7d':
+      return { startDate: now.subtract(7, 'day'), days: 7, label: 'Last 7 Days' }
+    case '14d':
+      return {
+        startDate: now.subtract(14, 'day'),
+        days: 14,
+        label: 'Last 14 Days',
+      }
+    case '30d':
+      return {
+        startDate: now.subtract(30, 'day'),
+        days: 30,
+        label: 'Last 30 Days',
+      }
+    case '90d':
+      return {
+        startDate: now.subtract(90, 'day'),
+        days: 90,
+        label: 'Last 90 Days',
+      }
+    case '1y':
+      return {
+        startDate: now.subtract(1, 'year'),
+        days: 365,
+        label: 'Last Year',
+      }
+  }
+}
 
 const chartConfig = {
-  leads: {
-    label: "Leads",
-    color: "#3b82f6", // Blue
-  },
   patients: {
-    label: "Patients",
-    color: "#10b981", // Emerald green
-  },
-  revenue: {
-    label: "Revenue",
-    color: "#f59e0b", // Amber
+    label: 'Patients',
+    color: '#10b981', // Emerald green
   },
 } satisfies ChartConfig
 
-// Generate fake data for the past 30 days with upward trend
-function generateFakeData() {
-  const data = []
-  const today = new Date()
-  
-  // Starting values (day 0)
-  const baseLeads = 8
-  const basePatients = 3
-  const baseRevenue = 200
-  
-  // Trend multipliers (how much to increase by day 29)
-  const leadsTrend = 1.6 // 60% increase over 30 days
-  const patientsTrend = 1.5 // 50% increase over 30 days
-  const revenueTrend = 1.8 // 80% increase over 30 days
-  
-  for (let i = 29; i >= 0; i--) {
-    const date = new Date(today)
-    date.setDate(date.getDate() - i)
-    
-    // Calculate progress (0 to 1) from first day to last day
-    const progress = (29 - i) / 29
-    
-    // Calculate trend value (linear interpolation with some smoothing)
-    const trendFactor = progress
-    
-    // Generate base values with trend
-    const trendLeads = baseLeads + (baseLeads * leadsTrend - baseLeads) * trendFactor
-    const trendPatients = basePatients + (basePatients * patientsTrend - basePatients) * trendFactor
-    const trendRevenue = baseRevenue + (baseRevenue * revenueTrend - baseRevenue) * trendFactor
-    
-    // Add random variation (20-30% of base value) to make it not a straight line
-    const leadsVariation = (Math.random() - 0.5) * (trendLeads * 0.25)
-    const patientsVariation = (Math.random() - 0.5) * (trendPatients * 0.3)
-    const revenueVariation = (Math.random() - 0.5) * (trendRevenue * 0.2)
-    
-    // Calculate final values
-    const leads = Math.max(3, Math.floor(trendLeads + leadsVariation))
-    const patients = Math.max(1, Math.floor(trendPatients + patientsVariation))
-    const revenue = Math.max(100, Math.floor(trendRevenue + revenueVariation + (patients * 30)))
-    
-    data.push({
-      date: date.toISOString().split('T')[0],
-      leads,
-      patients,
-      revenue,
-    })
+// Check if contact is a patient based on externalIds
+function isPatient(
+  externalIds: Array<{ source: ExternalIdSource }>,
+): boolean {
+  if (!externalIds || externalIds.length === 0) {
+    return false
   }
-  
-  return data
+
+  const sources = externalIds.map((id) => id.source)
+
+  // Check if it's a patient (has CHIROTOUCH, JASMINE, or UNIFIED_PRACTICE)
+  return (
+    sources.includes(ExternalIdSource.CHIROTOUCH) ||
+    sources.includes(ExternalIdSource.JASMINE) ||
+    sources.includes(ExternalIdSource.UNIFIED_PRACTICE)
+  )
 }
 
-export function LeadsPatientsChart() {
-  const [data] = React.useState(() => generateFakeData())
+interface PatientsChartProps {
+  companyId: string
+  timeRange: TimeRange
+}
 
-  const totalLeads = React.useMemo(() => {
-    return data.reduce((acc, curr) => acc + curr.leads, 0)
-  }, [data])
+export function LeadsPatientsChart({
+  companyId,
+  timeRange,
+}: PatientsChartProps) {
+  const { contactsCollection } = useCollections()
+
+  const { data: contacts } = useLiveQuery((q) =>
+    q
+      .from({ contact: contactsCollection })
+      .where(({ contact }) => eq(contact.companyId, companyId)),
+  )
+
+  const data = React.useMemo(() => {
+    if (!contacts) return []
+
+    const { startDate, days } = getTimeRangeInfo(timeRange)
+
+    // Filter patients from the selected time range based on firstSeenAt
+    const recentPatients = contacts
+      .filter((contact) => dayjs(contact.firstSeenAt).isAfter(startDate))
+      .filter((contact) => isPatient(contact.externalIds || []))
+      .map((contact) => ({
+        date: dayjs(contact.firstSeenAt).format('YYYY-MM-DD'),
+      }))
+
+    // Group by date
+    const groupedByDate = new Map<string, number>()
+
+    // Initialize all dates in the selected time range
+    for (let i = days - 1; i >= 0; i--) {
+      const dateStr = dayjs().subtract(i, 'day').format('YYYY-MM-DD')
+      groupedByDate.set(dateStr, 0)
+    }
+
+    // Count patients by date
+    for (const patient of recentPatients) {
+      const existing = groupedByDate.get(patient.date)
+      if (existing !== undefined) {
+        groupedByDate.set(patient.date, existing + 1)
+      }
+    }
+
+    return Array.from(groupedByDate.entries()).map(([date, patients]) => ({
+      date,
+      patients,
+    }))
+  }, [contacts, timeRange])
 
   const totalPatients = React.useMemo(() => {
     return data.reduce((acc, curr) => acc + curr.patients, 0)
   }, [data])
 
-  const totalRevenue = React.useMemo(() => {
-    return data.reduce((acc, curr) => acc + curr.revenue, 0)
-  }, [data])
+  const { label } = getTimeRangeInfo(timeRange)
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Leads & Patients (Last 30 Days)</CardTitle>
-        <CardDescription>
-          Total Leads: {totalLeads} • Total Patients: {totalPatients} • Total Revenue: ${totalRevenue.toLocaleString()}
-        </CardDescription>
+        <CardTitle>Patients ({label})</CardTitle>
+        <CardDescription>Total Patients: {totalPatients}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="h-[300px] w-full">
@@ -126,63 +175,24 @@ export function LeadsPatientsChart() {
               tickMargin={8}
               minTickGap={32}
               tickFormatter={(value) => {
-                const date = new Date(value)
-                return date.toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                })
+                return dayjs(value).format('MMM D')
               }}
             />
-            <YAxis
-              yAxisId="left"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-            />
-            <YAxis
-              yAxisId="right"
-              orientation="right"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              tickFormatter={(value) => `$${value}`}
-            />
+            <YAxis tickLine={false} axisLine={false} tickMargin={8} />
             <ChartTooltip
               cursor={false}
               content={
                 <ChartTooltipContent
                   labelFormatter={(value) => {
-                    const date = new Date(value)
-                    return date.toLocaleDateString("en-US", {
-                      month: "long",
-                      day: "numeric",
-                      year: "numeric",
-                    })
+                    return dayjs(value).format('MMMM D, YYYY')
                   }}
                 />
               }
             />
             <Bar
-              yAxisId="left"
-              dataKey="leads"
-              fill="var(--color-leads)"
-              stackId="a"
-              radius={[0, 0, 0, 0]}
-            />
-            <Bar
-              yAxisId="left"
               dataKey="patients"
               fill="var(--color-patients)"
-              stackId="a"
               radius={[4, 4, 0, 0]}
-            />
-            <Line
-              yAxisId="right"
-              type="monotone"
-              dataKey="revenue"
-              stroke="var(--color-revenue)"
-              strokeWidth={2}
-              dot={false}
             />
           </ComposedChart>
         </ChartContainer>
@@ -190,4 +200,3 @@ export function LeadsPatientsChart() {
     </Card>
   )
 }
-

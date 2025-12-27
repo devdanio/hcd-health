@@ -13,6 +13,7 @@ export * from './appointments'
 export * from './services'
 export * from './providers'
 export * from './google-ads'
+export * from './financials'
 
 // ============================================================================
 // Import collection factory functions
@@ -27,6 +28,7 @@ import { createAppointmentsCollection } from './appointments'
 import { createServicesCollection } from './services'
 import { createProvidersCollection } from './providers'
 import { createCityStateLatLngCollection } from './city-state-lat-lng'
+import { createFinancialsCollection } from './financials'
 
 // ============================================================================
 // Collection factory function
@@ -43,6 +45,7 @@ export function createCollections(queryClient: QueryClient) {
     servicesCollection: createServicesCollection(queryClient),
     providersCollection: createProvidersCollection(queryClient),
     cityStateLatLngCollection: createCityStateLatLngCollection(queryClient),
+    financialsCollection: createFinancialsCollection(queryClient),
   }
 }
 

@@ -207,6 +207,7 @@ export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeo
 
 export const PaymentsScalarFieldEnum = {
   id: 'id',
+  companyId: 'companyId',
   externalId: 'externalId',
   amountInCents: 'amountInCents',
   posted_date: 'posted_date',

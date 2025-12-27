@@ -66,13 +66,14 @@ model Company {
   appointments Appointment[]
   oauthStates  OAuthState[]
   cmsPages     CmsPage[]
+  payments     Payments[]
   @@index([apiKey])
 }
 
 enum EhrType {
-  unified_practice
-  chirotouch
-  ghl
+  UNIFIED_PRACTICE
+  JASMINE
+  CHIROTOUCH
 }
 
 // Deprecated - use Event instead
@@ -226,6 +227,8 @@ enum PaymentStatus {
 }
 model Payments{
   id String @id @default(cuid())
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
   externalId String @unique
   amountInCents Int
   posted_date DateTime
@@ -234,7 +237,8 @@ model Payments{
   contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
+  @@index([companyId])
 
   @@index([contactId])
 }

@@ -93,8 +93,9 @@ export function CompanySettings({ companyId }: CompanySettingsProps) {
               <SelectValue placeholder="None - Select EHR system" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="unified_practice">Unified Practice</SelectItem>
-              <SelectItem value="ghl">GoHighLevel</SelectItem>
+              <SelectItem value="UNIFIED_PRACTICE">Unified Practice</SelectItem>
+              <SelectItem value="JASMINE">Jasmine</SelectItem>
+              <SelectItem value="CHIROTOUCH">ChiroTouch</SelectItem>
             </SelectContent>
           </Select>
           {ehr && (

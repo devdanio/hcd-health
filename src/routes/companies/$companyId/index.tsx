@@ -35,20 +35,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { useState, useMemo } from 'react'
+import { TimeframeSelect, type TimeRange } from '@/components/timeframe-select'
+import dayjs from 'dayjs'
 import {
   getCompany,
   getSessions,
   getSessionPageViews,
   getLast24HoursVisitors,
   getTopPages,
+  getRevenueByDateRange,
 } from '@/collections'
 import { ChartAreaInteractive } from '@/components/chart-area-interactive'
 import { ChartCategories } from '@/components/chart-categories'
@@ -63,10 +59,30 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { useCollections } from '@/routes/__root'
+import { useLiveQuery, eq } from '@tanstack/react-db'
 
 const searchParamsSchema = z.object({
-  timeRange: z.enum(['24h', '7d', '30d', '90d']).optional().default('30d'),
+  timeRange: z.enum(['24h', '7d', '14d', '30d', '90d', '1y']).optional().default('30d'),
 })
+
+// Helper to get start date from TimeRange
+function getStartDateFromTimeRange(timeRange: TimeRange): Date {
+  switch (timeRange) {
+    case '24h':
+      return dayjs().subtract(24, 'hour').toDate()
+    case '7d':
+      return dayjs().subtract(7, 'day').toDate()
+    case '14d':
+      return dayjs().subtract(14, 'day').toDate()
+    case '30d':
+      return dayjs().subtract(30, 'day').toDate()
+    case '90d':
+      return dayjs().subtract(90, 'day').toDate()
+    case '1y':
+      return dayjs().subtract(1, 'year').toDate()
+  }
+}
 
 export const Route = createFileRoute('/companies/$companyId/')({
   validateSearch: searchParamsSchema,
@@ -393,11 +409,11 @@ function CompanyDetailsPage() {
     null,
   )
 
-  const handleTimeRangeChange = (value: string) => {
+  const handleTimeRangeChange = (value: TimeRange) => {
     navigate({
       search: (prev: z.infer<typeof searchParamsSchema>) => ({
         ...prev,
-        timeRange: value as '24h' | '7d' | '30d' | '90d',
+        timeRange: value,
       }),
     })
   }
@@ -406,6 +422,32 @@ function CompanyDetailsPage() {
     queryKey: ['company', companyId],
     queryFn: () => getCompany({ data: { companyId } }),
   })
+
+  const { contactsCollection } = useCollections()
+
+  const { data: contacts } = useLiveQuery((q) =>
+    q
+      .from({ contact: contactsCollection })
+      .where(({ contact }) => eq(contact.companyId, companyId)),
+  )
+
+  const { data: revenueData } = useQuery({
+    queryKey: ['revenue', companyId, timeRange],
+    queryFn: () =>
+      getRevenueByDateRange({
+        data: {
+          companyId,
+          startDate: getStartDateFromTimeRange(timeRange),
+          endDate: dayjs().toDate(),
+          groupBy: 'day',
+        },
+      }),
+  })
+
+  const totalRevenue = useMemo(() => {
+    if (!revenueData) return 0
+    return revenueData.reduce((acc, curr) => acc + curr.revenueDollars, 0)
+  }, [revenueData])
 
   // const { data: sessions } = useQuery({
   //   queryKey: ['sessions', companyId],
@@ -546,13 +588,18 @@ function CompanyDetailsPage() {
   return (
     <div className="container mx-auto p-8">
       {/* Header */}
-      <div className="mb-4">
+      <div className="mb-4 flex items-center justify-between">
         <Link
           to="/companies"
-          className="text-sm text-muted-foreground hover:underline mb-2 inline-block"
+          className="text-sm text-muted-foreground hover:underline"
         >
           ← Back to Companies
         </Link>
+        <TimeframeSelect
+          value={timeRange}
+          onValueChange={handleTimeRangeChange}
+          className="w-[180px]"
+        />
       </div>
 
       <div className="grid grid-cols-4 mb-4 gap-4">
@@ -569,9 +616,11 @@ function CompanyDetailsPage() {
           </CardContent>
         </Card>
         <Card>
-          <CardHeader>Time to lead</CardHeader>
+          <CardHeader>Total Revenue</CardHeader>
           <CardContent className="flex items-center justify-center">
-            <span className="text-2xl font-semibold">1hr 31min</span>
+            <span className="text-2xl font-semibold">
+              ${totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+            </span>
           </CardContent>
         </Card>
         <Card>
@@ -584,7 +633,7 @@ function CompanyDetailsPage() {
 
       <div className="grid grid-cols-4 gap-4">
         <div className="col-span-3">
-          <LeadsPatientsChart />
+          <LeadsPatientsChart companyId={companyId} timeRange={timeRange} />
         </div>
         <div className="col-span-1">
           <Card>
