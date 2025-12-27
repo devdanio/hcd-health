@@ -114,3 +114,8 @@ JOIN "Contact" c ON p."contactId" = c.id
 JOIN "Company" comp ON c."companyId" = comp.id
 WHERE comp.name = 'Eye Health Institute'
 AND p.status = 'posted';
+
+### Scheduled calls by source
+
+select count(\*), data->'contact'->'attributionSource'->'sessionSource'
+src from "Event" where "type" = 'SCHEDULED_CALL' group by src;

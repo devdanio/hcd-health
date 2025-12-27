@@ -407,40 +407,40 @@ function CompanyDetailsPage() {
     queryFn: () => getCompany({ data: { companyId } }),
   })
 
-  const { data: sessions } = useQuery({
-    queryKey: ['sessions', companyId],
-    queryFn: () => getSessions({ data: { companyId, limit: 500 } }),
-  })
+  // const { data: sessions } = useQuery({
+  //   queryKey: ['sessions', companyId],
+  //   queryFn: () => getSessions({ data: { companyId, limit: 500 } }),
+  // })
 
-  const { data: pageViews } = useQuery({
-    queryKey: ['pageViews', selectedSessionId],
-    queryFn: () =>
-      getSessionPageViews({ data: { sessionId: selectedSessionId! } }),
-    enabled: !!selectedSessionId,
-  })
+  // const { data: pageViews } = useQuery({
+  //   queryKey: ['pageViews', selectedSessionId],
+  //   queryFn: () =>
+  //     getSessionPageViews({ data: { sessionId: selectedSessionId! } }),
+  //   enabled: !!selectedSessionId,
+  // })
 
-  const { data: last24HoursVisitors } = useQuery({
-    queryKey: ['visitors24h', companyId],
-    queryFn: () => getLast24HoursVisitors({ data: { companyId } }),
-  })
+  // const { data: last24HoursVisitors } = useQuery({
+  //   queryKey: ['visitors24h', companyId],
+  //   queryFn: () => getLast24HoursVisitors({ data: { companyId } }),
+  // })
 
-  const { data: topPages } = useQuery({
-    queryKey: ['topPages', companyId, timeRange],
-    queryFn: () => getTopPages({ data: { companyId, timeRange } }),
-  })
+  // const { data: topPages } = useQuery({
+  //   queryKey: ['topPages', companyId, timeRange],
+  //   queryFn: () => getTopPages({ data: { companyId, timeRange } }),
+  // })
 
   // Sort sessions by last activity
-  const sortedSessions = useMemo(() => {
-    if (!sessions) return []
-    return [...sessions].sort((a, b) => {
-      return b.lastActivity - a.lastActivity
-    })
-  }, [sessions])
+  // const sortedSessions = useMemo(() => {
+  //   if (!sessions) return []
+  //   return [...sessions].sort((a, b) => {
+  //     return b.lastActivity - a.lastActivity
+  //   })
+  // }, [sessions])
 
   // Find the selected session to get its client sessionId for display
-  const selectedSession = selectedSessionId
-    ? sessions?.find((s) => s._id === selectedSessionId)
-    : null
+  // const selectedSession = selectedSessionId
+  //   ? sessions?.find((s) => s._id === selectedSessionId)
+  //   : null
 
   // Category badge styling
   const getCategoryBadge = (category: string) => {
@@ -526,7 +526,7 @@ function CompanyDetailsPage() {
     )
   }
 
-  if (company === undefined || sessions === undefined) {
+  if (company === undefined) {
     return <div className="container mx-auto p-8">Loading...</div>
   }
 
