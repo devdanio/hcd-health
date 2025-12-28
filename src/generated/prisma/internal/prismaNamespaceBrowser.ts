@@ -51,20 +51,18 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  CityLatLng: 'CityLatLng',
-  LeadCalculator: 'LeadCalculator',
-  Company: 'Company',
-  GHLEvent: 'GHLEvent',
-  Contact: 'Contact',
-  ExternalId: 'ExternalId',
-  Event: 'Event',
-  Service: 'Service',
-  Payments: 'Payments',
-  Provider: 'Provider',
-  Appointment: 'Appointment',
-  AppointmentProcedure: 'AppointmentProcedure',
-  OAuthState: 'OAuthState',
-  CmsPage: 'CmsPage'
+  city_lat_lng: 'city_lat_lng',
+  lead_calculator: 'lead_calculator',
+  company: 'company',
+  person: 'person',
+  profile: 'profile',
+  event: 'event',
+  service: 'service',
+  purchase: 'purchase',
+  provider: 'provider',
+  appointment: 'appointment',
+  appointment_procedure: 'appointment_procedure',
+  cms_page: 'cms_page'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -83,84 +81,60 @@ export const TransactionIsolationLevel = {
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const CityLatLngScalarFieldEnum = {
+export const City_lat_lngScalarFieldEnum = {
   city: 'city',
   state: 'state',
   latitude: 'latitude',
   longitude: 'longitude'
 } as const
 
-export type CityLatLngScalarFieldEnum = (typeof CityLatLngScalarFieldEnum)[keyof typeof CityLatLngScalarFieldEnum]
+export type City_lat_lngScalarFieldEnum = (typeof City_lat_lngScalarFieldEnum)[keyof typeof City_lat_lngScalarFieldEnum]
 
 
-export const LeadCalculatorScalarFieldEnum = {
+export const Lead_calculatorScalarFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
   revenue: 'revenue',
   patients: 'patients',
-  newPatients: 'newPatients',
-  avgVisits: 'avgVisits',
-  marketingCosts: 'marketingCosts',
-  directCareCosts: 'directCareCosts',
-  overheadCosts: 'overheadCosts',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  new_patients: 'new_patients',
+  avg_visits: 'avg_visits',
+  marketing_costs: 'marketing_costs',
+  direct_care_costs: 'direct_care_costs',
+  overhead_costs: 'overhead_costs',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
 } as const
 
-export type LeadCalculatorScalarFieldEnum = (typeof LeadCalculatorScalarFieldEnum)[keyof typeof LeadCalculatorScalarFieldEnum]
+export type Lead_calculatorScalarFieldEnum = (typeof Lead_calculatorScalarFieldEnum)[keyof typeof Lead_calculatorScalarFieldEnum]
 
 
 export const CompanyScalarFieldEnum = {
   id: 'id',
   name: 'name',
   domain: 'domain',
-  companyBrief: 'companyBrief',
-  apiKey: 'apiKey',
+  company_brief: 'company_brief',
   ehr: 'ehr',
   address: 'address',
-  googleAdsAccessToken: 'googleAdsAccessToken',
-  googleAdsRefreshToken: 'googleAdsRefreshToken',
-  googleAdsTokenExpiresAt: 'googleAdsTokenExpiresAt',
-  googleAdsCustomerId: 'googleAdsCustomerId',
-  googleAdsAccountName: 'googleAdsAccountName',
-  googleAdsCurrencyCode: 'googleAdsCurrencyCode',
-  googleAdsTimeZone: 'googleAdsTimeZone',
-  googleAdsConnectedAt: 'googleAdsConnectedAt',
-  googleAdsAccountSelectedAt: 'googleAdsAccountSelectedAt',
-  googleAdsLastSyncedAt: 'googleAdsLastSyncedAt',
-  googleAdsLastError: 'googleAdsLastError',
-  googleAdsLastErrorAt: 'googleAdsLastErrorAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  created_at: 'created_at',
+  updated_at: 'updated_at'
 } as const
 
 export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeof CompanyScalarFieldEnum]
 
 
-export const GHLEventScalarFieldEnum = {
+export const PersonScalarFieldEnum = {
   id: 'id',
-  companyId: 'companyId',
-  data: 'data',
-  createdAt: 'createdAt'
-} as const
-
-export type GHLEventScalarFieldEnum = (typeof GHLEventScalarFieldEnum)[keyof typeof GHLEventScalarFieldEnum]
-
-
-export const ContactScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  firstSeenAt: 'firstSeenAt',
-  companyId: 'companyId',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  company_id: 'company_id',
   email: 'email',
   phone: 'phone',
-  fullName: 'fullName',
-  firstName: 'firstName',
-  lastName: 'lastName',
+  full_name: 'full_name',
+  first_name: 'first_name',
+  last_name: 'last_name',
   gender: 'gender',
-  dateOfBirth: 'dateOfBirth',
+  date_of_birth: 'date_of_birth',
   address1: 'address1',
   address2: 'address2',
   zip: 'zip',
@@ -168,27 +142,32 @@ export const ContactScalarFieldEnum = {
   state: 'state'
 } as const
 
-export type ContactScalarFieldEnum = (typeof ContactScalarFieldEnum)[keyof typeof ContactScalarFieldEnum]
+export type PersonScalarFieldEnum = (typeof PersonScalarFieldEnum)[keyof typeof PersonScalarFieldEnum]
 
 
-export const ExternalIdScalarFieldEnum = {
-  contactId: 'contactId',
-  externalId: 'externalId',
+export const ProfileScalarFieldEnum = {
+  id: 'id',
+  person_id: 'person_id',
   source: 'source',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  external_id: 'external_id',
+  first_name: 'first_name',
+  last_name: 'last_name',
+  email: 'email',
+  phone: 'phone',
+  raw: 'raw',
+  created_at: 'created_at'
 } as const
 
-export type ExternalIdScalarFieldEnum = (typeof ExternalIdScalarFieldEnum)[keyof typeof ExternalIdScalarFieldEnum]
+export type ProfileScalarFieldEnum = (typeof ProfileScalarFieldEnum)[keyof typeof ProfileScalarFieldEnum]
 
 
 export const EventScalarFieldEnum = {
   id: 'id',
-  contactId: 'contactId',
-  eventSource: 'eventSource',
+  person_id: 'person_id',
+  source: 'source',
   type: 'type',
-  data: 'data',
-  createdAt: 'createdAt'
+  timestamp: 'timestamp',
+  metadata: 'metadata'
 } as const
 
 export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof EventScalarFieldEnum]
@@ -196,37 +175,36 @@ export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof Ev
 
 export const ServiceScalarFieldEnum = {
   id: 'id',
-  companyId: 'companyId',
+  company_id: 'company_id',
   name: 'name',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  created_at: 'created_at',
+  updated_at: 'updated_at'
 } as const
 
 export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
 
 
-export const PaymentsScalarFieldEnum = {
+export const PurchaseScalarFieldEnum = {
   id: 'id',
-  companyId: 'companyId',
-  externalId: 'externalId',
-  amountInCents: 'amountInCents',
-  posted_date: 'posted_date',
-  status: 'status',
-  contactId: 'contactId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  person_id: 'person_id',
+  source: 'source',
+  external_id: 'external_id',
+  amount_in_cents: 'amount_in_cents',
+  currency: 'currency',
+  purchased_at: 'purchased_at',
+  metadata: 'metadata'
 } as const
 
-export type PaymentsScalarFieldEnum = (typeof PaymentsScalarFieldEnum)[keyof typeof PaymentsScalarFieldEnum]
+export type PurchaseScalarFieldEnum = (typeof PurchaseScalarFieldEnum)[keyof typeof PurchaseScalarFieldEnum]
 
 
 export const ProviderScalarFieldEnum = {
   id: 'id',
-  companyId: 'companyId',
+  company_id: 'company_id',
   name: 'name',
-  serviceId: 'serviceId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  service_id: 'service_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
 } as const
 
 export type ProviderScalarFieldEnum = (typeof ProviderScalarFieldEnum)[keyof typeof ProviderScalarFieldEnum]
@@ -234,58 +212,47 @@ export type ProviderScalarFieldEnum = (typeof ProviderScalarFieldEnum)[keyof typ
 
 export const AppointmentScalarFieldEnum = {
   id: 'id',
-  companyId: 'companyId',
-  contactId: 'contactId',
-  dateOfService: 'dateOfService',
+  company_id: 'company_id',
+  person_id: 'person_id',
+  date_of_service: 'date_of_service',
   service: 'service',
-  serviceId: 'serviceId',
-  providerId: 'providerId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  service_id: 'service_id',
+  provider_id: 'provider_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
 } as const
 
 export type AppointmentScalarFieldEnum = (typeof AppointmentScalarFieldEnum)[keyof typeof AppointmentScalarFieldEnum]
 
 
-export const AppointmentProcedureScalarFieldEnum = {
+export const Appointment_procedureScalarFieldEnum = {
   id: 'id',
-  appointmentId: 'appointmentId',
-  procedureCode: 'procedureCode',
-  chargeAmount: 'chargeAmount',
-  caseType: 'caseType',
-  payerName: 'payerName',
-  chargeDate: 'chargeDate',
-  createdAt: 'createdAt'
+  appointment_id: 'appointment_id',
+  procedure_code: 'procedure_code',
+  charge_amount: 'charge_amount',
+  case_type: 'case_type',
+  payer_name: 'payer_name',
+  charge_date: 'charge_date',
+  created_at: 'created_at'
 } as const
 
-export type AppointmentProcedureScalarFieldEnum = (typeof AppointmentProcedureScalarFieldEnum)[keyof typeof AppointmentProcedureScalarFieldEnum]
+export type Appointment_procedureScalarFieldEnum = (typeof Appointment_procedureScalarFieldEnum)[keyof typeof Appointment_procedureScalarFieldEnum]
 
 
-export const OAuthStateScalarFieldEnum = {
+export const Cms_pageScalarFieldEnum = {
   id: 'id',
-  state: 'state',
-  companyId: 'companyId',
-  expiresAt: 'expiresAt',
-  createdAt: 'createdAt'
-} as const
-
-export type OAuthStateScalarFieldEnum = (typeof OAuthStateScalarFieldEnum)[keyof typeof OAuthStateScalarFieldEnum]
-
-
-export const CmsPageScalarFieldEnum = {
-  id: 'id',
-  companyId: 'companyId',
+  company_id: 'company_id',
   h1: 'h1',
-  pageTitle: 'pageTitle',
-  pageDescription: 'pageDescription',
-  jsonSchema: 'jsonSchema',
+  page_title: 'page_title',
+  page_description: 'page_description',
+  json_schema: 'json_schema',
   slug: 'slug',
-  markdownContent: 'markdownContent',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  markdown_content: 'markdown_content',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
 } as const
 
-export type CmsPageScalarFieldEnum = (typeof CmsPageScalarFieldEnum)[keyof typeof CmsPageScalarFieldEnum]
+export type Cms_pageScalarFieldEnum = (typeof Cms_pageScalarFieldEnum)[keyof typeof Cms_pageScalarFieldEnum]
 
 
 export const SortOrder = {

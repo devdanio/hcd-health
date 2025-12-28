@@ -37,7 +37,11 @@ function getTimeRangeInfo(timeRange: TimeRange): {
         label: 'Last 24 Hours',
       }
     case '7d':
-      return { startDate: now.subtract(7, 'day'), days: 7, label: 'Last 7 Days' }
+      return {
+        startDate: now.subtract(7, 'day'),
+        days: 7,
+        label: 'Last 7 Days',
+      }
     case '14d':
       return {
         startDate: now.subtract(14, 'day'),
@@ -73,9 +77,7 @@ const chartConfig = {
 } satisfies ChartConfig
 
 // Check if contact is a patient based on externalIds
-function isPatient(
-  externalIds: Array<{ source: ExternalIdSource }>,
-): boolean {
+function isPatient(externalIds: Array<{ source: ExternalIdSource }>): boolean {
   if (!externalIds || externalIds.length === 0) {
     return false
   }
@@ -106,6 +108,8 @@ export function LeadsPatientsChart({
       .from({ contact: contactsCollection })
       .where(({ contact }) => eq(contact.companyId, companyId)),
   )
+
+  console.log('contacts', contacts)
 
   const data = React.useMemo(() => {
     if (!contacts) return []

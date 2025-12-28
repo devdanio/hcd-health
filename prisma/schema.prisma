@@ -8,7 +8,7 @@ datasource db {
 }
 
 
-model CityLatLng{
+model city_lat_lng{
   city String
   state String
   latitude Float
@@ -17,57 +17,38 @@ model CityLatLng{
   @@unique([city, state])
 }
 
-model LeadCalculator {
+model lead_calculator {
   id                String   @id @default(cuid())
   name              String
   email             String
   revenue           Float
   patients          Int
-  newPatients       Int
-  avgVisits         Float
-  marketingCosts    Float
-  directCareCosts   Float
-  overheadCosts     Float
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  new_patients       Int
+  avg_visits         Float
+  marketing_costs    Float
+  direct_care_costs   Float
+  overhead_costs     Float
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
 }
 
 // Companies - Multi-tenant root
-model Company {
+model company {
   id           String   @id @default(cuid())
   name         String
   domain       String
-  companyBrief String?
-  apiKey       String   @unique
+  company_brief String?
   ehr          EhrType?
   address      String?
 
-  // Google Ads OAuth (encrypted tokens stored directly)
-  googleAdsAccessToken       String?
-  googleAdsRefreshToken      String?
-  googleAdsTokenExpiresAt    DateTime?
-  googleAdsCustomerId        String?
-  googleAdsAccountName       String?
-  googleAdsCurrencyCode      String?
-  googleAdsTimeZone          String?
-  googleAdsConnectedAt       DateTime?
-  googleAdsAccountSelectedAt DateTime?
-  googleAdsLastSyncedAt      DateTime?
-  googleAdsLastError         String?
-  googleAdsLastErrorAt       DateTime?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  contacts     Contact[]
-  // sessions     Session[]
-  services     Service[]
-  providers    Provider[]
-  appointments Appointment[]
-  oauthStates  OAuthState[]
-  cmsPages     CmsPage[]
-  payments     Payments[]
-  @@index([apiKey])
+  people     person[]
+  services     service[]
+  providers    provider[]
+  appointments appointment[]
+  cms_pages     cms_page[]
 }
 
 enum EhrType {
@@ -76,34 +57,23 @@ enum EhrType {
   CHIROTOUCH
 }
 
-// Deprecated - use Event instead
-model GHLEvent{
-  id String @id @default(cuid())
-  companyId String
-  data      Json
-  createdAt DateTime @default(now())
-}
-
-model Contact {
+model person {
   id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
-  // First time we ever saw this contact, usually maps to the EHR's createdAt if we're doing a backfill
-  firstSeenAt DateTime @default(now())
 
-  companyId String
-  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  company_id String
+  company   company @relation(fields: [company_id], references: [id], onDelete: Cascade)
 
   email     String?
   phone     String?
-  fullName  String?
-  firstName String?
-  lastName  String?
+  full_name  String?
+  first_name String?
+  last_name  String?
   gender    String?
-  dateOfBirth DateTime?
+  date_of_birth DateTime?
 
-  externalIds ExternalId[]
   address1 String?
   address2 String?
   zip String?
@@ -111,18 +81,38 @@ model Contact {
   state String?
 
 
-  payments Payments[]
-  appointments Appointment[]
-  // sessions Session[]
-  events Event[]
+  purchases purchase[]
+  appointments appointment[]
+  events event[]
+  profiles profile[]
+  @@index([company_id, email])
+  @@index([company_id, phone])
+  @@index([company_id])
+}
 
-  @@index([companyId, email])
-  @@index([companyId, phone])
-  @@index([companyId])
+model profile {
+  id          String   @id @default(cuid())
+  person_id    String
+  source      DataSource
+  external_id  String
+
+  // Raw source data (do NOT over-normalize)
+  first_name   String?
+  last_name    String?
+  email       String?
+  phone       String?
+
+  raw         Json     // full payload snapshot
+  created_at   DateTime @default(now())
+
+  person      person   @relation(fields: [person_id], references: [id])
+
+  @@unique([source, external_id])
 }
 
 
-enum ExternalIdSource {
+enum DataSource {
+  TRACKING
   POSTHOG
   GHL
   CHIROTOUCH
@@ -131,66 +121,18 @@ enum ExternalIdSource {
   JASMINE
 }
 
-model ExternalId {
-  contactId String
-  contact Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
-  externalId String @unique
-  source ExternalIdSource
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
-  @@index([contactId, externalId])
-  @@index([source, externalId])
-  @@index([source, contactId])
-}
 
+model event {
+  id          String   @id @default(cuid())
+  person_id    String?
+  source      DataSource
+  type        String
+  timestamp   DateTime
+  metadata    Json
 
-// Sessions - Browser sessions with attribution
-// model Session {
-//   id               String  @id @default(cuid())
-//   browserSessionId String  @unique
-//   contactId        String
-//   contact          Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  person      person? @relation(fields: [person_id], references: [id])
 
-//   userAgent        String?
-//   ipAddress        String?
-//   screenResolution String?
-//   timezone         String?
-
-//   // Attribution stored as JSON (UTM params + click IDs)
-//   firstSessionAttribution Json
-//   lastSessionAttribution  Json
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-
-//   events    Event[]
-//   company   Company? @relation(fields: [companyId], references: [id])
-//   companyId String?
-
-//   @@index([contactId])
-//   @@index([browserSessionId])
-// }
-
-enum EventSource {
-  GHL
-  // WEBSITE
-  // POSTHOG
-  // SHOPIFY
-}
-
-model Event {
-  id        String  @id @default(cuid())
-  contactId String
-  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
-
-  eventSource EventSource
-
-  type     EventType
-  data Json
-
-  createdAt DateTime @default(now())
-
-  @@index([contactId])
+  @@index([person_id, timestamp])
 }
 
 enum EventType {
@@ -205,149 +147,122 @@ enum EventType {
 }
 
 // Services
-model Service {
+model service {
   id        String  @id @default(cuid())
-  companyId String
-  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  company_id String
+  company   company @relation(fields: [company_id], references: [id], onDelete: Cascade)
   name      String
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
-  providers    Provider[]
-  appointments Appointment[]
+  providers    provider[]
+  appointments appointment[]
 
-  @@index([companyId])
+  @@index([company_id])
 }
 
-enum PaymentStatus {
-  pending
-  posted
-  failed
-}
-model Payments{
-  id String @id @default(cuid())
-  companyId String
-  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  externalId String @unique
-  amountInCents Int
-  posted_date DateTime
-  status PaymentStatus
-  contactId String
-  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
-  @@index([companyId])
 
-  @@index([contactId])
+
+model purchase {
+  id            String   @id @default(cuid())
+  person_id      String
+  source        DataSource
+  external_id    String
+  amount_in_cents        Decimal
+  currency      String
+  purchased_at    DateTime
+  metadata      Json
+
+  person        person @relation(fields: [person_id], references: [id])
+
+  @@unique([source, external_id])
 }
 
 
 
 // Providers
-model Provider {
+model provider {
   id        String  @id @default(cuid())
-  companyId String
-  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  company_id String
+  company   company @relation(fields: [company_id], references: [id], onDelete: Cascade)
   name      String
-  serviceId String
-  service   Service @relation(fields: [serviceId], references: [id])
+  service_id String
+  service   service @relation(fields: [service_id], references: [id])
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
-  appointments Appointment[]
+  appointments appointment[]
 
-  @@index([companyId])
-  @@index([serviceId])
+  @@index([company_id])
+  @@index([service_id])
 }
 
 // Appointments
-model Appointment {
+model appointment {
   id String @id @default(cuid())
 
-  companyId String
-  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  company_id String
+  company   company @relation(fields: [company_id], references: [id], onDelete: Cascade)
 
-  contactId String
-  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  person_id String
+  person   person @relation(fields: [person_id], references: [id], onDelete: Cascade)
 
-  dateOfService DateTime
+  date_of_service DateTime
   service       String?
-  serviceId     String?
-  serviceRel    Service?  @relation(fields: [serviceId], references: [id])
-  providerId    String?
-  provider      Provider? @relation(fields: [providerId], references: [id])
+  service_id     String?
+  service_rel    service?  @relation(fields: [service_id], references: [id])
+  provider_id    String?
+  provider      provider? @relation(fields: [provider_id], references: [id])
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
-  procedures AppointmentProcedure[]
+  procedures appointment_procedure[]
 
 }
 
 // Appointment Procedures - Revenue tracking
-model AppointmentProcedure {
+model appointment_procedure {
   id            String      @id @default(cuid())
-  appointmentId String
-  appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
-  procedureCode String
-  chargeAmount  Float
+  appointment_id String
+  appointment   appointment @relation(fields: [appointment_id], references: [id], onDelete: Cascade)
+  procedure_code String
+  charge_amount  Float
 
   // High level grouping of insurance
-  caseType String?
+  case_type String?
   // Specific insurance pan that is paying
-  payerName String?
+  payer_name String?
 
-  chargeDate DateTime?
+  charge_date DateTime?
 
-  createdAt DateTime @default(now())
+  created_at DateTime @default(now())
 
-  @@index([appointmentId])
-  @@index([appointmentId, procedureCode])
+  @@index([appointment_id])
+  @@index([appointment_id, procedure_code])
 }
 
-// Patients
-// model Patient {
-//   id        String  @id @default(cuid())
-//   contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
-//   contactId String  @unique
 
-//   // EHR ID
-
-// }
-
-// OAuth States - CSRF protection
-model OAuthState {
-  id        String   @id @default(cuid())
-  state     String   @unique
-  companyId String
-  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  expiresAt DateTime
-
-  createdAt DateTime @default(now())
-
-  @@index([state])
-  @@index([expiresAt])
-}
 
 // CMS Pages
-model CmsPage {
+model cms_page {
   id        String  @id @default(cuid())
-  companyId String
-  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  company_id String
+  company   company @relation(fields: [company_id], references: [id], onDelete: Cascade)
 
   h1              String
-  pageTitle       String
-  pageDescription String
-  jsonSchema      Json?
+  page_title       String
+  page_description String
+  json_schema      Json?
   slug            String
-  markdownContent String @db.Text
+  markdown_content String @db.Text
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
-  @@unique([companyId, slug])
-  @@index([companyId])
+  @@unique([company_id, slug])
+  @@index([company_id])
 }

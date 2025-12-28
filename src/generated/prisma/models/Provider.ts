@@ -4,7 +4,7 @@
 // biome-ignore-all lint: generated file
 // @ts-nocheck 
 /*
- * This file exports the `Provider` model and its related types.
+ * This file exports the `provider` model and its related types.
  *
  * 🟢 You can import this file directly.
  */
@@ -13,10 +13,10 @@ import type * as $Enums from "../enums.ts"
 import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
- * Model Provider
+ * Model provider
  * 
  */
-export type ProviderModel = runtime.Types.Result.DefaultSelection<Prisma.$ProviderPayload>
+export type providerModel = runtime.Types.Result.DefaultSelection<Prisma.$providerPayload>
 
 export type AggregateProvider = {
   _count: ProviderCountAggregateOutputType | null
@@ -26,94 +26,94 @@ export type AggregateProvider = {
 
 export type ProviderMinAggregateOutputType = {
   id: string | null
-  companyId: string | null
+  company_id: string | null
   name: string | null
-  serviceId: string | null
-  createdAt: Date | null
-  updatedAt: Date | null
+  service_id: string | null
+  created_at: Date | null
+  updated_at: Date | null
 }
 
 export type ProviderMaxAggregateOutputType = {
   id: string | null
-  companyId: string | null
+  company_id: string | null
   name: string | null
-  serviceId: string | null
-  createdAt: Date | null
-  updatedAt: Date | null
+  service_id: string | null
+  created_at: Date | null
+  updated_at: Date | null
 }
 
 export type ProviderCountAggregateOutputType = {
   id: number
-  companyId: number
+  company_id: number
   name: number
-  serviceId: number
-  createdAt: number
-  updatedAt: number
+  service_id: number
+  created_at: number
+  updated_at: number
   _all: number
 }
 
 
 export type ProviderMinAggregateInputType = {
   id?: true
-  companyId?: true
+  company_id?: true
   name?: true
-  serviceId?: true
-  createdAt?: true
-  updatedAt?: true
+  service_id?: true
+  created_at?: true
+  updated_at?: true
 }
 
 export type ProviderMaxAggregateInputType = {
   id?: true
-  companyId?: true
+  company_id?: true
   name?: true
-  serviceId?: true
-  createdAt?: true
-  updatedAt?: true
+  service_id?: true
+  created_at?: true
+  updated_at?: true
 }
 
 export type ProviderCountAggregateInputType = {
   id?: true
-  companyId?: true
+  company_id?: true
   name?: true
-  serviceId?: true
-  createdAt?: true
-  updatedAt?: true
+  service_id?: true
+  created_at?: true
+  updated_at?: true
   _all?: true
 }
 
 export type ProviderAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which Provider to aggregate.
+   * Filter which provider to aggregate.
    */
-  where?: Prisma.ProviderWhereInput
+  where?: Prisma.providerWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Providers to fetch.
+   * Determine the order of providers to fetch.
    */
-  orderBy?: Prisma.ProviderOrderByWithRelationInput | Prisma.ProviderOrderByWithRelationInput[]
+  orderBy?: Prisma.providerOrderByWithRelationInput | Prisma.providerOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
    * Sets the start position
    */
-  cursor?: Prisma.ProviderWhereUniqueInput
+  cursor?: Prisma.providerWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Providers from the position of the cursor.
+   * Take `±n` providers from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Providers.
+   * Skip the first `n` providers.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Count returned Providers
+   * Count returned providers
   **/
   _count?: true | ProviderCountAggregateInputType
   /**
@@ -141,11 +141,11 @@ export type GetProviderAggregateType<T extends ProviderAggregateArgs> = {
 
 
 
-export type ProviderGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ProviderWhereInput
-  orderBy?: Prisma.ProviderOrderByWithAggregationInput | Prisma.ProviderOrderByWithAggregationInput[]
+export type providerGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.providerWhereInput
+  orderBy?: Prisma.providerOrderByWithAggregationInput | Prisma.providerOrderByWithAggregationInput[]
   by: Prisma.ProviderScalarFieldEnum[] | Prisma.ProviderScalarFieldEnum
-  having?: Prisma.ProviderScalarWhereWithAggregatesInput
+  having?: Prisma.providerScalarWhereWithAggregatesInput
   take?: number
   skip?: number
   _count?: ProviderCountAggregateInputType | true
@@ -155,17 +155,17 @@ export type ProviderGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 
 export type ProviderGroupByOutputType = {
   id: string
-  companyId: string
+  company_id: string
   name: string
-  serviceId: string
-  createdAt: Date
-  updatedAt: Date
+  service_id: string
+  created_at: Date
+  updated_at: Date
   _count: ProviderCountAggregateOutputType | null
   _min: ProviderMinAggregateOutputType | null
   _max: ProviderMaxAggregateOutputType | null
 }
 
-type GetProviderGroupByPayload<T extends ProviderGroupByArgs> = Prisma.PrismaPromise<
+type GetProviderGroupByPayload<T extends providerGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ProviderGroupByOutputType, T['by']> &
       {
@@ -180,497 +180,497 @@ type GetProviderGroupByPayload<T extends ProviderGroupByArgs> = Prisma.PrismaPro
 
 
 
-export type ProviderWhereInput = {
-  AND?: Prisma.ProviderWhereInput | Prisma.ProviderWhereInput[]
-  OR?: Prisma.ProviderWhereInput[]
-  NOT?: Prisma.ProviderWhereInput | Prisma.ProviderWhereInput[]
-  id?: Prisma.StringFilter<"Provider"> | string
-  companyId?: Prisma.StringFilter<"Provider"> | string
-  name?: Prisma.StringFilter<"Provider"> | string
-  serviceId?: Prisma.StringFilter<"Provider"> | string
-  createdAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
-  company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
-  service?: Prisma.XOR<Prisma.ServiceScalarRelationFilter, Prisma.ServiceWhereInput>
+export type providerWhereInput = {
+  AND?: Prisma.providerWhereInput | Prisma.providerWhereInput[]
+  OR?: Prisma.providerWhereInput[]
+  NOT?: Prisma.providerWhereInput | Prisma.providerWhereInput[]
+  id?: Prisma.StringFilter<"provider"> | string
+  company_id?: Prisma.StringFilter<"provider"> | string
+  name?: Prisma.StringFilter<"provider"> | string
+  service_id?: Prisma.StringFilter<"provider"> | string
+  created_at?: Prisma.DateTimeFilter<"provider"> | Date | string
+  updated_at?: Prisma.DateTimeFilter<"provider"> | Date | string
+  company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.companyWhereInput>
+  service?: Prisma.XOR<Prisma.ServiceScalarRelationFilter, Prisma.serviceWhereInput>
   appointments?: Prisma.AppointmentListRelationFilter
 }
 
-export type ProviderOrderByWithRelationInput = {
+export type providerOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  companyId?: Prisma.SortOrder
+  company_id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  serviceId?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
-  company?: Prisma.CompanyOrderByWithRelationInput
-  service?: Prisma.ServiceOrderByWithRelationInput
-  appointments?: Prisma.AppointmentOrderByRelationAggregateInput
+  service_id?: Prisma.SortOrder
+  created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
+  company?: Prisma.companyOrderByWithRelationInput
+  service?: Prisma.serviceOrderByWithRelationInput
+  appointments?: Prisma.appointmentOrderByRelationAggregateInput
 }
 
-export type ProviderWhereUniqueInput = Prisma.AtLeast<{
+export type providerWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  AND?: Prisma.ProviderWhereInput | Prisma.ProviderWhereInput[]
-  OR?: Prisma.ProviderWhereInput[]
-  NOT?: Prisma.ProviderWhereInput | Prisma.ProviderWhereInput[]
-  companyId?: Prisma.StringFilter<"Provider"> | string
-  name?: Prisma.StringFilter<"Provider"> | string
-  serviceId?: Prisma.StringFilter<"Provider"> | string
-  createdAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
-  company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
-  service?: Prisma.XOR<Prisma.ServiceScalarRelationFilter, Prisma.ServiceWhereInput>
+  AND?: Prisma.providerWhereInput | Prisma.providerWhereInput[]
+  OR?: Prisma.providerWhereInput[]
+  NOT?: Prisma.providerWhereInput | Prisma.providerWhereInput[]
+  company_id?: Prisma.StringFilter<"provider"> | string
+  name?: Prisma.StringFilter<"provider"> | string
+  service_id?: Prisma.StringFilter<"provider"> | string
+  created_at?: Prisma.DateTimeFilter<"provider"> | Date | string
+  updated_at?: Prisma.DateTimeFilter<"provider"> | Date | string
+  company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.companyWhereInput>
+  service?: Prisma.XOR<Prisma.ServiceScalarRelationFilter, Prisma.serviceWhereInput>
   appointments?: Prisma.AppointmentListRelationFilter
 }, "id">
 
-export type ProviderOrderByWithAggregationInput = {
+export type providerOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  companyId?: Prisma.SortOrder
+  company_id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  serviceId?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
-  _count?: Prisma.ProviderCountOrderByAggregateInput
-  _max?: Prisma.ProviderMaxOrderByAggregateInput
-  _min?: Prisma.ProviderMinOrderByAggregateInput
+  service_id?: Prisma.SortOrder
+  created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
+  _count?: Prisma.providerCountOrderByAggregateInput
+  _max?: Prisma.providerMaxOrderByAggregateInput
+  _min?: Prisma.providerMinOrderByAggregateInput
 }
 
-export type ProviderScalarWhereWithAggregatesInput = {
-  AND?: Prisma.ProviderScalarWhereWithAggregatesInput | Prisma.ProviderScalarWhereWithAggregatesInput[]
-  OR?: Prisma.ProviderScalarWhereWithAggregatesInput[]
-  NOT?: Prisma.ProviderScalarWhereWithAggregatesInput | Prisma.ProviderScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"Provider"> | string
-  companyId?: Prisma.StringWithAggregatesFilter<"Provider"> | string
-  name?: Prisma.StringWithAggregatesFilter<"Provider"> | string
-  serviceId?: Prisma.StringWithAggregatesFilter<"Provider"> | string
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Provider"> | Date | string
-  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Provider"> | Date | string
+export type providerScalarWhereWithAggregatesInput = {
+  AND?: Prisma.providerScalarWhereWithAggregatesInput | Prisma.providerScalarWhereWithAggregatesInput[]
+  OR?: Prisma.providerScalarWhereWithAggregatesInput[]
+  NOT?: Prisma.providerScalarWhereWithAggregatesInput | Prisma.providerScalarWhereWithAggregatesInput[]
+  id?: Prisma.StringWithAggregatesFilter<"provider"> | string
+  company_id?: Prisma.StringWithAggregatesFilter<"provider"> | string
+  name?: Prisma.StringWithAggregatesFilter<"provider"> | string
+  service_id?: Prisma.StringWithAggregatesFilter<"provider"> | string
+  created_at?: Prisma.DateTimeWithAggregatesFilter<"provider"> | Date | string
+  updated_at?: Prisma.DateTimeWithAggregatesFilter<"provider"> | Date | string
 }
 
-export type ProviderCreateInput = {
+export type providerCreateInput = {
   id?: string
   name: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  company: Prisma.CompanyCreateNestedOneWithoutProvidersInput
-  service: Prisma.ServiceCreateNestedOneWithoutProvidersInput
-  appointments?: Prisma.AppointmentCreateNestedManyWithoutProviderInput
+  created_at?: Date | string
+  updated_at?: Date | string
+  company: Prisma.companyCreateNestedOneWithoutProvidersInput
+  service: Prisma.serviceCreateNestedOneWithoutProvidersInput
+  appointments?: Prisma.appointmentCreateNestedManyWithoutProviderInput
 }
 
-export type ProviderUncheckedCreateInput = {
+export type providerUncheckedCreateInput = {
   id?: string
-  companyId: string
+  company_id: string
   name: string
-  serviceId: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutProviderInput
+  service_id: string
+  created_at?: Date | string
+  updated_at?: Date | string
+  appointments?: Prisma.appointmentUncheckedCreateNestedManyWithoutProviderInput
 }
 
-export type ProviderUpdateInput = {
+export type providerUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  company?: Prisma.CompanyUpdateOneRequiredWithoutProvidersNestedInput
-  service?: Prisma.ServiceUpdateOneRequiredWithoutProvidersNestedInput
-  appointments?: Prisma.AppointmentUpdateManyWithoutProviderNestedInput
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.companyUpdateOneRequiredWithoutProvidersNestedInput
+  service?: Prisma.serviceUpdateOneRequiredWithoutProvidersNestedInput
+  appointments?: Prisma.appointmentUpdateManyWithoutProviderNestedInput
 }
 
-export type ProviderUncheckedUpdateInput = {
+export type providerUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  company_id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  serviceId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutProviderNestedInput
+  service_id?: Prisma.StringFieldUpdateOperationsInput | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  appointments?: Prisma.appointmentUncheckedUpdateManyWithoutProviderNestedInput
 }
 
-export type ProviderCreateManyInput = {
+export type providerCreateManyInput = {
   id?: string
-  companyId: string
+  company_id: string
   name: string
-  serviceId: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  service_id: string
+  created_at?: Date | string
+  updated_at?: Date | string
 }
 
-export type ProviderUpdateManyMutationInput = {
+export type providerUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type ProviderUncheckedUpdateManyInput = {
+export type providerUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  company_id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  serviceId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  service_id?: Prisma.StringFieldUpdateOperationsInput | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ProviderListRelationFilter = {
-  every?: Prisma.ProviderWhereInput
-  some?: Prisma.ProviderWhereInput
-  none?: Prisma.ProviderWhereInput
+  every?: Prisma.providerWhereInput
+  some?: Prisma.providerWhereInput
+  none?: Prisma.providerWhereInput
 }
 
-export type ProviderOrderByRelationAggregateInput = {
+export type providerOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type ProviderCountOrderByAggregateInput = {
+export type providerCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  companyId?: Prisma.SortOrder
+  company_id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  serviceId?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
+  service_id?: Prisma.SortOrder
+  created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
 }
 
-export type ProviderMaxOrderByAggregateInput = {
+export type providerMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  companyId?: Prisma.SortOrder
+  company_id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  serviceId?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
+  service_id?: Prisma.SortOrder
+  created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
 }
 
-export type ProviderMinOrderByAggregateInput = {
+export type providerMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  companyId?: Prisma.SortOrder
+  company_id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  serviceId?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
+  service_id?: Prisma.SortOrder
+  created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
 }
 
 export type ProviderNullableScalarRelationFilter = {
-  is?: Prisma.ProviderWhereInput | null
-  isNot?: Prisma.ProviderWhereInput | null
+  is?: Prisma.providerWhereInput | null
+  isNot?: Prisma.providerWhereInput | null
 }
 
-export type ProviderCreateNestedManyWithoutCompanyInput = {
-  create?: Prisma.XOR<Prisma.ProviderCreateWithoutCompanyInput, Prisma.ProviderUncheckedCreateWithoutCompanyInput> | Prisma.ProviderCreateWithoutCompanyInput[] | Prisma.ProviderUncheckedCreateWithoutCompanyInput[]
-  connectOrCreate?: Prisma.ProviderCreateOrConnectWithoutCompanyInput | Prisma.ProviderCreateOrConnectWithoutCompanyInput[]
-  createMany?: Prisma.ProviderCreateManyCompanyInputEnvelope
-  connect?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
+export type providerCreateNestedManyWithoutCompanyInput = {
+  create?: Prisma.XOR<Prisma.providerCreateWithoutCompanyInput, Prisma.providerUncheckedCreateWithoutCompanyInput> | Prisma.providerCreateWithoutCompanyInput[] | Prisma.providerUncheckedCreateWithoutCompanyInput[]
+  connectOrCreate?: Prisma.providerCreateOrConnectWithoutCompanyInput | Prisma.providerCreateOrConnectWithoutCompanyInput[]
+  createMany?: Prisma.providerCreateManyCompanyInputEnvelope
+  connect?: Prisma.providerWhereUniqueInput | Prisma.providerWhereUniqueInput[]
 }
 
-export type ProviderUncheckedCreateNestedManyWithoutCompanyInput = {
-  create?: Prisma.XOR<Prisma.ProviderCreateWithoutCompanyInput, Prisma.ProviderUncheckedCreateWithoutCompanyInput> | Prisma.ProviderCreateWithoutCompanyInput[] | Prisma.ProviderUncheckedCreateWithoutCompanyInput[]
-  connectOrCreate?: Prisma.ProviderCreateOrConnectWithoutCompanyInput | Prisma.ProviderCreateOrConnectWithoutCompanyInput[]
-  createMany?: Prisma.ProviderCreateManyCompanyInputEnvelope
-  connect?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
+export type providerUncheckedCreateNestedManyWithoutCompanyInput = {
+  create?: Prisma.XOR<Prisma.providerCreateWithoutCompanyInput, Prisma.providerUncheckedCreateWithoutCompanyInput> | Prisma.providerCreateWithoutCompanyInput[] | Prisma.providerUncheckedCreateWithoutCompanyInput[]
+  connectOrCreate?: Prisma.providerCreateOrConnectWithoutCompanyInput | Prisma.providerCreateOrConnectWithoutCompanyInput[]
+  createMany?: Prisma.providerCreateManyCompanyInputEnvelope
+  connect?: Prisma.providerWhereUniqueInput | Prisma.providerWhereUniqueInput[]
 }
 
-export type ProviderUpdateManyWithoutCompanyNestedInput = {
-  create?: Prisma.XOR<Prisma.ProviderCreateWithoutCompanyInput, Prisma.ProviderUncheckedCreateWithoutCompanyInput> | Prisma.ProviderCreateWithoutCompanyInput[] | Prisma.ProviderUncheckedCreateWithoutCompanyInput[]
-  connectOrCreate?: Prisma.ProviderCreateOrConnectWithoutCompanyInput | Prisma.ProviderCreateOrConnectWithoutCompanyInput[]
-  upsert?: Prisma.ProviderUpsertWithWhereUniqueWithoutCompanyInput | Prisma.ProviderUpsertWithWhereUniqueWithoutCompanyInput[]
-  createMany?: Prisma.ProviderCreateManyCompanyInputEnvelope
-  set?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  disconnect?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  delete?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  connect?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  update?: Prisma.ProviderUpdateWithWhereUniqueWithoutCompanyInput | Prisma.ProviderUpdateWithWhereUniqueWithoutCompanyInput[]
-  updateMany?: Prisma.ProviderUpdateManyWithWhereWithoutCompanyInput | Prisma.ProviderUpdateManyWithWhereWithoutCompanyInput[]
-  deleteMany?: Prisma.ProviderScalarWhereInput | Prisma.ProviderScalarWhereInput[]
+export type providerUpdateManyWithoutCompanyNestedInput = {
+  create?: Prisma.XOR<Prisma.providerCreateWithoutCompanyInput, Prisma.providerUncheckedCreateWithoutCompanyInput> | Prisma.providerCreateWithoutCompanyInput[] | Prisma.providerUncheckedCreateWithoutCompanyInput[]
+  connectOrCreate?: Prisma.providerCreateOrConnectWithoutCompanyInput | Prisma.providerCreateOrConnectWithoutCompanyInput[]
+  upsert?: Prisma.providerUpsertWithWhereUniqueWithoutCompanyInput | Prisma.providerUpsertWithWhereUniqueWithoutCompanyInput[]
+  createMany?: Prisma.providerCreateManyCompanyInputEnvelope
+  set?: Prisma.providerWhereUniqueInput | Prisma.providerWhereUniqueInput[]
+  disconnect?: Prisma.providerWhereUniqueInput | Prisma.providerWhereUniqueInput[]
+  delete?: Prisma.providerWhereUniqueInput | Prisma.providerWhereUniqueInput[]
+  connect?: Prisma.providerWhereUniqueInput | Prisma.providerWhereUniqueInput[]
+  update?: Prisma.providerUpdateWithWhereUniqueWithoutCompanyInput | Prisma.providerUpdateWithWhereUniqueWithoutCompanyInput[]
+  updateMany?: Prisma.providerUpdateManyWithWhereWithoutCompanyInput | Prisma.providerUpdateManyWithWhereWithoutCompanyInput[]
+  deleteMany?: Prisma.providerScalarWhereInput | Prisma.providerScalarWhereInput[]
 }
 
-export type ProviderUncheckedUpdateManyWithoutCompanyNestedInput = {
-  create?: Prisma.XOR<Prisma.ProviderCreateWithoutCompanyInput, Prisma.ProviderUncheckedCreateWithoutCompanyInput> | Prisma.ProviderCreateWithoutCompanyInput[] | Prisma.ProviderUncheckedCreateWithoutCompanyInput[]
-  connectOrCreate?: Prisma.ProviderCreateOrConnectWithoutCompanyInput | Prisma.ProviderCreateOrConnectWithoutCompanyInput[]
-  upsert?: Prisma.ProviderUpsertWithWhereUniqueWithoutCompanyInput | Prisma.ProviderUpsertWithWhereUniqueWithoutCompanyInput[]
-  createMany?: Prisma.ProviderCreateManyCompanyInputEnvelope
-  set?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  disconnect?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  delete?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  connect?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  update?: Prisma.ProviderUpdateWithWhereUniqueWithoutCompanyInput | Prisma.ProviderUpdateWithWhereUniqueWithoutCompanyInput[]
-  updateMany?: Prisma.ProviderUpdateManyWithWhereWithoutCompanyInput | Prisma.ProviderUpdateManyWithWhereWithoutCompanyInput[]
-  deleteMany?: Prisma.ProviderScalarWhereInput | Prisma.ProviderScalarWhereInput[]
+export type providerUncheckedUpdateManyWithoutCompanyNestedInput = {
+  create?: Prisma.XOR<Prisma.providerCreateWithoutCompanyInput, Prisma.providerUncheckedCreateWithoutCompanyInput> | Prisma.providerCreateWithoutCompanyInput[] | Prisma.providerUncheckedCreateWithoutCompanyInput[]
+  connectOrCreate?: Prisma.providerCreateOrConnectWithoutCompanyInput | Prisma.providerCreateOrConnectWithoutCompanyInput[]
+  upsert?: Prisma.providerUpsertWithWhereUniqueWithoutCompanyInput | Prisma.providerUpsertWithWhereUniqueWithoutCompanyInput[]
+  createMany?: Prisma.providerCreateManyCompanyInputEnvelope
+  set?: Prisma.providerWhereUniqueInput | Prisma.providerWhereUniqueInput[]
+  disconnect?: Prisma.providerWhereUniqueInput | Prisma.providerWhereUniqueInput[]
+  delete?: Prisma.providerWhereUniqueInput | Prisma.providerWhereUniqueInput[]
+  connect?: Prisma.providerWhereUniqueInput | Prisma.providerWhereUniqueInput[]
+  update?: Prisma.providerUpdateWithWhereUniqueWithoutCompanyInput | Prisma.providerUpdateWithWhereUniqueWithoutCompanyInput[]
+  updateMany?: Prisma.providerUpdateManyWithWhereWithoutCompanyInput | Prisma.providerUpdateManyWithWhereWithoutCompanyInput[]
+  deleteMany?: Prisma.providerScalarWhereInput | Prisma.providerScalarWhereInput[]
 }
 
-export type ProviderCreateNestedManyWithoutServiceInput = {
-  create?: Prisma.XOR<Prisma.ProviderCreateWithoutServiceInput, Prisma.ProviderUncheckedCreateWithoutServiceInput> | Prisma.ProviderCreateWithoutServiceInput[] | Prisma.ProviderUncheckedCreateWithoutServiceInput[]
-  connectOrCreate?: Prisma.ProviderCreateOrConnectWithoutServiceInput | Prisma.ProviderCreateOrConnectWithoutServiceInput[]
-  createMany?: Prisma.ProviderCreateManyServiceInputEnvelope
-  connect?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
+export type providerCreateNestedManyWithoutServiceInput = {
+  create?: Prisma.XOR<Prisma.providerCreateWithoutServiceInput, Prisma.providerUncheckedCreateWithoutServiceInput> | Prisma.providerCreateWithoutServiceInput[] | Prisma.providerUncheckedCreateWithoutServiceInput[]
+  connectOrCreate?: Prisma.providerCreateOrConnectWithoutServiceInput | Prisma.providerCreateOrConnectWithoutServiceInput[]
+  createMany?: Prisma.providerCreateManyServiceInputEnvelope
+  connect?: Prisma.providerWhereUniqueInput | Prisma.providerWhereUniqueInput[]
 }
 
-export type ProviderUncheckedCreateNestedManyWithoutServiceInput = {
-  create?: Prisma.XOR<Prisma.ProviderCreateWithoutServiceInput, Prisma.ProviderUncheckedCreateWithoutServiceInput> | Prisma.ProviderCreateWithoutServiceInput[] | Prisma.ProviderUncheckedCreateWithoutServiceInput[]
-  connectOrCreate?: Prisma.ProviderCreateOrConnectWithoutServiceInput | Prisma.ProviderCreateOrConnectWithoutServiceInput[]
-  createMany?: Prisma.ProviderCreateManyServiceInputEnvelope
-  connect?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
+export type providerUncheckedCreateNestedManyWithoutServiceInput = {
+  create?: Prisma.XOR<Prisma.providerCreateWithoutServiceInput, Prisma.providerUncheckedCreateWithoutServiceInput> | Prisma.providerCreateWithoutServiceInput[] | Prisma.providerUncheckedCreateWithoutServiceInput[]
+  connectOrCreate?: Prisma.providerCreateOrConnectWithoutServiceInput | Prisma.providerCreateOrConnectWithoutServiceInput[]
+  createMany?: Prisma.providerCreateManyServiceInputEnvelope
+  connect?: Prisma.providerWhereUniqueInput | Prisma.providerWhereUniqueInput[]
 }
 
-export type ProviderUpdateManyWithoutServiceNestedInput = {
-  create?: Prisma.XOR<Prisma.ProviderCreateWithoutServiceInput, Prisma.ProviderUncheckedCreateWithoutServiceInput> | Prisma.ProviderCreateWithoutServiceInput[] | Prisma.ProviderUncheckedCreateWithoutServiceInput[]
-  connectOrCreate?: Prisma.ProviderCreateOrConnectWithoutServiceInput | Prisma.ProviderCreateOrConnectWithoutServiceInput[]
-  upsert?: Prisma.ProviderUpsertWithWhereUniqueWithoutServiceInput | Prisma.ProviderUpsertWithWhereUniqueWithoutServiceInput[]
-  createMany?: Prisma.ProviderCreateManyServiceInputEnvelope
-  set?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  disconnect?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  delete?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  connect?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  update?: Prisma.ProviderUpdateWithWhereUniqueWithoutServiceInput | Prisma.ProviderUpdateWithWhereUniqueWithoutServiceInput[]
-  updateMany?: Prisma.ProviderUpdateManyWithWhereWithoutServiceInput | Prisma.ProviderUpdateManyWithWhereWithoutServiceInput[]
-  deleteMany?: Prisma.ProviderScalarWhereInput | Prisma.ProviderScalarWhereInput[]
+export type providerUpdateManyWithoutServiceNestedInput = {
+  create?: Prisma.XOR<Prisma.providerCreateWithoutServiceInput, Prisma.providerUncheckedCreateWithoutServiceInput> | Prisma.providerCreateWithoutServiceInput[] | Prisma.providerUncheckedCreateWithoutServiceInput[]
+  connectOrCreate?: Prisma.providerCreateOrConnectWithoutServiceInput | Prisma.providerCreateOrConnectWithoutServiceInput[]
+  upsert?: Prisma.providerUpsertWithWhereUniqueWithoutServiceInput | Prisma.providerUpsertWithWhereUniqueWithoutServiceInput[]
+  createMany?: Prisma.providerCreateManyServiceInputEnvelope
+  set?: Prisma.providerWhereUniqueInput | Prisma.providerWhereUniqueInput[]
+  disconnect?: Prisma.providerWhereUniqueInput | Prisma.providerWhereUniqueInput[]
+  delete?: Prisma.providerWhereUniqueInput | Prisma.providerWhereUniqueInput[]
+  connect?: Prisma.providerWhereUniqueInput | Prisma.providerWhereUniqueInput[]
+  update?: Prisma.providerUpdateWithWhereUniqueWithoutServiceInput | Prisma.providerUpdateWithWhereUniqueWithoutServiceInput[]
+  updateMany?: Prisma.providerUpdateManyWithWhereWithoutServiceInput | Prisma.providerUpdateManyWithWhereWithoutServiceInput[]
+  deleteMany?: Prisma.providerScalarWhereInput | Prisma.providerScalarWhereInput[]
 }
 
-export type ProviderUncheckedUpdateManyWithoutServiceNestedInput = {
-  create?: Prisma.XOR<Prisma.ProviderCreateWithoutServiceInput, Prisma.ProviderUncheckedCreateWithoutServiceInput> | Prisma.ProviderCreateWithoutServiceInput[] | Prisma.ProviderUncheckedCreateWithoutServiceInput[]
-  connectOrCreate?: Prisma.ProviderCreateOrConnectWithoutServiceInput | Prisma.ProviderCreateOrConnectWithoutServiceInput[]
-  upsert?: Prisma.ProviderUpsertWithWhereUniqueWithoutServiceInput | Prisma.ProviderUpsertWithWhereUniqueWithoutServiceInput[]
-  createMany?: Prisma.ProviderCreateManyServiceInputEnvelope
-  set?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  disconnect?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  delete?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  connect?: Prisma.ProviderWhereUniqueInput | Prisma.ProviderWhereUniqueInput[]
-  update?: Prisma.ProviderUpdateWithWhereUniqueWithoutServiceInput | Prisma.ProviderUpdateWithWhereUniqueWithoutServiceInput[]
-  updateMany?: Prisma.ProviderUpdateManyWithWhereWithoutServiceInput | Prisma.ProviderUpdateManyWithWhereWithoutServiceInput[]
-  deleteMany?: Prisma.ProviderScalarWhereInput | Prisma.ProviderScalarWhereInput[]
+export type providerUncheckedUpdateManyWithoutServiceNestedInput = {
+  create?: Prisma.XOR<Prisma.providerCreateWithoutServiceInput, Prisma.providerUncheckedCreateWithoutServiceInput> | Prisma.providerCreateWithoutServiceInput[] | Prisma.providerUncheckedCreateWithoutServiceInput[]
+  connectOrCreate?: Prisma.providerCreateOrConnectWithoutServiceInput | Prisma.providerCreateOrConnectWithoutServiceInput[]
+  upsert?: Prisma.providerUpsertWithWhereUniqueWithoutServiceInput | Prisma.providerUpsertWithWhereUniqueWithoutServiceInput[]
+  createMany?: Prisma.providerCreateManyServiceInputEnvelope
+  set?: Prisma.providerWhereUniqueInput | Prisma.providerWhereUniqueInput[]
+  disconnect?: Prisma.providerWhereUniqueInput | Prisma.providerWhereUniqueInput[]
+  delete?: Prisma.providerWhereUniqueInput | Prisma.providerWhereUniqueInput[]
+  connect?: Prisma.providerWhereUniqueInput | Prisma.providerWhereUniqueInput[]
+  update?: Prisma.providerUpdateWithWhereUniqueWithoutServiceInput | Prisma.providerUpdateWithWhereUniqueWithoutServiceInput[]
+  updateMany?: Prisma.providerUpdateManyWithWhereWithoutServiceInput | Prisma.providerUpdateManyWithWhereWithoutServiceInput[]
+  deleteMany?: Prisma.providerScalarWhereInput | Prisma.providerScalarWhereInput[]
 }
 
-export type ProviderCreateNestedOneWithoutAppointmentsInput = {
-  create?: Prisma.XOR<Prisma.ProviderCreateWithoutAppointmentsInput, Prisma.ProviderUncheckedCreateWithoutAppointmentsInput>
-  connectOrCreate?: Prisma.ProviderCreateOrConnectWithoutAppointmentsInput
-  connect?: Prisma.ProviderWhereUniqueInput
+export type providerCreateNestedOneWithoutAppointmentsInput = {
+  create?: Prisma.XOR<Prisma.providerCreateWithoutAppointmentsInput, Prisma.providerUncheckedCreateWithoutAppointmentsInput>
+  connectOrCreate?: Prisma.providerCreateOrConnectWithoutAppointmentsInput
+  connect?: Prisma.providerWhereUniqueInput
 }
 
-export type ProviderUpdateOneWithoutAppointmentsNestedInput = {
-  create?: Prisma.XOR<Prisma.ProviderCreateWithoutAppointmentsInput, Prisma.ProviderUncheckedCreateWithoutAppointmentsInput>
-  connectOrCreate?: Prisma.ProviderCreateOrConnectWithoutAppointmentsInput
-  upsert?: Prisma.ProviderUpsertWithoutAppointmentsInput
-  disconnect?: Prisma.ProviderWhereInput | boolean
-  delete?: Prisma.ProviderWhereInput | boolean
-  connect?: Prisma.ProviderWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ProviderUpdateToOneWithWhereWithoutAppointmentsInput, Prisma.ProviderUpdateWithoutAppointmentsInput>, Prisma.ProviderUncheckedUpdateWithoutAppointmentsInput>
+export type providerUpdateOneWithoutAppointmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.providerCreateWithoutAppointmentsInput, Prisma.providerUncheckedCreateWithoutAppointmentsInput>
+  connectOrCreate?: Prisma.providerCreateOrConnectWithoutAppointmentsInput
+  upsert?: Prisma.providerUpsertWithoutAppointmentsInput
+  disconnect?: Prisma.providerWhereInput | boolean
+  delete?: Prisma.providerWhereInput | boolean
+  connect?: Prisma.providerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.providerUpdateToOneWithWhereWithoutAppointmentsInput, Prisma.providerUpdateWithoutAppointmentsInput>, Prisma.providerUncheckedUpdateWithoutAppointmentsInput>
 }
 
-export type ProviderCreateWithoutCompanyInput = {
+export type providerCreateWithoutCompanyInput = {
   id?: string
   name: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  service: Prisma.ServiceCreateNestedOneWithoutProvidersInput
-  appointments?: Prisma.AppointmentCreateNestedManyWithoutProviderInput
+  created_at?: Date | string
+  updated_at?: Date | string
+  service: Prisma.serviceCreateNestedOneWithoutProvidersInput
+  appointments?: Prisma.appointmentCreateNestedManyWithoutProviderInput
 }
 
-export type ProviderUncheckedCreateWithoutCompanyInput = {
+export type providerUncheckedCreateWithoutCompanyInput = {
   id?: string
   name: string
-  serviceId: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutProviderInput
+  service_id: string
+  created_at?: Date | string
+  updated_at?: Date | string
+  appointments?: Prisma.appointmentUncheckedCreateNestedManyWithoutProviderInput
 }
 
-export type ProviderCreateOrConnectWithoutCompanyInput = {
-  where: Prisma.ProviderWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProviderCreateWithoutCompanyInput, Prisma.ProviderUncheckedCreateWithoutCompanyInput>
+export type providerCreateOrConnectWithoutCompanyInput = {
+  where: Prisma.providerWhereUniqueInput
+  create: Prisma.XOR<Prisma.providerCreateWithoutCompanyInput, Prisma.providerUncheckedCreateWithoutCompanyInput>
 }
 
-export type ProviderCreateManyCompanyInputEnvelope = {
-  data: Prisma.ProviderCreateManyCompanyInput | Prisma.ProviderCreateManyCompanyInput[]
+export type providerCreateManyCompanyInputEnvelope = {
+  data: Prisma.providerCreateManyCompanyInput | Prisma.providerCreateManyCompanyInput[]
   skipDuplicates?: boolean
 }
 
-export type ProviderUpsertWithWhereUniqueWithoutCompanyInput = {
-  where: Prisma.ProviderWhereUniqueInput
-  update: Prisma.XOR<Prisma.ProviderUpdateWithoutCompanyInput, Prisma.ProviderUncheckedUpdateWithoutCompanyInput>
-  create: Prisma.XOR<Prisma.ProviderCreateWithoutCompanyInput, Prisma.ProviderUncheckedCreateWithoutCompanyInput>
+export type providerUpsertWithWhereUniqueWithoutCompanyInput = {
+  where: Prisma.providerWhereUniqueInput
+  update: Prisma.XOR<Prisma.providerUpdateWithoutCompanyInput, Prisma.providerUncheckedUpdateWithoutCompanyInput>
+  create: Prisma.XOR<Prisma.providerCreateWithoutCompanyInput, Prisma.providerUncheckedCreateWithoutCompanyInput>
 }
 
-export type ProviderUpdateWithWhereUniqueWithoutCompanyInput = {
-  where: Prisma.ProviderWhereUniqueInput
-  data: Prisma.XOR<Prisma.ProviderUpdateWithoutCompanyInput, Prisma.ProviderUncheckedUpdateWithoutCompanyInput>
+export type providerUpdateWithWhereUniqueWithoutCompanyInput = {
+  where: Prisma.providerWhereUniqueInput
+  data: Prisma.XOR<Prisma.providerUpdateWithoutCompanyInput, Prisma.providerUncheckedUpdateWithoutCompanyInput>
 }
 
-export type ProviderUpdateManyWithWhereWithoutCompanyInput = {
-  where: Prisma.ProviderScalarWhereInput
-  data: Prisma.XOR<Prisma.ProviderUpdateManyMutationInput, Prisma.ProviderUncheckedUpdateManyWithoutCompanyInput>
+export type providerUpdateManyWithWhereWithoutCompanyInput = {
+  where: Prisma.providerScalarWhereInput
+  data: Prisma.XOR<Prisma.providerUpdateManyMutationInput, Prisma.providerUncheckedUpdateManyWithoutCompanyInput>
 }
 
-export type ProviderScalarWhereInput = {
-  AND?: Prisma.ProviderScalarWhereInput | Prisma.ProviderScalarWhereInput[]
-  OR?: Prisma.ProviderScalarWhereInput[]
-  NOT?: Prisma.ProviderScalarWhereInput | Prisma.ProviderScalarWhereInput[]
-  id?: Prisma.StringFilter<"Provider"> | string
-  companyId?: Prisma.StringFilter<"Provider"> | string
-  name?: Prisma.StringFilter<"Provider"> | string
-  serviceId?: Prisma.StringFilter<"Provider"> | string
-  createdAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
+export type providerScalarWhereInput = {
+  AND?: Prisma.providerScalarWhereInput | Prisma.providerScalarWhereInput[]
+  OR?: Prisma.providerScalarWhereInput[]
+  NOT?: Prisma.providerScalarWhereInput | Prisma.providerScalarWhereInput[]
+  id?: Prisma.StringFilter<"provider"> | string
+  company_id?: Prisma.StringFilter<"provider"> | string
+  name?: Prisma.StringFilter<"provider"> | string
+  service_id?: Prisma.StringFilter<"provider"> | string
+  created_at?: Prisma.DateTimeFilter<"provider"> | Date | string
+  updated_at?: Prisma.DateTimeFilter<"provider"> | Date | string
 }
 
-export type ProviderCreateWithoutServiceInput = {
+export type providerCreateWithoutServiceInput = {
   id?: string
   name: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  company: Prisma.CompanyCreateNestedOneWithoutProvidersInput
-  appointments?: Prisma.AppointmentCreateNestedManyWithoutProviderInput
+  created_at?: Date | string
+  updated_at?: Date | string
+  company: Prisma.companyCreateNestedOneWithoutProvidersInput
+  appointments?: Prisma.appointmentCreateNestedManyWithoutProviderInput
 }
 
-export type ProviderUncheckedCreateWithoutServiceInput = {
+export type providerUncheckedCreateWithoutServiceInput = {
   id?: string
-  companyId: string
+  company_id: string
   name: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutProviderInput
+  created_at?: Date | string
+  updated_at?: Date | string
+  appointments?: Prisma.appointmentUncheckedCreateNestedManyWithoutProviderInput
 }
 
-export type ProviderCreateOrConnectWithoutServiceInput = {
-  where: Prisma.ProviderWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProviderCreateWithoutServiceInput, Prisma.ProviderUncheckedCreateWithoutServiceInput>
+export type providerCreateOrConnectWithoutServiceInput = {
+  where: Prisma.providerWhereUniqueInput
+  create: Prisma.XOR<Prisma.providerCreateWithoutServiceInput, Prisma.providerUncheckedCreateWithoutServiceInput>
 }
 
-export type ProviderCreateManyServiceInputEnvelope = {
-  data: Prisma.ProviderCreateManyServiceInput | Prisma.ProviderCreateManyServiceInput[]
+export type providerCreateManyServiceInputEnvelope = {
+  data: Prisma.providerCreateManyServiceInput | Prisma.providerCreateManyServiceInput[]
   skipDuplicates?: boolean
 }
 
-export type ProviderUpsertWithWhereUniqueWithoutServiceInput = {
-  where: Prisma.ProviderWhereUniqueInput
-  update: Prisma.XOR<Prisma.ProviderUpdateWithoutServiceInput, Prisma.ProviderUncheckedUpdateWithoutServiceInput>
-  create: Prisma.XOR<Prisma.ProviderCreateWithoutServiceInput, Prisma.ProviderUncheckedCreateWithoutServiceInput>
+export type providerUpsertWithWhereUniqueWithoutServiceInput = {
+  where: Prisma.providerWhereUniqueInput
+  update: Prisma.XOR<Prisma.providerUpdateWithoutServiceInput, Prisma.providerUncheckedUpdateWithoutServiceInput>
+  create: Prisma.XOR<Prisma.providerCreateWithoutServiceInput, Prisma.providerUncheckedCreateWithoutServiceInput>
 }
 
-export type ProviderUpdateWithWhereUniqueWithoutServiceInput = {
-  where: Prisma.ProviderWhereUniqueInput
-  data: Prisma.XOR<Prisma.ProviderUpdateWithoutServiceInput, Prisma.ProviderUncheckedUpdateWithoutServiceInput>
+export type providerUpdateWithWhereUniqueWithoutServiceInput = {
+  where: Prisma.providerWhereUniqueInput
+  data: Prisma.XOR<Prisma.providerUpdateWithoutServiceInput, Prisma.providerUncheckedUpdateWithoutServiceInput>
 }
 
-export type ProviderUpdateManyWithWhereWithoutServiceInput = {
-  where: Prisma.ProviderScalarWhereInput
-  data: Prisma.XOR<Prisma.ProviderUpdateManyMutationInput, Prisma.ProviderUncheckedUpdateManyWithoutServiceInput>
+export type providerUpdateManyWithWhereWithoutServiceInput = {
+  where: Prisma.providerScalarWhereInput
+  data: Prisma.XOR<Prisma.providerUpdateManyMutationInput, Prisma.providerUncheckedUpdateManyWithoutServiceInput>
 }
 
-export type ProviderCreateWithoutAppointmentsInput = {
+export type providerCreateWithoutAppointmentsInput = {
   id?: string
   name: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  company: Prisma.CompanyCreateNestedOneWithoutProvidersInput
-  service: Prisma.ServiceCreateNestedOneWithoutProvidersInput
+  created_at?: Date | string
+  updated_at?: Date | string
+  company: Prisma.companyCreateNestedOneWithoutProvidersInput
+  service: Prisma.serviceCreateNestedOneWithoutProvidersInput
 }
 
-export type ProviderUncheckedCreateWithoutAppointmentsInput = {
+export type providerUncheckedCreateWithoutAppointmentsInput = {
   id?: string
-  companyId: string
+  company_id: string
   name: string
-  serviceId: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  service_id: string
+  created_at?: Date | string
+  updated_at?: Date | string
 }
 
-export type ProviderCreateOrConnectWithoutAppointmentsInput = {
-  where: Prisma.ProviderWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProviderCreateWithoutAppointmentsInput, Prisma.ProviderUncheckedCreateWithoutAppointmentsInput>
+export type providerCreateOrConnectWithoutAppointmentsInput = {
+  where: Prisma.providerWhereUniqueInput
+  create: Prisma.XOR<Prisma.providerCreateWithoutAppointmentsInput, Prisma.providerUncheckedCreateWithoutAppointmentsInput>
 }
 
-export type ProviderUpsertWithoutAppointmentsInput = {
-  update: Prisma.XOR<Prisma.ProviderUpdateWithoutAppointmentsInput, Prisma.ProviderUncheckedUpdateWithoutAppointmentsInput>
-  create: Prisma.XOR<Prisma.ProviderCreateWithoutAppointmentsInput, Prisma.ProviderUncheckedCreateWithoutAppointmentsInput>
-  where?: Prisma.ProviderWhereInput
+export type providerUpsertWithoutAppointmentsInput = {
+  update: Prisma.XOR<Prisma.providerUpdateWithoutAppointmentsInput, Prisma.providerUncheckedUpdateWithoutAppointmentsInput>
+  create: Prisma.XOR<Prisma.providerCreateWithoutAppointmentsInput, Prisma.providerUncheckedCreateWithoutAppointmentsInput>
+  where?: Prisma.providerWhereInput
 }
 
-export type ProviderUpdateToOneWithWhereWithoutAppointmentsInput = {
-  where?: Prisma.ProviderWhereInput
-  data: Prisma.XOR<Prisma.ProviderUpdateWithoutAppointmentsInput, Prisma.ProviderUncheckedUpdateWithoutAppointmentsInput>
+export type providerUpdateToOneWithWhereWithoutAppointmentsInput = {
+  where?: Prisma.providerWhereInput
+  data: Prisma.XOR<Prisma.providerUpdateWithoutAppointmentsInput, Prisma.providerUncheckedUpdateWithoutAppointmentsInput>
 }
 
-export type ProviderUpdateWithoutAppointmentsInput = {
+export type providerUpdateWithoutAppointmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  company?: Prisma.CompanyUpdateOneRequiredWithoutProvidersNestedInput
-  service?: Prisma.ServiceUpdateOneRequiredWithoutProvidersNestedInput
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.companyUpdateOneRequiredWithoutProvidersNestedInput
+  service?: Prisma.serviceUpdateOneRequiredWithoutProvidersNestedInput
 }
 
-export type ProviderUncheckedUpdateWithoutAppointmentsInput = {
+export type providerUncheckedUpdateWithoutAppointmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  company_id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  serviceId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  service_id?: Prisma.StringFieldUpdateOperationsInput | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type ProviderCreateManyCompanyInput = {
+export type providerCreateManyCompanyInput = {
   id?: string
   name: string
-  serviceId: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  service_id: string
+  created_at?: Date | string
+  updated_at?: Date | string
 }
 
-export type ProviderUpdateWithoutCompanyInput = {
+export type providerUpdateWithoutCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  service?: Prisma.ServiceUpdateOneRequiredWithoutProvidersNestedInput
-  appointments?: Prisma.AppointmentUpdateManyWithoutProviderNestedInput
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  service?: Prisma.serviceUpdateOneRequiredWithoutProvidersNestedInput
+  appointments?: Prisma.appointmentUpdateManyWithoutProviderNestedInput
 }
 
-export type ProviderUncheckedUpdateWithoutCompanyInput = {
+export type providerUncheckedUpdateWithoutCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  serviceId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutProviderNestedInput
+  service_id?: Prisma.StringFieldUpdateOperationsInput | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  appointments?: Prisma.appointmentUncheckedUpdateManyWithoutProviderNestedInput
 }
 
-export type ProviderUncheckedUpdateManyWithoutCompanyInput = {
+export type providerUncheckedUpdateManyWithoutCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  serviceId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  service_id?: Prisma.StringFieldUpdateOperationsInput | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type ProviderCreateManyServiceInput = {
+export type providerCreateManyServiceInput = {
   id?: string
-  companyId: string
+  company_id: string
   name: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  created_at?: Date | string
+  updated_at?: Date | string
 }
 
-export type ProviderUpdateWithoutServiceInput = {
+export type providerUpdateWithoutServiceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  company?: Prisma.CompanyUpdateOneRequiredWithoutProvidersNestedInput
-  appointments?: Prisma.AppointmentUpdateManyWithoutProviderNestedInput
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.companyUpdateOneRequiredWithoutProvidersNestedInput
+  appointments?: Prisma.appointmentUpdateManyWithoutProviderNestedInput
 }
 
-export type ProviderUncheckedUpdateWithoutServiceInput = {
+export type providerUncheckedUpdateWithoutServiceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  company_id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutProviderNestedInput
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  appointments?: Prisma.appointmentUncheckedUpdateManyWithoutProviderNestedInput
 }
 
-export type ProviderUncheckedUpdateManyWithoutServiceInput = {
+export type providerUncheckedUpdateManyWithoutServiceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  company_id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -700,100 +700,100 @@ export type ProviderCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ext
  * ProviderCountOutputType without action
  */
 export type ProviderCountOutputTypeCountAppointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AppointmentWhereInput
+  where?: Prisma.appointmentWhereInput
 }
 
 
-export type ProviderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+export type providerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  companyId?: boolean
+  company_id?: boolean
   name?: boolean
-  serviceId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  service?: boolean | Prisma.ServiceDefaultArgs<ExtArgs>
-  appointments?: boolean | Prisma.Provider$appointmentsArgs<ExtArgs>
+  service_id?: boolean
+  created_at?: boolean
+  updated_at?: boolean
+  company?: boolean | Prisma.companyDefaultArgs<ExtArgs>
+  service?: boolean | Prisma.serviceDefaultArgs<ExtArgs>
+  appointments?: boolean | Prisma.provider$appointmentsArgs<ExtArgs>
   _count?: boolean | Prisma.ProviderCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["provider"]>
 
-export type ProviderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+export type providerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  companyId?: boolean
+  company_id?: boolean
   name?: boolean
-  serviceId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  service?: boolean | Prisma.ServiceDefaultArgs<ExtArgs>
+  service_id?: boolean
+  created_at?: boolean
+  updated_at?: boolean
+  company?: boolean | Prisma.companyDefaultArgs<ExtArgs>
+  service?: boolean | Prisma.serviceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["provider"]>
 
-export type ProviderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+export type providerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  companyId?: boolean
+  company_id?: boolean
   name?: boolean
-  serviceId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  service?: boolean | Prisma.ServiceDefaultArgs<ExtArgs>
+  service_id?: boolean
+  created_at?: boolean
+  updated_at?: boolean
+  company?: boolean | Prisma.companyDefaultArgs<ExtArgs>
+  service?: boolean | Prisma.serviceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["provider"]>
 
-export type ProviderSelectScalar = {
+export type providerSelectScalar = {
   id?: boolean
-  companyId?: boolean
+  company_id?: boolean
   name?: boolean
-  serviceId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
+  service_id?: boolean
+  created_at?: boolean
+  updated_at?: boolean
 }
 
-export type ProviderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "name" | "serviceId" | "createdAt" | "updatedAt", ExtArgs["result"]["provider"]>
-export type ProviderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  service?: boolean | Prisma.ServiceDefaultArgs<ExtArgs>
-  appointments?: boolean | Prisma.Provider$appointmentsArgs<ExtArgs>
+export type providerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "company_id" | "name" | "service_id" | "created_at" | "updated_at", ExtArgs["result"]["provider"]>
+export type providerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  company?: boolean | Prisma.companyDefaultArgs<ExtArgs>
+  service?: boolean | Prisma.serviceDefaultArgs<ExtArgs>
+  appointments?: boolean | Prisma.provider$appointmentsArgs<ExtArgs>
   _count?: boolean | Prisma.ProviderCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type ProviderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  service?: boolean | Prisma.ServiceDefaultArgs<ExtArgs>
+export type providerIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  company?: boolean | Prisma.companyDefaultArgs<ExtArgs>
+  service?: boolean | Prisma.serviceDefaultArgs<ExtArgs>
 }
-export type ProviderIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
-  service?: boolean | Prisma.ServiceDefaultArgs<ExtArgs>
+export type providerIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  company?: boolean | Prisma.companyDefaultArgs<ExtArgs>
+  service?: boolean | Prisma.serviceDefaultArgs<ExtArgs>
 }
 
-export type $ProviderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  name: "Provider"
+export type $providerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  name: "provider"
   objects: {
-    company: Prisma.$CompanyPayload<ExtArgs>
-    service: Prisma.$ServicePayload<ExtArgs>
-    appointments: Prisma.$AppointmentPayload<ExtArgs>[]
+    company: Prisma.$companyPayload<ExtArgs>
+    service: Prisma.$servicePayload<ExtArgs>
+    appointments: Prisma.$appointmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    companyId: string
+    company_id: string
     name: string
-    serviceId: string
-    createdAt: Date
-    updatedAt: Date
+    service_id: string
+    created_at: Date
+    updated_at: Date
   }, ExtArgs["result"]["provider"]>
   composites: {}
 }
 
-export type ProviderGetPayload<S extends boolean | null | undefined | ProviderDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$ProviderPayload, S>
+export type providerGetPayload<S extends boolean | null | undefined | providerDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$providerPayload, S>
 
-export type ProviderCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
-  Omit<ProviderFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+export type providerCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
+  Omit<providerFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
     select?: ProviderCountAggregateInputType | true
   }
 
-export interface ProviderDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Provider'], meta: { name: 'Provider' } }
+export interface providerDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['provider'], meta: { name: 'provider' } }
   /**
    * Find zero or one Provider that matches the filter.
-   * @param {ProviderFindUniqueArgs} args - Arguments to find a Provider
+   * @param {providerFindUniqueArgs} args - Arguments to find a Provider
    * @example
    * // Get one Provider
    * const provider = await prisma.provider.findUnique({
@@ -802,12 +802,12 @@ export interface ProviderDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    *   }
    * })
    */
-  findUnique<T extends ProviderFindUniqueArgs>(args: Prisma.SelectSubset<T, ProviderFindUniqueArgs<ExtArgs>>): Prisma.Prisma__ProviderClient<runtime.Types.Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findUnique<T extends providerFindUniqueArgs>(args: Prisma.SelectSubset<T, providerFindUniqueArgs<ExtArgs>>): Prisma.Prisma__providerClient<runtime.Types.Result.GetResult<Prisma.$providerPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find one Provider that matches the filter or throw an error with `error.code='P2025'`
    * if no matches were found.
-   * @param {ProviderFindUniqueOrThrowArgs} args - Arguments to find a Provider
+   * @param {providerFindUniqueOrThrowArgs} args - Arguments to find a Provider
    * @example
    * // Get one Provider
    * const provider = await prisma.provider.findUniqueOrThrow({
@@ -816,13 +816,13 @@ export interface ProviderDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    *   }
    * })
    */
-  findUniqueOrThrow<T extends ProviderFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, ProviderFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__ProviderClient<runtime.Types.Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findUniqueOrThrow<T extends providerFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, providerFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__providerClient<runtime.Types.Result.GetResult<Prisma.$providerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first Provider that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProviderFindFirstArgs} args - Arguments to find a Provider
+   * @param {providerFindFirstArgs} args - Arguments to find a Provider
    * @example
    * // Get one Provider
    * const provider = await prisma.provider.findFirst({
@@ -831,14 +831,14 @@ export interface ProviderDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    *   }
    * })
    */
-  findFirst<T extends ProviderFindFirstArgs>(args?: Prisma.SelectSubset<T, ProviderFindFirstArgs<ExtArgs>>): Prisma.Prisma__ProviderClient<runtime.Types.Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findFirst<T extends providerFindFirstArgs>(args?: Prisma.SelectSubset<T, providerFindFirstArgs<ExtArgs>>): Prisma.Prisma__providerClient<runtime.Types.Result.GetResult<Prisma.$providerPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first Provider that matches the filter or
    * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProviderFindFirstOrThrowArgs} args - Arguments to find a Provider
+   * @param {providerFindFirstOrThrowArgs} args - Arguments to find a Provider
    * @example
    * // Get one Provider
    * const provider = await prisma.provider.findFirstOrThrow({
@@ -847,13 +847,13 @@ export interface ProviderDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    *   }
    * })
    */
-  findFirstOrThrow<T extends ProviderFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, ProviderFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__ProviderClient<runtime.Types.Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findFirstOrThrow<T extends providerFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, providerFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__providerClient<runtime.Types.Result.GetResult<Prisma.$providerPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find zero or more Providers that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProviderFindManyArgs} args - Arguments to filter and select certain fields only.
+   * @param {providerFindManyArgs} args - Arguments to filter and select certain fields only.
    * @example
    * // Get all Providers
    * const providers = await prisma.provider.findMany()
@@ -865,11 +865,11 @@ export interface ProviderDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * const providerWithIdOnly = await prisma.provider.findMany({ select: { id: true } })
    * 
    */
-  findMany<T extends ProviderFindManyArgs>(args?: Prisma.SelectSubset<T, ProviderFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+  findMany<T extends providerFindManyArgs>(args?: Prisma.SelectSubset<T, providerFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$providerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
   /**
    * Create a Provider.
-   * @param {ProviderCreateArgs} args - Arguments to create a Provider.
+   * @param {providerCreateArgs} args - Arguments to create a Provider.
    * @example
    * // Create one Provider
    * const Provider = await prisma.provider.create({
@@ -879,11 +879,11 @@ export interface ProviderDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * })
    * 
    */
-  create<T extends ProviderCreateArgs>(args: Prisma.SelectSubset<T, ProviderCreateArgs<ExtArgs>>): Prisma.Prisma__ProviderClient<runtime.Types.Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  create<T extends providerCreateArgs>(args: Prisma.SelectSubset<T, providerCreateArgs<ExtArgs>>): Prisma.Prisma__providerClient<runtime.Types.Result.GetResult<Prisma.$providerPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Create many Providers.
-   * @param {ProviderCreateManyArgs} args - Arguments to create many Providers.
+   * @param {providerCreateManyArgs} args - Arguments to create many Providers.
    * @example
    * // Create many Providers
    * const provider = await prisma.provider.createMany({
@@ -893,11 +893,11 @@ export interface ProviderDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * })
    *     
    */
-  createMany<T extends ProviderCreateManyArgs>(args?: Prisma.SelectSubset<T, ProviderCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  createMany<T extends providerCreateManyArgs>(args?: Prisma.SelectSubset<T, providerCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Create many Providers and returns the data saved in the database.
-   * @param {ProviderCreateManyAndReturnArgs} args - Arguments to create many Providers.
+   * @param {providerCreateManyAndReturnArgs} args - Arguments to create many Providers.
    * @example
    * // Create many Providers
    * const provider = await prisma.provider.createManyAndReturn({
@@ -917,11 +917,11 @@ export interface ProviderDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * Read more here: https://pris.ly/d/null-undefined
    * 
    */
-  createManyAndReturn<T extends ProviderCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, ProviderCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+  createManyAndReturn<T extends providerCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, providerCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$providerPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Delete a Provider.
-   * @param {ProviderDeleteArgs} args - Arguments to delete one Provider.
+   * @param {providerDeleteArgs} args - Arguments to delete one Provider.
    * @example
    * // Delete one Provider
    * const Provider = await prisma.provider.delete({
@@ -931,11 +931,11 @@ export interface ProviderDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * })
    * 
    */
-  delete<T extends ProviderDeleteArgs>(args: Prisma.SelectSubset<T, ProviderDeleteArgs<ExtArgs>>): Prisma.Prisma__ProviderClient<runtime.Types.Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  delete<T extends providerDeleteArgs>(args: Prisma.SelectSubset<T, providerDeleteArgs<ExtArgs>>): Prisma.Prisma__providerClient<runtime.Types.Result.GetResult<Prisma.$providerPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Update one Provider.
-   * @param {ProviderUpdateArgs} args - Arguments to update one Provider.
+   * @param {providerUpdateArgs} args - Arguments to update one Provider.
    * @example
    * // Update one Provider
    * const provider = await prisma.provider.update({
@@ -948,11 +948,11 @@ export interface ProviderDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * })
    * 
    */
-  update<T extends ProviderUpdateArgs>(args: Prisma.SelectSubset<T, ProviderUpdateArgs<ExtArgs>>): Prisma.Prisma__ProviderClient<runtime.Types.Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  update<T extends providerUpdateArgs>(args: Prisma.SelectSubset<T, providerUpdateArgs<ExtArgs>>): Prisma.Prisma__providerClient<runtime.Types.Result.GetResult<Prisma.$providerPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Delete zero or more Providers.
-   * @param {ProviderDeleteManyArgs} args - Arguments to filter Providers to delete.
+   * @param {providerDeleteManyArgs} args - Arguments to filter Providers to delete.
    * @example
    * // Delete a few Providers
    * const { count } = await prisma.provider.deleteMany({
@@ -962,13 +962,13 @@ export interface ProviderDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * })
    * 
    */
-  deleteMany<T extends ProviderDeleteManyArgs>(args?: Prisma.SelectSubset<T, ProviderDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  deleteMany<T extends providerDeleteManyArgs>(args?: Prisma.SelectSubset<T, providerDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Update zero or more Providers.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProviderUpdateManyArgs} args - Arguments to update one or more rows.
+   * @param {providerUpdateManyArgs} args - Arguments to update one or more rows.
    * @example
    * // Update many Providers
    * const provider = await prisma.provider.updateMany({
@@ -981,11 +981,11 @@ export interface ProviderDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * })
    * 
    */
-  updateMany<T extends ProviderUpdateManyArgs>(args: Prisma.SelectSubset<T, ProviderUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  updateMany<T extends providerUpdateManyArgs>(args: Prisma.SelectSubset<T, providerUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Update zero or more Providers and returns the data updated in the database.
-   * @param {ProviderUpdateManyAndReturnArgs} args - Arguments to update many Providers.
+   * @param {providerUpdateManyAndReturnArgs} args - Arguments to update many Providers.
    * @example
    * // Update many Providers
    * const provider = await prisma.provider.updateManyAndReturn({
@@ -1011,11 +1011,11 @@ export interface ProviderDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * Read more here: https://pris.ly/d/null-undefined
    * 
    */
-  updateManyAndReturn<T extends ProviderUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, ProviderUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+  updateManyAndReturn<T extends providerUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, providerUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$providerPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Provider.
-   * @param {ProviderUpsertArgs} args - Arguments to update or create a Provider.
+   * @param {providerUpsertArgs} args - Arguments to update or create a Provider.
    * @example
    * // Update or create a Provider
    * const provider = await prisma.provider.upsert({
@@ -1030,14 +1030,14 @@ export interface ProviderDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    *   }
    * })
    */
-  upsert<T extends ProviderUpsertArgs>(args: Prisma.SelectSubset<T, ProviderUpsertArgs<ExtArgs>>): Prisma.Prisma__ProviderClient<runtime.Types.Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  upsert<T extends providerUpsertArgs>(args: Prisma.SelectSubset<T, providerUpsertArgs<ExtArgs>>): Prisma.Prisma__providerClient<runtime.Types.Result.GetResult<Prisma.$providerPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
   /**
    * Count the number of Providers.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProviderCountArgs} args - Arguments to filter Providers to count.
+   * @param {providerCountArgs} args - Arguments to filter Providers to count.
    * @example
    * // Count the number of Providers
    * const count = await prisma.provider.count({
@@ -1046,8 +1046,8 @@ export interface ProviderDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    *   }
    * })
   **/
-  count<T extends ProviderCountArgs>(
-    args?: Prisma.Subset<T, ProviderCountArgs>,
+  count<T extends providerCountArgs>(
+    args?: Prisma.Subset<T, providerCountArgs>,
   ): Prisma.PrismaPromise<
     T extends runtime.Types.Utils.Record<'select', any>
       ? T['select'] extends true
@@ -1086,7 +1086,7 @@ export interface ProviderDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * Group by Provider.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {ProviderGroupByArgs} args - Group by arguments.
+   * @param {providerGroupByArgs} args - Group by arguments.
    * @example
    * // Group by city, order by createdAt, get count
    * const result = await prisma.user.groupBy({
@@ -1101,14 +1101,14 @@ export interface ProviderDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * 
   **/
   groupBy<
-    T extends ProviderGroupByArgs,
+    T extends providerGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
       Prisma.Extends<'skip', Prisma.Keys<T>>,
       Prisma.Extends<'take', Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: ProviderGroupByArgs['orderBy'] }
-      : { orderBy?: ProviderGroupByArgs['orderBy'] },
+      ? { orderBy: providerGroupByArgs['orderBy'] }
+      : { orderBy?: providerGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
     ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
@@ -1157,24 +1157,24 @@ export interface ProviderDelegate<ExtArgs extends runtime.Types.Extensions.Inter
           ? never
           : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
       }[OrderFields]
-  >(args: Prisma.SubsetIntersection<T, ProviderGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProviderGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  >(args: Prisma.SubsetIntersection<T, providerGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProviderGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 /**
- * Fields of the Provider model
+ * Fields of the provider model
  */
-readonly fields: ProviderFieldRefs;
+readonly fields: providerFieldRefs;
 }
 
 /**
- * The delegate class that acts as a "Promise-like" for Provider.
+ * The delegate class that acts as a "Promise-like" for provider.
  * Why is this prefixed with `Prisma__`?
  * Because we want to prevent naming conflicts as mentioned in
  * https://github.com/prisma/prisma-client-js/issues/707
  */
-export interface Prisma__ProviderClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+export interface Prisma__providerClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  company<T extends Prisma.CompanyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyDefaultArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  service<T extends Prisma.ServiceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ServiceDefaultArgs<ExtArgs>>): Prisma.Prisma__ServiceClient<runtime.Types.Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  appointments<T extends Prisma.Provider$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Provider$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  company<T extends Prisma.companyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.companyDefaultArgs<ExtArgs>>): Prisma.Prisma__companyClient<runtime.Types.Result.GetResult<Prisma.$companyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  service<T extends Prisma.serviceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.serviceDefaultArgs<ExtArgs>>): Prisma.Prisma__serviceClient<runtime.Types.Result.GetResult<Prisma.$servicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  appointments<T extends Prisma.provider$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.provider$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$appointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1201,448 +1201,448 @@ export interface Prisma__ProviderClient<T, Null = never, ExtArgs extends runtime
 
 
 /**
- * Fields of the Provider model
+ * Fields of the provider model
  */
-export interface ProviderFieldRefs {
-  readonly id: Prisma.FieldRef<"Provider", 'String'>
-  readonly companyId: Prisma.FieldRef<"Provider", 'String'>
-  readonly name: Prisma.FieldRef<"Provider", 'String'>
-  readonly serviceId: Prisma.FieldRef<"Provider", 'String'>
-  readonly createdAt: Prisma.FieldRef<"Provider", 'DateTime'>
-  readonly updatedAt: Prisma.FieldRef<"Provider", 'DateTime'>
+export interface providerFieldRefs {
+  readonly id: Prisma.FieldRef<"provider", 'String'>
+  readonly company_id: Prisma.FieldRef<"provider", 'String'>
+  readonly name: Prisma.FieldRef<"provider", 'String'>
+  readonly service_id: Prisma.FieldRef<"provider", 'String'>
+  readonly created_at: Prisma.FieldRef<"provider", 'DateTime'>
+  readonly updated_at: Prisma.FieldRef<"provider", 'DateTime'>
 }
     
 
 // Custom InputTypes
 /**
- * Provider findUnique
+ * provider findUnique
  */
-export type ProviderFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type providerFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Provider
+   * Select specific fields to fetch from the provider
    */
-  select?: Prisma.ProviderSelect<ExtArgs> | null
+  select?: Prisma.providerSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Provider
+   * Omit specific fields from the provider
    */
-  omit?: Prisma.ProviderOmit<ExtArgs> | null
+  omit?: Prisma.providerOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProviderInclude<ExtArgs> | null
+  include?: Prisma.providerInclude<ExtArgs> | null
   /**
-   * Filter, which Provider to fetch.
+   * Filter, which provider to fetch.
    */
-  where: Prisma.ProviderWhereUniqueInput
+  where: Prisma.providerWhereUniqueInput
 }
 
 /**
- * Provider findUniqueOrThrow
+ * provider findUniqueOrThrow
  */
-export type ProviderFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type providerFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Provider
+   * Select specific fields to fetch from the provider
    */
-  select?: Prisma.ProviderSelect<ExtArgs> | null
+  select?: Prisma.providerSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Provider
+   * Omit specific fields from the provider
    */
-  omit?: Prisma.ProviderOmit<ExtArgs> | null
+  omit?: Prisma.providerOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProviderInclude<ExtArgs> | null
+  include?: Prisma.providerInclude<ExtArgs> | null
   /**
-   * Filter, which Provider to fetch.
+   * Filter, which provider to fetch.
    */
-  where: Prisma.ProviderWhereUniqueInput
+  where: Prisma.providerWhereUniqueInput
 }
 
 /**
- * Provider findFirst
+ * provider findFirst
  */
-export type ProviderFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type providerFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Provider
+   * Select specific fields to fetch from the provider
    */
-  select?: Prisma.ProviderSelect<ExtArgs> | null
+  select?: Prisma.providerSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Provider
+   * Omit specific fields from the provider
    */
-  omit?: Prisma.ProviderOmit<ExtArgs> | null
+  omit?: Prisma.providerOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProviderInclude<ExtArgs> | null
+  include?: Prisma.providerInclude<ExtArgs> | null
   /**
-   * Filter, which Provider to fetch.
+   * Filter, which provider to fetch.
    */
-  where?: Prisma.ProviderWhereInput
+  where?: Prisma.providerWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Providers to fetch.
+   * Determine the order of providers to fetch.
    */
-  orderBy?: Prisma.ProviderOrderByWithRelationInput | Prisma.ProviderOrderByWithRelationInput[]
+  orderBy?: Prisma.providerOrderByWithRelationInput | Prisma.providerOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for Providers.
+   * Sets the position for searching for providers.
    */
-  cursor?: Prisma.ProviderWhereUniqueInput
+  cursor?: Prisma.providerWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Providers from the position of the cursor.
+   * Take `±n` providers from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Providers.
+   * Skip the first `n` providers.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of Providers.
+   * Filter by unique combinations of providers.
    */
   distinct?: Prisma.ProviderScalarFieldEnum | Prisma.ProviderScalarFieldEnum[]
 }
 
 /**
- * Provider findFirstOrThrow
+ * provider findFirstOrThrow
  */
-export type ProviderFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type providerFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Provider
+   * Select specific fields to fetch from the provider
    */
-  select?: Prisma.ProviderSelect<ExtArgs> | null
+  select?: Prisma.providerSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Provider
+   * Omit specific fields from the provider
    */
-  omit?: Prisma.ProviderOmit<ExtArgs> | null
+  omit?: Prisma.providerOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProviderInclude<ExtArgs> | null
+  include?: Prisma.providerInclude<ExtArgs> | null
   /**
-   * Filter, which Provider to fetch.
+   * Filter, which provider to fetch.
    */
-  where?: Prisma.ProviderWhereInput
+  where?: Prisma.providerWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Providers to fetch.
+   * Determine the order of providers to fetch.
    */
-  orderBy?: Prisma.ProviderOrderByWithRelationInput | Prisma.ProviderOrderByWithRelationInput[]
+  orderBy?: Prisma.providerOrderByWithRelationInput | Prisma.providerOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for Providers.
+   * Sets the position for searching for providers.
    */
-  cursor?: Prisma.ProviderWhereUniqueInput
+  cursor?: Prisma.providerWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Providers from the position of the cursor.
+   * Take `±n` providers from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Providers.
+   * Skip the first `n` providers.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of Providers.
+   * Filter by unique combinations of providers.
    */
   distinct?: Prisma.ProviderScalarFieldEnum | Prisma.ProviderScalarFieldEnum[]
 }
 
 /**
- * Provider findMany
+ * provider findMany
  */
-export type ProviderFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type providerFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Provider
+   * Select specific fields to fetch from the provider
    */
-  select?: Prisma.ProviderSelect<ExtArgs> | null
+  select?: Prisma.providerSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Provider
+   * Omit specific fields from the provider
    */
-  omit?: Prisma.ProviderOmit<ExtArgs> | null
+  omit?: Prisma.providerOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProviderInclude<ExtArgs> | null
+  include?: Prisma.providerInclude<ExtArgs> | null
   /**
-   * Filter, which Providers to fetch.
+   * Filter, which providers to fetch.
    */
-  where?: Prisma.ProviderWhereInput
+  where?: Prisma.providerWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Providers to fetch.
+   * Determine the order of providers to fetch.
    */
-  orderBy?: Prisma.ProviderOrderByWithRelationInput | Prisma.ProviderOrderByWithRelationInput[]
+  orderBy?: Prisma.providerOrderByWithRelationInput | Prisma.providerOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for listing Providers.
+   * Sets the position for listing providers.
    */
-  cursor?: Prisma.ProviderWhereUniqueInput
+  cursor?: Prisma.providerWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Providers from the position of the cursor.
+   * Take `±n` providers from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Providers.
+   * Skip the first `n` providers.
    */
   skip?: number
   distinct?: Prisma.ProviderScalarFieldEnum | Prisma.ProviderScalarFieldEnum[]
 }
 
 /**
- * Provider create
+ * provider create
  */
-export type ProviderCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type providerCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Provider
+   * Select specific fields to fetch from the provider
    */
-  select?: Prisma.ProviderSelect<ExtArgs> | null
+  select?: Prisma.providerSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Provider
+   * Omit specific fields from the provider
    */
-  omit?: Prisma.ProviderOmit<ExtArgs> | null
+  omit?: Prisma.providerOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProviderInclude<ExtArgs> | null
+  include?: Prisma.providerInclude<ExtArgs> | null
   /**
-   * The data needed to create a Provider.
+   * The data needed to create a provider.
    */
-  data: Prisma.XOR<Prisma.ProviderCreateInput, Prisma.ProviderUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.providerCreateInput, Prisma.providerUncheckedCreateInput>
 }
 
 /**
- * Provider createMany
+ * provider createMany
  */
-export type ProviderCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type providerCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to create many Providers.
+   * The data used to create many providers.
    */
-  data: Prisma.ProviderCreateManyInput | Prisma.ProviderCreateManyInput[]
+  data: Prisma.providerCreateManyInput | Prisma.providerCreateManyInput[]
   skipDuplicates?: boolean
 }
 
 /**
- * Provider createManyAndReturn
+ * provider createManyAndReturn
  */
-export type ProviderCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type providerCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Provider
+   * Select specific fields to fetch from the provider
    */
-  select?: Prisma.ProviderSelectCreateManyAndReturn<ExtArgs> | null
+  select?: Prisma.providerSelectCreateManyAndReturn<ExtArgs> | null
   /**
-   * Omit specific fields from the Provider
+   * Omit specific fields from the provider
    */
-  omit?: Prisma.ProviderOmit<ExtArgs> | null
+  omit?: Prisma.providerOmit<ExtArgs> | null
   /**
-   * The data used to create many Providers.
+   * The data used to create many providers.
    */
-  data: Prisma.ProviderCreateManyInput | Prisma.ProviderCreateManyInput[]
+  data: Prisma.providerCreateManyInput | Prisma.providerCreateManyInput[]
   skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProviderIncludeCreateManyAndReturn<ExtArgs> | null
+  include?: Prisma.providerIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
- * Provider update
+ * provider update
  */
-export type ProviderUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type providerUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Provider
+   * Select specific fields to fetch from the provider
    */
-  select?: Prisma.ProviderSelect<ExtArgs> | null
+  select?: Prisma.providerSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Provider
+   * Omit specific fields from the provider
    */
-  omit?: Prisma.ProviderOmit<ExtArgs> | null
+  omit?: Prisma.providerOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProviderInclude<ExtArgs> | null
+  include?: Prisma.providerInclude<ExtArgs> | null
   /**
-   * The data needed to update a Provider.
+   * The data needed to update a provider.
    */
-  data: Prisma.XOR<Prisma.ProviderUpdateInput, Prisma.ProviderUncheckedUpdateInput>
+  data: Prisma.XOR<Prisma.providerUpdateInput, Prisma.providerUncheckedUpdateInput>
   /**
-   * Choose, which Provider to update.
+   * Choose, which provider to update.
    */
-  where: Prisma.ProviderWhereUniqueInput
+  where: Prisma.providerWhereUniqueInput
 }
 
 /**
- * Provider updateMany
+ * provider updateMany
  */
-export type ProviderUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type providerUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to update Providers.
+   * The data used to update providers.
    */
-  data: Prisma.XOR<Prisma.ProviderUpdateManyMutationInput, Prisma.ProviderUncheckedUpdateManyInput>
+  data: Prisma.XOR<Prisma.providerUpdateManyMutationInput, Prisma.providerUncheckedUpdateManyInput>
   /**
-   * Filter which Providers to update
+   * Filter which providers to update
    */
-  where?: Prisma.ProviderWhereInput
+  where?: Prisma.providerWhereInput
   /**
-   * Limit how many Providers to update.
+   * Limit how many providers to update.
    */
   limit?: number
 }
 
 /**
- * Provider updateManyAndReturn
+ * provider updateManyAndReturn
  */
-export type ProviderUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type providerUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Provider
+   * Select specific fields to fetch from the provider
    */
-  select?: Prisma.ProviderSelectUpdateManyAndReturn<ExtArgs> | null
+  select?: Prisma.providerSelectUpdateManyAndReturn<ExtArgs> | null
   /**
-   * Omit specific fields from the Provider
+   * Omit specific fields from the provider
    */
-  omit?: Prisma.ProviderOmit<ExtArgs> | null
+  omit?: Prisma.providerOmit<ExtArgs> | null
   /**
-   * The data used to update Providers.
+   * The data used to update providers.
    */
-  data: Prisma.XOR<Prisma.ProviderUpdateManyMutationInput, Prisma.ProviderUncheckedUpdateManyInput>
+  data: Prisma.XOR<Prisma.providerUpdateManyMutationInput, Prisma.providerUncheckedUpdateManyInput>
   /**
-   * Filter which Providers to update
+   * Filter which providers to update
    */
-  where?: Prisma.ProviderWhereInput
+  where?: Prisma.providerWhereInput
   /**
-   * Limit how many Providers to update.
+   * Limit how many providers to update.
    */
   limit?: number
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProviderIncludeUpdateManyAndReturn<ExtArgs> | null
+  include?: Prisma.providerIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
- * Provider upsert
+ * provider upsert
  */
-export type ProviderUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type providerUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Provider
+   * Select specific fields to fetch from the provider
    */
-  select?: Prisma.ProviderSelect<ExtArgs> | null
+  select?: Prisma.providerSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Provider
+   * Omit specific fields from the provider
    */
-  omit?: Prisma.ProviderOmit<ExtArgs> | null
+  omit?: Prisma.providerOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProviderInclude<ExtArgs> | null
+  include?: Prisma.providerInclude<ExtArgs> | null
   /**
-   * The filter to search for the Provider to update in case it exists.
+   * The filter to search for the provider to update in case it exists.
    */
-  where: Prisma.ProviderWhereUniqueInput
+  where: Prisma.providerWhereUniqueInput
   /**
-   * In case the Provider found by the `where` argument doesn't exist, create a new Provider with this data.
+   * In case the provider found by the `where` argument doesn't exist, create a new provider with this data.
    */
-  create: Prisma.XOR<Prisma.ProviderCreateInput, Prisma.ProviderUncheckedCreateInput>
+  create: Prisma.XOR<Prisma.providerCreateInput, Prisma.providerUncheckedCreateInput>
   /**
-   * In case the Provider was found with the provided `where` argument, update it with this data.
+   * In case the provider was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.ProviderUpdateInput, Prisma.ProviderUncheckedUpdateInput>
+  update: Prisma.XOR<Prisma.providerUpdateInput, Prisma.providerUncheckedUpdateInput>
 }
 
 /**
- * Provider delete
+ * provider delete
  */
-export type ProviderDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type providerDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Provider
+   * Select specific fields to fetch from the provider
    */
-  select?: Prisma.ProviderSelect<ExtArgs> | null
+  select?: Prisma.providerSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Provider
+   * Omit specific fields from the provider
    */
-  omit?: Prisma.ProviderOmit<ExtArgs> | null
+  omit?: Prisma.providerOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProviderInclude<ExtArgs> | null
+  include?: Prisma.providerInclude<ExtArgs> | null
   /**
-   * Filter which Provider to delete.
+   * Filter which provider to delete.
    */
-  where: Prisma.ProviderWhereUniqueInput
+  where: Prisma.providerWhereUniqueInput
 }
 
 /**
- * Provider deleteMany
+ * provider deleteMany
  */
-export type ProviderDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type providerDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which Providers to delete
+   * Filter which providers to delete
    */
-  where?: Prisma.ProviderWhereInput
+  where?: Prisma.providerWhereInput
   /**
-   * Limit how many Providers to delete.
+   * Limit how many providers to delete.
    */
   limit?: number
 }
 
 /**
- * Provider.appointments
+ * provider.appointments
  */
-export type Provider$appointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type provider$appointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Appointment
+   * Select specific fields to fetch from the appointment
    */
-  select?: Prisma.AppointmentSelect<ExtArgs> | null
+  select?: Prisma.appointmentSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Appointment
+   * Omit specific fields from the appointment
    */
-  omit?: Prisma.AppointmentOmit<ExtArgs> | null
+  omit?: Prisma.appointmentOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.AppointmentInclude<ExtArgs> | null
-  where?: Prisma.AppointmentWhereInput
-  orderBy?: Prisma.AppointmentOrderByWithRelationInput | Prisma.AppointmentOrderByWithRelationInput[]
-  cursor?: Prisma.AppointmentWhereUniqueInput
+  include?: Prisma.appointmentInclude<ExtArgs> | null
+  where?: Prisma.appointmentWhereInput
+  orderBy?: Prisma.appointmentOrderByWithRelationInput | Prisma.appointmentOrderByWithRelationInput[]
+  cursor?: Prisma.appointmentWhereUniqueInput
   take?: number
   skip?: number
   distinct?: Prisma.AppointmentScalarFieldEnum | Prisma.AppointmentScalarFieldEnum[]
 }
 
 /**
- * Provider without action
+ * provider without action
  */
-export type ProviderDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type providerDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Provider
+   * Select specific fields to fetch from the provider
    */
-  select?: Prisma.ProviderSelect<ExtArgs> | null
+  select?: Prisma.providerSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Provider
+   * Omit specific fields from the provider
    */
-  omit?: Prisma.ProviderOmit<ExtArgs> | null
+  omit?: Prisma.providerOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProviderInclude<ExtArgs> | null
+  include?: Prisma.providerInclude<ExtArgs> | null
 }

@@ -4,7 +4,7 @@
 // biome-ignore-all lint: generated file
 // @ts-nocheck 
 /*
- * This file exports the `Company` model and its related types.
+ * This file exports the `company` model and its related types.
  *
  * 🟢 You can import this file directly.
  */
@@ -13,10 +13,10 @@ import type * as $Enums from "../enums.ts"
 import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
- * Model Company
+ * Model company
  * 
  */
-export type CompanyModel = runtime.Types.Result.DefaultSelection<Prisma.$CompanyPayload>
+export type companyModel = runtime.Types.Result.DefaultSelection<Prisma.$companyPayload>
 
 export type AggregateCompany = {
   _count: CompanyCountAggregateOutputType | null
@@ -28,72 +28,33 @@ export type CompanyMinAggregateOutputType = {
   id: string | null
   name: string | null
   domain: string | null
-  companyBrief: string | null
-  apiKey: string | null
+  company_brief: string | null
   ehr: $Enums.EhrType | null
   address: string | null
-  googleAdsAccessToken: string | null
-  googleAdsRefreshToken: string | null
-  googleAdsTokenExpiresAt: Date | null
-  googleAdsCustomerId: string | null
-  googleAdsAccountName: string | null
-  googleAdsCurrencyCode: string | null
-  googleAdsTimeZone: string | null
-  googleAdsConnectedAt: Date | null
-  googleAdsAccountSelectedAt: Date | null
-  googleAdsLastSyncedAt: Date | null
-  googleAdsLastError: string | null
-  googleAdsLastErrorAt: Date | null
-  createdAt: Date | null
-  updatedAt: Date | null
+  created_at: Date | null
+  updated_at: Date | null
 }
 
 export type CompanyMaxAggregateOutputType = {
   id: string | null
   name: string | null
   domain: string | null
-  companyBrief: string | null
-  apiKey: string | null
+  company_brief: string | null
   ehr: $Enums.EhrType | null
   address: string | null
-  googleAdsAccessToken: string | null
-  googleAdsRefreshToken: string | null
-  googleAdsTokenExpiresAt: Date | null
-  googleAdsCustomerId: string | null
-  googleAdsAccountName: string | null
-  googleAdsCurrencyCode: string | null
-  googleAdsTimeZone: string | null
-  googleAdsConnectedAt: Date | null
-  googleAdsAccountSelectedAt: Date | null
-  googleAdsLastSyncedAt: Date | null
-  googleAdsLastError: string | null
-  googleAdsLastErrorAt: Date | null
-  createdAt: Date | null
-  updatedAt: Date | null
+  created_at: Date | null
+  updated_at: Date | null
 }
 
 export type CompanyCountAggregateOutputType = {
   id: number
   name: number
   domain: number
-  companyBrief: number
-  apiKey: number
+  company_brief: number
   ehr: number
   address: number
-  googleAdsAccessToken: number
-  googleAdsRefreshToken: number
-  googleAdsTokenExpiresAt: number
-  googleAdsCustomerId: number
-  googleAdsAccountName: number
-  googleAdsCurrencyCode: number
-  googleAdsTimeZone: number
-  googleAdsConnectedAt: number
-  googleAdsAccountSelectedAt: number
-  googleAdsLastSyncedAt: number
-  googleAdsLastError: number
-  googleAdsLastErrorAt: number
-  createdAt: number
-  updatedAt: number
+  created_at: number
+  updated_at: number
   _all: number
 }
 
@@ -102,108 +63,69 @@ export type CompanyMinAggregateInputType = {
   id?: true
   name?: true
   domain?: true
-  companyBrief?: true
-  apiKey?: true
+  company_brief?: true
   ehr?: true
   address?: true
-  googleAdsAccessToken?: true
-  googleAdsRefreshToken?: true
-  googleAdsTokenExpiresAt?: true
-  googleAdsCustomerId?: true
-  googleAdsAccountName?: true
-  googleAdsCurrencyCode?: true
-  googleAdsTimeZone?: true
-  googleAdsConnectedAt?: true
-  googleAdsAccountSelectedAt?: true
-  googleAdsLastSyncedAt?: true
-  googleAdsLastError?: true
-  googleAdsLastErrorAt?: true
-  createdAt?: true
-  updatedAt?: true
+  created_at?: true
+  updated_at?: true
 }
 
 export type CompanyMaxAggregateInputType = {
   id?: true
   name?: true
   domain?: true
-  companyBrief?: true
-  apiKey?: true
+  company_brief?: true
   ehr?: true
   address?: true
-  googleAdsAccessToken?: true
-  googleAdsRefreshToken?: true
-  googleAdsTokenExpiresAt?: true
-  googleAdsCustomerId?: true
-  googleAdsAccountName?: true
-  googleAdsCurrencyCode?: true
-  googleAdsTimeZone?: true
-  googleAdsConnectedAt?: true
-  googleAdsAccountSelectedAt?: true
-  googleAdsLastSyncedAt?: true
-  googleAdsLastError?: true
-  googleAdsLastErrorAt?: true
-  createdAt?: true
-  updatedAt?: true
+  created_at?: true
+  updated_at?: true
 }
 
 export type CompanyCountAggregateInputType = {
   id?: true
   name?: true
   domain?: true
-  companyBrief?: true
-  apiKey?: true
+  company_brief?: true
   ehr?: true
   address?: true
-  googleAdsAccessToken?: true
-  googleAdsRefreshToken?: true
-  googleAdsTokenExpiresAt?: true
-  googleAdsCustomerId?: true
-  googleAdsAccountName?: true
-  googleAdsCurrencyCode?: true
-  googleAdsTimeZone?: true
-  googleAdsConnectedAt?: true
-  googleAdsAccountSelectedAt?: true
-  googleAdsLastSyncedAt?: true
-  googleAdsLastError?: true
-  googleAdsLastErrorAt?: true
-  createdAt?: true
-  updatedAt?: true
+  created_at?: true
+  updated_at?: true
   _all?: true
 }
 
 export type CompanyAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which Company to aggregate.
+   * Filter which company to aggregate.
    */
-  where?: Prisma.CompanyWhereInput
+  where?: Prisma.companyWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Companies to fetch.
+   * Determine the order of companies to fetch.
    */
-  orderBy?: Prisma.CompanyOrderByWithRelationInput | Prisma.CompanyOrderByWithRelationInput[]
+  orderBy?: Prisma.companyOrderByWithRelationInput | Prisma.companyOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
    * Sets the start position
    */
-  cursor?: Prisma.CompanyWhereUniqueInput
+  cursor?: Prisma.companyWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Companies from the position of the cursor.
+   * Take `±n` companies from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Companies.
+   * Skip the first `n` companies.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Count returned Companies
+   * Count returned companies
   **/
   _count?: true | CompanyCountAggregateInputType
   /**
@@ -231,11 +153,11 @@ export type GetCompanyAggregateType<T extends CompanyAggregateArgs> = {
 
 
 
-export type CompanyGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.CompanyWhereInput
-  orderBy?: Prisma.CompanyOrderByWithAggregationInput | Prisma.CompanyOrderByWithAggregationInput[]
+export type companyGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.companyWhereInput
+  orderBy?: Prisma.companyOrderByWithAggregationInput | Prisma.companyOrderByWithAggregationInput[]
   by: Prisma.CompanyScalarFieldEnum[] | Prisma.CompanyScalarFieldEnum
-  having?: Prisma.CompanyScalarWhereWithAggregatesInput
+  having?: Prisma.companyScalarWhereWithAggregatesInput
   take?: number
   skip?: number
   _count?: CompanyCountAggregateInputType | true
@@ -247,30 +169,17 @@ export type CompanyGroupByOutputType = {
   id: string
   name: string
   domain: string
-  companyBrief: string | null
-  apiKey: string
+  company_brief: string | null
   ehr: $Enums.EhrType | null
   address: string | null
-  googleAdsAccessToken: string | null
-  googleAdsRefreshToken: string | null
-  googleAdsTokenExpiresAt: Date | null
-  googleAdsCustomerId: string | null
-  googleAdsAccountName: string | null
-  googleAdsCurrencyCode: string | null
-  googleAdsTimeZone: string | null
-  googleAdsConnectedAt: Date | null
-  googleAdsAccountSelectedAt: Date | null
-  googleAdsLastSyncedAt: Date | null
-  googleAdsLastError: string | null
-  googleAdsLastErrorAt: Date | null
-  createdAt: Date
-  updatedAt: Date
+  created_at: Date
+  updated_at: Date
   _count: CompanyCountAggregateOutputType | null
   _min: CompanyMinAggregateOutputType | null
   _max: CompanyMaxAggregateOutputType | null
 }
 
-type GetCompanyGroupByPayload<T extends CompanyGroupByArgs> = Prisma.PrismaPromise<
+type GetCompanyGroupByPayload<T extends companyGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<CompanyGroupByOutputType, T['by']> &
       {
@@ -285,430 +194,221 @@ type GetCompanyGroupByPayload<T extends CompanyGroupByArgs> = Prisma.PrismaPromi
 
 
 
-export type CompanyWhereInput = {
-  AND?: Prisma.CompanyWhereInput | Prisma.CompanyWhereInput[]
-  OR?: Prisma.CompanyWhereInput[]
-  NOT?: Prisma.CompanyWhereInput | Prisma.CompanyWhereInput[]
-  id?: Prisma.StringFilter<"Company"> | string
-  name?: Prisma.StringFilter<"Company"> | string
-  domain?: Prisma.StringFilter<"Company"> | string
-  companyBrief?: Prisma.StringNullableFilter<"Company"> | string | null
-  apiKey?: Prisma.StringFilter<"Company"> | string
-  ehr?: Prisma.EnumEhrTypeNullableFilter<"Company"> | $Enums.EhrType | null
-  address?: Prisma.StringNullableFilter<"Company"> | string | null
-  googleAdsAccessToken?: Prisma.StringNullableFilter<"Company"> | string | null
-  googleAdsRefreshToken?: Prisma.StringNullableFilter<"Company"> | string | null
-  googleAdsTokenExpiresAt?: Prisma.DateTimeNullableFilter<"Company"> | Date | string | null
-  googleAdsCustomerId?: Prisma.StringNullableFilter<"Company"> | string | null
-  googleAdsAccountName?: Prisma.StringNullableFilter<"Company"> | string | null
-  googleAdsCurrencyCode?: Prisma.StringNullableFilter<"Company"> | string | null
-  googleAdsTimeZone?: Prisma.StringNullableFilter<"Company"> | string | null
-  googleAdsConnectedAt?: Prisma.DateTimeNullableFilter<"Company"> | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.DateTimeNullableFilter<"Company"> | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.DateTimeNullableFilter<"Company"> | Date | string | null
-  googleAdsLastError?: Prisma.StringNullableFilter<"Company"> | string | null
-  googleAdsLastErrorAt?: Prisma.DateTimeNullableFilter<"Company"> | Date | string | null
-  createdAt?: Prisma.DateTimeFilter<"Company"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Company"> | Date | string
-  contacts?: Prisma.ContactListRelationFilter
+export type companyWhereInput = {
+  AND?: Prisma.companyWhereInput | Prisma.companyWhereInput[]
+  OR?: Prisma.companyWhereInput[]
+  NOT?: Prisma.companyWhereInput | Prisma.companyWhereInput[]
+  id?: Prisma.StringFilter<"company"> | string
+  name?: Prisma.StringFilter<"company"> | string
+  domain?: Prisma.StringFilter<"company"> | string
+  company_brief?: Prisma.StringNullableFilter<"company"> | string | null
+  ehr?: Prisma.EnumEhrTypeNullableFilter<"company"> | $Enums.EhrType | null
+  address?: Prisma.StringNullableFilter<"company"> | string | null
+  created_at?: Prisma.DateTimeFilter<"company"> | Date | string
+  updated_at?: Prisma.DateTimeFilter<"company"> | Date | string
+  people?: Prisma.PersonListRelationFilter
   services?: Prisma.ServiceListRelationFilter
   providers?: Prisma.ProviderListRelationFilter
   appointments?: Prisma.AppointmentListRelationFilter
-  oauthStates?: Prisma.OAuthStateListRelationFilter
-  cmsPages?: Prisma.CmsPageListRelationFilter
-  payments?: Prisma.PaymentsListRelationFilter
+  cms_pages?: Prisma.Cms_pageListRelationFilter
 }
 
-export type CompanyOrderByWithRelationInput = {
+export type companyOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   domain?: Prisma.SortOrder
-  companyBrief?: Prisma.SortOrderInput | Prisma.SortOrder
-  apiKey?: Prisma.SortOrder
+  company_brief?: Prisma.SortOrderInput | Prisma.SortOrder
   ehr?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsAccessToken?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsRefreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsTokenExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsAccountName?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsCurrencyCode?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsTimeZone?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsConnectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsAccountSelectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsLastSyncedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsLastError?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsLastErrorAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
-  contacts?: Prisma.ContactOrderByRelationAggregateInput
-  services?: Prisma.ServiceOrderByRelationAggregateInput
-  providers?: Prisma.ProviderOrderByRelationAggregateInput
-  appointments?: Prisma.AppointmentOrderByRelationAggregateInput
-  oauthStates?: Prisma.OAuthStateOrderByRelationAggregateInput
-  cmsPages?: Prisma.CmsPageOrderByRelationAggregateInput
-  payments?: Prisma.PaymentsOrderByRelationAggregateInput
+  created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
+  people?: Prisma.personOrderByRelationAggregateInput
+  services?: Prisma.serviceOrderByRelationAggregateInput
+  providers?: Prisma.providerOrderByRelationAggregateInput
+  appointments?: Prisma.appointmentOrderByRelationAggregateInput
+  cms_pages?: Prisma.cms_pageOrderByRelationAggregateInput
 }
 
-export type CompanyWhereUniqueInput = Prisma.AtLeast<{
+export type companyWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  apiKey?: string
-  AND?: Prisma.CompanyWhereInput | Prisma.CompanyWhereInput[]
-  OR?: Prisma.CompanyWhereInput[]
-  NOT?: Prisma.CompanyWhereInput | Prisma.CompanyWhereInput[]
-  name?: Prisma.StringFilter<"Company"> | string
-  domain?: Prisma.StringFilter<"Company"> | string
-  companyBrief?: Prisma.StringNullableFilter<"Company"> | string | null
-  ehr?: Prisma.EnumEhrTypeNullableFilter<"Company"> | $Enums.EhrType | null
-  address?: Prisma.StringNullableFilter<"Company"> | string | null
-  googleAdsAccessToken?: Prisma.StringNullableFilter<"Company"> | string | null
-  googleAdsRefreshToken?: Prisma.StringNullableFilter<"Company"> | string | null
-  googleAdsTokenExpiresAt?: Prisma.DateTimeNullableFilter<"Company"> | Date | string | null
-  googleAdsCustomerId?: Prisma.StringNullableFilter<"Company"> | string | null
-  googleAdsAccountName?: Prisma.StringNullableFilter<"Company"> | string | null
-  googleAdsCurrencyCode?: Prisma.StringNullableFilter<"Company"> | string | null
-  googleAdsTimeZone?: Prisma.StringNullableFilter<"Company"> | string | null
-  googleAdsConnectedAt?: Prisma.DateTimeNullableFilter<"Company"> | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.DateTimeNullableFilter<"Company"> | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.DateTimeNullableFilter<"Company"> | Date | string | null
-  googleAdsLastError?: Prisma.StringNullableFilter<"Company"> | string | null
-  googleAdsLastErrorAt?: Prisma.DateTimeNullableFilter<"Company"> | Date | string | null
-  createdAt?: Prisma.DateTimeFilter<"Company"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Company"> | Date | string
-  contacts?: Prisma.ContactListRelationFilter
+  AND?: Prisma.companyWhereInput | Prisma.companyWhereInput[]
+  OR?: Prisma.companyWhereInput[]
+  NOT?: Prisma.companyWhereInput | Prisma.companyWhereInput[]
+  name?: Prisma.StringFilter<"company"> | string
+  domain?: Prisma.StringFilter<"company"> | string
+  company_brief?: Prisma.StringNullableFilter<"company"> | string | null
+  ehr?: Prisma.EnumEhrTypeNullableFilter<"company"> | $Enums.EhrType | null
+  address?: Prisma.StringNullableFilter<"company"> | string | null
+  created_at?: Prisma.DateTimeFilter<"company"> | Date | string
+  updated_at?: Prisma.DateTimeFilter<"company"> | Date | string
+  people?: Prisma.PersonListRelationFilter
   services?: Prisma.ServiceListRelationFilter
   providers?: Prisma.ProviderListRelationFilter
   appointments?: Prisma.AppointmentListRelationFilter
-  oauthStates?: Prisma.OAuthStateListRelationFilter
-  cmsPages?: Prisma.CmsPageListRelationFilter
-  payments?: Prisma.PaymentsListRelationFilter
-}, "id" | "apiKey">
+  cms_pages?: Prisma.Cms_pageListRelationFilter
+}, "id">
 
-export type CompanyOrderByWithAggregationInput = {
+export type companyOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   domain?: Prisma.SortOrder
-  companyBrief?: Prisma.SortOrderInput | Prisma.SortOrder
-  apiKey?: Prisma.SortOrder
+  company_brief?: Prisma.SortOrderInput | Prisma.SortOrder
   ehr?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsAccessToken?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsRefreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsTokenExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsAccountName?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsCurrencyCode?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsTimeZone?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsConnectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsAccountSelectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsLastSyncedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsLastError?: Prisma.SortOrderInput | Prisma.SortOrder
-  googleAdsLastErrorAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
-  _count?: Prisma.CompanyCountOrderByAggregateInput
-  _max?: Prisma.CompanyMaxOrderByAggregateInput
-  _min?: Prisma.CompanyMinOrderByAggregateInput
+  created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
+  _count?: Prisma.companyCountOrderByAggregateInput
+  _max?: Prisma.companyMaxOrderByAggregateInput
+  _min?: Prisma.companyMinOrderByAggregateInput
 }
 
-export type CompanyScalarWhereWithAggregatesInput = {
-  AND?: Prisma.CompanyScalarWhereWithAggregatesInput | Prisma.CompanyScalarWhereWithAggregatesInput[]
-  OR?: Prisma.CompanyScalarWhereWithAggregatesInput[]
-  NOT?: Prisma.CompanyScalarWhereWithAggregatesInput | Prisma.CompanyScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"Company"> | string
-  name?: Prisma.StringWithAggregatesFilter<"Company"> | string
-  domain?: Prisma.StringWithAggregatesFilter<"Company"> | string
-  companyBrief?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
-  apiKey?: Prisma.StringWithAggregatesFilter<"Company"> | string
-  ehr?: Prisma.EnumEhrTypeNullableWithAggregatesFilter<"Company"> | $Enums.EhrType | null
-  address?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
-  googleAdsAccessToken?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
-  googleAdsRefreshToken?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
-  googleAdsTokenExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Company"> | Date | string | null
-  googleAdsCustomerId?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
-  googleAdsAccountName?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
-  googleAdsCurrencyCode?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
-  googleAdsTimeZone?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
-  googleAdsConnectedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Company"> | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Company"> | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Company"> | Date | string | null
-  googleAdsLastError?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
-  googleAdsLastErrorAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Company"> | Date | string | null
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Company"> | Date | string
-  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Company"> | Date | string
+export type companyScalarWhereWithAggregatesInput = {
+  AND?: Prisma.companyScalarWhereWithAggregatesInput | Prisma.companyScalarWhereWithAggregatesInput[]
+  OR?: Prisma.companyScalarWhereWithAggregatesInput[]
+  NOT?: Prisma.companyScalarWhereWithAggregatesInput | Prisma.companyScalarWhereWithAggregatesInput[]
+  id?: Prisma.StringWithAggregatesFilter<"company"> | string
+  name?: Prisma.StringWithAggregatesFilter<"company"> | string
+  domain?: Prisma.StringWithAggregatesFilter<"company"> | string
+  company_brief?: Prisma.StringNullableWithAggregatesFilter<"company"> | string | null
+  ehr?: Prisma.EnumEhrTypeNullableWithAggregatesFilter<"company"> | $Enums.EhrType | null
+  address?: Prisma.StringNullableWithAggregatesFilter<"company"> | string | null
+  created_at?: Prisma.DateTimeWithAggregatesFilter<"company"> | Date | string
+  updated_at?: Prisma.DateTimeWithAggregatesFilter<"company"> | Date | string
 }
 
-export type CompanyCreateInput = {
+export type companyCreateInput = {
   id?: string
   name: string
   domain: string
-  companyBrief?: string | null
-  apiKey: string
+  company_brief?: string | null
   ehr?: $Enums.EhrType | null
   address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contacts?: Prisma.ContactCreateNestedManyWithoutCompanyInput
-  services?: Prisma.ServiceCreateNestedManyWithoutCompanyInput
-  providers?: Prisma.ProviderCreateNestedManyWithoutCompanyInput
-  appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
-  oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
-  cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
+  created_at?: Date | string
+  updated_at?: Date | string
+  people?: Prisma.personCreateNestedManyWithoutCompanyInput
+  services?: Prisma.serviceCreateNestedManyWithoutCompanyInput
+  providers?: Prisma.providerCreateNestedManyWithoutCompanyInput
+  appointments?: Prisma.appointmentCreateNestedManyWithoutCompanyInput
+  cms_pages?: Prisma.cms_pageCreateNestedManyWithoutCompanyInput
 }
 
-export type CompanyUncheckedCreateInput = {
+export type companyUncheckedCreateInput = {
   id?: string
   name: string
   domain: string
-  companyBrief?: string | null
-  apiKey: string
+  company_brief?: string | null
   ehr?: $Enums.EhrType | null
   address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutCompanyInput
-  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCompanyInput
-  providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutCompanyInput
-  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
-  oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
-  cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
+  created_at?: Date | string
+  updated_at?: Date | string
+  people?: Prisma.personUncheckedCreateNestedManyWithoutCompanyInput
+  services?: Prisma.serviceUncheckedCreateNestedManyWithoutCompanyInput
+  providers?: Prisma.providerUncheckedCreateNestedManyWithoutCompanyInput
+  appointments?: Prisma.appointmentUncheckedCreateNestedManyWithoutCompanyInput
+  cms_pages?: Prisma.cms_pageUncheckedCreateNestedManyWithoutCompanyInput
 }
 
-export type CompanyUpdateInput = {
+export type companyUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  company_brief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contacts?: Prisma.ContactUpdateManyWithoutCompanyNestedInput
-  services?: Prisma.ServiceUpdateManyWithoutCompanyNestedInput
-  providers?: Prisma.ProviderUpdateManyWithoutCompanyNestedInput
-  appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
-  oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
-  cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  people?: Prisma.personUpdateManyWithoutCompanyNestedInput
+  services?: Prisma.serviceUpdateManyWithoutCompanyNestedInput
+  providers?: Prisma.providerUpdateManyWithoutCompanyNestedInput
+  appointments?: Prisma.appointmentUpdateManyWithoutCompanyNestedInput
+  cms_pages?: Prisma.cms_pageUpdateManyWithoutCompanyNestedInput
 }
 
-export type CompanyUncheckedUpdateInput = {
+export type companyUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  company_brief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contacts?: Prisma.ContactUncheckedUpdateManyWithoutCompanyNestedInput
-  services?: Prisma.ServiceUncheckedUpdateManyWithoutCompanyNestedInput
-  providers?: Prisma.ProviderUncheckedUpdateManyWithoutCompanyNestedInput
-  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
-  oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
-  cmsPages?: Prisma.CmsPageUncheckedUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  people?: Prisma.personUncheckedUpdateManyWithoutCompanyNestedInput
+  services?: Prisma.serviceUncheckedUpdateManyWithoutCompanyNestedInput
+  providers?: Prisma.providerUncheckedUpdateManyWithoutCompanyNestedInput
+  appointments?: Prisma.appointmentUncheckedUpdateManyWithoutCompanyNestedInput
+  cms_pages?: Prisma.cms_pageUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
-export type CompanyCreateManyInput = {
+export type companyCreateManyInput = {
   id?: string
   name: string
   domain: string
-  companyBrief?: string | null
-  apiKey: string
+  company_brief?: string | null
   ehr?: $Enums.EhrType | null
   address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  created_at?: Date | string
+  updated_at?: Date | string
 }
 
-export type CompanyUpdateManyMutationInput = {
+export type companyUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  company_brief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type CompanyUncheckedUpdateManyInput = {
+export type companyUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  company_brief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type CompanyCountOrderByAggregateInput = {
+export type companyCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   domain?: Prisma.SortOrder
-  companyBrief?: Prisma.SortOrder
-  apiKey?: Prisma.SortOrder
+  company_brief?: Prisma.SortOrder
   ehr?: Prisma.SortOrder
   address?: Prisma.SortOrder
-  googleAdsAccessToken?: Prisma.SortOrder
-  googleAdsRefreshToken?: Prisma.SortOrder
-  googleAdsTokenExpiresAt?: Prisma.SortOrder
-  googleAdsCustomerId?: Prisma.SortOrder
-  googleAdsAccountName?: Prisma.SortOrder
-  googleAdsCurrencyCode?: Prisma.SortOrder
-  googleAdsTimeZone?: Prisma.SortOrder
-  googleAdsConnectedAt?: Prisma.SortOrder
-  googleAdsAccountSelectedAt?: Prisma.SortOrder
-  googleAdsLastSyncedAt?: Prisma.SortOrder
-  googleAdsLastError?: Prisma.SortOrder
-  googleAdsLastErrorAt?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
+  created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
 }
 
-export type CompanyMaxOrderByAggregateInput = {
+export type companyMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   domain?: Prisma.SortOrder
-  companyBrief?: Prisma.SortOrder
-  apiKey?: Prisma.SortOrder
+  company_brief?: Prisma.SortOrder
   ehr?: Prisma.SortOrder
   address?: Prisma.SortOrder
-  googleAdsAccessToken?: Prisma.SortOrder
-  googleAdsRefreshToken?: Prisma.SortOrder
-  googleAdsTokenExpiresAt?: Prisma.SortOrder
-  googleAdsCustomerId?: Prisma.SortOrder
-  googleAdsAccountName?: Prisma.SortOrder
-  googleAdsCurrencyCode?: Prisma.SortOrder
-  googleAdsTimeZone?: Prisma.SortOrder
-  googleAdsConnectedAt?: Prisma.SortOrder
-  googleAdsAccountSelectedAt?: Prisma.SortOrder
-  googleAdsLastSyncedAt?: Prisma.SortOrder
-  googleAdsLastError?: Prisma.SortOrder
-  googleAdsLastErrorAt?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
+  created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
 }
 
-export type CompanyMinOrderByAggregateInput = {
+export type companyMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   domain?: Prisma.SortOrder
-  companyBrief?: Prisma.SortOrder
-  apiKey?: Prisma.SortOrder
+  company_brief?: Prisma.SortOrder
   ehr?: Prisma.SortOrder
   address?: Prisma.SortOrder
-  googleAdsAccessToken?: Prisma.SortOrder
-  googleAdsRefreshToken?: Prisma.SortOrder
-  googleAdsTokenExpiresAt?: Prisma.SortOrder
-  googleAdsCustomerId?: Prisma.SortOrder
-  googleAdsAccountName?: Prisma.SortOrder
-  googleAdsCurrencyCode?: Prisma.SortOrder
-  googleAdsTimeZone?: Prisma.SortOrder
-  googleAdsConnectedAt?: Prisma.SortOrder
-  googleAdsAccountSelectedAt?: Prisma.SortOrder
-  googleAdsLastSyncedAt?: Prisma.SortOrder
-  googleAdsLastError?: Prisma.SortOrder
-  googleAdsLastErrorAt?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
+  created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
 }
 
 export type CompanyScalarRelationFilter = {
-  is?: Prisma.CompanyWhereInput
-  isNot?: Prisma.CompanyWhereInput
+  is?: Prisma.companyWhereInput
+  isNot?: Prisma.companyWhereInput
 }
 
 export type NullableStringFieldUpdateOperationsInput = {
@@ -719,1058 +419,454 @@ export type NullableEnumEhrTypeFieldUpdateOperationsInput = {
   set?: $Enums.EhrType | null
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
+export type companyCreateNestedOneWithoutPeopleInput = {
+  create?: Prisma.XOR<Prisma.companyCreateWithoutPeopleInput, Prisma.companyUncheckedCreateWithoutPeopleInput>
+  connectOrCreate?: Prisma.companyCreateOrConnectWithoutPeopleInput
+  connect?: Prisma.companyWhereUniqueInput
 }
 
-export type CompanyCreateNestedOneWithoutContactsInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutContactsInput, Prisma.CompanyUncheckedCreateWithoutContactsInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutContactsInput
-  connect?: Prisma.CompanyWhereUniqueInput
+export type companyUpdateOneRequiredWithoutPeopleNestedInput = {
+  create?: Prisma.XOR<Prisma.companyCreateWithoutPeopleInput, Prisma.companyUncheckedCreateWithoutPeopleInput>
+  connectOrCreate?: Prisma.companyCreateOrConnectWithoutPeopleInput
+  upsert?: Prisma.companyUpsertWithoutPeopleInput
+  connect?: Prisma.companyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.companyUpdateToOneWithWhereWithoutPeopleInput, Prisma.companyUpdateWithoutPeopleInput>, Prisma.companyUncheckedUpdateWithoutPeopleInput>
 }
 
-export type CompanyUpdateOneRequiredWithoutContactsNestedInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutContactsInput, Prisma.CompanyUncheckedCreateWithoutContactsInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutContactsInput
-  upsert?: Prisma.CompanyUpsertWithoutContactsInput
-  connect?: Prisma.CompanyWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutContactsInput, Prisma.CompanyUpdateWithoutContactsInput>, Prisma.CompanyUncheckedUpdateWithoutContactsInput>
+export type companyCreateNestedOneWithoutServicesInput = {
+  create?: Prisma.XOR<Prisma.companyCreateWithoutServicesInput, Prisma.companyUncheckedCreateWithoutServicesInput>
+  connectOrCreate?: Prisma.companyCreateOrConnectWithoutServicesInput
+  connect?: Prisma.companyWhereUniqueInput
 }
 
-export type CompanyCreateNestedOneWithoutServicesInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutServicesInput, Prisma.CompanyUncheckedCreateWithoutServicesInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutServicesInput
-  connect?: Prisma.CompanyWhereUniqueInput
+export type companyUpdateOneRequiredWithoutServicesNestedInput = {
+  create?: Prisma.XOR<Prisma.companyCreateWithoutServicesInput, Prisma.companyUncheckedCreateWithoutServicesInput>
+  connectOrCreate?: Prisma.companyCreateOrConnectWithoutServicesInput
+  upsert?: Prisma.companyUpsertWithoutServicesInput
+  connect?: Prisma.companyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.companyUpdateToOneWithWhereWithoutServicesInput, Prisma.companyUpdateWithoutServicesInput>, Prisma.companyUncheckedUpdateWithoutServicesInput>
 }
 
-export type CompanyUpdateOneRequiredWithoutServicesNestedInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutServicesInput, Prisma.CompanyUncheckedCreateWithoutServicesInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutServicesInput
-  upsert?: Prisma.CompanyUpsertWithoutServicesInput
-  connect?: Prisma.CompanyWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutServicesInput, Prisma.CompanyUpdateWithoutServicesInput>, Prisma.CompanyUncheckedUpdateWithoutServicesInput>
+export type companyCreateNestedOneWithoutProvidersInput = {
+  create?: Prisma.XOR<Prisma.companyCreateWithoutProvidersInput, Prisma.companyUncheckedCreateWithoutProvidersInput>
+  connectOrCreate?: Prisma.companyCreateOrConnectWithoutProvidersInput
+  connect?: Prisma.companyWhereUniqueInput
 }
 
-export type CompanyCreateNestedOneWithoutPaymentsInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutPaymentsInput, Prisma.CompanyUncheckedCreateWithoutPaymentsInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutPaymentsInput
-  connect?: Prisma.CompanyWhereUniqueInput
+export type companyUpdateOneRequiredWithoutProvidersNestedInput = {
+  create?: Prisma.XOR<Prisma.companyCreateWithoutProvidersInput, Prisma.companyUncheckedCreateWithoutProvidersInput>
+  connectOrCreate?: Prisma.companyCreateOrConnectWithoutProvidersInput
+  upsert?: Prisma.companyUpsertWithoutProvidersInput
+  connect?: Prisma.companyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.companyUpdateToOneWithWhereWithoutProvidersInput, Prisma.companyUpdateWithoutProvidersInput>, Prisma.companyUncheckedUpdateWithoutProvidersInput>
 }
 
-export type CompanyUpdateOneRequiredWithoutPaymentsNestedInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutPaymentsInput, Prisma.CompanyUncheckedCreateWithoutPaymentsInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutPaymentsInput
-  upsert?: Prisma.CompanyUpsertWithoutPaymentsInput
-  connect?: Prisma.CompanyWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutPaymentsInput, Prisma.CompanyUpdateWithoutPaymentsInput>, Prisma.CompanyUncheckedUpdateWithoutPaymentsInput>
+export type companyCreateNestedOneWithoutAppointmentsInput = {
+  create?: Prisma.XOR<Prisma.companyCreateWithoutAppointmentsInput, Prisma.companyUncheckedCreateWithoutAppointmentsInput>
+  connectOrCreate?: Prisma.companyCreateOrConnectWithoutAppointmentsInput
+  connect?: Prisma.companyWhereUniqueInput
 }
 
-export type CompanyCreateNestedOneWithoutProvidersInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutProvidersInput, Prisma.CompanyUncheckedCreateWithoutProvidersInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutProvidersInput
-  connect?: Prisma.CompanyWhereUniqueInput
+export type companyUpdateOneRequiredWithoutAppointmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.companyCreateWithoutAppointmentsInput, Prisma.companyUncheckedCreateWithoutAppointmentsInput>
+  connectOrCreate?: Prisma.companyCreateOrConnectWithoutAppointmentsInput
+  upsert?: Prisma.companyUpsertWithoutAppointmentsInput
+  connect?: Prisma.companyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.companyUpdateToOneWithWhereWithoutAppointmentsInput, Prisma.companyUpdateWithoutAppointmentsInput>, Prisma.companyUncheckedUpdateWithoutAppointmentsInput>
 }
 
-export type CompanyUpdateOneRequiredWithoutProvidersNestedInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutProvidersInput, Prisma.CompanyUncheckedCreateWithoutProvidersInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutProvidersInput
-  upsert?: Prisma.CompanyUpsertWithoutProvidersInput
-  connect?: Prisma.CompanyWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutProvidersInput, Prisma.CompanyUpdateWithoutProvidersInput>, Prisma.CompanyUncheckedUpdateWithoutProvidersInput>
+export type companyCreateNestedOneWithoutCms_pagesInput = {
+  create?: Prisma.XOR<Prisma.companyCreateWithoutCms_pagesInput, Prisma.companyUncheckedCreateWithoutCms_pagesInput>
+  connectOrCreate?: Prisma.companyCreateOrConnectWithoutCms_pagesInput
+  connect?: Prisma.companyWhereUniqueInput
 }
 
-export type CompanyCreateNestedOneWithoutAppointmentsInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutAppointmentsInput, Prisma.CompanyUncheckedCreateWithoutAppointmentsInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutAppointmentsInput
-  connect?: Prisma.CompanyWhereUniqueInput
+export type companyUpdateOneRequiredWithoutCms_pagesNestedInput = {
+  create?: Prisma.XOR<Prisma.companyCreateWithoutCms_pagesInput, Prisma.companyUncheckedCreateWithoutCms_pagesInput>
+  connectOrCreate?: Prisma.companyCreateOrConnectWithoutCms_pagesInput
+  upsert?: Prisma.companyUpsertWithoutCms_pagesInput
+  connect?: Prisma.companyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.companyUpdateToOneWithWhereWithoutCms_pagesInput, Prisma.companyUpdateWithoutCms_pagesInput>, Prisma.companyUncheckedUpdateWithoutCms_pagesInput>
 }
 
-export type CompanyUpdateOneRequiredWithoutAppointmentsNestedInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutAppointmentsInput, Prisma.CompanyUncheckedCreateWithoutAppointmentsInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutAppointmentsInput
-  upsert?: Prisma.CompanyUpsertWithoutAppointmentsInput
-  connect?: Prisma.CompanyWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutAppointmentsInput, Prisma.CompanyUpdateWithoutAppointmentsInput>, Prisma.CompanyUncheckedUpdateWithoutAppointmentsInput>
-}
-
-export type CompanyCreateNestedOneWithoutOauthStatesInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutOauthStatesInput, Prisma.CompanyUncheckedCreateWithoutOauthStatesInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutOauthStatesInput
-  connect?: Prisma.CompanyWhereUniqueInput
-}
-
-export type CompanyUpdateOneRequiredWithoutOauthStatesNestedInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutOauthStatesInput, Prisma.CompanyUncheckedCreateWithoutOauthStatesInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutOauthStatesInput
-  upsert?: Prisma.CompanyUpsertWithoutOauthStatesInput
-  connect?: Prisma.CompanyWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutOauthStatesInput, Prisma.CompanyUpdateWithoutOauthStatesInput>, Prisma.CompanyUncheckedUpdateWithoutOauthStatesInput>
-}
-
-export type CompanyCreateNestedOneWithoutCmsPagesInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutCmsPagesInput, Prisma.CompanyUncheckedCreateWithoutCmsPagesInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutCmsPagesInput
-  connect?: Prisma.CompanyWhereUniqueInput
-}
-
-export type CompanyUpdateOneRequiredWithoutCmsPagesNestedInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutCmsPagesInput, Prisma.CompanyUncheckedCreateWithoutCmsPagesInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutCmsPagesInput
-  upsert?: Prisma.CompanyUpsertWithoutCmsPagesInput
-  connect?: Prisma.CompanyWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutCmsPagesInput, Prisma.CompanyUpdateWithoutCmsPagesInput>, Prisma.CompanyUncheckedUpdateWithoutCmsPagesInput>
-}
-
-export type CompanyCreateWithoutContactsInput = {
+export type companyCreateWithoutPeopleInput = {
   id?: string
   name: string
   domain: string
-  companyBrief?: string | null
-  apiKey: string
+  company_brief?: string | null
   ehr?: $Enums.EhrType | null
   address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  services?: Prisma.ServiceCreateNestedManyWithoutCompanyInput
-  providers?: Prisma.ProviderCreateNestedManyWithoutCompanyInput
-  appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
-  oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
-  cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
+  created_at?: Date | string
+  updated_at?: Date | string
+  services?: Prisma.serviceCreateNestedManyWithoutCompanyInput
+  providers?: Prisma.providerCreateNestedManyWithoutCompanyInput
+  appointments?: Prisma.appointmentCreateNestedManyWithoutCompanyInput
+  cms_pages?: Prisma.cms_pageCreateNestedManyWithoutCompanyInput
 }
 
-export type CompanyUncheckedCreateWithoutContactsInput = {
+export type companyUncheckedCreateWithoutPeopleInput = {
   id?: string
   name: string
   domain: string
-  companyBrief?: string | null
-  apiKey: string
+  company_brief?: string | null
   ehr?: $Enums.EhrType | null
   address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCompanyInput
-  providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutCompanyInput
-  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
-  oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
-  cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
+  created_at?: Date | string
+  updated_at?: Date | string
+  services?: Prisma.serviceUncheckedCreateNestedManyWithoutCompanyInput
+  providers?: Prisma.providerUncheckedCreateNestedManyWithoutCompanyInput
+  appointments?: Prisma.appointmentUncheckedCreateNestedManyWithoutCompanyInput
+  cms_pages?: Prisma.cms_pageUncheckedCreateNestedManyWithoutCompanyInput
 }
 
-export type CompanyCreateOrConnectWithoutContactsInput = {
-  where: Prisma.CompanyWhereUniqueInput
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutContactsInput, Prisma.CompanyUncheckedCreateWithoutContactsInput>
+export type companyCreateOrConnectWithoutPeopleInput = {
+  where: Prisma.companyWhereUniqueInput
+  create: Prisma.XOR<Prisma.companyCreateWithoutPeopleInput, Prisma.companyUncheckedCreateWithoutPeopleInput>
 }
 
-export type CompanyUpsertWithoutContactsInput = {
-  update: Prisma.XOR<Prisma.CompanyUpdateWithoutContactsInput, Prisma.CompanyUncheckedUpdateWithoutContactsInput>
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutContactsInput, Prisma.CompanyUncheckedCreateWithoutContactsInput>
-  where?: Prisma.CompanyWhereInput
+export type companyUpsertWithoutPeopleInput = {
+  update: Prisma.XOR<Prisma.companyUpdateWithoutPeopleInput, Prisma.companyUncheckedUpdateWithoutPeopleInput>
+  create: Prisma.XOR<Prisma.companyCreateWithoutPeopleInput, Prisma.companyUncheckedCreateWithoutPeopleInput>
+  where?: Prisma.companyWhereInput
 }
 
-export type CompanyUpdateToOneWithWhereWithoutContactsInput = {
-  where?: Prisma.CompanyWhereInput
-  data: Prisma.XOR<Prisma.CompanyUpdateWithoutContactsInput, Prisma.CompanyUncheckedUpdateWithoutContactsInput>
+export type companyUpdateToOneWithWhereWithoutPeopleInput = {
+  where?: Prisma.companyWhereInput
+  data: Prisma.XOR<Prisma.companyUpdateWithoutPeopleInput, Prisma.companyUncheckedUpdateWithoutPeopleInput>
 }
 
-export type CompanyUpdateWithoutContactsInput = {
+export type companyUpdateWithoutPeopleInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  company_brief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  services?: Prisma.ServiceUpdateManyWithoutCompanyNestedInput
-  providers?: Prisma.ProviderUpdateManyWithoutCompanyNestedInput
-  appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
-  oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
-  cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  services?: Prisma.serviceUpdateManyWithoutCompanyNestedInput
+  providers?: Prisma.providerUpdateManyWithoutCompanyNestedInput
+  appointments?: Prisma.appointmentUpdateManyWithoutCompanyNestedInput
+  cms_pages?: Prisma.cms_pageUpdateManyWithoutCompanyNestedInput
 }
 
-export type CompanyUncheckedUpdateWithoutContactsInput = {
+export type companyUncheckedUpdateWithoutPeopleInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  company_brief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  services?: Prisma.ServiceUncheckedUpdateManyWithoutCompanyNestedInput
-  providers?: Prisma.ProviderUncheckedUpdateManyWithoutCompanyNestedInput
-  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
-  oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
-  cmsPages?: Prisma.CmsPageUncheckedUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  services?: Prisma.serviceUncheckedUpdateManyWithoutCompanyNestedInput
+  providers?: Prisma.providerUncheckedUpdateManyWithoutCompanyNestedInput
+  appointments?: Prisma.appointmentUncheckedUpdateManyWithoutCompanyNestedInput
+  cms_pages?: Prisma.cms_pageUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
-export type CompanyCreateWithoutServicesInput = {
+export type companyCreateWithoutServicesInput = {
   id?: string
   name: string
   domain: string
-  companyBrief?: string | null
-  apiKey: string
+  company_brief?: string | null
   ehr?: $Enums.EhrType | null
   address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contacts?: Prisma.ContactCreateNestedManyWithoutCompanyInput
-  providers?: Prisma.ProviderCreateNestedManyWithoutCompanyInput
-  appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
-  oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
-  cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
+  created_at?: Date | string
+  updated_at?: Date | string
+  people?: Prisma.personCreateNestedManyWithoutCompanyInput
+  providers?: Prisma.providerCreateNestedManyWithoutCompanyInput
+  appointments?: Prisma.appointmentCreateNestedManyWithoutCompanyInput
+  cms_pages?: Prisma.cms_pageCreateNestedManyWithoutCompanyInput
 }
 
-export type CompanyUncheckedCreateWithoutServicesInput = {
+export type companyUncheckedCreateWithoutServicesInput = {
   id?: string
   name: string
   domain: string
-  companyBrief?: string | null
-  apiKey: string
+  company_brief?: string | null
   ehr?: $Enums.EhrType | null
   address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutCompanyInput
-  providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutCompanyInput
-  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
-  oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
-  cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
+  created_at?: Date | string
+  updated_at?: Date | string
+  people?: Prisma.personUncheckedCreateNestedManyWithoutCompanyInput
+  providers?: Prisma.providerUncheckedCreateNestedManyWithoutCompanyInput
+  appointments?: Prisma.appointmentUncheckedCreateNestedManyWithoutCompanyInput
+  cms_pages?: Prisma.cms_pageUncheckedCreateNestedManyWithoutCompanyInput
 }
 
-export type CompanyCreateOrConnectWithoutServicesInput = {
-  where: Prisma.CompanyWhereUniqueInput
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutServicesInput, Prisma.CompanyUncheckedCreateWithoutServicesInput>
+export type companyCreateOrConnectWithoutServicesInput = {
+  where: Prisma.companyWhereUniqueInput
+  create: Prisma.XOR<Prisma.companyCreateWithoutServicesInput, Prisma.companyUncheckedCreateWithoutServicesInput>
 }
 
-export type CompanyUpsertWithoutServicesInput = {
-  update: Prisma.XOR<Prisma.CompanyUpdateWithoutServicesInput, Prisma.CompanyUncheckedUpdateWithoutServicesInput>
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutServicesInput, Prisma.CompanyUncheckedCreateWithoutServicesInput>
-  where?: Prisma.CompanyWhereInput
+export type companyUpsertWithoutServicesInput = {
+  update: Prisma.XOR<Prisma.companyUpdateWithoutServicesInput, Prisma.companyUncheckedUpdateWithoutServicesInput>
+  create: Prisma.XOR<Prisma.companyCreateWithoutServicesInput, Prisma.companyUncheckedCreateWithoutServicesInput>
+  where?: Prisma.companyWhereInput
 }
 
-export type CompanyUpdateToOneWithWhereWithoutServicesInput = {
-  where?: Prisma.CompanyWhereInput
-  data: Prisma.XOR<Prisma.CompanyUpdateWithoutServicesInput, Prisma.CompanyUncheckedUpdateWithoutServicesInput>
+export type companyUpdateToOneWithWhereWithoutServicesInput = {
+  where?: Prisma.companyWhereInput
+  data: Prisma.XOR<Prisma.companyUpdateWithoutServicesInput, Prisma.companyUncheckedUpdateWithoutServicesInput>
 }
 
-export type CompanyUpdateWithoutServicesInput = {
+export type companyUpdateWithoutServicesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  company_brief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contacts?: Prisma.ContactUpdateManyWithoutCompanyNestedInput
-  providers?: Prisma.ProviderUpdateManyWithoutCompanyNestedInput
-  appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
-  oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
-  cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  people?: Prisma.personUpdateManyWithoutCompanyNestedInput
+  providers?: Prisma.providerUpdateManyWithoutCompanyNestedInput
+  appointments?: Prisma.appointmentUpdateManyWithoutCompanyNestedInput
+  cms_pages?: Prisma.cms_pageUpdateManyWithoutCompanyNestedInput
 }
 
-export type CompanyUncheckedUpdateWithoutServicesInput = {
+export type companyUncheckedUpdateWithoutServicesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  company_brief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contacts?: Prisma.ContactUncheckedUpdateManyWithoutCompanyNestedInput
-  providers?: Prisma.ProviderUncheckedUpdateManyWithoutCompanyNestedInput
-  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
-  oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
-  cmsPages?: Prisma.CmsPageUncheckedUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  people?: Prisma.personUncheckedUpdateManyWithoutCompanyNestedInput
+  providers?: Prisma.providerUncheckedUpdateManyWithoutCompanyNestedInput
+  appointments?: Prisma.appointmentUncheckedUpdateManyWithoutCompanyNestedInput
+  cms_pages?: Prisma.cms_pageUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
-export type CompanyCreateWithoutPaymentsInput = {
+export type companyCreateWithoutProvidersInput = {
   id?: string
   name: string
   domain: string
-  companyBrief?: string | null
-  apiKey: string
+  company_brief?: string | null
   ehr?: $Enums.EhrType | null
   address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contacts?: Prisma.ContactCreateNestedManyWithoutCompanyInput
-  services?: Prisma.ServiceCreateNestedManyWithoutCompanyInput
-  providers?: Prisma.ProviderCreateNestedManyWithoutCompanyInput
-  appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
-  oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
-  cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
+  created_at?: Date | string
+  updated_at?: Date | string
+  people?: Prisma.personCreateNestedManyWithoutCompanyInput
+  services?: Prisma.serviceCreateNestedManyWithoutCompanyInput
+  appointments?: Prisma.appointmentCreateNestedManyWithoutCompanyInput
+  cms_pages?: Prisma.cms_pageCreateNestedManyWithoutCompanyInput
 }
 
-export type CompanyUncheckedCreateWithoutPaymentsInput = {
+export type companyUncheckedCreateWithoutProvidersInput = {
   id?: string
   name: string
   domain: string
-  companyBrief?: string | null
-  apiKey: string
+  company_brief?: string | null
   ehr?: $Enums.EhrType | null
   address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutCompanyInput
-  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCompanyInput
-  providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutCompanyInput
-  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
-  oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
-  cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
+  created_at?: Date | string
+  updated_at?: Date | string
+  people?: Prisma.personUncheckedCreateNestedManyWithoutCompanyInput
+  services?: Prisma.serviceUncheckedCreateNestedManyWithoutCompanyInput
+  appointments?: Prisma.appointmentUncheckedCreateNestedManyWithoutCompanyInput
+  cms_pages?: Prisma.cms_pageUncheckedCreateNestedManyWithoutCompanyInput
 }
 
-export type CompanyCreateOrConnectWithoutPaymentsInput = {
-  where: Prisma.CompanyWhereUniqueInput
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutPaymentsInput, Prisma.CompanyUncheckedCreateWithoutPaymentsInput>
+export type companyCreateOrConnectWithoutProvidersInput = {
+  where: Prisma.companyWhereUniqueInput
+  create: Prisma.XOR<Prisma.companyCreateWithoutProvidersInput, Prisma.companyUncheckedCreateWithoutProvidersInput>
 }
 
-export type CompanyUpsertWithoutPaymentsInput = {
-  update: Prisma.XOR<Prisma.CompanyUpdateWithoutPaymentsInput, Prisma.CompanyUncheckedUpdateWithoutPaymentsInput>
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutPaymentsInput, Prisma.CompanyUncheckedCreateWithoutPaymentsInput>
-  where?: Prisma.CompanyWhereInput
+export type companyUpsertWithoutProvidersInput = {
+  update: Prisma.XOR<Prisma.companyUpdateWithoutProvidersInput, Prisma.companyUncheckedUpdateWithoutProvidersInput>
+  create: Prisma.XOR<Prisma.companyCreateWithoutProvidersInput, Prisma.companyUncheckedCreateWithoutProvidersInput>
+  where?: Prisma.companyWhereInput
 }
 
-export type CompanyUpdateToOneWithWhereWithoutPaymentsInput = {
-  where?: Prisma.CompanyWhereInput
-  data: Prisma.XOR<Prisma.CompanyUpdateWithoutPaymentsInput, Prisma.CompanyUncheckedUpdateWithoutPaymentsInput>
+export type companyUpdateToOneWithWhereWithoutProvidersInput = {
+  where?: Prisma.companyWhereInput
+  data: Prisma.XOR<Prisma.companyUpdateWithoutProvidersInput, Prisma.companyUncheckedUpdateWithoutProvidersInput>
 }
 
-export type CompanyUpdateWithoutPaymentsInput = {
+export type companyUpdateWithoutProvidersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  company_brief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contacts?: Prisma.ContactUpdateManyWithoutCompanyNestedInput
-  services?: Prisma.ServiceUpdateManyWithoutCompanyNestedInput
-  providers?: Prisma.ProviderUpdateManyWithoutCompanyNestedInput
-  appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
-  oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
-  cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  people?: Prisma.personUpdateManyWithoutCompanyNestedInput
+  services?: Prisma.serviceUpdateManyWithoutCompanyNestedInput
+  appointments?: Prisma.appointmentUpdateManyWithoutCompanyNestedInput
+  cms_pages?: Prisma.cms_pageUpdateManyWithoutCompanyNestedInput
 }
 
-export type CompanyUncheckedUpdateWithoutPaymentsInput = {
+export type companyUncheckedUpdateWithoutProvidersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  company_brief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contacts?: Prisma.ContactUncheckedUpdateManyWithoutCompanyNestedInput
-  services?: Prisma.ServiceUncheckedUpdateManyWithoutCompanyNestedInput
-  providers?: Prisma.ProviderUncheckedUpdateManyWithoutCompanyNestedInput
-  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
-  oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
-  cmsPages?: Prisma.CmsPageUncheckedUpdateManyWithoutCompanyNestedInput
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  people?: Prisma.personUncheckedUpdateManyWithoutCompanyNestedInput
+  services?: Prisma.serviceUncheckedUpdateManyWithoutCompanyNestedInput
+  appointments?: Prisma.appointmentUncheckedUpdateManyWithoutCompanyNestedInput
+  cms_pages?: Prisma.cms_pageUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
-export type CompanyCreateWithoutProvidersInput = {
+export type companyCreateWithoutAppointmentsInput = {
   id?: string
   name: string
   domain: string
-  companyBrief?: string | null
-  apiKey: string
+  company_brief?: string | null
   ehr?: $Enums.EhrType | null
   address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contacts?: Prisma.ContactCreateNestedManyWithoutCompanyInput
-  services?: Prisma.ServiceCreateNestedManyWithoutCompanyInput
-  appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
-  oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
-  cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
+  created_at?: Date | string
+  updated_at?: Date | string
+  people?: Prisma.personCreateNestedManyWithoutCompanyInput
+  services?: Prisma.serviceCreateNestedManyWithoutCompanyInput
+  providers?: Prisma.providerCreateNestedManyWithoutCompanyInput
+  cms_pages?: Prisma.cms_pageCreateNestedManyWithoutCompanyInput
 }
 
-export type CompanyUncheckedCreateWithoutProvidersInput = {
+export type companyUncheckedCreateWithoutAppointmentsInput = {
   id?: string
   name: string
   domain: string
-  companyBrief?: string | null
-  apiKey: string
+  company_brief?: string | null
   ehr?: $Enums.EhrType | null
   address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutCompanyInput
-  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCompanyInput
-  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
-  oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
-  cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
+  created_at?: Date | string
+  updated_at?: Date | string
+  people?: Prisma.personUncheckedCreateNestedManyWithoutCompanyInput
+  services?: Prisma.serviceUncheckedCreateNestedManyWithoutCompanyInput
+  providers?: Prisma.providerUncheckedCreateNestedManyWithoutCompanyInput
+  cms_pages?: Prisma.cms_pageUncheckedCreateNestedManyWithoutCompanyInput
 }
 
-export type CompanyCreateOrConnectWithoutProvidersInput = {
-  where: Prisma.CompanyWhereUniqueInput
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutProvidersInput, Prisma.CompanyUncheckedCreateWithoutProvidersInput>
+export type companyCreateOrConnectWithoutAppointmentsInput = {
+  where: Prisma.companyWhereUniqueInput
+  create: Prisma.XOR<Prisma.companyCreateWithoutAppointmentsInput, Prisma.companyUncheckedCreateWithoutAppointmentsInput>
 }
 
-export type CompanyUpsertWithoutProvidersInput = {
-  update: Prisma.XOR<Prisma.CompanyUpdateWithoutProvidersInput, Prisma.CompanyUncheckedUpdateWithoutProvidersInput>
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutProvidersInput, Prisma.CompanyUncheckedCreateWithoutProvidersInput>
-  where?: Prisma.CompanyWhereInput
+export type companyUpsertWithoutAppointmentsInput = {
+  update: Prisma.XOR<Prisma.companyUpdateWithoutAppointmentsInput, Prisma.companyUncheckedUpdateWithoutAppointmentsInput>
+  create: Prisma.XOR<Prisma.companyCreateWithoutAppointmentsInput, Prisma.companyUncheckedCreateWithoutAppointmentsInput>
+  where?: Prisma.companyWhereInput
 }
 
-export type CompanyUpdateToOneWithWhereWithoutProvidersInput = {
-  where?: Prisma.CompanyWhereInput
-  data: Prisma.XOR<Prisma.CompanyUpdateWithoutProvidersInput, Prisma.CompanyUncheckedUpdateWithoutProvidersInput>
+export type companyUpdateToOneWithWhereWithoutAppointmentsInput = {
+  where?: Prisma.companyWhereInput
+  data: Prisma.XOR<Prisma.companyUpdateWithoutAppointmentsInput, Prisma.companyUncheckedUpdateWithoutAppointmentsInput>
 }
 
-export type CompanyUpdateWithoutProvidersInput = {
+export type companyUpdateWithoutAppointmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  company_brief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contacts?: Prisma.ContactUpdateManyWithoutCompanyNestedInput
-  services?: Prisma.ServiceUpdateManyWithoutCompanyNestedInput
-  appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
-  oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
-  cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  people?: Prisma.personUpdateManyWithoutCompanyNestedInput
+  services?: Prisma.serviceUpdateManyWithoutCompanyNestedInput
+  providers?: Prisma.providerUpdateManyWithoutCompanyNestedInput
+  cms_pages?: Prisma.cms_pageUpdateManyWithoutCompanyNestedInput
 }
 
-export type CompanyUncheckedUpdateWithoutProvidersInput = {
+export type companyUncheckedUpdateWithoutAppointmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  company_brief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contacts?: Prisma.ContactUncheckedUpdateManyWithoutCompanyNestedInput
-  services?: Prisma.ServiceUncheckedUpdateManyWithoutCompanyNestedInput
-  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
-  oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
-  cmsPages?: Prisma.CmsPageUncheckedUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  people?: Prisma.personUncheckedUpdateManyWithoutCompanyNestedInput
+  services?: Prisma.serviceUncheckedUpdateManyWithoutCompanyNestedInput
+  providers?: Prisma.providerUncheckedUpdateManyWithoutCompanyNestedInput
+  cms_pages?: Prisma.cms_pageUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
-export type CompanyCreateWithoutAppointmentsInput = {
+export type companyCreateWithoutCms_pagesInput = {
   id?: string
   name: string
   domain: string
-  companyBrief?: string | null
-  apiKey: string
+  company_brief?: string | null
   ehr?: $Enums.EhrType | null
   address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contacts?: Prisma.ContactCreateNestedManyWithoutCompanyInput
-  services?: Prisma.ServiceCreateNestedManyWithoutCompanyInput
-  providers?: Prisma.ProviderCreateNestedManyWithoutCompanyInput
-  oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
-  cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
+  created_at?: Date | string
+  updated_at?: Date | string
+  people?: Prisma.personCreateNestedManyWithoutCompanyInput
+  services?: Prisma.serviceCreateNestedManyWithoutCompanyInput
+  providers?: Prisma.providerCreateNestedManyWithoutCompanyInput
+  appointments?: Prisma.appointmentCreateNestedManyWithoutCompanyInput
 }
 
-export type CompanyUncheckedCreateWithoutAppointmentsInput = {
+export type companyUncheckedCreateWithoutCms_pagesInput = {
   id?: string
   name: string
   domain: string
-  companyBrief?: string | null
-  apiKey: string
+  company_brief?: string | null
   ehr?: $Enums.EhrType | null
   address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutCompanyInput
-  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCompanyInput
-  providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutCompanyInput
-  oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
-  cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
+  created_at?: Date | string
+  updated_at?: Date | string
+  people?: Prisma.personUncheckedCreateNestedManyWithoutCompanyInput
+  services?: Prisma.serviceUncheckedCreateNestedManyWithoutCompanyInput
+  providers?: Prisma.providerUncheckedCreateNestedManyWithoutCompanyInput
+  appointments?: Prisma.appointmentUncheckedCreateNestedManyWithoutCompanyInput
 }
 
-export type CompanyCreateOrConnectWithoutAppointmentsInput = {
-  where: Prisma.CompanyWhereUniqueInput
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutAppointmentsInput, Prisma.CompanyUncheckedCreateWithoutAppointmentsInput>
+export type companyCreateOrConnectWithoutCms_pagesInput = {
+  where: Prisma.companyWhereUniqueInput
+  create: Prisma.XOR<Prisma.companyCreateWithoutCms_pagesInput, Prisma.companyUncheckedCreateWithoutCms_pagesInput>
 }
 
-export type CompanyUpsertWithoutAppointmentsInput = {
-  update: Prisma.XOR<Prisma.CompanyUpdateWithoutAppointmentsInput, Prisma.CompanyUncheckedUpdateWithoutAppointmentsInput>
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutAppointmentsInput, Prisma.CompanyUncheckedCreateWithoutAppointmentsInput>
-  where?: Prisma.CompanyWhereInput
+export type companyUpsertWithoutCms_pagesInput = {
+  update: Prisma.XOR<Prisma.companyUpdateWithoutCms_pagesInput, Prisma.companyUncheckedUpdateWithoutCms_pagesInput>
+  create: Prisma.XOR<Prisma.companyCreateWithoutCms_pagesInput, Prisma.companyUncheckedCreateWithoutCms_pagesInput>
+  where?: Prisma.companyWhereInput
 }
 
-export type CompanyUpdateToOneWithWhereWithoutAppointmentsInput = {
-  where?: Prisma.CompanyWhereInput
-  data: Prisma.XOR<Prisma.CompanyUpdateWithoutAppointmentsInput, Prisma.CompanyUncheckedUpdateWithoutAppointmentsInput>
+export type companyUpdateToOneWithWhereWithoutCms_pagesInput = {
+  where?: Prisma.companyWhereInput
+  data: Prisma.XOR<Prisma.companyUpdateWithoutCms_pagesInput, Prisma.companyUncheckedUpdateWithoutCms_pagesInput>
 }
 
-export type CompanyUpdateWithoutAppointmentsInput = {
+export type companyUpdateWithoutCms_pagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  company_brief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contacts?: Prisma.ContactUpdateManyWithoutCompanyNestedInput
-  services?: Prisma.ServiceUpdateManyWithoutCompanyNestedInput
-  providers?: Prisma.ProviderUpdateManyWithoutCompanyNestedInput
-  oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
-  cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  people?: Prisma.personUpdateManyWithoutCompanyNestedInput
+  services?: Prisma.serviceUpdateManyWithoutCompanyNestedInput
+  providers?: Prisma.providerUpdateManyWithoutCompanyNestedInput
+  appointments?: Prisma.appointmentUpdateManyWithoutCompanyNestedInput
 }
 
-export type CompanyUncheckedUpdateWithoutAppointmentsInput = {
+export type companyUncheckedUpdateWithoutCms_pagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  company_brief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contacts?: Prisma.ContactUncheckedUpdateManyWithoutCompanyNestedInput
-  services?: Prisma.ServiceUncheckedUpdateManyWithoutCompanyNestedInput
-  providers?: Prisma.ProviderUncheckedUpdateManyWithoutCompanyNestedInput
-  oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
-  cmsPages?: Prisma.CmsPageUncheckedUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
-}
-
-export type CompanyCreateWithoutOauthStatesInput = {
-  id?: string
-  name: string
-  domain: string
-  companyBrief?: string | null
-  apiKey: string
-  ehr?: $Enums.EhrType | null
-  address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contacts?: Prisma.ContactCreateNestedManyWithoutCompanyInput
-  services?: Prisma.ServiceCreateNestedManyWithoutCompanyInput
-  providers?: Prisma.ProviderCreateNestedManyWithoutCompanyInput
-  appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
-  cmsPages?: Prisma.CmsPageCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
-}
-
-export type CompanyUncheckedCreateWithoutOauthStatesInput = {
-  id?: string
-  name: string
-  domain: string
-  companyBrief?: string | null
-  apiKey: string
-  ehr?: $Enums.EhrType | null
-  address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutCompanyInput
-  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCompanyInput
-  providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutCompanyInput
-  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
-  cmsPages?: Prisma.CmsPageUncheckedCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
-}
-
-export type CompanyCreateOrConnectWithoutOauthStatesInput = {
-  where: Prisma.CompanyWhereUniqueInput
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutOauthStatesInput, Prisma.CompanyUncheckedCreateWithoutOauthStatesInput>
-}
-
-export type CompanyUpsertWithoutOauthStatesInput = {
-  update: Prisma.XOR<Prisma.CompanyUpdateWithoutOauthStatesInput, Prisma.CompanyUncheckedUpdateWithoutOauthStatesInput>
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutOauthStatesInput, Prisma.CompanyUncheckedCreateWithoutOauthStatesInput>
-  where?: Prisma.CompanyWhereInput
-}
-
-export type CompanyUpdateToOneWithWhereWithoutOauthStatesInput = {
-  where?: Prisma.CompanyWhereInput
-  data: Prisma.XOR<Prisma.CompanyUpdateWithoutOauthStatesInput, Prisma.CompanyUncheckedUpdateWithoutOauthStatesInput>
-}
-
-export type CompanyUpdateWithoutOauthStatesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
-  ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contacts?: Prisma.ContactUpdateManyWithoutCompanyNestedInput
-  services?: Prisma.ServiceUpdateManyWithoutCompanyNestedInput
-  providers?: Prisma.ProviderUpdateManyWithoutCompanyNestedInput
-  appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
-  cmsPages?: Prisma.CmsPageUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
-}
-
-export type CompanyUncheckedUpdateWithoutOauthStatesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
-  ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contacts?: Prisma.ContactUncheckedUpdateManyWithoutCompanyNestedInput
-  services?: Prisma.ServiceUncheckedUpdateManyWithoutCompanyNestedInput
-  providers?: Prisma.ProviderUncheckedUpdateManyWithoutCompanyNestedInput
-  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
-  cmsPages?: Prisma.CmsPageUncheckedUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
-}
-
-export type CompanyCreateWithoutCmsPagesInput = {
-  id?: string
-  name: string
-  domain: string
-  companyBrief?: string | null
-  apiKey: string
-  ehr?: $Enums.EhrType | null
-  address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contacts?: Prisma.ContactCreateNestedManyWithoutCompanyInput
-  services?: Prisma.ServiceCreateNestedManyWithoutCompanyInput
-  providers?: Prisma.ProviderCreateNestedManyWithoutCompanyInput
-  appointments?: Prisma.AppointmentCreateNestedManyWithoutCompanyInput
-  oauthStates?: Prisma.OAuthStateCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsCreateNestedManyWithoutCompanyInput
-}
-
-export type CompanyUncheckedCreateWithoutCmsPagesInput = {
-  id?: string
-  name: string
-  domain: string
-  companyBrief?: string | null
-  apiKey: string
-  ehr?: $Enums.EhrType | null
-  address?: string | null
-  googleAdsAccessToken?: string | null
-  googleAdsRefreshToken?: string | null
-  googleAdsTokenExpiresAt?: Date | string | null
-  googleAdsCustomerId?: string | null
-  googleAdsAccountName?: string | null
-  googleAdsCurrencyCode?: string | null
-  googleAdsTimeZone?: string | null
-  googleAdsConnectedAt?: Date | string | null
-  googleAdsAccountSelectedAt?: Date | string | null
-  googleAdsLastSyncedAt?: Date | string | null
-  googleAdsLastError?: string | null
-  googleAdsLastErrorAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutCompanyInput
-  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCompanyInput
-  providers?: Prisma.ProviderUncheckedCreateNestedManyWithoutCompanyInput
-  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCompanyInput
-  oauthStates?: Prisma.OAuthStateUncheckedCreateNestedManyWithoutCompanyInput
-  payments?: Prisma.PaymentsUncheckedCreateNestedManyWithoutCompanyInput
-}
-
-export type CompanyCreateOrConnectWithoutCmsPagesInput = {
-  where: Prisma.CompanyWhereUniqueInput
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutCmsPagesInput, Prisma.CompanyUncheckedCreateWithoutCmsPagesInput>
-}
-
-export type CompanyUpsertWithoutCmsPagesInput = {
-  update: Prisma.XOR<Prisma.CompanyUpdateWithoutCmsPagesInput, Prisma.CompanyUncheckedUpdateWithoutCmsPagesInput>
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutCmsPagesInput, Prisma.CompanyUncheckedCreateWithoutCmsPagesInput>
-  where?: Prisma.CompanyWhereInput
-}
-
-export type CompanyUpdateToOneWithWhereWithoutCmsPagesInput = {
-  where?: Prisma.CompanyWhereInput
-  data: Prisma.XOR<Prisma.CompanyUpdateWithoutCmsPagesInput, Prisma.CompanyUncheckedUpdateWithoutCmsPagesInput>
-}
-
-export type CompanyUpdateWithoutCmsPagesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
-  ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contacts?: Prisma.ContactUpdateManyWithoutCompanyNestedInput
-  services?: Prisma.ServiceUpdateManyWithoutCompanyNestedInput
-  providers?: Prisma.ProviderUpdateManyWithoutCompanyNestedInput
-  appointments?: Prisma.AppointmentUpdateManyWithoutCompanyNestedInput
-  oauthStates?: Prisma.OAuthStateUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUpdateManyWithoutCompanyNestedInput
-}
-
-export type CompanyUncheckedUpdateWithoutCmsPagesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
-  companyBrief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
-  ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsCurrencyCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsTimeZone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsAccountSelectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  googleAdsLastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  googleAdsLastErrorAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  contacts?: Prisma.ContactUncheckedUpdateManyWithoutCompanyNestedInput
-  services?: Prisma.ServiceUncheckedUpdateManyWithoutCompanyNestedInput
-  providers?: Prisma.ProviderUncheckedUpdateManyWithoutCompanyNestedInput
-  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCompanyNestedInput
-  oauthStates?: Prisma.OAuthStateUncheckedUpdateManyWithoutCompanyNestedInput
-  payments?: Prisma.PaymentsUncheckedUpdateManyWithoutCompanyNestedInput
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  people?: Prisma.personUncheckedUpdateManyWithoutCompanyNestedInput
+  services?: Prisma.serviceUncheckedUpdateManyWithoutCompanyNestedInput
+  providers?: Prisma.providerUncheckedUpdateManyWithoutCompanyNestedInput
+  appointments?: Prisma.appointmentUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 
@@ -1779,23 +875,19 @@ export type CompanyUncheckedUpdateWithoutCmsPagesInput = {
  */
 
 export type CompanyCountOutputType = {
-  contacts: number
+  people: number
   services: number
   providers: number
   appointments: number
-  oauthStates: number
-  cmsPages: number
-  payments: number
+  cms_pages: number
 }
 
 export type CompanyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  contacts?: boolean | CompanyCountOutputTypeCountContactsArgs
+  people?: boolean | CompanyCountOutputTypeCountPeopleArgs
   services?: boolean | CompanyCountOutputTypeCountServicesArgs
   providers?: boolean | CompanyCountOutputTypeCountProvidersArgs
   appointments?: boolean | CompanyCountOutputTypeCountAppointmentsArgs
-  oauthStates?: boolean | CompanyCountOutputTypeCountOauthStatesArgs
-  cmsPages?: boolean | CompanyCountOutputTypeCountCmsPagesArgs
-  payments?: boolean | CompanyCountOutputTypeCountPaymentsArgs
+  cms_pages?: boolean | CompanyCountOutputTypeCountCms_pagesArgs
 }
 
 /**
@@ -1811,220 +903,135 @@ export type CompanyCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
 /**
  * CompanyCountOutputType without action
  */
-export type CompanyCountOutputTypeCountContactsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ContactWhereInput
+export type CompanyCountOutputTypeCountPeopleArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.personWhereInput
 }
 
 /**
  * CompanyCountOutputType without action
  */
 export type CompanyCountOutputTypeCountServicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ServiceWhereInput
+  where?: Prisma.serviceWhereInput
 }
 
 /**
  * CompanyCountOutputType without action
  */
 export type CompanyCountOutputTypeCountProvidersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ProviderWhereInput
+  where?: Prisma.providerWhereInput
 }
 
 /**
  * CompanyCountOutputType without action
  */
 export type CompanyCountOutputTypeCountAppointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AppointmentWhereInput
+  where?: Prisma.appointmentWhereInput
 }
 
 /**
  * CompanyCountOutputType without action
  */
-export type CompanyCountOutputTypeCountOauthStatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.OAuthStateWhereInput
-}
-
-/**
- * CompanyCountOutputType without action
- */
-export type CompanyCountOutputTypeCountCmsPagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.CmsPageWhereInput
-}
-
-/**
- * CompanyCountOutputType without action
- */
-export type CompanyCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PaymentsWhereInput
+export type CompanyCountOutputTypeCountCms_pagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.cms_pageWhereInput
 }
 
 
-export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+export type companySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   domain?: boolean
-  companyBrief?: boolean
-  apiKey?: boolean
+  company_brief?: boolean
   ehr?: boolean
   address?: boolean
-  googleAdsAccessToken?: boolean
-  googleAdsRefreshToken?: boolean
-  googleAdsTokenExpiresAt?: boolean
-  googleAdsCustomerId?: boolean
-  googleAdsAccountName?: boolean
-  googleAdsCurrencyCode?: boolean
-  googleAdsTimeZone?: boolean
-  googleAdsConnectedAt?: boolean
-  googleAdsAccountSelectedAt?: boolean
-  googleAdsLastSyncedAt?: boolean
-  googleAdsLastError?: boolean
-  googleAdsLastErrorAt?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  contacts?: boolean | Prisma.Company$contactsArgs<ExtArgs>
-  services?: boolean | Prisma.Company$servicesArgs<ExtArgs>
-  providers?: boolean | Prisma.Company$providersArgs<ExtArgs>
-  appointments?: boolean | Prisma.Company$appointmentsArgs<ExtArgs>
-  oauthStates?: boolean | Prisma.Company$oauthStatesArgs<ExtArgs>
-  cmsPages?: boolean | Prisma.Company$cmsPagesArgs<ExtArgs>
-  payments?: boolean | Prisma.Company$paymentsArgs<ExtArgs>
+  created_at?: boolean
+  updated_at?: boolean
+  people?: boolean | Prisma.company$peopleArgs<ExtArgs>
+  services?: boolean | Prisma.company$servicesArgs<ExtArgs>
+  providers?: boolean | Prisma.company$providersArgs<ExtArgs>
+  appointments?: boolean | Prisma.company$appointmentsArgs<ExtArgs>
+  cms_pages?: boolean | Prisma.company$cms_pagesArgs<ExtArgs>
   _count?: boolean | Prisma.CompanyCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["company"]>
 
-export type CompanySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+export type companySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   domain?: boolean
-  companyBrief?: boolean
-  apiKey?: boolean
+  company_brief?: boolean
   ehr?: boolean
   address?: boolean
-  googleAdsAccessToken?: boolean
-  googleAdsRefreshToken?: boolean
-  googleAdsTokenExpiresAt?: boolean
-  googleAdsCustomerId?: boolean
-  googleAdsAccountName?: boolean
-  googleAdsCurrencyCode?: boolean
-  googleAdsTimeZone?: boolean
-  googleAdsConnectedAt?: boolean
-  googleAdsAccountSelectedAt?: boolean
-  googleAdsLastSyncedAt?: boolean
-  googleAdsLastError?: boolean
-  googleAdsLastErrorAt?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
+  created_at?: boolean
+  updated_at?: boolean
 }, ExtArgs["result"]["company"]>
 
-export type CompanySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+export type companySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   domain?: boolean
-  companyBrief?: boolean
-  apiKey?: boolean
+  company_brief?: boolean
   ehr?: boolean
   address?: boolean
-  googleAdsAccessToken?: boolean
-  googleAdsRefreshToken?: boolean
-  googleAdsTokenExpiresAt?: boolean
-  googleAdsCustomerId?: boolean
-  googleAdsAccountName?: boolean
-  googleAdsCurrencyCode?: boolean
-  googleAdsTimeZone?: boolean
-  googleAdsConnectedAt?: boolean
-  googleAdsAccountSelectedAt?: boolean
-  googleAdsLastSyncedAt?: boolean
-  googleAdsLastError?: boolean
-  googleAdsLastErrorAt?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
+  created_at?: boolean
+  updated_at?: boolean
 }, ExtArgs["result"]["company"]>
 
-export type CompanySelectScalar = {
+export type companySelectScalar = {
   id?: boolean
   name?: boolean
   domain?: boolean
-  companyBrief?: boolean
-  apiKey?: boolean
+  company_brief?: boolean
   ehr?: boolean
   address?: boolean
-  googleAdsAccessToken?: boolean
-  googleAdsRefreshToken?: boolean
-  googleAdsTokenExpiresAt?: boolean
-  googleAdsCustomerId?: boolean
-  googleAdsAccountName?: boolean
-  googleAdsCurrencyCode?: boolean
-  googleAdsTimeZone?: boolean
-  googleAdsConnectedAt?: boolean
-  googleAdsAccountSelectedAt?: boolean
-  googleAdsLastSyncedAt?: boolean
-  googleAdsLastError?: boolean
-  googleAdsLastErrorAt?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
+  created_at?: boolean
+  updated_at?: boolean
 }
 
-export type CompanyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "domain" | "companyBrief" | "apiKey" | "ehr" | "address" | "googleAdsAccessToken" | "googleAdsRefreshToken" | "googleAdsTokenExpiresAt" | "googleAdsCustomerId" | "googleAdsAccountName" | "googleAdsCurrencyCode" | "googleAdsTimeZone" | "googleAdsConnectedAt" | "googleAdsAccountSelectedAt" | "googleAdsLastSyncedAt" | "googleAdsLastError" | "googleAdsLastErrorAt" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
-export type CompanyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  contacts?: boolean | Prisma.Company$contactsArgs<ExtArgs>
-  services?: boolean | Prisma.Company$servicesArgs<ExtArgs>
-  providers?: boolean | Prisma.Company$providersArgs<ExtArgs>
-  appointments?: boolean | Prisma.Company$appointmentsArgs<ExtArgs>
-  oauthStates?: boolean | Prisma.Company$oauthStatesArgs<ExtArgs>
-  cmsPages?: boolean | Prisma.Company$cmsPagesArgs<ExtArgs>
-  payments?: boolean | Prisma.Company$paymentsArgs<ExtArgs>
+export type companyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "domain" | "company_brief" | "ehr" | "address" | "created_at" | "updated_at", ExtArgs["result"]["company"]>
+export type companyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  people?: boolean | Prisma.company$peopleArgs<ExtArgs>
+  services?: boolean | Prisma.company$servicesArgs<ExtArgs>
+  providers?: boolean | Prisma.company$providersArgs<ExtArgs>
+  appointments?: boolean | Prisma.company$appointmentsArgs<ExtArgs>
+  cms_pages?: boolean | Prisma.company$cms_pagesArgs<ExtArgs>
   _count?: boolean | Prisma.CompanyCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type CompanyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type CompanyIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type companyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type companyIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
-export type $CompanyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  name: "Company"
+export type $companyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  name: "company"
   objects: {
-    contacts: Prisma.$ContactPayload<ExtArgs>[]
-    services: Prisma.$ServicePayload<ExtArgs>[]
-    providers: Prisma.$ProviderPayload<ExtArgs>[]
-    appointments: Prisma.$AppointmentPayload<ExtArgs>[]
-    oauthStates: Prisma.$OAuthStatePayload<ExtArgs>[]
-    cmsPages: Prisma.$CmsPagePayload<ExtArgs>[]
-    payments: Prisma.$PaymentsPayload<ExtArgs>[]
+    people: Prisma.$personPayload<ExtArgs>[]
+    services: Prisma.$servicePayload<ExtArgs>[]
+    providers: Prisma.$providerPayload<ExtArgs>[]
+    appointments: Prisma.$appointmentPayload<ExtArgs>[]
+    cms_pages: Prisma.$cms_pagePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
     domain: string
-    companyBrief: string | null
-    apiKey: string
+    company_brief: string | null
     ehr: $Enums.EhrType | null
     address: string | null
-    googleAdsAccessToken: string | null
-    googleAdsRefreshToken: string | null
-    googleAdsTokenExpiresAt: Date | null
-    googleAdsCustomerId: string | null
-    googleAdsAccountName: string | null
-    googleAdsCurrencyCode: string | null
-    googleAdsTimeZone: string | null
-    googleAdsConnectedAt: Date | null
-    googleAdsAccountSelectedAt: Date | null
-    googleAdsLastSyncedAt: Date | null
-    googleAdsLastError: string | null
-    googleAdsLastErrorAt: Date | null
-    createdAt: Date
-    updatedAt: Date
+    created_at: Date
+    updated_at: Date
   }, ExtArgs["result"]["company"]>
   composites: {}
 }
 
-export type CompanyGetPayload<S extends boolean | null | undefined | CompanyDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$CompanyPayload, S>
+export type companyGetPayload<S extends boolean | null | undefined | companyDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$companyPayload, S>
 
-export type CompanyCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
-  Omit<CompanyFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+export type companyCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
+  Omit<companyFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
     select?: CompanyCountAggregateInputType | true
   }
 
-export interface CompanyDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Company'], meta: { name: 'Company' } }
+export interface companyDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['company'], meta: { name: 'company' } }
   /**
    * Find zero or one Company that matches the filter.
-   * @param {CompanyFindUniqueArgs} args - Arguments to find a Company
+   * @param {companyFindUniqueArgs} args - Arguments to find a Company
    * @example
    * // Get one Company
    * const company = await prisma.company.findUnique({
@@ -2033,12 +1040,12 @@ export interface CompanyDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   }
    * })
    */
-  findUnique<T extends CompanyFindUniqueArgs>(args: Prisma.SelectSubset<T, CompanyFindUniqueArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findUnique<T extends companyFindUniqueArgs>(args: Prisma.SelectSubset<T, companyFindUniqueArgs<ExtArgs>>): Prisma.Prisma__companyClient<runtime.Types.Result.GetResult<Prisma.$companyPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find one Company that matches the filter or throw an error with `error.code='P2025'`
    * if no matches were found.
-   * @param {CompanyFindUniqueOrThrowArgs} args - Arguments to find a Company
+   * @param {companyFindUniqueOrThrowArgs} args - Arguments to find a Company
    * @example
    * // Get one Company
    * const company = await prisma.company.findUniqueOrThrow({
@@ -2047,13 +1054,13 @@ export interface CompanyDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   }
    * })
    */
-  findUniqueOrThrow<T extends CompanyFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, CompanyFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findUniqueOrThrow<T extends companyFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, companyFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__companyClient<runtime.Types.Result.GetResult<Prisma.$companyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first Company that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {CompanyFindFirstArgs} args - Arguments to find a Company
+   * @param {companyFindFirstArgs} args - Arguments to find a Company
    * @example
    * // Get one Company
    * const company = await prisma.company.findFirst({
@@ -2062,14 +1069,14 @@ export interface CompanyDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   }
    * })
    */
-  findFirst<T extends CompanyFindFirstArgs>(args?: Prisma.SelectSubset<T, CompanyFindFirstArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findFirst<T extends companyFindFirstArgs>(args?: Prisma.SelectSubset<T, companyFindFirstArgs<ExtArgs>>): Prisma.Prisma__companyClient<runtime.Types.Result.GetResult<Prisma.$companyPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first Company that matches the filter or
    * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {CompanyFindFirstOrThrowArgs} args - Arguments to find a Company
+   * @param {companyFindFirstOrThrowArgs} args - Arguments to find a Company
    * @example
    * // Get one Company
    * const company = await prisma.company.findFirstOrThrow({
@@ -2078,13 +1085,13 @@ export interface CompanyDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   }
    * })
    */
-  findFirstOrThrow<T extends CompanyFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, CompanyFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findFirstOrThrow<T extends companyFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, companyFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__companyClient<runtime.Types.Result.GetResult<Prisma.$companyPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find zero or more Companies that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {CompanyFindManyArgs} args - Arguments to filter and select certain fields only.
+   * @param {companyFindManyArgs} args - Arguments to filter and select certain fields only.
    * @example
    * // Get all Companies
    * const companies = await prisma.company.findMany()
@@ -2096,11 +1103,11 @@ export interface CompanyDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * const companyWithIdOnly = await prisma.company.findMany({ select: { id: true } })
    * 
    */
-  findMany<T extends CompanyFindManyArgs>(args?: Prisma.SelectSubset<T, CompanyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+  findMany<T extends companyFindManyArgs>(args?: Prisma.SelectSubset<T, companyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$companyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
   /**
    * Create a Company.
-   * @param {CompanyCreateArgs} args - Arguments to create a Company.
+   * @param {companyCreateArgs} args - Arguments to create a Company.
    * @example
    * // Create one Company
    * const Company = await prisma.company.create({
@@ -2110,11 +1117,11 @@ export interface CompanyDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * })
    * 
    */
-  create<T extends CompanyCreateArgs>(args: Prisma.SelectSubset<T, CompanyCreateArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  create<T extends companyCreateArgs>(args: Prisma.SelectSubset<T, companyCreateArgs<ExtArgs>>): Prisma.Prisma__companyClient<runtime.Types.Result.GetResult<Prisma.$companyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Create many Companies.
-   * @param {CompanyCreateManyArgs} args - Arguments to create many Companies.
+   * @param {companyCreateManyArgs} args - Arguments to create many Companies.
    * @example
    * // Create many Companies
    * const company = await prisma.company.createMany({
@@ -2124,11 +1131,11 @@ export interface CompanyDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * })
    *     
    */
-  createMany<T extends CompanyCreateManyArgs>(args?: Prisma.SelectSubset<T, CompanyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  createMany<T extends companyCreateManyArgs>(args?: Prisma.SelectSubset<T, companyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Create many Companies and returns the data saved in the database.
-   * @param {CompanyCreateManyAndReturnArgs} args - Arguments to create many Companies.
+   * @param {companyCreateManyAndReturnArgs} args - Arguments to create many Companies.
    * @example
    * // Create many Companies
    * const company = await prisma.company.createManyAndReturn({
@@ -2148,11 +1155,11 @@ export interface CompanyDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * Read more here: https://pris.ly/d/null-undefined
    * 
    */
-  createManyAndReturn<T extends CompanyCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, CompanyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+  createManyAndReturn<T extends companyCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, companyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$companyPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Delete a Company.
-   * @param {CompanyDeleteArgs} args - Arguments to delete one Company.
+   * @param {companyDeleteArgs} args - Arguments to delete one Company.
    * @example
    * // Delete one Company
    * const Company = await prisma.company.delete({
@@ -2162,11 +1169,11 @@ export interface CompanyDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * })
    * 
    */
-  delete<T extends CompanyDeleteArgs>(args: Prisma.SelectSubset<T, CompanyDeleteArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  delete<T extends companyDeleteArgs>(args: Prisma.SelectSubset<T, companyDeleteArgs<ExtArgs>>): Prisma.Prisma__companyClient<runtime.Types.Result.GetResult<Prisma.$companyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Update one Company.
-   * @param {CompanyUpdateArgs} args - Arguments to update one Company.
+   * @param {companyUpdateArgs} args - Arguments to update one Company.
    * @example
    * // Update one Company
    * const company = await prisma.company.update({
@@ -2179,11 +1186,11 @@ export interface CompanyDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * })
    * 
    */
-  update<T extends CompanyUpdateArgs>(args: Prisma.SelectSubset<T, CompanyUpdateArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  update<T extends companyUpdateArgs>(args: Prisma.SelectSubset<T, companyUpdateArgs<ExtArgs>>): Prisma.Prisma__companyClient<runtime.Types.Result.GetResult<Prisma.$companyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Delete zero or more Companies.
-   * @param {CompanyDeleteManyArgs} args - Arguments to filter Companies to delete.
+   * @param {companyDeleteManyArgs} args - Arguments to filter Companies to delete.
    * @example
    * // Delete a few Companies
    * const { count } = await prisma.company.deleteMany({
@@ -2193,13 +1200,13 @@ export interface CompanyDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * })
    * 
    */
-  deleteMany<T extends CompanyDeleteManyArgs>(args?: Prisma.SelectSubset<T, CompanyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  deleteMany<T extends companyDeleteManyArgs>(args?: Prisma.SelectSubset<T, companyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Update zero or more Companies.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {CompanyUpdateManyArgs} args - Arguments to update one or more rows.
+   * @param {companyUpdateManyArgs} args - Arguments to update one or more rows.
    * @example
    * // Update many Companies
    * const company = await prisma.company.updateMany({
@@ -2212,11 +1219,11 @@ export interface CompanyDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * })
    * 
    */
-  updateMany<T extends CompanyUpdateManyArgs>(args: Prisma.SelectSubset<T, CompanyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  updateMany<T extends companyUpdateManyArgs>(args: Prisma.SelectSubset<T, companyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Update zero or more Companies and returns the data updated in the database.
-   * @param {CompanyUpdateManyAndReturnArgs} args - Arguments to update many Companies.
+   * @param {companyUpdateManyAndReturnArgs} args - Arguments to update many Companies.
    * @example
    * // Update many Companies
    * const company = await prisma.company.updateManyAndReturn({
@@ -2242,11 +1249,11 @@ export interface CompanyDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * Read more here: https://pris.ly/d/null-undefined
    * 
    */
-  updateManyAndReturn<T extends CompanyUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, CompanyUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+  updateManyAndReturn<T extends companyUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, companyUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$companyPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Company.
-   * @param {CompanyUpsertArgs} args - Arguments to update or create a Company.
+   * @param {companyUpsertArgs} args - Arguments to update or create a Company.
    * @example
    * // Update or create a Company
    * const company = await prisma.company.upsert({
@@ -2261,14 +1268,14 @@ export interface CompanyDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   }
    * })
    */
-  upsert<T extends CompanyUpsertArgs>(args: Prisma.SelectSubset<T, CompanyUpsertArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  upsert<T extends companyUpsertArgs>(args: Prisma.SelectSubset<T, companyUpsertArgs<ExtArgs>>): Prisma.Prisma__companyClient<runtime.Types.Result.GetResult<Prisma.$companyPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
   /**
    * Count the number of Companies.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {CompanyCountArgs} args - Arguments to filter Companies to count.
+   * @param {companyCountArgs} args - Arguments to filter Companies to count.
    * @example
    * // Count the number of Companies
    * const count = await prisma.company.count({
@@ -2277,8 +1284,8 @@ export interface CompanyDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   }
    * })
   **/
-  count<T extends CompanyCountArgs>(
-    args?: Prisma.Subset<T, CompanyCountArgs>,
+  count<T extends companyCountArgs>(
+    args?: Prisma.Subset<T, companyCountArgs>,
   ): Prisma.PrismaPromise<
     T extends runtime.Types.Utils.Record<'select', any>
       ? T['select'] extends true
@@ -2317,7 +1324,7 @@ export interface CompanyDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * Group by Company.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {CompanyGroupByArgs} args - Group by arguments.
+   * @param {companyGroupByArgs} args - Group by arguments.
    * @example
    * // Group by city, order by createdAt, get count
    * const result = await prisma.user.groupBy({
@@ -2332,14 +1339,14 @@ export interface CompanyDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * 
   **/
   groupBy<
-    T extends CompanyGroupByArgs,
+    T extends companyGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
       Prisma.Extends<'skip', Prisma.Keys<T>>,
       Prisma.Extends<'take', Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: CompanyGroupByArgs['orderBy'] }
-      : { orderBy?: CompanyGroupByArgs['orderBy'] },
+      ? { orderBy: companyGroupByArgs['orderBy'] }
+      : { orderBy?: companyGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
     ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
@@ -2388,28 +1395,26 @@ export interface CompanyDelegate<ExtArgs extends runtime.Types.Extensions.Intern
           ? never
           : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
       }[OrderFields]
-  >(args: Prisma.SubsetIntersection<T, CompanyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCompanyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  >(args: Prisma.SubsetIntersection<T, companyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCompanyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 /**
- * Fields of the Company model
+ * Fields of the company model
  */
-readonly fields: CompanyFieldRefs;
+readonly fields: companyFieldRefs;
 }
 
 /**
- * The delegate class that acts as a "Promise-like" for Company.
+ * The delegate class that acts as a "Promise-like" for company.
  * Why is this prefixed with `Prisma__`?
  * Because we want to prevent naming conflicts as mentioned in
  * https://github.com/prisma/prisma-client-js/issues/707
  */
-export interface Prisma__CompanyClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+export interface Prisma__companyClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  contacts<T extends Prisma.Company$contactsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$contactsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  services<T extends Prisma.Company$servicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$servicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  providers<T extends Prisma.Company$providersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$providersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  appointments<T extends Prisma.Company$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  oauthStates<T extends Prisma.Company$oauthStatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$oauthStatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OAuthStatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  cmsPages<T extends Prisma.Company$cmsPagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$cmsPagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CmsPagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  payments<T extends Prisma.Company$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  people<T extends Prisma.company$peopleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.company$peopleArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$personPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  services<T extends Prisma.company$servicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.company$servicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$servicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  providers<T extends Prisma.company$providersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.company$providersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$providerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  appointments<T extends Prisma.company$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.company$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$appointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  cms_pages<T extends Prisma.company$cms_pagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.company$cms_pagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$cms_pagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2436,599 +1441,538 @@ export interface Prisma__CompanyClient<T, Null = never, ExtArgs extends runtime.
 
 
 /**
- * Fields of the Company model
+ * Fields of the company model
  */
-export interface CompanyFieldRefs {
-  readonly id: Prisma.FieldRef<"Company", 'String'>
-  readonly name: Prisma.FieldRef<"Company", 'String'>
-  readonly domain: Prisma.FieldRef<"Company", 'String'>
-  readonly companyBrief: Prisma.FieldRef<"Company", 'String'>
-  readonly apiKey: Prisma.FieldRef<"Company", 'String'>
-  readonly ehr: Prisma.FieldRef<"Company", 'EhrType'>
-  readonly address: Prisma.FieldRef<"Company", 'String'>
-  readonly googleAdsAccessToken: Prisma.FieldRef<"Company", 'String'>
-  readonly googleAdsRefreshToken: Prisma.FieldRef<"Company", 'String'>
-  readonly googleAdsTokenExpiresAt: Prisma.FieldRef<"Company", 'DateTime'>
-  readonly googleAdsCustomerId: Prisma.FieldRef<"Company", 'String'>
-  readonly googleAdsAccountName: Prisma.FieldRef<"Company", 'String'>
-  readonly googleAdsCurrencyCode: Prisma.FieldRef<"Company", 'String'>
-  readonly googleAdsTimeZone: Prisma.FieldRef<"Company", 'String'>
-  readonly googleAdsConnectedAt: Prisma.FieldRef<"Company", 'DateTime'>
-  readonly googleAdsAccountSelectedAt: Prisma.FieldRef<"Company", 'DateTime'>
-  readonly googleAdsLastSyncedAt: Prisma.FieldRef<"Company", 'DateTime'>
-  readonly googleAdsLastError: Prisma.FieldRef<"Company", 'String'>
-  readonly googleAdsLastErrorAt: Prisma.FieldRef<"Company", 'DateTime'>
-  readonly createdAt: Prisma.FieldRef<"Company", 'DateTime'>
-  readonly updatedAt: Prisma.FieldRef<"Company", 'DateTime'>
+export interface companyFieldRefs {
+  readonly id: Prisma.FieldRef<"company", 'String'>
+  readonly name: Prisma.FieldRef<"company", 'String'>
+  readonly domain: Prisma.FieldRef<"company", 'String'>
+  readonly company_brief: Prisma.FieldRef<"company", 'String'>
+  readonly ehr: Prisma.FieldRef<"company", 'EhrType'>
+  readonly address: Prisma.FieldRef<"company", 'String'>
+  readonly created_at: Prisma.FieldRef<"company", 'DateTime'>
+  readonly updated_at: Prisma.FieldRef<"company", 'DateTime'>
 }
     
 
 // Custom InputTypes
 /**
- * Company findUnique
+ * company findUnique
  */
-export type CompanyFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type companyFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Company
+   * Select specific fields to fetch from the company
    */
-  select?: Prisma.CompanySelect<ExtArgs> | null
+  select?: Prisma.companySelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Company
+   * Omit specific fields from the company
    */
-  omit?: Prisma.CompanyOmit<ExtArgs> | null
+  omit?: Prisma.companyOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.CompanyInclude<ExtArgs> | null
+  include?: Prisma.companyInclude<ExtArgs> | null
   /**
-   * Filter, which Company to fetch.
+   * Filter, which company to fetch.
    */
-  where: Prisma.CompanyWhereUniqueInput
+  where: Prisma.companyWhereUniqueInput
 }
 
 /**
- * Company findUniqueOrThrow
+ * company findUniqueOrThrow
  */
-export type CompanyFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type companyFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Company
+   * Select specific fields to fetch from the company
    */
-  select?: Prisma.CompanySelect<ExtArgs> | null
+  select?: Prisma.companySelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Company
+   * Omit specific fields from the company
    */
-  omit?: Prisma.CompanyOmit<ExtArgs> | null
+  omit?: Prisma.companyOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.CompanyInclude<ExtArgs> | null
+  include?: Prisma.companyInclude<ExtArgs> | null
   /**
-   * Filter, which Company to fetch.
+   * Filter, which company to fetch.
    */
-  where: Prisma.CompanyWhereUniqueInput
+  where: Prisma.companyWhereUniqueInput
 }
 
 /**
- * Company findFirst
+ * company findFirst
  */
-export type CompanyFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type companyFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Company
+   * Select specific fields to fetch from the company
    */
-  select?: Prisma.CompanySelect<ExtArgs> | null
+  select?: Prisma.companySelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Company
+   * Omit specific fields from the company
    */
-  omit?: Prisma.CompanyOmit<ExtArgs> | null
+  omit?: Prisma.companyOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.CompanyInclude<ExtArgs> | null
+  include?: Prisma.companyInclude<ExtArgs> | null
   /**
-   * Filter, which Company to fetch.
+   * Filter, which company to fetch.
    */
-  where?: Prisma.CompanyWhereInput
+  where?: Prisma.companyWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Companies to fetch.
+   * Determine the order of companies to fetch.
    */
-  orderBy?: Prisma.CompanyOrderByWithRelationInput | Prisma.CompanyOrderByWithRelationInput[]
+  orderBy?: Prisma.companyOrderByWithRelationInput | Prisma.companyOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for Companies.
+   * Sets the position for searching for companies.
    */
-  cursor?: Prisma.CompanyWhereUniqueInput
+  cursor?: Prisma.companyWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Companies from the position of the cursor.
+   * Take `±n` companies from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Companies.
+   * Skip the first `n` companies.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of Companies.
+   * Filter by unique combinations of companies.
    */
   distinct?: Prisma.CompanyScalarFieldEnum | Prisma.CompanyScalarFieldEnum[]
 }
 
 /**
- * Company findFirstOrThrow
+ * company findFirstOrThrow
  */
-export type CompanyFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type companyFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Company
+   * Select specific fields to fetch from the company
    */
-  select?: Prisma.CompanySelect<ExtArgs> | null
+  select?: Prisma.companySelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Company
+   * Omit specific fields from the company
    */
-  omit?: Prisma.CompanyOmit<ExtArgs> | null
+  omit?: Prisma.companyOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.CompanyInclude<ExtArgs> | null
+  include?: Prisma.companyInclude<ExtArgs> | null
   /**
-   * Filter, which Company to fetch.
+   * Filter, which company to fetch.
    */
-  where?: Prisma.CompanyWhereInput
+  where?: Prisma.companyWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Companies to fetch.
+   * Determine the order of companies to fetch.
    */
-  orderBy?: Prisma.CompanyOrderByWithRelationInput | Prisma.CompanyOrderByWithRelationInput[]
+  orderBy?: Prisma.companyOrderByWithRelationInput | Prisma.companyOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for Companies.
+   * Sets the position for searching for companies.
    */
-  cursor?: Prisma.CompanyWhereUniqueInput
+  cursor?: Prisma.companyWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Companies from the position of the cursor.
+   * Take `±n` companies from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Companies.
+   * Skip the first `n` companies.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of Companies.
+   * Filter by unique combinations of companies.
    */
   distinct?: Prisma.CompanyScalarFieldEnum | Prisma.CompanyScalarFieldEnum[]
 }
 
 /**
- * Company findMany
+ * company findMany
  */
-export type CompanyFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type companyFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Company
+   * Select specific fields to fetch from the company
    */
-  select?: Prisma.CompanySelect<ExtArgs> | null
+  select?: Prisma.companySelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Company
+   * Omit specific fields from the company
    */
-  omit?: Prisma.CompanyOmit<ExtArgs> | null
+  omit?: Prisma.companyOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.CompanyInclude<ExtArgs> | null
+  include?: Prisma.companyInclude<ExtArgs> | null
   /**
-   * Filter, which Companies to fetch.
+   * Filter, which companies to fetch.
    */
-  where?: Prisma.CompanyWhereInput
+  where?: Prisma.companyWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of Companies to fetch.
+   * Determine the order of companies to fetch.
    */
-  orderBy?: Prisma.CompanyOrderByWithRelationInput | Prisma.CompanyOrderByWithRelationInput[]
+  orderBy?: Prisma.companyOrderByWithRelationInput | Prisma.companyOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for listing Companies.
+   * Sets the position for listing companies.
    */
-  cursor?: Prisma.CompanyWhereUniqueInput
+  cursor?: Prisma.companyWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` Companies from the position of the cursor.
+   * Take `±n` companies from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` Companies.
+   * Skip the first `n` companies.
    */
   skip?: number
   distinct?: Prisma.CompanyScalarFieldEnum | Prisma.CompanyScalarFieldEnum[]
 }
 
 /**
- * Company create
+ * company create
  */
-export type CompanyCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type companyCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Company
+   * Select specific fields to fetch from the company
    */
-  select?: Prisma.CompanySelect<ExtArgs> | null
+  select?: Prisma.companySelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Company
+   * Omit specific fields from the company
    */
-  omit?: Prisma.CompanyOmit<ExtArgs> | null
+  omit?: Prisma.companyOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.CompanyInclude<ExtArgs> | null
+  include?: Prisma.companyInclude<ExtArgs> | null
   /**
-   * The data needed to create a Company.
+   * The data needed to create a company.
    */
-  data: Prisma.XOR<Prisma.CompanyCreateInput, Prisma.CompanyUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.companyCreateInput, Prisma.companyUncheckedCreateInput>
 }
 
 /**
- * Company createMany
+ * company createMany
  */
-export type CompanyCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type companyCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to create many Companies.
+   * The data used to create many companies.
    */
-  data: Prisma.CompanyCreateManyInput | Prisma.CompanyCreateManyInput[]
+  data: Prisma.companyCreateManyInput | Prisma.companyCreateManyInput[]
   skipDuplicates?: boolean
 }
 
 /**
- * Company createManyAndReturn
+ * company createManyAndReturn
  */
-export type CompanyCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type companyCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Company
+   * Select specific fields to fetch from the company
    */
-  select?: Prisma.CompanySelectCreateManyAndReturn<ExtArgs> | null
+  select?: Prisma.companySelectCreateManyAndReturn<ExtArgs> | null
   /**
-   * Omit specific fields from the Company
+   * Omit specific fields from the company
    */
-  omit?: Prisma.CompanyOmit<ExtArgs> | null
+  omit?: Prisma.companyOmit<ExtArgs> | null
   /**
-   * The data used to create many Companies.
+   * The data used to create many companies.
    */
-  data: Prisma.CompanyCreateManyInput | Prisma.CompanyCreateManyInput[]
+  data: Prisma.companyCreateManyInput | Prisma.companyCreateManyInput[]
   skipDuplicates?: boolean
 }
 
 /**
- * Company update
+ * company update
  */
-export type CompanyUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type companyUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Company
+   * Select specific fields to fetch from the company
    */
-  select?: Prisma.CompanySelect<ExtArgs> | null
+  select?: Prisma.companySelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Company
+   * Omit specific fields from the company
    */
-  omit?: Prisma.CompanyOmit<ExtArgs> | null
+  omit?: Prisma.companyOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.CompanyInclude<ExtArgs> | null
+  include?: Prisma.companyInclude<ExtArgs> | null
   /**
-   * The data needed to update a Company.
+   * The data needed to update a company.
    */
-  data: Prisma.XOR<Prisma.CompanyUpdateInput, Prisma.CompanyUncheckedUpdateInput>
+  data: Prisma.XOR<Prisma.companyUpdateInput, Prisma.companyUncheckedUpdateInput>
   /**
-   * Choose, which Company to update.
+   * Choose, which company to update.
    */
-  where: Prisma.CompanyWhereUniqueInput
+  where: Prisma.companyWhereUniqueInput
 }
 
 /**
- * Company updateMany
+ * company updateMany
  */
-export type CompanyUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type companyUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to update Companies.
+   * The data used to update companies.
    */
-  data: Prisma.XOR<Prisma.CompanyUpdateManyMutationInput, Prisma.CompanyUncheckedUpdateManyInput>
+  data: Prisma.XOR<Prisma.companyUpdateManyMutationInput, Prisma.companyUncheckedUpdateManyInput>
   /**
-   * Filter which Companies to update
+   * Filter which companies to update
    */
-  where?: Prisma.CompanyWhereInput
+  where?: Prisma.companyWhereInput
   /**
-   * Limit how many Companies to update.
+   * Limit how many companies to update.
    */
   limit?: number
 }
 
 /**
- * Company updateManyAndReturn
+ * company updateManyAndReturn
  */
-export type CompanyUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type companyUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Company
+   * Select specific fields to fetch from the company
    */
-  select?: Prisma.CompanySelectUpdateManyAndReturn<ExtArgs> | null
+  select?: Prisma.companySelectUpdateManyAndReturn<ExtArgs> | null
   /**
-   * Omit specific fields from the Company
+   * Omit specific fields from the company
    */
-  omit?: Prisma.CompanyOmit<ExtArgs> | null
+  omit?: Prisma.companyOmit<ExtArgs> | null
   /**
-   * The data used to update Companies.
+   * The data used to update companies.
    */
-  data: Prisma.XOR<Prisma.CompanyUpdateManyMutationInput, Prisma.CompanyUncheckedUpdateManyInput>
+  data: Prisma.XOR<Prisma.companyUpdateManyMutationInput, Prisma.companyUncheckedUpdateManyInput>
   /**
-   * Filter which Companies to update
+   * Filter which companies to update
    */
-  where?: Prisma.CompanyWhereInput
+  where?: Prisma.companyWhereInput
   /**
-   * Limit how many Companies to update.
+   * Limit how many companies to update.
    */
   limit?: number
 }
 
 /**
- * Company upsert
+ * company upsert
  */
-export type CompanyUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type companyUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Company
+   * Select specific fields to fetch from the company
    */
-  select?: Prisma.CompanySelect<ExtArgs> | null
+  select?: Prisma.companySelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Company
+   * Omit specific fields from the company
    */
-  omit?: Prisma.CompanyOmit<ExtArgs> | null
+  omit?: Prisma.companyOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.CompanyInclude<ExtArgs> | null
+  include?: Prisma.companyInclude<ExtArgs> | null
   /**
-   * The filter to search for the Company to update in case it exists.
+   * The filter to search for the company to update in case it exists.
    */
-  where: Prisma.CompanyWhereUniqueInput
+  where: Prisma.companyWhereUniqueInput
   /**
-   * In case the Company found by the `where` argument doesn't exist, create a new Company with this data.
+   * In case the company found by the `where` argument doesn't exist, create a new company with this data.
    */
-  create: Prisma.XOR<Prisma.CompanyCreateInput, Prisma.CompanyUncheckedCreateInput>
+  create: Prisma.XOR<Prisma.companyCreateInput, Prisma.companyUncheckedCreateInput>
   /**
-   * In case the Company was found with the provided `where` argument, update it with this data.
+   * In case the company was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.CompanyUpdateInput, Prisma.CompanyUncheckedUpdateInput>
+  update: Prisma.XOR<Prisma.companyUpdateInput, Prisma.companyUncheckedUpdateInput>
 }
 
 /**
- * Company delete
+ * company delete
  */
-export type CompanyDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type companyDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Company
+   * Select specific fields to fetch from the company
    */
-  select?: Prisma.CompanySelect<ExtArgs> | null
+  select?: Prisma.companySelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Company
+   * Omit specific fields from the company
    */
-  omit?: Prisma.CompanyOmit<ExtArgs> | null
+  omit?: Prisma.companyOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.CompanyInclude<ExtArgs> | null
+  include?: Prisma.companyInclude<ExtArgs> | null
   /**
-   * Filter which Company to delete.
+   * Filter which company to delete.
    */
-  where: Prisma.CompanyWhereUniqueInput
+  where: Prisma.companyWhereUniqueInput
 }
 
 /**
- * Company deleteMany
+ * company deleteMany
  */
-export type CompanyDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type companyDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which Companies to delete
+   * Filter which companies to delete
    */
-  where?: Prisma.CompanyWhereInput
+  where?: Prisma.companyWhereInput
   /**
-   * Limit how many Companies to delete.
+   * Limit how many companies to delete.
    */
   limit?: number
 }
 
 /**
- * Company.contacts
+ * company.people
  */
-export type Company$contactsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type company$peopleArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Contact
+   * Select specific fields to fetch from the person
    */
-  select?: Prisma.ContactSelect<ExtArgs> | null
+  select?: Prisma.personSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Contact
+   * Omit specific fields from the person
    */
-  omit?: Prisma.ContactOmit<ExtArgs> | null
+  omit?: Prisma.personOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ContactInclude<ExtArgs> | null
-  where?: Prisma.ContactWhereInput
-  orderBy?: Prisma.ContactOrderByWithRelationInput | Prisma.ContactOrderByWithRelationInput[]
-  cursor?: Prisma.ContactWhereUniqueInput
+  include?: Prisma.personInclude<ExtArgs> | null
+  where?: Prisma.personWhereInput
+  orderBy?: Prisma.personOrderByWithRelationInput | Prisma.personOrderByWithRelationInput[]
+  cursor?: Prisma.personWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.ContactScalarFieldEnum | Prisma.ContactScalarFieldEnum[]
+  distinct?: Prisma.PersonScalarFieldEnum | Prisma.PersonScalarFieldEnum[]
 }
 
 /**
- * Company.services
+ * company.services
  */
-export type Company$servicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type company$servicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Service
+   * Select specific fields to fetch from the service
    */
-  select?: Prisma.ServiceSelect<ExtArgs> | null
+  select?: Prisma.serviceSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Service
+   * Omit specific fields from the service
    */
-  omit?: Prisma.ServiceOmit<ExtArgs> | null
+  omit?: Prisma.serviceOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ServiceInclude<ExtArgs> | null
-  where?: Prisma.ServiceWhereInput
-  orderBy?: Prisma.ServiceOrderByWithRelationInput | Prisma.ServiceOrderByWithRelationInput[]
-  cursor?: Prisma.ServiceWhereUniqueInput
+  include?: Prisma.serviceInclude<ExtArgs> | null
+  where?: Prisma.serviceWhereInput
+  orderBy?: Prisma.serviceOrderByWithRelationInput | Prisma.serviceOrderByWithRelationInput[]
+  cursor?: Prisma.serviceWhereUniqueInput
   take?: number
   skip?: number
   distinct?: Prisma.ServiceScalarFieldEnum | Prisma.ServiceScalarFieldEnum[]
 }
 
 /**
- * Company.providers
+ * company.providers
  */
-export type Company$providersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type company$providersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Provider
+   * Select specific fields to fetch from the provider
    */
-  select?: Prisma.ProviderSelect<ExtArgs> | null
+  select?: Prisma.providerSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Provider
+   * Omit specific fields from the provider
    */
-  omit?: Prisma.ProviderOmit<ExtArgs> | null
+  omit?: Prisma.providerOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProviderInclude<ExtArgs> | null
-  where?: Prisma.ProviderWhereInput
-  orderBy?: Prisma.ProviderOrderByWithRelationInput | Prisma.ProviderOrderByWithRelationInput[]
-  cursor?: Prisma.ProviderWhereUniqueInput
+  include?: Prisma.providerInclude<ExtArgs> | null
+  where?: Prisma.providerWhereInput
+  orderBy?: Prisma.providerOrderByWithRelationInput | Prisma.providerOrderByWithRelationInput[]
+  cursor?: Prisma.providerWhereUniqueInput
   take?: number
   skip?: number
   distinct?: Prisma.ProviderScalarFieldEnum | Prisma.ProviderScalarFieldEnum[]
 }
 
 /**
- * Company.appointments
+ * company.appointments
  */
-export type Company$appointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type company$appointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Appointment
+   * Select specific fields to fetch from the appointment
    */
-  select?: Prisma.AppointmentSelect<ExtArgs> | null
+  select?: Prisma.appointmentSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Appointment
+   * Omit specific fields from the appointment
    */
-  omit?: Prisma.AppointmentOmit<ExtArgs> | null
+  omit?: Prisma.appointmentOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.AppointmentInclude<ExtArgs> | null
-  where?: Prisma.AppointmentWhereInput
-  orderBy?: Prisma.AppointmentOrderByWithRelationInput | Prisma.AppointmentOrderByWithRelationInput[]
-  cursor?: Prisma.AppointmentWhereUniqueInput
+  include?: Prisma.appointmentInclude<ExtArgs> | null
+  where?: Prisma.appointmentWhereInput
+  orderBy?: Prisma.appointmentOrderByWithRelationInput | Prisma.appointmentOrderByWithRelationInput[]
+  cursor?: Prisma.appointmentWhereUniqueInput
   take?: number
   skip?: number
   distinct?: Prisma.AppointmentScalarFieldEnum | Prisma.AppointmentScalarFieldEnum[]
 }
 
 /**
- * Company.oauthStates
+ * company.cms_pages
  */
-export type Company$oauthStatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type company$cms_pagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the OAuthState
+   * Select specific fields to fetch from the cms_page
    */
-  select?: Prisma.OAuthStateSelect<ExtArgs> | null
+  select?: Prisma.cms_pageSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the OAuthState
+   * Omit specific fields from the cms_page
    */
-  omit?: Prisma.OAuthStateOmit<ExtArgs> | null
+  omit?: Prisma.cms_pageOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.OAuthStateInclude<ExtArgs> | null
-  where?: Prisma.OAuthStateWhereInput
-  orderBy?: Prisma.OAuthStateOrderByWithRelationInput | Prisma.OAuthStateOrderByWithRelationInput[]
-  cursor?: Prisma.OAuthStateWhereUniqueInput
+  include?: Prisma.cms_pageInclude<ExtArgs> | null
+  where?: Prisma.cms_pageWhereInput
+  orderBy?: Prisma.cms_pageOrderByWithRelationInput | Prisma.cms_pageOrderByWithRelationInput[]
+  cursor?: Prisma.cms_pageWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.OAuthStateScalarFieldEnum | Prisma.OAuthStateScalarFieldEnum[]
+  distinct?: Prisma.Cms_pageScalarFieldEnum | Prisma.Cms_pageScalarFieldEnum[]
 }
 
 /**
- * Company.cmsPages
+ * company without action
  */
-export type Company$cmsPagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type companyDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the CmsPage
+   * Select specific fields to fetch from the company
    */
-  select?: Prisma.CmsPageSelect<ExtArgs> | null
+  select?: Prisma.companySelect<ExtArgs> | null
   /**
-   * Omit specific fields from the CmsPage
+   * Omit specific fields from the company
    */
-  omit?: Prisma.CmsPageOmit<ExtArgs> | null
+  omit?: Prisma.companyOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.CmsPageInclude<ExtArgs> | null
-  where?: Prisma.CmsPageWhereInput
-  orderBy?: Prisma.CmsPageOrderByWithRelationInput | Prisma.CmsPageOrderByWithRelationInput[]
-  cursor?: Prisma.CmsPageWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.CmsPageScalarFieldEnum | Prisma.CmsPageScalarFieldEnum[]
-}
-
-/**
- * Company.payments
- */
-export type Company$paymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Payments
-   */
-  select?: Prisma.PaymentsSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Payments
-   */
-  omit?: Prisma.PaymentsOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PaymentsInclude<ExtArgs> | null
-  where?: Prisma.PaymentsWhereInput
-  orderBy?: Prisma.PaymentsOrderByWithRelationInput | Prisma.PaymentsOrderByWithRelationInput[]
-  cursor?: Prisma.PaymentsWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.PaymentsScalarFieldEnum | Prisma.PaymentsScalarFieldEnum[]
-}
-
-/**
- * Company without action
- */
-export type CompanyDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Company
-   */
-  select?: Prisma.CompanySelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Company
-   */
-  omit?: Prisma.CompanyOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.CompanyInclude<ExtArgs> | null
+  include?: Prisma.companyInclude<ExtArgs> | null
 }

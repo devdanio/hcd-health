@@ -29,8 +29,8 @@ export * from "./enums.ts"
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more CityLatLngs
- * const cityLatLngs = await prisma.cityLatLng.findMany()
+ * // Fetch zero or more City_lat_lngs
+ * const city_lat_lngs = await prisma.city_lat_lng.findMany()
  * ```
  * 
  * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
@@ -40,72 +40,62 @@ export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts exten
 export { Prisma }
 
 /**
- * Model CityLatLng
+ * Model city_lat_lng
  * 
  */
-export type CityLatLng = Prisma.CityLatLngModel
+export type city_lat_lng = Prisma.city_lat_lngModel
 /**
- * Model LeadCalculator
+ * Model lead_calculator
  * 
  */
-export type LeadCalculator = Prisma.LeadCalculatorModel
+export type lead_calculator = Prisma.lead_calculatorModel
 /**
- * Model Company
+ * Model company
  * 
  */
-export type Company = Prisma.CompanyModel
+export type company = Prisma.companyModel
 /**
- * Model GHLEvent
+ * Model person
  * 
  */
-export type GHLEvent = Prisma.GHLEventModel
+export type person = Prisma.personModel
 /**
- * Model Contact
+ * Model profile
  * 
  */
-export type Contact = Prisma.ContactModel
+export type profile = Prisma.profileModel
 /**
- * Model ExternalId
+ * Model event
  * 
  */
-export type ExternalId = Prisma.ExternalIdModel
+export type event = Prisma.eventModel
 /**
- * Model Event
+ * Model service
  * 
  */
-export type Event = Prisma.EventModel
+export type service = Prisma.serviceModel
 /**
- * Model Service
+ * Model purchase
  * 
  */
-export type Service = Prisma.ServiceModel
+export type purchase = Prisma.purchaseModel
 /**
- * Model Payments
+ * Model provider
  * 
  */
-export type Payments = Prisma.PaymentsModel
+export type provider = Prisma.providerModel
 /**
- * Model Provider
+ * Model appointment
  * 
  */
-export type Provider = Prisma.ProviderModel
+export type appointment = Prisma.appointmentModel
 /**
- * Model Appointment
+ * Model appointment_procedure
  * 
  */
-export type Appointment = Prisma.AppointmentModel
+export type appointment_procedure = Prisma.appointment_procedureModel
 /**
- * Model AppointmentProcedure
+ * Model cms_page
  * 
  */
-export type AppointmentProcedure = Prisma.AppointmentProcedureModel
-/**
- * Model OAuthState
- * 
- */
-export type OAuthState = Prisma.OAuthStateModel
-/**
- * Model CmsPage
- * 
- */
-export type CmsPage = Prisma.CmsPageModel
+export type cms_page = Prisma.cms_pageModel

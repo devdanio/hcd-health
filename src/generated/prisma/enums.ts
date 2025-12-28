@@ -18,7 +18,8 @@ export const EhrType = {
 export type EhrType = (typeof EhrType)[keyof typeof EhrType]
 
 
-export const ExternalIdSource = {
+export const DataSource = {
+  TRACKING: 'TRACKING',
   POSTHOG: 'POSTHOG',
   GHL: 'GHL',
   CHIROTOUCH: 'CHIROTOUCH',
@@ -27,14 +28,7 @@ export const ExternalIdSource = {
   JASMINE: 'JASMINE'
 } as const
 
-export type ExternalIdSource = (typeof ExternalIdSource)[keyof typeof ExternalIdSource]
-
-
-export const EventSource = {
-  GHL: 'GHL'
-} as const
-
-export type EventSource = (typeof EventSource)[keyof typeof EventSource]
+export type DataSource = (typeof DataSource)[keyof typeof DataSource]
 
 
 export const EventType = {
@@ -48,12 +42,3 @@ export const EventType = {
 } as const
 
 export type EventType = (typeof EventType)[keyof typeof EventType]
-
-
-export const PaymentStatus = {
-  pending: 'pending',
-  posted: 'posted',
-  failed: 'failed'
-} as const
-
-export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
