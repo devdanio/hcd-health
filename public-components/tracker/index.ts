@@ -13,20 +13,21 @@
  *
  * Usage:
  *
- * 1. Auto-initialization (via data-endpoint attribute):
- *    <script src="/tracker.js" data-endpoint="https://api.example.com/events?locationId=123"></script>
+ * 1. Auto-initialization (via data-location-id attribute):
+ *    <script src="/tracker.js" data-location-id="YOUR_LOCATION_ID"></script>
  *    // Access via window.__HCH.track('event_name', { custom: 'data' })
  *
  * 2. Manual initialization:
  *    <script src="/tracker.js"></script>
  *    <script>
- *      const tracker = new window.HCHTracker('https://api.example.com/events?locationId=123')
+ *      const tracker = new window.HCHTracker('YOUR_LOCATION_ID')
  *      tracker.track('custom_event', { foo: 'bar' })
  *      tracker.identify({ email: 'user@example.com', phone: '+1234567890' })
  *    </script>
  */
 ;(function () {
   class Tracker {
+    private locationId: string
     private apiEndpoint: string
     private storageKey: string = '_hch_uuid'
     private sessionKey: string = '_hch_session_id'
@@ -35,8 +36,10 @@
     private utms: Record<string, string | null>
     private lastTrackedPath: string = ''
 
-    constructor(apiEndpoint: string) {
-      this.apiEndpoint = apiEndpoint
+    constructor(locationId: string) {
+      this.locationId = locationId
+      // Build API endpoint from locationId
+      this.apiEndpoint = `${window.location.protocol}//${window.location.host}/api/${locationId}/event`
       this.anonymousId = this.getOrCreateAnonymousId()
       this.sessionId = this.getOrCreateSessionId()
       this.utms = this.captureUTMs()
@@ -266,9 +269,9 @@
   // Expose Tracker class globally
   ;(window as any).HCHTracker = Tracker
 
-  // Auto-initialize if script has data-endpoint attribute
+  // Auto-initialize if script has data-location-id attribute
   const script = document.currentScript as HTMLScriptElement
-  if (script && script.dataset.endpoint) {
-    ;(window as any).__HCH = new Tracker(script.dataset.endpoint)
+  if (script && script.dataset.locationId) {
+    ;(window as any).__HCH = new Tracker(script.dataset.locationId)
   }
 })()

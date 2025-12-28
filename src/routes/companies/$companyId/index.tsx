@@ -48,7 +48,7 @@ import {
 } from '@/collections'
 import { ChartAreaInteractive } from '@/components/chart-area-interactive'
 import { ChartCategories } from '@/components/chart-categories'
-import { LeadsPatientsChart } from '@/components/leads-patients-chart'
+// import { LeadsPatientsChart } from '@/components/leads-patients-chart'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -63,7 +63,10 @@ import { useCollections } from '@/routes/__root'
 import { useLiveQuery, eq } from '@tanstack/react-db'
 
 const searchParamsSchema = z.object({
-  timeRange: z.enum(['24h', '7d', '14d', '30d', '90d', '1y']).optional().default('30d'),
+  timeRange: z
+    .enum(['24h', '7d', '14d', '30d', '90d', '1y'])
+    .optional()
+    .default('30d'),
 })
 
 // Helper to get start date from TimeRange
@@ -619,7 +622,11 @@ function CompanyDetailsPage() {
           <CardHeader>Total Revenue</CardHeader>
           <CardContent className="flex items-center justify-center">
             <span className="text-2xl font-semibold">
-              ${totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+              $
+              {totalRevenue.toLocaleString('en-US', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              })}
             </span>
           </CardContent>
         </Card>
@@ -633,7 +640,7 @@ function CompanyDetailsPage() {
 
       <div className="grid grid-cols-4 gap-4">
         <div className="col-span-3">
-          <LeadsPatientsChart companyId={companyId} timeRange={timeRange} />
+          {/* <LeadsPatientsChart companyId={companyId} timeRange={timeRange} /> */}
         </div>
         <div className="col-span-1">
           <Card>
