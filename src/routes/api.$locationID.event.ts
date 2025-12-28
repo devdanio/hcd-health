@@ -15,6 +15,13 @@ const PayloadSchema = z.object({
   events: z.array(EventSchema).min(1),
 })
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Max-Age': '86400', // 24 hours
+}
+
 export const Route = createFileRoute('/api/$locationID/event')({
   server: {
     handlers: {
@@ -28,7 +35,10 @@ export const Route = createFileRoute('/api/$locationID/event')({
         })
 
         if (!company) {
-          return new Response('Location not found', { status: 404 })
+          return new Response('Location not found', {
+            status: 404,
+            headers: corsHeaders,
+          })
         }
 
         console.log('company', company)
@@ -38,20 +48,29 @@ export const Route = createFileRoute('/api/$locationID/event')({
         try {
           body = await request.json()
         } catch {
-          return new Response('Invalid JSON', { status: 400 })
+          return new Response('Invalid JSON', {
+            status: 400,
+            headers: corsHeaders,
+          })
         }
 
         const parsed = PayloadSchema.safeParse(body)
         if (!parsed.success) {
           console.error('invalid payload', parsed.error)
-          return new Response('Invalid payload', { status: 400 })
+          return new Response('Invalid payload', {
+            status: 400,
+            headers: corsHeaders,
+          })
         }
 
         const { anonymous_id, session_id, events } = parsed.data
 
         // Hard limit to prevent abuse
         if (events.length > 50) {
-          return new Response('Too many events', { status: 413 })
+          return new Response('Too many events', {
+            status: 413,
+            headers: corsHeaders,
+          })
         }
 
         // Build Prisma rows
@@ -74,13 +93,16 @@ export const Route = createFileRoute('/api/$locationID/event')({
           })
         } catch (err) {
           console.error('Event ingestion error:', err)
-          return new Response('Failed to persist events', { status: 500 })
+          return new Response('Failed to persist events', {
+            status: 500,
+            headers: corsHeaders,
+          })
         }
 
-        return new Response(null, { status: 204 })
+        return new Response(null, { status: 204, headers: corsHeaders })
       },
       OPTIONS: async () => {
-        return new Response(null, { status: 204 })
+        return new Response(null, { status: 204, headers: corsHeaders })
       },
     },
   },
