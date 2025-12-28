@@ -13,14 +13,16 @@
  *
  * Usage:
  *
- * 1. Auto-initialization (via data-location-id attribute):
+ * 1. Auto-initialization (via data attributes):
  *    <script src="/tracker.js" data-location-id="YOUR_LOCATION_ID"></script>
+ *    // With custom API endpoint:
+ *    <script src="/tracker.js" data-location-id="YOUR_LOCATION_ID" data-api-endpoint="https://example.com/api/events"></script>
  *    // Access via window.__HCH.track('event_name', { custom: 'data' })
  *
  * 2. Manual initialization:
  *    <script src="/tracker.js"></script>
  *    <script>
- *      const tracker = new window.HCHTracker('YOUR_LOCATION_ID')
+ *      const tracker = new window.HCHTracker('YOUR_LOCATION_ID', 'https://example.com/api/events')
  *      tracker.track('custom_event', { foo: 'bar' })
  *      tracker.identify({ email: 'user@example.com', phone: '+1234567890' })
  *    </script>
@@ -36,10 +38,12 @@
     private utms: Record<string, string | null>
     private lastTrackedPath: string = ''
 
-    constructor(locationId: string) {
+    constructor(locationId: string, apiEndpoint?: string) {
       this.locationId = locationId
-      // Build API endpoint from locationId
-      this.apiEndpoint = `${window.location.protocol}//${window.location.host}/api/${locationId}/event`
+      // Use custom API endpoint or build from locationId
+      this.apiEndpoint =
+        apiEndpoint ||
+        `${window.location.protocol}//${window.location.host}/api/${locationId}/event`
       this.anonymousId = this.getOrCreateAnonymousId()
       this.sessionId = this.getOrCreateSessionId()
       this.utms = this.captureUTMs()
@@ -174,7 +178,7 @@
 
       this.lastTrackedPath = currentPath
 
-      this.track('page_view', {
+      this.track('PAGE_VIEW', {
         path: currentPath,
         title: document.title,
       })
@@ -272,6 +276,8 @@
   // Auto-initialize if script has data-location-id attribute
   const script = document.currentScript as HTMLScriptElement
   if (script && script.dataset.locationId) {
-    ;(window as any).__HCH = new Tracker(script.dataset.locationId)
+    const locationId = script.dataset.locationId
+    const apiEndpoint = script.dataset.apiEndpoint || undefined
+    ;(window as any).__HCH = new Tracker(locationId, apiEndpoint)
   }
 })()

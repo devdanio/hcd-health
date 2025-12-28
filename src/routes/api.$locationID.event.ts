@@ -4,9 +4,9 @@ import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
 
 const EventSchema = z.object({
-  type: z.string().min(1),
-  timestamp: z.number(),
-  metadata: z.record(z.string(), z.string()),
+  type: z.enum(EventType),
+  timestamp: z.string().pipe(z.coerce.date()),
+  metadata: z.record(z.string(), z.any()),
 })
 
 const PayloadSchema = z.object({
@@ -20,6 +20,7 @@ export const Route = createFileRoute('/api/$locationID/event')({
     handlers: {
       POST: async ({ request, params }) => {
         const { locationID } = params
+        console.log('got this far')
 
         // Verify location (company) exists
         const company = await prisma.company.findUnique({
@@ -29,6 +30,8 @@ export const Route = createFileRoute('/api/$locationID/event')({
         if (!company) {
           return new Response('Location not found', { status: 404 })
         }
+
+        console.log('company', company)
 
         let body: unknown
 
@@ -40,6 +43,7 @@ export const Route = createFileRoute('/api/$locationID/event')({
 
         const parsed = PayloadSchema.safeParse(body)
         if (!parsed.success) {
+          console.error('invalid payload', parsed.error)
           return new Response('Invalid payload', { status: 400 })
         }
 
@@ -53,8 +57,8 @@ export const Route = createFileRoute('/api/$locationID/event')({
         // Build Prisma rows
         const rows = events.map((event) => ({
           source: DataSource.TRACKING,
-          type: event.type as EventType,
-          timestamp: new Date(event.timestamp),
+          type: event.type,
+          timestamp: event.timestamp,
           anonymous_id,
           session_id,
           company_id: locationID,
