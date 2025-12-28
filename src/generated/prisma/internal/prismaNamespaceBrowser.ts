@@ -164,6 +164,9 @@ export type ProfileScalarFieldEnum = (typeof ProfileScalarFieldEnum)[keyof typeo
 export const EventScalarFieldEnum = {
   id: 'id',
   person_id: 'person_id',
+  anonymous_id: 'anonymous_id',
+  session_id: 'session_id',
+  company_id: 'company_id',
   source: 'source',
   type: 'type',
   timestamp: 'timestamp',

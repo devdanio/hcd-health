@@ -42,10 +42,6 @@ export const regenerateApiKeySchema = z.object({
   companyId: z.string(),
 })
 
-export const getCompanyByApiKeySchema = z.object({
-  apiKey: z.string(),
-})
-
 // ============================================================================
 // Helper Functions
 // ============================================================================
@@ -65,7 +61,7 @@ export const getCompanies = createServerFn({ method: 'GET' })
   .inputValidator(getCompaniesSchema)
   .handler(async () => {
     return await prisma.company.findMany({
-      orderBy: { createdAt: 'desc' },
+      orderBy: { created_at: 'desc' },
     })
   })
 
@@ -87,37 +83,17 @@ export const getCompany = createServerFn({ method: 'GET' })
   })
 
 /**
- * Get company by API key (for tracking authentication)
- */
-export const getCompanyByApiKey = createServerFn({ method: 'GET' })
-  .inputValidator(getCompanyByApiKeySchema)
-  .handler(async ({ data }) => {
-    const company = await prisma.company.findUnique({
-      where: { apiKey: data.apiKey },
-    })
-
-    if (!company) {
-      throw new Error('Invalid API key')
-    }
-
-    return company
-  })
-
-/**
  * Create a new company
  */
 export const createCompany = createServerFn({ method: 'POST' })
   .inputValidator(createCompanySchema)
   .handler(async ({ data }) => {
-    const apiKey = generateApiKey()
-
     return await prisma.company.create({
       data: {
         name: data.name,
         domain: data.domain,
-        companyBrief: data.companyBrief,
+        company_brief: data.companyBrief,
         ehr: data.ehr,
-        apiKey,
       },
     })
   })

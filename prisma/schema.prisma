@@ -49,6 +49,7 @@ model company {
   providers    provider[]
   appointments appointment[]
   cms_pages     cms_page[]
+  events       event[]
 }
 
 enum EhrType {
@@ -125,14 +126,19 @@ enum DataSource {
 model event {
   id          String   @id @default(cuid())
   person_id    String?
+  anonymous_id String?
+  session_id   String?
+  company_id   String
+  company      company @relation(fields: [company_id], references: [id])
   source      DataSource
-  type        String
+  type        EventType
   timestamp   DateTime
   metadata    Json
 
   person      person? @relation(fields: [person_id], references: [id])
 
   @@index([person_id, timestamp])
+  @@index([company_id])
 }
 
 enum EventType {
@@ -142,6 +148,7 @@ enum EventType {
   CHAT
   FB_FORM_SUBMISSION
   SCHEDULED_CALL
+  BACKFILL
   // Used for data imports where we have attribution data but no events
   UNKNOWN
 }

@@ -211,6 +211,7 @@ export type companyWhereInput = {
   providers?: Prisma.ProviderListRelationFilter
   appointments?: Prisma.AppointmentListRelationFilter
   cms_pages?: Prisma.Cms_pageListRelationFilter
+  events?: Prisma.EventListRelationFilter
 }
 
 export type companyOrderByWithRelationInput = {
@@ -227,6 +228,7 @@ export type companyOrderByWithRelationInput = {
   providers?: Prisma.providerOrderByRelationAggregateInput
   appointments?: Prisma.appointmentOrderByRelationAggregateInput
   cms_pages?: Prisma.cms_pageOrderByRelationAggregateInput
+  events?: Prisma.eventOrderByRelationAggregateInput
 }
 
 export type companyWhereUniqueInput = Prisma.AtLeast<{
@@ -246,6 +248,7 @@ export type companyWhereUniqueInput = Prisma.AtLeast<{
   providers?: Prisma.ProviderListRelationFilter
   appointments?: Prisma.AppointmentListRelationFilter
   cms_pages?: Prisma.Cms_pageListRelationFilter
+  events?: Prisma.EventListRelationFilter
 }, "id">
 
 export type companyOrderByWithAggregationInput = {
@@ -290,6 +293,7 @@ export type companyCreateInput = {
   providers?: Prisma.providerCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.appointmentCreateNestedManyWithoutCompanyInput
   cms_pages?: Prisma.cms_pageCreateNestedManyWithoutCompanyInput
+  events?: Prisma.eventCreateNestedManyWithoutCompanyInput
 }
 
 export type companyUncheckedCreateInput = {
@@ -306,6 +310,7 @@ export type companyUncheckedCreateInput = {
   providers?: Prisma.providerUncheckedCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.appointmentUncheckedCreateNestedManyWithoutCompanyInput
   cms_pages?: Prisma.cms_pageUncheckedCreateNestedManyWithoutCompanyInput
+  events?: Prisma.eventUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type companyUpdateInput = {
@@ -322,6 +327,7 @@ export type companyUpdateInput = {
   providers?: Prisma.providerUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.appointmentUpdateManyWithoutCompanyNestedInput
   cms_pages?: Prisma.cms_pageUpdateManyWithoutCompanyNestedInput
+  events?: Prisma.eventUpdateManyWithoutCompanyNestedInput
 }
 
 export type companyUncheckedUpdateInput = {
@@ -338,6 +344,7 @@ export type companyUncheckedUpdateInput = {
   providers?: Prisma.providerUncheckedUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.appointmentUncheckedUpdateManyWithoutCompanyNestedInput
   cms_pages?: Prisma.cms_pageUncheckedUpdateManyWithoutCompanyNestedInput
+  events?: Prisma.eventUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type companyCreateManyInput = {
@@ -433,6 +440,20 @@ export type companyUpdateOneRequiredWithoutPeopleNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.companyUpdateToOneWithWhereWithoutPeopleInput, Prisma.companyUpdateWithoutPeopleInput>, Prisma.companyUncheckedUpdateWithoutPeopleInput>
 }
 
+export type companyCreateNestedOneWithoutEventsInput = {
+  create?: Prisma.XOR<Prisma.companyCreateWithoutEventsInput, Prisma.companyUncheckedCreateWithoutEventsInput>
+  connectOrCreate?: Prisma.companyCreateOrConnectWithoutEventsInput
+  connect?: Prisma.companyWhereUniqueInput
+}
+
+export type companyUpdateOneRequiredWithoutEventsNestedInput = {
+  create?: Prisma.XOR<Prisma.companyCreateWithoutEventsInput, Prisma.companyUncheckedCreateWithoutEventsInput>
+  connectOrCreate?: Prisma.companyCreateOrConnectWithoutEventsInput
+  upsert?: Prisma.companyUpsertWithoutEventsInput
+  connect?: Prisma.companyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.companyUpdateToOneWithWhereWithoutEventsInput, Prisma.companyUpdateWithoutEventsInput>, Prisma.companyUncheckedUpdateWithoutEventsInput>
+}
+
 export type companyCreateNestedOneWithoutServicesInput = {
   create?: Prisma.XOR<Prisma.companyCreateWithoutServicesInput, Prisma.companyUncheckedCreateWithoutServicesInput>
   connectOrCreate?: Prisma.companyCreateOrConnectWithoutServicesInput
@@ -502,6 +523,7 @@ export type companyCreateWithoutPeopleInput = {
   providers?: Prisma.providerCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.appointmentCreateNestedManyWithoutCompanyInput
   cms_pages?: Prisma.cms_pageCreateNestedManyWithoutCompanyInput
+  events?: Prisma.eventCreateNestedManyWithoutCompanyInput
 }
 
 export type companyUncheckedCreateWithoutPeopleInput = {
@@ -517,6 +539,7 @@ export type companyUncheckedCreateWithoutPeopleInput = {
   providers?: Prisma.providerUncheckedCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.appointmentUncheckedCreateNestedManyWithoutCompanyInput
   cms_pages?: Prisma.cms_pageUncheckedCreateNestedManyWithoutCompanyInput
+  events?: Prisma.eventUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type companyCreateOrConnectWithoutPeopleInput = {
@@ -548,6 +571,7 @@ export type companyUpdateWithoutPeopleInput = {
   providers?: Prisma.providerUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.appointmentUpdateManyWithoutCompanyNestedInput
   cms_pages?: Prisma.cms_pageUpdateManyWithoutCompanyNestedInput
+  events?: Prisma.eventUpdateManyWithoutCompanyNestedInput
 }
 
 export type companyUncheckedUpdateWithoutPeopleInput = {
@@ -559,6 +583,87 @@ export type companyUncheckedUpdateWithoutPeopleInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  services?: Prisma.serviceUncheckedUpdateManyWithoutCompanyNestedInput
+  providers?: Prisma.providerUncheckedUpdateManyWithoutCompanyNestedInput
+  appointments?: Prisma.appointmentUncheckedUpdateManyWithoutCompanyNestedInput
+  cms_pages?: Prisma.cms_pageUncheckedUpdateManyWithoutCompanyNestedInput
+  events?: Prisma.eventUncheckedUpdateManyWithoutCompanyNestedInput
+}
+
+export type companyCreateWithoutEventsInput = {
+  id?: string
+  name: string
+  domain: string
+  company_brief?: string | null
+  ehr?: $Enums.EhrType | null
+  address?: string | null
+  created_at?: Date | string
+  updated_at?: Date | string
+  people?: Prisma.personCreateNestedManyWithoutCompanyInput
+  services?: Prisma.serviceCreateNestedManyWithoutCompanyInput
+  providers?: Prisma.providerCreateNestedManyWithoutCompanyInput
+  appointments?: Prisma.appointmentCreateNestedManyWithoutCompanyInput
+  cms_pages?: Prisma.cms_pageCreateNestedManyWithoutCompanyInput
+}
+
+export type companyUncheckedCreateWithoutEventsInput = {
+  id?: string
+  name: string
+  domain: string
+  company_brief?: string | null
+  ehr?: $Enums.EhrType | null
+  address?: string | null
+  created_at?: Date | string
+  updated_at?: Date | string
+  people?: Prisma.personUncheckedCreateNestedManyWithoutCompanyInput
+  services?: Prisma.serviceUncheckedCreateNestedManyWithoutCompanyInput
+  providers?: Prisma.providerUncheckedCreateNestedManyWithoutCompanyInput
+  appointments?: Prisma.appointmentUncheckedCreateNestedManyWithoutCompanyInput
+  cms_pages?: Prisma.cms_pageUncheckedCreateNestedManyWithoutCompanyInput
+}
+
+export type companyCreateOrConnectWithoutEventsInput = {
+  where: Prisma.companyWhereUniqueInput
+  create: Prisma.XOR<Prisma.companyCreateWithoutEventsInput, Prisma.companyUncheckedCreateWithoutEventsInput>
+}
+
+export type companyUpsertWithoutEventsInput = {
+  update: Prisma.XOR<Prisma.companyUpdateWithoutEventsInput, Prisma.companyUncheckedUpdateWithoutEventsInput>
+  create: Prisma.XOR<Prisma.companyCreateWithoutEventsInput, Prisma.companyUncheckedCreateWithoutEventsInput>
+  where?: Prisma.companyWhereInput
+}
+
+export type companyUpdateToOneWithWhereWithoutEventsInput = {
+  where?: Prisma.companyWhereInput
+  data: Prisma.XOR<Prisma.companyUpdateWithoutEventsInput, Prisma.companyUncheckedUpdateWithoutEventsInput>
+}
+
+export type companyUpdateWithoutEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  domain?: Prisma.StringFieldUpdateOperationsInput | string
+  company_brief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  people?: Prisma.personUpdateManyWithoutCompanyNestedInput
+  services?: Prisma.serviceUpdateManyWithoutCompanyNestedInput
+  providers?: Prisma.providerUpdateManyWithoutCompanyNestedInput
+  appointments?: Prisma.appointmentUpdateManyWithoutCompanyNestedInput
+  cms_pages?: Prisma.cms_pageUpdateManyWithoutCompanyNestedInput
+}
+
+export type companyUncheckedUpdateWithoutEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  domain?: Prisma.StringFieldUpdateOperationsInput | string
+  company_brief?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ehr?: Prisma.NullableEnumEhrTypeFieldUpdateOperationsInput | $Enums.EhrType | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  people?: Prisma.personUncheckedUpdateManyWithoutCompanyNestedInput
   services?: Prisma.serviceUncheckedUpdateManyWithoutCompanyNestedInput
   providers?: Prisma.providerUncheckedUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.appointmentUncheckedUpdateManyWithoutCompanyNestedInput
@@ -578,6 +683,7 @@ export type companyCreateWithoutServicesInput = {
   providers?: Prisma.providerCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.appointmentCreateNestedManyWithoutCompanyInput
   cms_pages?: Prisma.cms_pageCreateNestedManyWithoutCompanyInput
+  events?: Prisma.eventCreateNestedManyWithoutCompanyInput
 }
 
 export type companyUncheckedCreateWithoutServicesInput = {
@@ -593,6 +699,7 @@ export type companyUncheckedCreateWithoutServicesInput = {
   providers?: Prisma.providerUncheckedCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.appointmentUncheckedCreateNestedManyWithoutCompanyInput
   cms_pages?: Prisma.cms_pageUncheckedCreateNestedManyWithoutCompanyInput
+  events?: Prisma.eventUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type companyCreateOrConnectWithoutServicesInput = {
@@ -624,6 +731,7 @@ export type companyUpdateWithoutServicesInput = {
   providers?: Prisma.providerUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.appointmentUpdateManyWithoutCompanyNestedInput
   cms_pages?: Prisma.cms_pageUpdateManyWithoutCompanyNestedInput
+  events?: Prisma.eventUpdateManyWithoutCompanyNestedInput
 }
 
 export type companyUncheckedUpdateWithoutServicesInput = {
@@ -639,6 +747,7 @@ export type companyUncheckedUpdateWithoutServicesInput = {
   providers?: Prisma.providerUncheckedUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.appointmentUncheckedUpdateManyWithoutCompanyNestedInput
   cms_pages?: Prisma.cms_pageUncheckedUpdateManyWithoutCompanyNestedInput
+  events?: Prisma.eventUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type companyCreateWithoutProvidersInput = {
@@ -654,6 +763,7 @@ export type companyCreateWithoutProvidersInput = {
   services?: Prisma.serviceCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.appointmentCreateNestedManyWithoutCompanyInput
   cms_pages?: Prisma.cms_pageCreateNestedManyWithoutCompanyInput
+  events?: Prisma.eventCreateNestedManyWithoutCompanyInput
 }
 
 export type companyUncheckedCreateWithoutProvidersInput = {
@@ -669,6 +779,7 @@ export type companyUncheckedCreateWithoutProvidersInput = {
   services?: Prisma.serviceUncheckedCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.appointmentUncheckedCreateNestedManyWithoutCompanyInput
   cms_pages?: Prisma.cms_pageUncheckedCreateNestedManyWithoutCompanyInput
+  events?: Prisma.eventUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type companyCreateOrConnectWithoutProvidersInput = {
@@ -700,6 +811,7 @@ export type companyUpdateWithoutProvidersInput = {
   services?: Prisma.serviceUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.appointmentUpdateManyWithoutCompanyNestedInput
   cms_pages?: Prisma.cms_pageUpdateManyWithoutCompanyNestedInput
+  events?: Prisma.eventUpdateManyWithoutCompanyNestedInput
 }
 
 export type companyUncheckedUpdateWithoutProvidersInput = {
@@ -715,6 +827,7 @@ export type companyUncheckedUpdateWithoutProvidersInput = {
   services?: Prisma.serviceUncheckedUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.appointmentUncheckedUpdateManyWithoutCompanyNestedInput
   cms_pages?: Prisma.cms_pageUncheckedUpdateManyWithoutCompanyNestedInput
+  events?: Prisma.eventUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type companyCreateWithoutAppointmentsInput = {
@@ -730,6 +843,7 @@ export type companyCreateWithoutAppointmentsInput = {
   services?: Prisma.serviceCreateNestedManyWithoutCompanyInput
   providers?: Prisma.providerCreateNestedManyWithoutCompanyInput
   cms_pages?: Prisma.cms_pageCreateNestedManyWithoutCompanyInput
+  events?: Prisma.eventCreateNestedManyWithoutCompanyInput
 }
 
 export type companyUncheckedCreateWithoutAppointmentsInput = {
@@ -745,6 +859,7 @@ export type companyUncheckedCreateWithoutAppointmentsInput = {
   services?: Prisma.serviceUncheckedCreateNestedManyWithoutCompanyInput
   providers?: Prisma.providerUncheckedCreateNestedManyWithoutCompanyInput
   cms_pages?: Prisma.cms_pageUncheckedCreateNestedManyWithoutCompanyInput
+  events?: Prisma.eventUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type companyCreateOrConnectWithoutAppointmentsInput = {
@@ -776,6 +891,7 @@ export type companyUpdateWithoutAppointmentsInput = {
   services?: Prisma.serviceUpdateManyWithoutCompanyNestedInput
   providers?: Prisma.providerUpdateManyWithoutCompanyNestedInput
   cms_pages?: Prisma.cms_pageUpdateManyWithoutCompanyNestedInput
+  events?: Prisma.eventUpdateManyWithoutCompanyNestedInput
 }
 
 export type companyUncheckedUpdateWithoutAppointmentsInput = {
@@ -791,6 +907,7 @@ export type companyUncheckedUpdateWithoutAppointmentsInput = {
   services?: Prisma.serviceUncheckedUpdateManyWithoutCompanyNestedInput
   providers?: Prisma.providerUncheckedUpdateManyWithoutCompanyNestedInput
   cms_pages?: Prisma.cms_pageUncheckedUpdateManyWithoutCompanyNestedInput
+  events?: Prisma.eventUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type companyCreateWithoutCms_pagesInput = {
@@ -806,6 +923,7 @@ export type companyCreateWithoutCms_pagesInput = {
   services?: Prisma.serviceCreateNestedManyWithoutCompanyInput
   providers?: Prisma.providerCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.appointmentCreateNestedManyWithoutCompanyInput
+  events?: Prisma.eventCreateNestedManyWithoutCompanyInput
 }
 
 export type companyUncheckedCreateWithoutCms_pagesInput = {
@@ -821,6 +939,7 @@ export type companyUncheckedCreateWithoutCms_pagesInput = {
   services?: Prisma.serviceUncheckedCreateNestedManyWithoutCompanyInput
   providers?: Prisma.providerUncheckedCreateNestedManyWithoutCompanyInput
   appointments?: Prisma.appointmentUncheckedCreateNestedManyWithoutCompanyInput
+  events?: Prisma.eventUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type companyCreateOrConnectWithoutCms_pagesInput = {
@@ -852,6 +971,7 @@ export type companyUpdateWithoutCms_pagesInput = {
   services?: Prisma.serviceUpdateManyWithoutCompanyNestedInput
   providers?: Prisma.providerUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.appointmentUpdateManyWithoutCompanyNestedInput
+  events?: Prisma.eventUpdateManyWithoutCompanyNestedInput
 }
 
 export type companyUncheckedUpdateWithoutCms_pagesInput = {
@@ -867,6 +987,7 @@ export type companyUncheckedUpdateWithoutCms_pagesInput = {
   services?: Prisma.serviceUncheckedUpdateManyWithoutCompanyNestedInput
   providers?: Prisma.providerUncheckedUpdateManyWithoutCompanyNestedInput
   appointments?: Prisma.appointmentUncheckedUpdateManyWithoutCompanyNestedInput
+  events?: Prisma.eventUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 
@@ -880,6 +1001,7 @@ export type CompanyCountOutputType = {
   providers: number
   appointments: number
   cms_pages: number
+  events: number
 }
 
 export type CompanyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -888,6 +1010,7 @@ export type CompanyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   providers?: boolean | CompanyCountOutputTypeCountProvidersArgs
   appointments?: boolean | CompanyCountOutputTypeCountAppointmentsArgs
   cms_pages?: boolean | CompanyCountOutputTypeCountCms_pagesArgs
+  events?: boolean | CompanyCountOutputTypeCountEventsArgs
 }
 
 /**
@@ -935,6 +1058,13 @@ export type CompanyCountOutputTypeCountCms_pagesArgs<ExtArgs extends runtime.Typ
   where?: Prisma.cms_pageWhereInput
 }
 
+/**
+ * CompanyCountOutputType without action
+ */
+export type CompanyCountOutputTypeCountEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.eventWhereInput
+}
+
 
 export type companySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -950,6 +1080,7 @@ export type companySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   providers?: boolean | Prisma.company$providersArgs<ExtArgs>
   appointments?: boolean | Prisma.company$appointmentsArgs<ExtArgs>
   cms_pages?: boolean | Prisma.company$cms_pagesArgs<ExtArgs>
+  events?: boolean | Prisma.company$eventsArgs<ExtArgs>
   _count?: boolean | Prisma.CompanyCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["company"]>
 
@@ -993,6 +1124,7 @@ export type companyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   providers?: boolean | Prisma.company$providersArgs<ExtArgs>
   appointments?: boolean | Prisma.company$appointmentsArgs<ExtArgs>
   cms_pages?: boolean | Prisma.company$cms_pagesArgs<ExtArgs>
+  events?: boolean | Prisma.company$eventsArgs<ExtArgs>
   _count?: boolean | Prisma.CompanyCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type companyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1006,6 +1138,7 @@ export type $companyPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     providers: Prisma.$providerPayload<ExtArgs>[]
     appointments: Prisma.$appointmentPayload<ExtArgs>[]
     cms_pages: Prisma.$cms_pagePayload<ExtArgs>[]
+    events: Prisma.$eventPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1415,6 +1548,7 @@ export interface Prisma__companyClient<T, Null = never, ExtArgs extends runtime.
   providers<T extends Prisma.company$providersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.company$providersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$providerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   appointments<T extends Prisma.company$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.company$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$appointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cms_pages<T extends Prisma.company$cms_pagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.company$cms_pagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$cms_pagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  events<T extends Prisma.company$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.company$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$eventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1957,6 +2091,30 @@ export type company$cms_pagesArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.Cms_pageScalarFieldEnum | Prisma.Cms_pageScalarFieldEnum[]
+}
+
+/**
+ * company.events
+ */
+export type company$eventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the event
+   */
+  select?: Prisma.eventSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the event
+   */
+  omit?: Prisma.eventOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.eventInclude<ExtArgs> | null
+  where?: Prisma.eventWhereInput
+  orderBy?: Prisma.eventOrderByWithRelationInput | Prisma.eventOrderByWithRelationInput[]
+  cursor?: Prisma.eventWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EventScalarFieldEnum | Prisma.EventScalarFieldEnum[]
 }
 
 /**

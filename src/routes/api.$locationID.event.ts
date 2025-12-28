@@ -1,3 +1,4 @@
+import { DataSource, EventType } from '@/generated/prisma/enums'
 import { prisma } from '@/server/db/client'
 import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
@@ -51,13 +52,14 @@ export const Route = createFileRoute('/api/$locationID/event')({
 
         // Build Prisma rows
         const rows = events.map((event) => ({
-          source: 'TRACKING' as const,
-          type: event.type,
+          source: DataSource.TRACKING,
+          type: event.type as EventType,
           timestamp: new Date(event.timestamp),
+          anonymous_id,
+          session_id,
+          company_id: locationID,
           metadata: {
             ...event.metadata,
-            anonymous_id,
-            session_id,
           },
         }))
 

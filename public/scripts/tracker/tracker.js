@@ -1,1 +1,121 @@
-this.HCHTracker=(function(){"use strict";const o="hch_uuid";class s{apiKey;apiUrl;hchUuid=null;initialized=!1;constructor(i){this.apiKey=i.apiKey,this.apiUrl=i.apiUrl||window.location.origin,this.init()}async init(){if(!this.initialized)try{this.hchUuid=await this.getOrCreateHchUuid(),this.identifyInPostHog(),this.exposeGlobally(),this.initialized=!0,console.log("[HCH] Initialized with uuid:",this.hchUuid)}catch(i){console.error("[HCH] Initialization failed:",i)}}async getOrCreateHchUuid(){let i=this.getCookie(o)||localStorage.getItem(o);if(i){if(await this.validateHchUuid(i))return i;console.warn("[HCH] Existing uuid invalid, creating new one")}const{contactId:t}=await this.createContact();return this.setCookie(o,t,365),localStorage.setItem(o,t),t}async validateHchUuid(i){try{const t=await fetch(`${this.apiUrl}/api/validate-hch-uuid`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({apiKey:this.apiKey,hchUuid:i})});if(!t.ok)return!1;const{valid:e}=await t.json();return e}catch(t){return console.error("[HCH] Validation failed:",t),!1}}async createContact(){const i=await fetch(`${this.apiUrl}/api/create-contact`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({apiKey:this.apiKey})});if(!i.ok)throw new Error("Failed to create contact");return await i.json()}identifyInPostHog(){if(typeof window<"u"&&window.posthog&&this.hchUuid)try{window.posthog.identify(this.hchUuid,{hch_uuid:this.hchUuid}),console.log("[HCH] PostHog identified with uuid:",this.hchUuid)}catch(i){console.error("[HCH] PostHog identify failed:",i)}}exposeGlobally(){typeof window<"u"&&(window.HCH={getUuid:()=>this.hchUuid,tracker:this})}getCookie(i){if(typeof document>"u")return null;const e=`; ${document.cookie}`.split(`; ${i}=`);return e.length===2&&e.pop()?.split(";").shift()||null}setCookie(i,t,e){if(typeof document>"u")return;const n=new Date;n.setTime(n.getTime()+e*24*60*60*1e3);const a=window.location.hostname,c=a.includes(".")?"."+a.split(".").slice(-2).join("."):a;document.cookie=`${i}=${t};expires=${n.toUTCString()};path=/;domain=${c};SameSite=Lax`}getUuid(){return this.hchUuid}}if(typeof window<"u"&&window.HCH_CONFIG){const r=new s(window.HCH_CONFIG);window.hchTracker=r}return s})();
+;(function () {
+  const API_ENDPOINT = 'https://app.highcountryhealth.com/api/event'
+  const STORAGE_KEY = '_hch_uuid'
+  const SESSION_KEY = '_hch_session_id'
+  const FLUSH_INTERVAL = 5000
+  const MAX_BATCH_SIZE = 20
+
+  // ---------- Utilities ----------
+
+  function uuid() {
+    return crypto.randomUUID()
+  }
+
+  function now() {
+    return new Date().toISOString()
+  }
+
+  function getOrCreate(key) {
+    let value = localStorage.getItem(key)
+    if (!value) {
+      value = uuid()
+      localStorage.setItem(key, value)
+    }
+    return value
+  }
+
+  function getSessionId() {
+    let sid = sessionStorage.getItem(SESSION_KEY)
+    if (!sid) {
+      sid = uuid()
+      sessionStorage.setItem(SESSION_KEY, sid)
+    }
+    return sid
+  }
+
+  function getUTMs() {
+    const params = new URLSearchParams(window.location.search)
+    return {
+      utm_source: params.get('utm_source'),
+      utm_medium: params.get('utm_medium'),
+      utm_campaign: params.get('utm_campaign'),
+      utm_term: params.get('utm_term'),
+      utm_content: params.get('utm_content'),
+      gclid: params.get('gclid'),
+      fbclid: params.get('fbclid'),
+    }
+  }
+
+  // ---------- State ----------
+
+  const anonId = getOrCreate(STORAGE_KEY)
+  const sessionId = getSessionId()
+  const utms = getUTMs()
+  const queue = []
+
+  // ---------- Core Send Logic ----------
+
+  function send(events) {
+    if (!events.length) return
+
+    navigator.sendBeacon(
+      API_ENDPOINT,
+      JSON.stringify({
+        anonymous_id: anonId,
+        session_id: sessionId,
+        events,
+      }),
+    )
+  }
+
+  function flush() {
+    if (!queue.length) return
+    const batch = queue.splice(0, MAX_BATCH_SIZE)
+    send(batch)
+  }
+
+  setInterval(flush, FLUSH_INTERVAL)
+  window.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') flush()
+  })
+
+  // ---------- Public API ----------
+
+  function track(type, metadata = {}) {
+    queue.push({
+      type,
+      timestamp: now(),
+      metadata: {
+        ...utms,
+        ...metadata,
+        url: window.location.href,
+        referrer: document.referrer || null,
+      },
+    })
+
+    if (queue.length >= MAX_BATCH_SIZE) {
+      flush()
+    }
+  }
+
+  // ---------- Default Events ----------
+
+  // Track landing page only (not every SPA route)
+  track('page_view', {
+    path: window.location.pathname,
+  })
+
+  // ---------- Expose API ----------
+
+  w.__HCH = {
+    track,
+
+    identify(identity) {
+      // identity = { email, phone }
+      track('identify', {
+        email: identity.email || null,
+        phone: identity.phone || null,
+      })
+    },
+  }
+})()

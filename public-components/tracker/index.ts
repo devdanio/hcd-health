@@ -1,205 +1,274 @@
 /**
- * High Country Health Identity Tracker
+ * High Country Health Tracker
  *
- * Purpose: Ensure every visitor has an hch_uuid (Contact.id)
+ * Robust, class-based tracking system for comprehensive user analytics.
  *
- * What it does:
- * - Creates/validates hch_uuid
- * - Stores in cookies + localStorage
- * - Identifies user in PostHog with hch_uuid
- * - Exposes window.HCH.getUuid() for GHL iframe usage
+ * Features:
+ * - Tracks every page view (initial load + all SPA navigation)
+ * - Persistent anonymous ID stored indefinitely in localStorage
+ * - Immediate event sending (no batching)
+ * - Automatic retry of failed events when back online
+ * - Tracks page title changes
+ * - Captures UTM parameters and click IDs (gclid, fbclid)
  *
- * What it DOESN'T do:
- * - Event tracking (PostHog does this)
- * - Page view tracking (PostHog does this)
- * - Session tracking (PostHog does this)
- * - Analytics (PostHog does this)
+ * Usage:
+ *
+ * 1. Auto-initialization (via data-endpoint attribute):
+ *    <script src="/tracker.js" data-endpoint="https://api.example.com/events?locationId=123"></script>
+ *    // Access via window.__HCH.track('event_name', { custom: 'data' })
+ *
+ * 2. Manual initialization:
+ *    <script src="/tracker.js"></script>
+ *    <script>
+ *      const tracker = new window.HCHTracker('https://api.example.com/events?locationId=123')
+ *      tracker.track('custom_event', { foo: 'bar' })
+ *      tracker.identify({ email: 'user@example.com', phone: '+1234567890' })
+ *    </script>
  */
+;(function () {
+  class Tracker {
+    private apiEndpoint: string
+    private storageKey: string = '_hch_uuid'
+    private sessionKey: string = '_hch_session_id'
+    private anonymousId: string
+    private sessionId: string
+    private utms: Record<string, string | null>
+    private lastTrackedPath: string = ''
 
-interface TrackerConfig {
-  apiKey: string
-  apiUrl?: string
-}
-
-const STORAGE_KEY = 'hch_uuid'
-const COOKIE_EXPIRY_DAYS = 365
-
-class HCHTracker {
-  private apiKey: string
-  private apiUrl: string
-  private hchUuid: string | null = null
-  private initialized = false
-
-  constructor(config: TrackerConfig) {
-    this.apiKey = config.apiKey
-    this.apiUrl = config.apiUrl || window.location.origin
-    this.init()
-  }
-
-  /**
-   * Initialize tracker - create/validate hch_uuid and identify in PostHog
-   */
-  async init() {
-    if (this.initialized) return
-
-    try {
-      // Get or create hch_uuid
-      this.hchUuid = await this.getOrCreateHchUuid()
-
-      // Identify in PostHog
-      this.identifyInPostHog()
-
-      // Expose globally for GHL iframe usage
-      this.exposeGlobally()
-
-      this.initialized = true
-      console.log('[HCH] Initialized with uuid:', this.hchUuid)
-    } catch (error) {
-      console.error('[HCH] Initialization failed:', error)
+    constructor(apiEndpoint: string) {
+      this.apiEndpoint = apiEndpoint
+      this.anonymousId = this.getOrCreateAnonymousId()
+      this.sessionId = this.getOrCreateSessionId()
+      this.utms = this.captureUTMs()
+      this.init()
     }
-  }
 
-  /**
-   * Get or create hch_uuid (Contact.id)
-   */
-  private async getOrCreateHchUuid(): Promise<string> {
-    // Check cookies AND localStorage
-    let hchUuid =
-      this.getCookie(STORAGE_KEY) || localStorage.getItem(STORAGE_KEY)
+    private init(): void {
+      // Track initial page view
+      this.trackPageView()
 
-    if (hchUuid) {
-      // Validate with server
-      const isValid = await this.validateHchUuid(hchUuid)
-      if (isValid) {
-        return hchUuid
+      // Intercept SPA navigation
+      this.interceptNavigation()
+
+      // Handle online/offline for robustness
+      this.setupOnlineHandlers()
+    }
+
+    private uuid(): string {
+      return crypto.randomUUID()
+    }
+
+    private now(): string {
+      return new Date().toISOString()
+    }
+
+    /**
+     * Get or create anonymous ID (persists indefinitely)
+     */
+    private getOrCreateAnonymousId(): string {
+      let value = localStorage.getItem(this.storageKey)
+
+      if (!value) {
+        value = this.uuid()
+        localStorage.setItem(this.storageKey, value)
       }
-      console.warn('[HCH] Existing uuid invalid, creating new one')
+
+      return value
     }
 
-    // Create new contact
-    const { contactId } = await this.createContact()
+    private getOrCreateSessionId(): string {
+      let sid = sessionStorage.getItem(this.sessionKey)
+      if (!sid) {
+        sid = this.uuid()
+        sessionStorage.setItem(this.sessionKey, sid)
+      }
+      return sid
+    }
 
-    // Store in BOTH cookies and localStorage
-    this.setCookie(STORAGE_KEY, contactId, COOKIE_EXPIRY_DAYS)
-    localStorage.setItem(STORAGE_KEY, contactId)
+    private captureUTMs(): Record<string, string | null> {
+      const params = new URLSearchParams(window.location.search)
+      return {
+        utm_source: params.get('utm_source'),
+        utm_medium: params.get('utm_medium'),
+        utm_campaign: params.get('utm_campaign'),
+        utm_term: params.get('utm_term'),
+        utm_content: params.get('utm_content'),
+        gclid: params.get('gclid'),
+        fbclid: params.get('fbclid'),
+      }
+    }
 
-    return contactId
-  }
+    /**
+     * Send event immediately (no batching/queuing)
+     */
+    private async send(event: Record<string, any>): Promise<void> {
+      try {
+        const response = await fetch(this.apiEndpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            anonymous_id: this.anonymousId,
+            session_id: this.sessionId,
+            events: [event],
+          }),
+          keepalive: true, // Ensures request completes even if page is closing
+        })
 
-  /**
-   * Validate hch_uuid with server
-   */
-  private async validateHchUuid(hchUuid: string): Promise<boolean> {
-    try {
-      const response = await fetch(`${this.apiUrl}/api/validate-hch-uuid`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          apiKey: this.apiKey,
-          hchUuid,
-        }),
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`)
+        }
+      } catch (error) {
+        console.error('[HCH Tracker] Failed to send event:', error)
+        // Store failed event for retry
+        this.queueFailedEvent(event)
+      }
+    }
+
+    /**
+     * Queue failed events to retry later
+     */
+    private queueFailedEvent(event: Record<string, any>): void {
+      try {
+        const queueKey = '_hch_failed_events'
+        const queue = JSON.parse(localStorage.getItem(queueKey) || '[]')
+        queue.push(event)
+        // Keep only last 50 failed events
+        const trimmed = queue.slice(-50)
+        localStorage.setItem(queueKey, JSON.stringify(trimmed))
+      } catch (e) {
+        // Ignore storage errors
+      }
+    }
+
+    /**
+     * Retry failed events
+     */
+    private async retryFailedEvents(): Promise<void> {
+      try {
+        const queueKey = '_hch_failed_events'
+        const queue = JSON.parse(localStorage.getItem(queueKey) || '[]')
+
+        if (queue.length === 0) return
+
+        for (const event of queue) {
+          await this.send(event)
+        }
+
+        // Clear queue on success
+        localStorage.removeItem(queueKey)
+      } catch (e) {
+        // Will retry next time
+      }
+    }
+
+    private trackPageView(): void {
+      const currentPath = window.location.pathname
+
+      // Avoid duplicate tracking of the same path
+      if (currentPath === this.lastTrackedPath) return
+
+      this.lastTrackedPath = currentPath
+
+      this.track('page_view', {
+        path: currentPath,
+        title: document.title,
+      })
+    }
+
+    /**
+     * Intercept all navigation methods to track every page view
+     */
+    private interceptNavigation(): void {
+      // Save original methods
+      const originalPushState = history.pushState.bind(history)
+      const originalReplaceState = history.replaceState.bind(history)
+
+      // Override pushState
+      history.pushState = (...args: any[]) => {
+        originalPushState(...args)
+        // Use setTimeout to ensure DOM updates (especially title) are complete
+        setTimeout(() => this.trackPageView(), 100)
+      }
+
+      // Override replaceState
+      history.replaceState = (...args: any[]) => {
+        originalReplaceState(...args)
+        setTimeout(() => this.trackPageView(), 100)
+      }
+
+      // Handle popstate (back/forward buttons)
+      window.addEventListener('popstate', () => {
+        setTimeout(() => this.trackPageView(), 100)
       })
 
-      if (!response.ok) return false
+      // Handle hash changes (for hash-based routing)
+      window.addEventListener('hashchange', () => {
+        setTimeout(() => this.trackPageView(), 100)
+      })
 
-      const { valid } = await response.json()
-      return valid
-    } catch (error) {
-      console.error('[HCH] Validation failed:', error)
-      return false
-    }
-  }
+      // MutationObserver to catch dynamic title changes
+      const observer = new MutationObserver(() => {
+        // Re-track if title changes
+        if (document.title !== this.lastTrackedPath) {
+          this.trackPageView()
+        }
+      })
 
-  /**
-   * Create new contact (returns contact.id)
-   */
-  private async createContact(): Promise<{ contactId: string }> {
-    const response = await fetch(`${this.apiUrl}/api/create-contact`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ apiKey: this.apiKey }),
-    })
-
-    if (!response.ok) {
-      throw new Error('Failed to create contact')
+      observer.observe(document.querySelector('title') || document.head, {
+        childList: true,
+        characterData: true,
+        subtree: true,
+      })
     }
 
-    return await response.json()
-  }
+    /**
+     * Setup online/offline handlers for robustness
+     */
+    private setupOnlineHandlers(): void {
+      window.addEventListener('online', () => {
+        // Retry failed events when coming back online
+        this.retryFailedEvents()
+      })
+    }
 
-  /**
-   * Identify user in PostHog with hch_uuid
-   */
-  private identifyInPostHog() {
-    if (
-      typeof window !== 'undefined' &&
-      (window as any).posthog &&
-      this.hchUuid
-    ) {
-      try {
-        ;(window as any).posthog.identify(this.hchUuid, {
-          hch_uuid: this.hchUuid,
-        })
-        console.log('[HCH] PostHog identified with uuid:', this.hchUuid)
-      } catch (error) {
-        console.error('[HCH] PostHog identify failed:', error)
+    /**
+     * Public API: Track custom event
+     */
+    track(type: string, metadata: Record<string, any> = {}): void {
+      const event = {
+        type,
+        timestamp: this.now(),
+        metadata: {
+          ...this.utms,
+          ...metadata,
+          url: window.location.href,
+          referrer: document.referrer || null,
+          title: document.title,
+        },
       }
+
+      this.send(event)
+    }
+
+    /**
+     * Public API: Identify user
+     */
+    identify(identity: { email?: string; phone?: string }): void {
+      this.track('identify', {
+        email: identity.email || null,
+        phone: identity.phone || null,
+      })
     }
   }
 
-  /**
-   * Expose globally for GHL iframe usage
-   */
-  private exposeGlobally() {
-    if (typeof window !== 'undefined') {
-      ;(window as any).HCH = {
-        getUuid: () => this.hchUuid,
-        tracker: this,
-      }
-    }
+  // Expose Tracker class globally
+  ;(window as any).HCHTracker = Tracker
+
+  // Auto-initialize if script has data-endpoint attribute
+  const script = document.currentScript as HTMLScriptElement
+  if (script && script.dataset.endpoint) {
+    ;(window as any).__HCH = new Tracker(script.dataset.endpoint)
   }
-
-  /**
-   * Cookie utilities
-   */
-  private getCookie(name: string): string | null {
-    if (typeof document === 'undefined') return null
-
-    const value = `; ${document.cookie}`
-    const parts = value.split(`; ${name}=`)
-    if (parts.length === 2) {
-      return parts.pop()?.split(';').shift() || null
-    }
-    return null
-  }
-
-  private setCookie(name: string, value: string, days: number) {
-    if (typeof document === 'undefined') return
-
-    const expires = new Date()
-    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000)
-
-    // Extract root domain (e.g., "root.com" from "foo.root.com")
-    const hostname = window.location.hostname
-    const domain = hostname.includes('.')
-      ? '.' + hostname.split('.').slice(-2).join('.') // e.g., ".root.com"
-      : hostname // fallback for localhost
-
-    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;domain=${domain};SameSite=Lax`
-  }
-
-  /**
-   * Public API: Get current hch_uuid
-   */
-  getUuid(): string | null {
-    return this.hchUuid
-  }
-}
-
-// Auto-initialize if config is available
-if (typeof window !== 'undefined' && (window as any).HCH_CONFIG) {
-  const tracker = new HCHTracker((window as any).HCH_CONFIG)
-  ;(window as any).hchTracker = tracker
-}
-
-export default HCHTracker
+})()
