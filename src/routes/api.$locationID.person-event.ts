@@ -18,6 +18,7 @@ const PersonEventSchema = z.union([
     external_id: z.string().optional(),
     source: z.enum(DataSource).optional(),
     event_type: z.enum(EventType),
+    timestamp: z.string().pipe(z.coerce.date()),
     metadata: z.record(z.string(), z.any()),
   }),
   z.object({
@@ -25,6 +26,7 @@ const PersonEventSchema = z.union([
     external_id: z.string(),
     source: z.enum(DataSource),
     event_type: z.enum(EventType),
+    timestamp: z.string().pipe(z.coerce.date()),
     metadata: z.record(z.string(), z.any()),
   }),
 ])
@@ -66,8 +68,14 @@ export const Route = createFileRoute('/api/$locationID/person-event')({
           })
         }
 
-        const { event_type, metadata, external_id, source, person_id } =
-          parsed.data
+        const {
+          event_type,
+          metadata,
+          external_id,
+          source,
+          person_id,
+          timestamp,
+        } = parsed.data
 
         // Determine the person_id to use
         let finalPersonId: string | null = null
@@ -133,7 +141,7 @@ export const Route = createFileRoute('/api/$locationID/person-event')({
               person_id: finalPersonId,
               source: source as DataSource,
               type: event_type,
-              timestamp: new Date(),
+              timestamp: timestamp as Date,
               metadata,
             },
           })
