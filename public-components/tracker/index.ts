@@ -24,7 +24,7 @@
  *    <script>
  *      const tracker = new window.HCHTracker('YOUR_LOCATION_ID', 'https://example.com/api/events')
  *      tracker.track('custom_event', { foo: 'bar' })
- *      tracker.identify({ email: 'user@example.com', phone: '+1234567890' })
+ *      tracker.identify({ email: 'user@example.com', phone: '+1234567890', metadata: { fullName: 'John Doe', firstName: 'John', lastName: 'Doe' } })
  *    </script>
  */
 ;(function () {
