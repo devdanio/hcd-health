@@ -136,6 +136,21 @@ function RouteComponent() {
     return result
   }, [webEvents])
 
+  // Calculate totals across all sources
+  const totals = useMemo(() => {
+    return campaignData.reduce(
+      (acc, source) => ({
+        sessions: acc.sessions + source.sessions,
+        leads: acc.leads + source.leads,
+        patients: acc.patients + source.patients,
+        revenue: acc.revenue + source.revenue,
+        cost: acc.cost + source.cost,
+        cac: acc.cac + source.cac,
+      }),
+      { sessions: 0, leads: 0, patients: 0, revenue: 0, cost: 0, cac: 0 },
+    )
+  }, [campaignData])
+
   const columns = useMemo<ColumnDef<TableRow>[]>(
     () => [
       {
@@ -387,6 +402,29 @@ function RouteComponent() {
                   <tr>
                     <td colSpan={columns.length} className="h-24 text-center">
                       No sources found.
+                    </td>
+                  </tr>
+                )}
+                {table.getRowModel().rows?.length > 0 && (
+                  <tr className="border-t-2 bg-muted/50 font-semibold">
+                    <td className="p-4 align-middle">Total</td>
+                    <td className="p-4 align-middle text-right">
+                      {totals.sessions.toLocaleString()}
+                    </td>
+                    <td className="p-4 align-middle text-right">
+                      {totals.leads}
+                    </td>
+                    <td className="p-4 align-middle text-right">
+                      {totals.patients}
+                    </td>
+                    <td className="p-4 align-middle text-right">
+                      ${totals.revenue}
+                    </td>
+                    <td className="p-4 align-middle text-right">
+                      ${totals.cost}
+                    </td>
+                    <td className="p-4 align-middle text-right">
+                      ${totals.cac}
                     </td>
                   </tr>
                 )}

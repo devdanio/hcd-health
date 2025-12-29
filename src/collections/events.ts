@@ -40,7 +40,8 @@ export const getWebEvents = createServerFn({ method: 'GET' })
         type: EventType.PAGE_VIEW,
       },
       orderBy: { timestamp: 'desc' },
-      take: 500,
+      distinct: ['session_id'],
+      take: 900,
     })
 
     return result.map((r) => r as typeof r & { metadata: WebMetadata })
