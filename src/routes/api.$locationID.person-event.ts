@@ -207,7 +207,7 @@ export const Route = createFileRoute('/api/$locationID/person-event')({
               source: source as DataSource,
               type: event_type,
               timestamp: timestamp as Date,
-              metadata,
+              metadata: metadata || {},
             },
           })
 
