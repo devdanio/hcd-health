@@ -6,7 +6,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-export type TimeRange = '24h' | '7d' | '14d' | '30d' | '90d' | '1y'
+export type TimeRange = '24h' | '7d' | '14d' | '30d' | '90d' | '1y' | 'max'
 
 export interface TimeframeSelectProps {
   value: TimeRange
@@ -21,6 +21,7 @@ const timeRangeOptions: Array<{ value: TimeRange; label: string }> = [
   { value: '30d', label: 'Last 30 Days' },
   { value: '90d', label: 'Last 90 Days' },
   { value: '1y', label: 'Last Year' },
+  { value: 'max', label: 'All Time' },
 ]
 
 export function TimeframeSelect({

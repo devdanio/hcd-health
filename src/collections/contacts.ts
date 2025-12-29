@@ -97,25 +97,25 @@ export const upsertContactByChirotouchAccountIdSchema = z.object({
 export const getContacts = createServerFn({ method: 'GET' })
   .inputValidator(getContactsSchema)
   .handler(async ({ data }) => {
-    const limit = data.limit ?? 100
-    const sortBy = data.sortBy ?? 'firstSeenAt'
-    const sortOrder = data.sortOrder ?? 'desc'
+    // const limit = data.limit ?? 100
+    // const sortBy = data.sortBy ?? 'firstSeenAt'
+    // const sortOrder = data.sortOrder ?? 'desc'
 
-    const contacts = await prisma.contact.findMany({
-      where: {
-        companyId: data.companyId,
-        events: { some: { type: EventType.CONTACT_CREATED } },
-      },
-      orderBy: { [sortBy]: sortOrder },
-      take: limit,
-      include: {
-        externalIds: true,
-        appointments: true,
-        events: {},
-      },
-    })
+    // const contacts = await prisma.contact.findMany({
+    //   where: {
+    //     companyId: data.companyId,
+    //     events: { some: { type: EventType.CONTACT_CREATED } },
+    //   },
+    //   orderBy: { [sortBy]: sortOrder },
+    //   take: limit,
+    //   include: {
+    //     externalIds: true,
+    //     appointments: true,
+    //     events: {},
+    //   },
+    // })
 
-    return contacts
+    return []
   })
 
 /**

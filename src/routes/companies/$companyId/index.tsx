@@ -37,18 +37,12 @@ import {
 } from '@/components/ui/dialog'
 import { useState, useMemo } from 'react'
 import { TimeframeSelect, type TimeRange } from '@/components/timeframe-select'
+import { GroupBySelect, type GroupBy } from '@/components/group-by-select'
 import dayjs from 'dayjs'
-import {
-  getCompany,
-  getSessions,
-  getSessionPageViews,
-  getLast24HoursVisitors,
-  getTopPages,
-  getRevenueByDateRange,
-} from '@/collections'
+import { getCompany, getRevenueByDateRange } from '@/collections'
 import { ChartAreaInteractive } from '@/components/chart-area-interactive'
 import { ChartCategories } from '@/components/chart-categories'
-// import { LeadsPatientsChart } from '@/components/leads-patients-chart'
+import { RevenueChart } from '@/components/revenue-chart'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -64,9 +58,13 @@ import { useLiveQuery, eq } from '@tanstack/react-db'
 
 const searchParamsSchema = z.object({
   timeRange: z
-    .enum(['24h', '7d', '14d', '30d', '90d', '1y'])
+    .enum(['24h', '7d', '14d', '30d', '90d', '1y', 'max'])
     .optional()
     .default('30d'),
+  groupBy: z
+    .enum(['hour', 'day', 'week', 'month', 'year'])
+    .optional()
+    .default('day'),
 })
 
 // Helper to get start date from TimeRange
@@ -84,6 +82,8 @@ function getStartDateFromTimeRange(timeRange: TimeRange): Date {
       return dayjs().subtract(90, 'day').toDate()
     case '1y':
       return dayjs().subtract(1, 'year').toDate()
+    case 'max':
+      return new Date('2000-01-01') // Far enough in the past to get all data
   }
 }
 
@@ -408,6 +408,7 @@ function CompanyDetailsPage() {
   const navigate = Route.useNavigate()
   const searchParams = Route.useSearch()
   const timeRange = searchParams.timeRange
+  const groupBy = searchParams.groupBy
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(
     null,
   )
@@ -417,6 +418,15 @@ function CompanyDetailsPage() {
       search: (prev: z.infer<typeof searchParamsSchema>) => ({
         ...prev,
         timeRange: value,
+      }),
+    })
+  }
+
+  const handleGroupByChange = (value: GroupBy) => {
+    navigate({
+      search: (prev: z.infer<typeof searchParamsSchema>) => ({
+        ...prev,
+        groupBy: value,
       }),
     })
   }
@@ -435,57 +445,24 @@ function CompanyDetailsPage() {
   )
 
   const { data: revenueData } = useQuery({
-    queryKey: ['revenue', companyId, timeRange],
+    queryKey: ['revenue', companyId, timeRange, groupBy],
     queryFn: () =>
       getRevenueByDateRange({
         data: {
           companyId,
           startDate: getStartDateFromTimeRange(timeRange),
           endDate: dayjs().toDate(),
-          groupBy: 'day',
+          groupBy,
         },
       }),
   })
+
+  console.log('revenueData', revenueData)
 
   const totalRevenue = useMemo(() => {
     if (!revenueData) return 0
     return revenueData.reduce((acc, curr) => acc + curr.revenueDollars, 0)
   }, [revenueData])
-
-  // const { data: sessions } = useQuery({
-  //   queryKey: ['sessions', companyId],
-  //   queryFn: () => getSessions({ data: { companyId, limit: 500 } }),
-  // })
-
-  // const { data: pageViews } = useQuery({
-  //   queryKey: ['pageViews', selectedSessionId],
-  //   queryFn: () =>
-  //     getSessionPageViews({ data: { sessionId: selectedSessionId! } }),
-  //   enabled: !!selectedSessionId,
-  // })
-
-  // const { data: last24HoursVisitors } = useQuery({
-  //   queryKey: ['visitors24h', companyId],
-  //   queryFn: () => getLast24HoursVisitors({ data: { companyId } }),
-  // })
-
-  // const { data: topPages } = useQuery({
-  //   queryKey: ['topPages', companyId, timeRange],
-  //   queryFn: () => getTopPages({ data: { companyId, timeRange } }),
-  // })
-
-  // Sort sessions by last activity
-  // const sortedSessions = useMemo(() => {
-  //   if (!sessions) return []
-  //   return [...sessions].sort((a, b) => {
-  //     return b.lastActivity - a.lastActivity
-  //   })
-  // }, [sessions])
-
-  // Find the selected session to get its client sessionId for display
-  // const selectedSession = selectedSessionId
-  //   ? sessions?.find((s) => s._id === selectedSessionId)
-  //   : null
 
   // Category badge styling
   const getCategoryBadge = (category: string) => {
@@ -598,11 +575,18 @@ function CompanyDetailsPage() {
         >
           ← Back to Companies
         </Link>
-        <TimeframeSelect
-          value={timeRange}
-          onValueChange={handleTimeRangeChange}
-          className="w-[180px]"
-        />
+        <div className="flex gap-2">
+          <GroupBySelect
+            value={groupBy}
+            onValueChange={handleGroupByChange}
+            className="w-[140px]"
+          />
+          <TimeframeSelect
+            value={timeRange}
+            onValueChange={handleTimeRangeChange}
+            className="w-[180px]"
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-4 mb-4 gap-4">
@@ -640,7 +624,11 @@ function CompanyDetailsPage() {
 
       <div className="grid grid-cols-4 gap-4">
         <div className="col-span-3">
-          {/* <LeadsPatientsChart companyId={companyId} timeRange={timeRange} /> */}
+          <RevenueChart
+            companyId={companyId}
+            timeRange={timeRange}
+            groupBy={groupBy}
+          />
         </div>
         <div className="col-span-1">
           <Card>

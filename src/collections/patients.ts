@@ -9,6 +9,7 @@ import { z } from 'zod'
 import { prisma } from '@/server/db/client'
 import type { QueryClient } from '@tanstack/react-query'
 import { createContactSchema } from './contacts'
+import { DataSource } from '@/generated/prisma/enums'
 
 // ============================================================================
 // Schemas
@@ -55,16 +56,27 @@ export const deletePatientSchema = z.object({
 export const getPatients = createServerFn({ method: 'GET' })
   .inputValidator(getPatientsSchema)
   .handler(async ({ data }) => {
-    return await prisma.patient.findMany({
+    return await prisma.profile.findMany({
       where: {
-        contact: {
-          companyId: data.companyId,
+        person: {
+          company_id: data.companyId,
+        },
+        source: {
+          in: [
+            DataSource.JASMINE,
+            DataSource.CHIROTOUCH,
+            DataSource.UNIFIED_PRACTICE,
+          ],
         },
       },
       include: {
-        contact: true,
+        person: {
+          include: {
+            purchases: true,
+          },
+        },
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { external_created_at: 'desc' },
     })
   })
 

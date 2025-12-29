@@ -13,7 +13,7 @@ export const getRevenueByDateRangeSchema = z.object({
   companyId: z.string(),
   startDate: z.date(),
   endDate: z.date(),
-  groupBy: z.enum(['day', 'week', 'month', 'year']),
+  groupBy: z.enum(['hour', 'day', 'week', 'month', 'year']),
 })
 
 // ============================================================================
@@ -30,31 +30,33 @@ export const getRevenueByDateRange = createServerFn({ method: 'GET' })
 
     // Build the date truncation SQL based on groupBy
     const dateTruncSql =
-      groupBy === 'day'
-        ? "DATE_TRUNC('day', p.\"posted_date\")"
-        : groupBy === 'week'
-          ? "DATE_TRUNC('week', p.\"posted_date\")"
-          : groupBy === 'month'
-            ? "DATE_TRUNC('month', p.\"posted_date\")"
-            : "DATE_TRUNC('year', p.\"posted_date\")"
+      groupBy === 'hour'
+        ? 'DATE_TRUNC(\'hour\', pur."purchased_at")'
+        : groupBy === 'day'
+          ? 'DATE_TRUNC(\'day\', pur."purchased_at")'
+          : groupBy === 'week'
+            ? 'DATE_TRUNC(\'week\', pur."purchased_at")'
+            : groupBy === 'month'
+              ? 'DATE_TRUNC(\'month\', pur."purchased_at")'
+              : 'DATE_TRUNC(\'year\', pur."purchased_at")'
 
     const results = await prisma.$queryRawUnsafe<
       Array<{
         date: Date
-        revenue_cents: number
+        revenue_cents: string
         payment_count: number
       }>
     >(
       `
       SELECT
         ${dateTruncSql}::date as date,
-        COALESCE(SUM(p."amountInCents"), 0)::int as revenue_cents,
+        COALESCE(SUM(pur."amount_in_cents"), 0) as revenue_cents,
         COUNT(*)::int as payment_count
-      FROM "Payments" p
-      WHERE p."companyId" = $1
-        AND p."posted_date" >= $2
-        AND p."posted_date" <= $3
-        AND p.status = 'posted'
+      FROM "purchase" pur
+      INNER JOIN "person" p ON pur."person_id" = p."id"
+      WHERE p."company_id" = $1
+        AND pur."purchased_at" >= $2
+        AND pur."purchased_at" <= $3
       GROUP BY ${dateTruncSql}
       ORDER BY date ASC
     `,
@@ -63,12 +65,18 @@ export const getRevenueByDateRange = createServerFn({ method: 'GET' })
       endDate,
     )
 
-    return results.map((row) => ({
-      date: row.date.toISOString(),
-      revenueCents: row.revenue_cents,
-      revenueDollars: row.revenue_cents / 100,
-      paymentCount: row.payment_count,
-    }))
+    console.log('results', results)
+
+    return results.map((row) => {
+      const revenueCents = parseFloat(row.revenue_cents)
+
+      return {
+        date: row.date.toISOString(),
+        revenueCents,
+        revenueDollars: revenueCents / 100,
+        paymentCount: row.payment_count,
+      }
+    })
   })
 
 // ============================================================================
