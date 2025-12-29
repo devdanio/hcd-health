@@ -28,7 +28,6 @@ export const Route = createFileRoute('/api/$locationID/event')({
     handlers: {
       POST: async ({ request, params }) => {
         const { locationID } = params
-        console.log('got this far')
 
         // Verify location (company) exists
         const company = await prisma.company.findUnique({
@@ -41,8 +40,6 @@ export const Route = createFileRoute('/api/$locationID/event')({
             headers: corsHeaders,
           })
         }
-
-        console.log('company', company)
 
         let body: unknown
 
@@ -176,11 +173,43 @@ export const Route = createFileRoute('/api/$locationID/event')({
             })
           }
 
-          // Update all events with this anonymous_id to link to person
+          // Get all profiles for this person to find all possible event matches
+          const allProfiles = await prisma.profile.findMany({
+            where: {
+              person_id: personId,
+            },
+            select: {
+              source: true,
+              external_id: true,
+            },
+          })
+
+          // Build OR conditions for all profile matches
+          const profileMatches = allProfiles.map((profile) => ({
+            AND: [
+              { company_id: locationID },
+              { source: profile.source },
+              { metadata: { path: ['external_id'], equals: profile.external_id } },
+            ],
+          }))
+
+          // Update all events that match:
+          // 1. Same company + anonymous_id (current session)
+          // 2. Same company + person_id (already linked events)
+          // 3. Same company + profile source + external_id (events from other sources)
           await prisma.event.updateMany({
             where: {
-              anonymous_id,
-              company_id: locationID,
+              OR: [
+                {
+                  company_id: locationID,
+                  anonymous_id,
+                },
+                {
+                  company_id: locationID,
+                  person_id: personId,
+                },
+                ...profileMatches,
+              ],
             },
             data: {
               person_id: personId,

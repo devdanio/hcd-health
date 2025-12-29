@@ -38,3 +38,42 @@ LEFT JOIN `leadalytics-471218`.`thrive`.`ghl_contacts` AS gc
   OR LOWER(cp.Email) = gc.emailLowerCase
 GROUP BY gc.attributionSource_campaign
 ORDER BY count DESC;
+
+
+
+
+-----------------
+List of people who we converted from the Belmar-25 campaign
+WITH normalized_patients AS (
+  SELECT 
+    *,
+    LOWER(TRIM(Email)) AS normalized_email,
+    TRIM(CAST(Phone AS STRING)) AS normalized_phone
+  FROM `leadalytics-471218.thrive.chirotouch_patients`
+),
+
+normalized_contacts AS (
+  SELECT 
+    *,
+    LOWER(TRIM(email)) AS normalized_email,
+    CASE 
+      WHEN STARTS_WITH(TRIM(CAST(phone AS STRING)), '1') 
+        THEN SUBSTR(TRIM(CAST(phone AS STRING)), 2)
+      ELSE TRIM(CAST(phone AS STRING))
+    END AS normalized_phone
+  FROM `leadalytics-471218.thrive.ghl_contacts`
+  WHERE lastAttributionSource_campaign = '{campaignname}'
+     OR attributionSource_campaign = '{campaignname}'
+),
+
+matched_records AS (
+  SELECT DISTINCT
+    p.Phone,
+    p.Email
+  FROM normalized_patients p
+  INNER JOIN normalized_contacts c
+    ON (p.normalized_email = c.normalized_email AND p.normalized_email != '')
+    OR (p.normalized_phone = c.normalized_phone AND p.normalized_phone != '')
+)
+
+SELECT * FROM matched_records

@@ -129,13 +129,18 @@ AND pur.source IN ('SHOPIFY', 'JASMINE');
 
 ## Integration
 
+Recommended setup:
+
+- Chat widget - client side identification. Use GHL for chat message recieved event to fire a server side event of "CHAT_MESSAGE"
+- Forms - Inject the anonymous ID using URL parameters
+
 ### GHL Chat widget
 
 Add the following before loading the chat widget script
 
 <script>
     function beforeSubmit(values, host) {
-    window.__HCH.identify({ email: values?.email, phone: values?.phone })
+    window.__HCH.identify({ email: values?.email, phone: values?.phone, metadata :{firstName, lastName, fullName} })
     return true;
     }
 
@@ -146,4 +151,39 @@ Add the following before loading the chat widget script
     },
     false
     );
+</script>
+
+### GHL Forms
+
+Inside the funnel tracking code add the following code an ensure that the HCH id is added and hidden to the form.
+
+<script>
+(function () {
+  const TARGET_ATTR = 'data-q="hch_id"';
+  const MAX_WAIT_MS = 10000;
+  const INTERVAL_MS = 250;
+
+  const start = Date.now();
+
+  const interval = setInterval(() => {
+    const input = document.querySelector(`input[${TARGET_ATTR}]`);
+
+    if (!input) {
+      if (Date.now() - start > MAX_WAIT_MS) {
+        clearInterval(interval);
+      }
+      return;
+    }
+
+    if (window.__HCH && window.__HCH.anonymousId) {
+      input.value = window.__HCH.anonymousId;
+
+      // Trigger events in case a framework is watching the field
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+
+      clearInterval(interval);
+    }
+  }, INTERVAL_MS);
+})();
 </script>
