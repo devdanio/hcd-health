@@ -6,12 +6,13 @@ import { join } from 'path'
 
 import { DataSource } from '@/generated/prisma/enums'
 import { prisma } from '@/server/db/client'
+import { parseDollarsToCents, sanitizePhone } from '@/utils/helpers'
 
 // EHI company ID
 const companyId = 'cmjq8rjqi0000doap08up0s41'
 
 // Batch size for bulk operations to avoid transaction timeouts
-const BULK_WRITE_SIZE = 100
+const BATCH_SIZE = 100
 
 interface CsvRow {
   'Payment: Payment Name': string
@@ -50,29 +51,6 @@ interface PaymentData {
   invoice: string
   amountInCents: number
   paymentDate: Date
-}
-
-/**
- * Sanitize phone number by removing all non-numeric characters
- */
-function sanitizePhone(phone: string | undefined | null): string | undefined {
-  if (!phone) return undefined
-  const sanitized = phone.replace(/\D/g, '')
-  return sanitized.length > 0 ? sanitized : undefined
-}
-
-/**
- * Parse dollar amount string to cents
- * Example: "$1,938.47" -> 193847
- * Returns null if invalid
- */
-function parseDollarsToCents(amount: string): number | null {
-  if (!amount || amount.trim() === '') return null
-  // Remove dollar sign, commas, and parse as float
-  const cleaned = amount.replace(/[$,]/g, '')
-  const dollars = parseFloat(cleaned)
-  if (isNaN(dollars)) return null
-  return Math.round(dollars * 100)
 }
 
 /**
@@ -232,11 +210,11 @@ async function upsertPeople(contactsMap: Map<string, ContactData>) {
 
   // Step 5: Bulk create new persons in batches
   if (newPersonsToCreate.length > 0) {
-    const totalBatches = Math.ceil(newPersonsToCreate.length / BULK_WRITE_SIZE)
+    const totalBatches = Math.ceil(newPersonsToCreate.length / BATCH_SIZE)
 
     for (let i = 0; i < totalBatches; i++) {
-      const start = i * BULK_WRITE_SIZE
-      const end = Math.min(start + BULK_WRITE_SIZE, newPersonsToCreate.length)
+      const start = i * BATCH_SIZE
+      const end = Math.min(start + BATCH_SIZE, newPersonsToCreate.length)
       const batch = newPersonsToCreate.slice(start, end)
 
       console.log(
@@ -276,11 +254,11 @@ async function upsertPeople(contactsMap: Map<string, ContactData>) {
   )
 
   if (newProfilesToCreate.length > 0) {
-    const totalBatches = Math.ceil(newProfilesToCreate.length / BULK_WRITE_SIZE)
+    const totalBatches = Math.ceil(newProfilesToCreate.length / BATCH_SIZE)
 
     for (let i = 0; i < totalBatches; i++) {
-      const start = i * BULK_WRITE_SIZE
-      const end = Math.min(start + BULK_WRITE_SIZE, newProfilesToCreate.length)
+      const start = i * BATCH_SIZE
+      const end = Math.min(start + BATCH_SIZE, newProfilesToCreate.length)
       const batch = newProfilesToCreate.slice(start, end)
 
       console.log(
@@ -356,11 +334,11 @@ async function upsertPayments(
 
   // Insert in batches
   let purchasesInserted = 0
-  const totalBatches = Math.ceil(allPurchases.length / BULK_WRITE_SIZE)
+  const totalBatches = Math.ceil(allPurchases.length / BATCH_SIZE)
 
   for (let i = 0; i < totalBatches; i++) {
-    const start = i * BULK_WRITE_SIZE
-    const end = Math.min(start + BULK_WRITE_SIZE, allPurchases.length)
+    const start = i * BATCH_SIZE
+    const end = Math.min(start + BATCH_SIZE, allPurchases.length)
     const batch = allPurchases.slice(start, end)
 
     console.log(

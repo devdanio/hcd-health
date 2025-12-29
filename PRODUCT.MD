@@ -67,3 +67,43 @@ These are all the ways that a contact can reach out. Once we have that and the a
    CHAT
    FB_FORM_SUBMISSION
 3. We will match the EHR and GHL events using GHL attribution to determine the source.
+
+## METRICS
+
+Everything sortable by month
+
+## Overall
+
+- Total Leads
+- TOtal Patients
+- % of leads -> patients
+- Table of most active leads (similar to hyros)
+
+### Revenue
+
+- Total
+- By patient
+- By service
+
+### Patients
+
+- LTV
+
+### Appointments
+
+- New patients
+- Existing patients
+- By service
+
+### Marketing/Advertising
+
+- CAC
+- CPL
+- Total leads
+- Leads by channel (oragnic search, email, etc)
+- Leads by campaign
+-
+
+### Funnel (build this later)
+
+- Breakdown of where all leads are in the funnel (visitor, lead, callback, insurance, scheduled call, purchased)

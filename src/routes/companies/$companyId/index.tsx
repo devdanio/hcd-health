@@ -59,6 +59,7 @@ import {
 } from '@/components/ui/table'
 import { useCollections } from '@/routes/__root'
 import { useLiveQuery, eq } from '@tanstack/react-db'
+import { useWebEvents } from '@/collections/events'
 
 const searchParamsSchema = z.object({
   timeRange: z
@@ -417,6 +418,20 @@ function CompanyDetailsPage() {
     null,
   )
 
+  const endDate = useMemo(() => {
+    return dayjs().toDate()
+  }, [])
+
+  const startDate = useMemo(() => {
+    return getStartDateFromTimeRange(timeRange)
+  }, [timeRange])
+
+  const { data: webEvents } = useWebEvents({
+    companyId: companyId,
+    startDate: startDate,
+    endDate: endDate,
+  })
+
   const handleTimeRangeChange = (value: TimeRange) => {
     navigate({
       search: (prev: z.infer<typeof searchParamsSchema>) => ({
@@ -729,23 +744,37 @@ function CompanyDetailsPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Location</TableHead>
-                  <TableHead>Category</TableHead>
+                  <TableHead>Anon ID</TableHead>
+                  <TableHead>Path</TableHead>
+                  <TableHead>Referrer</TableHead>
+                  <TableHead>UTM Campaign</TableHead>
+                  <TableHead>UTM Source</TableHead>
+                  <TableHead>UTM Medium</TableHead>
+
+                  <TableHead>UTM Content</TableHead>
+                  <TableHead>UTM Term</TableHead>
+                  {/* <TableHead>Category</TableHead>
                   <TableHead>Channel</TableHead>
                   <TableHead>Campaigns</TableHead>
                   <TableHead>Speed to Lead</TableHead>
-                  <TableHead>Contact Type</TableHead>
+                  <TableHead>Contact Type</TableHead> */}
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {generateFakeContacts().map((contact, index) => (
+                {webEvents?.map((event, index) => (
                   <TableRow key={index}>
                     <TableCell className="font-medium">
-                      {contact.name}
+                      {event.anonymous_id}
                     </TableCell>
-                    <TableCell>{contact.location}</TableCell>
-                    <TableCell>
+                    <TableCell>{event.metadata.path}</TableCell>
+                    <TableCell>{event.metadata.referrer}</TableCell>
+                    <TableCell>{event.metadata.utm_campaign}</TableCell>
+                    <TableCell>{event.metadata.utm_source}</TableCell>
+                    <TableCell>{event.metadata.utm_medium}</TableCell>
+
+                    <TableCell>{event.metadata.utm_content}</TableCell>
+                    <TableCell>{event.metadata.utm_term}</TableCell>
+                    {/* <TableCell>
                       <CategoryBadge category={contact.category} />
                     </TableCell>
                     <TableCell>
@@ -776,7 +805,7 @@ function CompanyDetailsPage() {
                       >
                         {contact.contactType}
                       </Badge>
-                    </TableCell>
+                    </TableCell> */}
                   </TableRow>
                 ))}
               </TableBody>
