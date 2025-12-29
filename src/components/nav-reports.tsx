@@ -44,7 +44,13 @@ export function NavReports({
         {items.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
-              <Link to={item.url}>
+              <Link
+                to={item.url}
+                activeOptions={{ exact: true }}
+                activeProps={{
+                  className: 'bg-primary text-primary-foreground',
+                }}
+              >
                 <item.icon />
                 <span>{item.name}</span>
               </Link>

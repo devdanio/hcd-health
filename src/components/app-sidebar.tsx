@@ -129,6 +129,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
     reports: [
       {
+        name: 'Marketing',
+        url: `/companies/${companyId}/reports/marketing`,
+        icon: IconChartBar,
+      },
+      {
         name: 'KPIs',
         url: `/companies/${companyId}/reports/kpis`,
         icon: IconChartBar,

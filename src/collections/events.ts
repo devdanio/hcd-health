@@ -4,7 +4,7 @@ import { getNewPatientsByDateRangeSchema } from './financials'
 import z from 'zod'
 import { EventType } from '@/generated/prisma/enums'
 import { useQuery } from '@tanstack/react-query'
-import { useParams } from '@tanstack/react-router'
+import { useParams, useSearch } from '@tanstack/react-router'
 
 interface WebMetadata {
   url: string
@@ -22,20 +22,20 @@ interface WebMetadata {
 
 export const getWebEventsSchema = z.object({
   companyId: z.string(),
-  startDate: z.coerce.date(),
-  endDate: z.coerce.date(),
+  before: z.coerce.date().optional(),
+  after: z.coerce.date().optional(),
 })
 export const getWebEvents = createServerFn({ method: 'GET' })
   .inputValidator(getWebEventsSchema)
   .handler(async ({ data }) => {
-    const { companyId, startDate, endDate } = data
+    const { companyId, before, after } = data
 
     const result = await prisma.event.findMany({
       where: {
         company_id: companyId,
         timestamp: {
-          gte: startDate,
-          lte: endDate,
+          gte: before,
+          lte: after,
         },
         type: EventType.PAGE_VIEW,
       },
@@ -46,17 +46,24 @@ export const getWebEvents = createServerFn({ method: 'GET' })
     return result.map((r) => r as typeof r & { metadata: WebMetadata })
   })
 
-export const useWebEvents = ({
-  companyId,
-  startDate,
-  endDate,
-}: {
+export const useWebEvents = (options?: {
   companyId: string
-  startDate: Date
-  endDate: Date
+  before: Date
+  after: Date
 }) => {
+  const { companyId } = useParams({
+    strict: false,
+    select: (params) => ({
+      companyId: params.companyId as string,
+    }),
+  })
+  const search = useSearch({
+    from: '/companies/$companyId',
+  })
+  const before = options?.before || search.before
+  const after = options?.after || search.after
   return useQuery({
-    queryKey: ['webEvents', companyId, startDate, endDate],
-    queryFn: () => getWebEvents({ data: { companyId, startDate, endDate } }),
+    queryKey: ['webEvents', companyId, before, after],
+    queryFn: () => getWebEvents({ data: { companyId, before, after } }),
   })
 }

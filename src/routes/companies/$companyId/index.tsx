@@ -745,6 +745,8 @@ function CompanyDetailsPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Anon ID</TableHead>
+                  <TableHead>Date</TableHead>
+
                   <TableHead>Path</TableHead>
                   <TableHead>Referrer</TableHead>
                   <TableHead>UTM Campaign</TableHead>
@@ -764,7 +766,10 @@ function CompanyDetailsPage() {
                 {webEvents?.map((event, index) => (
                   <TableRow key={index}>
                     <TableCell className="font-medium">
-                      {event.anonymous_id}
+                      {event.anonymous_id?.slice(0, 8)}
+                    </TableCell>
+                    <TableCell>
+                      {dayjs(event.timestamp).format('MM/DD/YYYY HH:mm')}
                     </TableCell>
                     <TableCell>{event.metadata.path}</TableCell>
                     <TableCell>{event.metadata.referrer}</TableCell>

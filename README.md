@@ -100,24 +100,31 @@ HAVING MIN(p.posted_date) IS NOT NULL
 AND c."firstSeenAt" <= MIN(p.posted_date)
 ORDER BY c."firstSeenAt" DESC;
 
-### Average reve per patient
-
-SELECT
-COUNT(DISTINCT p."contactId") as total_patients,
-TO_CHAR(COALESCE(SUM(p."amountInCents"), 0) / 100.0, 'FM$999,999,990.00') AS total_revenue,
-TO_CHAR(
-COALESCE(SUM(p."amountInCents"), 0) / 100.0 / COUNT(DISTINCT p."contactId"),
-'FM$999,999,990.00'
-) AS average_revenue_per_patient
-FROM "Payments" p
-JOIN "Contact" c ON p."contactId" = c.id
-JOIN "Company" comp ON c."companyId" = comp.id
-WHERE comp.name = 'Eye Health Institute'
-AND p.status = 'posted';
-
 ### Scheduled calls by source
 
 select count(\*), data->'contact'->'attributionSource'->'sessionSource'
 src from "Event" where "type" = 'SCHEDULED_CALL' group by src;
 
 ## Architecture
+
+### Revenue/patient shopify and patient
+
+SELECT
+COUNT(DISTINCT CASE WHEN pur.source = 'SHOPIFY' THEN pur.person_id END) as shopify_customer_count,
+COUNT(DISTINCT CASE WHEN pur.source = 'JASMINE' THEN pur.person_id END) as jasmine_patient_count,
+SUM(CASE WHEN pur.source = 'SHOPIFY' THEN pur.amount_in_cents ELSE 0 END) / 100.0 as shopify_total_revenue_dollars,
+SUM(CASE WHEN pur.source = 'JASMINE' THEN pur.amount_in_cents ELSE 0 END) / 100.0 as jasmine_total_revenue_dollars,
+CASE
+WHEN COUNT(DISTINCT CASE WHEN pur.source = 'SHOPIFY' THEN pur.person_id END) > 0
+THEN (SUM(CASE WHEN pur.source = 'SHOPIFY' THEN pur.amount_in_cents ELSE 0 END)::float / COUNT(DISTINCT CASE WHEN pur.source = 'SHOPIFY' THEN pur.person_id END)) / 100.0
+ELSE 0
+END as avg_revenue_per_shopify_customer_dollars,
+CASE
+WHEN COUNT(DISTINCT CASE WHEN pur.source = 'JASMINE' THEN pur.person_id END) > 0
+THEN (SUM(CASE WHEN pur.source = 'JASMINE' THEN pur.amount_in_cents ELSE 0 END)::float / COUNT(DISTINCT CASE WHEN pur.source = 'JASMINE' THEN pur.person_id END)) / 100.0
+ELSE 0
+END as avg_revenue_per_jasmine_patient_dollars
+FROM purchase pur
+INNER JOIN person p ON pur.person_id = p.id
+WHERE p.company_id = 'cmjq8rjqi0000doap08up0s41'
+AND pur.source IN ('SHOPIFY', 'JASMINE');

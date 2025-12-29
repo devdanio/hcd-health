@@ -173,6 +173,9 @@ importers:
       google-ads-api:
         specifier: ^21.0.1
         version: 21.0.1
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       lucide-preact:
         specifier: ^0.468.0
         version: 0.468.0(preact@10.28.0)

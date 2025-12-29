@@ -68,6 +68,7 @@
     "dotenv": "^17.2.3",
     "embla-carousel-react": "^8.6.0",
     "google-ads-api": "^21.0.1",
+    "lodash": "^4.17.21",
     "lucide-preact": "^0.468.0",
     "lucide-react": "^0.544.0",
     "mapbox-gl": "^3.16.0",
