@@ -11,14 +11,13 @@ import {
   type ColumnDef,
   type SortingState,
   type ColumnFiltersState,
-  type ExpandedState,
 } from '@tanstack/react-table'
 import { useState, useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { ArrowUpDown, ChevronDown, ChevronRight } from 'lucide-react'
+import { ArrowUpDown } from 'lucide-react'
 import groupBy from 'lodash/groupBy'
 
 export const Route = createFileRoute(
@@ -27,13 +26,18 @@ export const Route = createFileRoute(
   component: RouteComponent,
 })
 
-type SubRow = {
-  name: string
-  status: 'lead' | 'patient'
+type CampaignSubRow = {
+  campaignName: string
+  sessions: number
+  leads: number
+  patients: number
   revenue: number
+  cost: number
+  cac: number
+  isSubRow: true
 }
 
-type CampaignRow = {
+type SourceRow = {
   source: string
   sessions: number
   leads: number
@@ -41,36 +45,11 @@ type CampaignRow = {
   revenue: number
   cost: number
   cac: number
-  subRows?: SubRow[]
+  isSubRow?: false
+  subRows?: CampaignSubRow[]
 }
 
-// Random names for sub-rows
-const RANDOM_NAMES = [
-  'John Smith',
-  'Sarah Johnson',
-  'Michael Brown',
-  'Emily Davis',
-  'David Wilson',
-  'Jessica Martinez',
-  'Christopher Garcia',
-  'Amanda Rodriguez',
-  'Matthew Anderson',
-  'Ashley Taylor',
-  'Daniel Thomas',
-  'Jennifer Moore',
-  'James Jackson',
-  'Lisa White',
-  'Robert Harris',
-]
-
-// Generate random sub-rows for each campaign
-function generateSubRows(count: number): SubRow[] {
-  return Array.from({ length: Math.min(count, 5) }, (_, i) => ({
-    name: RANDOM_NAMES[Math.floor(Math.random() * RANDOM_NAMES.length)],
-    status: Math.random() > 0.5 ? 'lead' : 'patient',
-    revenue: Math.floor(Math.random() * 1000),
-  }))
-}
+type TableRow = SourceRow | CampaignSubRow
 
 function RouteComponent() {
   const { companyId } = Route.useParams()
@@ -78,64 +57,90 @@ function RouteComponent() {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [globalFilter, setGlobalFilter] = useState('')
-  const [expanded, setExpanded] = useState<ExpandedState>({})
 
   const campaigns = useMemo(() => {
     return groupBy(webEvents, 'metadata.utm_campaign')
   }, [webEvents])
   console.log('campaigns', campaigns)
 
-  // Transform events into campaign data grouped by source with unique sessions
+  // Transform events into hierarchical data: sources with campaign sub-rows
   const campaignData = useMemo(() => {
     if (!webEvents) return []
 
-    const groupedData = new Map<string, CampaignRow>()
+    // Group by source, then by campaign within each source
+    const sourceMap = new Map<
+      string,
+      Map<string, { sessionIds: Set<string> }>
+    >()
 
     for (const event of webEvents) {
       const source =
         (event.metadata as Record<string, unknown>)?.utm_source || 'Unknown'
+      const campaign =
+        (event.metadata as Record<string, unknown>)?.utm_campaign || 'Unknown'
       const sessionId = event.session_id
 
-      if (groupedData.has(source)) {
-        const existing = groupedData.get(source)!
-        // Track unique sessions
-        const sessions = new Set([...(existing as any).sessionIds, sessionId])
-        groupedData.set(source, {
-          ...existing,
-          sessions: sessions.size,
-          ...(existing as any).sessionIds && { sessionIds: sessions },
-        } as any)
+      if (!sourceMap.has(source)) {
+        sourceMap.set(source, new Map())
+      }
+
+      const campaignMap = sourceMap.get(source)!
+
+      if (campaignMap.has(campaign)) {
+        const existing = campaignMap.get(campaign)!
+        if (sessionId) {
+          existing.sessionIds.add(sessionId)
+        }
       } else {
-        groupedData.set(source, {
-          source: source as string,
-          sessions: sessionId ? 1 : 0,
+        campaignMap.set(campaign, {
+          sessionIds: new Set(sessionId ? [sessionId] : []),
+        })
+      }
+    }
+
+    // Convert to array with sub-rows
+    const result: SourceRow[] = []
+
+    for (const [source, campaignMap] of sourceMap) {
+      const campaigns: CampaignSubRow[] = []
+      let totalSessions = 0
+
+      for (const [campaignName, data] of campaignMap) {
+        const sessions = data.sessionIds.size
+        totalSessions += sessions
+
+        campaigns.push({
+          campaignName,
+          sessions,
           leads: 0,
           patients: 0,
           revenue: 0,
           cost: 0,
           cac: 0,
-          sessionIds: new Set([sessionId]),
-        } as any)
+          isSubRow: true,
+        })
       }
+
+      result.push({
+        source,
+        sessions: totalSessions,
+        leads: 0,
+        patients: 0,
+        revenue: 0,
+        cost: 0,
+        cac: 0,
+        subRows: campaigns,
+      })
     }
 
-    // Convert to array and add sub-rows
-    return Array.from(groupedData.values()).map((row) => ({
-      source: row.source,
-      sessions: row.sessions,
-      leads: 0,
-      patients: 0,
-      revenue: 0,
-      cost: 0,
-      cac: 0,
-      subRows: generateSubRows(row.sessions),
-    }))
+    return result
   }, [webEvents])
 
-  const columns = useMemo<ColumnDef<CampaignRow>[]>(
+  const columns = useMemo<ColumnDef<TableRow>[]>(
     () => [
       {
-        accessorKey: 'source',
+        id: 'source',
+        accessorFn: (row) => ('source' in row ? row.source : row.campaignName),
         header: ({ column }) => {
           return (
             <Button
@@ -144,31 +149,26 @@ function RouteComponent() {
                 column.toggleSorting(column.getIsSorted() === 'asc')
               }
             >
-              Source
+              Source / Campaign
               <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
           )
         },
-        cell: ({ row }) => (
-          <div className="flex items-center gap-2">
-            {row.getCanExpand() && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  row.toggleExpanded()
-                }}
-                className="cursor-pointer"
-              >
-                {row.getIsExpanded() ? (
-                  <ChevronDown className="h-4 w-4" />
-                ) : (
-                  <ChevronRight className="h-4 w-4" />
-                )}
-              </button>
-            )}
-            <div className="capitalize font-medium">{row.getValue('source')}</div>
-          </div>
-        ),
+        cell: ({ row }) => {
+          const isSubRow = row.original.isSubRow
+          const value =
+            'source' in row.original
+              ? row.original.source
+              : row.original.campaignName
+
+          return (
+            <div
+              className={`${isSubRow ? 'pl-8 text-sm text-muted-foreground' : 'font-medium'} capitalize`}
+            >
+              {value}
+            </div>
+          )
+        },
       },
       {
         accessorKey: 'sessions',
@@ -187,7 +187,7 @@ function RouteComponent() {
         },
         cell: ({ row }) => (
           <div className="text-right">
-            {row.getValue<number>('sessions').toLocaleString()}
+            {row.original.sessions.toLocaleString()}
           </div>
         ),
       },
@@ -280,47 +280,12 @@ function RouteComponent() {
     [],
   )
 
-  const subRowColumns = useMemo<ColumnDef<SubRow>[]>(
-    () => [
-      {
-        accessorKey: 'name',
-        header: 'Name',
-        cell: ({ row }) => (
-          <div className="pl-12 font-medium">{row.getValue('name')}</div>
-        ),
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-        cell: ({ row }) => {
-          const status = row.getValue<'lead' | 'patient'>('status')
-          return (
-            <Badge variant={status === 'patient' ? 'default' : 'secondary'}>
-              {status === 'patient' ? 'Patient' : 'Lead'}
-            </Badge>
-          )
-        },
-      },
-      {
-        accessorKey: 'revenue',
-        header: 'Revenue',
-        cell: ({ row }) => (
-          <div className="text-right">
-            ${row.getValue<number>('revenue').toLocaleString()}
-          </div>
-        ),
-      },
-    ],
-    [],
-  )
-
   const table = useReactTable({
     data: campaignData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
-    onExpandedChange: setExpanded,
     getSubRows: (row) => row.subRows,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -331,7 +296,7 @@ function RouteComponent() {
       sorting,
       columnFilters,
       globalFilter,
-      expanded,
+      expanded: true, // Always show all sub-rows
     },
   })
 
@@ -378,7 +343,7 @@ function RouteComponent() {
             <table className="w-full">
               <thead>
                 {table.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id} className="border-b bg-muted/50">
+                  <tr key={headerGroup.id} className="border-b ">
                     {headerGroup.headers.map((header) => (
                       <th
                         key={header.id}
@@ -398,45 +363,14 @@ function RouteComponent() {
               <tbody>
                 {table.getRowModel().rows?.length ? (
                   table.getRowModel().rows.map((row) => {
-                    const isSubRow = row.depth > 0
+                    const isSubRow = row.original.isSubRow
 
-                    if (isSubRow) {
-                      // Render sub-row with different columns
-                      return (
-                        <tr
-                          key={row.id}
-                          className="border-b bg-muted/30 transition-colors hover:bg-muted/40"
-                        >
-                          <td className="p-4 align-middle" colSpan={1}>
-                            <div className="pl-12 font-medium">
-                              {(row.original as SubRow).name}
-                            </div>
-                          </td>
-                          <td className="p-4 align-middle">
-                            <Badge
-                              variant={
-                                (row.original as SubRow).status === 'patient'
-                                  ? 'default'
-                                  : 'secondary'
-                              }
-                            >
-                              {(row.original as SubRow).status === 'patient'
-                                ? 'Patient'
-                                : 'Lead'}
-                            </Badge>
-                          </td>
-                          <td className="p-4 align-middle text-right" colSpan={5}>
-                            ${(row.original as SubRow).revenue.toLocaleString()}
-                          </td>
-                        </tr>
-                      )
-                    }
-
-                    // Render parent row
                     return (
                       <tr
                         key={row.id}
-                        className="border-b transition-colors hover:bg-muted/50"
+                        className={`border-b transition-colors ${
+                          isSubRow ? ' hover:bg-muted/30' : 'hover:bg-muted/50'
+                        }`}
                       >
                         {row.getVisibleCells().map((cell) => (
                           <td key={cell.id} className="p-4 align-middle">
