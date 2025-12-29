@@ -10,8 +10,6 @@ const dashboardSearchSchema = z.object({
   after: z.iso.datetime().optional(),
 })
 
-type DashboardSearch = z.infer<typeof dashboardSearchSchema>
-
 export const Route = createFileRoute('/companies/$companyId')({
   component: RouteComponent,
   validateSearch: (search) => dashboardSearchSchema.parse(search),
