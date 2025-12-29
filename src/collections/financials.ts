@@ -16,6 +16,12 @@ export const getRevenueByDateRangeSchema = z.object({
   groupBy: z.enum(['hour', 'day', 'week', 'month', 'year']),
 })
 
+export const getNewPatientsByDateRangeSchema = z.object({
+  companyId: z.string(),
+  startDate: z.coerce.date(),
+  endDate: z.coerce.date(),
+})
+
 // ============================================================================
 // Server Functions
 // ============================================================================
@@ -77,6 +83,41 @@ export const getRevenueByDateRange = createServerFn({ method: 'GET' })
         paymentCount: row.payment_count,
       }
     })
+  })
+
+/**
+ * Get count of new patients by date range
+ * A "new patient" is someone making their first purchase within the date range
+ */
+export const getNewPatientsByDateRange = createServerFn({ method: 'GET' })
+  .inputValidator(getNewPatientsByDateRangeSchema)
+  .handler(async ({ data }) => {
+    const { companyId, startDate, endDate } = data
+
+    const result = await prisma.$queryRawUnsafe<
+      Array<{
+        new_patient_count: number
+      }>
+    >(
+      `
+      SELECT COUNT(DISTINCT person_id)::int as new_patient_count
+      FROM (
+        SELECT
+          pur.person_id,
+          MIN(pur.purchased_at) as first_purchase_date
+        FROM "purchase" pur
+        INNER JOIN "person" p ON pur.person_id = p.id
+        WHERE p.company_id = $1
+        GROUP BY pur.person_id
+      ) as first_purchases
+      WHERE first_purchase_date >= $2 AND first_purchase_date <= $3
+    `,
+      companyId,
+      startDate,
+      endDate,
+    )
+
+    return result[0]?.new_patient_count || 0
   })
 
 // ============================================================================

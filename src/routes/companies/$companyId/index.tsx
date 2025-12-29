@@ -39,7 +39,11 @@ import { useState, useMemo } from 'react'
 import { TimeframeSelect, type TimeRange } from '@/components/timeframe-select'
 import { GroupBySelect, type GroupBy } from '@/components/group-by-select'
 import dayjs from 'dayjs'
-import { getCompany, getRevenueByDateRange } from '@/collections'
+import {
+  getCompany,
+  getRevenueByDateRange,
+  getNewPatientsByDateRange,
+} from '@/collections'
 import { ChartAreaInteractive } from '@/components/chart-area-interactive'
 import { ChartCategories } from '@/components/chart-categories'
 import { RevenueChart } from '@/components/revenue-chart'
@@ -464,6 +468,18 @@ function CompanyDetailsPage() {
     return revenueData.reduce((acc, curr) => acc + curr.revenueDollars, 0)
   }, [revenueData])
 
+  const { data: newPatientsCount } = useQuery({
+    queryKey: ['newPatients', companyId, timeRange],
+    queryFn: () =>
+      getNewPatientsByDateRange({
+        data: {
+          companyId,
+          startDate: getStartDateFromTimeRange(timeRange),
+          endDate: dayjs().toDate(),
+        },
+      }),
+  })
+
   // Category badge styling
   const getCategoryBadge = (category: string) => {
     const categoryMap: Record<string, { label: string; className: string }> = {
@@ -599,7 +615,9 @@ function CompanyDetailsPage() {
         <Card>
           <CardHeader>New Patients</CardHeader>
           <CardContent className="flex items-center justify-center">
-            <span className="text-2xl font-semibold">13</span>
+            <span className="text-2xl font-semibold">
+              {newPatientsCount ?? 0}
+            </span>
           </CardContent>
         </Card>
         <Card>
