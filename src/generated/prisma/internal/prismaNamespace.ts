@@ -1391,6 +1391,7 @@ export const PersonScalarFieldEnum = {
   company_id: 'company_id',
   email: 'email',
   phone: 'phone',
+  full_name: 'full_name',
   first_name: 'first_name',
   last_name: 'last_name'
 } as const
@@ -1405,6 +1406,7 @@ export const ProfileScalarFieldEnum = {
   external_id: 'external_id',
   first_name: 'first_name',
   last_name: 'last_name',
+  full_name: 'full_name',
   email: 'email',
   phone: 'phone',
   gender: 'gender',

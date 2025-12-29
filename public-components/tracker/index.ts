@@ -263,7 +263,7 @@
      * Public API: Identify user
      */
     identify(identity: { email?: string; phone?: string }): void {
-      this.track('identify', {
+      this.track('IDENTIFY', {
         email: identity.email || null,
         phone: identity.phone || null,
       })

@@ -75,9 +75,10 @@ function RouteComponent() {
 
     for (const event of webEvents) {
       const source =
-        (event.metadata as Record<string, unknown>)?.utm_source || 'Unknown'
+        (event.metadata as Record<string, unknown>)?.utm_source || 'No source'
       const campaign =
-        (event.metadata as Record<string, unknown>)?.utm_campaign || 'Unknown'
+        (event.metadata as Record<string, unknown>)?.utm_campaign ||
+        'No campaign'
       const sessionId = event.session_id
 
       if (!sourceMap.has(source)) {

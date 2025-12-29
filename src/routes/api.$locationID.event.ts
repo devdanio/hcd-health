@@ -2,6 +2,7 @@ import { DataSource, EventType } from '@/generated/prisma/enums'
 import { prisma } from '@/server/db/client'
 import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
+import { sanitizeEmail, sanitizePhone } from '@/utils/helpers'
 
 const EventSchema = z.object({
   type: z.enum(EventType),
@@ -73,30 +74,179 @@ export const Route = createFileRoute('/api/$locationID/event')({
           })
         }
 
-        // Build Prisma rows
-        const rows = events.map((event) => ({
-          source: DataSource.TRACKING,
-          type: event.type,
-          timestamp: event.timestamp,
-          anonymous_id,
-          session_id,
-          company_id: locationID,
-          metadata: {
-            ...event.metadata,
-          },
-        }))
+        // Check if there's an IDENTIFY event
+        const identifyEvent = events.find((e) => e.type === EventType.IDENTIFY)
 
-        try {
-          await prisma.event.createMany({
-            data: rows,
-            skipDuplicates: false,
+        if (identifyEvent) {
+          // Validate that IDENTIFY event has email or phone
+          const email = sanitizeEmail(
+            (identifyEvent.metadata as Record<string, unknown>)
+              ?.email as string,
+          )
+          const phone = sanitizePhone(
+            (identifyEvent.metadata as Record<string, unknown>)
+              ?.phone as string,
+          )
+
+          if (!email && !phone) {
+            return new Response(
+              'IDENTIFY event requires email or phone in metadata',
+              {
+                status: 400,
+                headers: corsHeaders,
+              },
+            )
+          }
+
+          // Look up person by email or phone
+          let person = await prisma.person.findFirst({
+            where: {
+              company_id: locationID,
+              OR: [
+                ...(email ? [{ email }] : []),
+                ...(phone ? [{ phone }] : []),
+              ],
+            },
           })
-        } catch (err) {
-          console.error('Event ingestion error:', err)
-          return new Response('Failed to persist events', {
-            status: 500,
-            headers: corsHeaders,
+
+          // If not found in person table, check profile table
+          if (!person && (email || phone)) {
+            const profile = await prisma.profile.findFirst({
+              where: {
+                person: {
+                  company_id: locationID,
+                },
+                OR: [
+                  ...(email ? [{ email }] : []),
+                  ...(phone ? [{ phone }] : []),
+                ],
+              },
+              include: {
+                person: true,
+              },
+            })
+
+            if (profile) {
+              person = profile.person
+            }
+          }
+
+          let personId: string
+
+          if (person) {
+            // Person exists - use their ID
+            personId = person.id
+          } else {
+            // Create new person and profile
+            const firstName = (
+              identifyEvent.metadata as Record<string, unknown>
+            )?.firstName as string | undefined
+            const lastName = (identifyEvent.metadata as Record<string, unknown>)
+              ?.lastName as string | undefined
+
+            const fullName = (identifyEvent.metadata as Record<string, unknown>)
+              ?.fullName as string | undefined
+
+            person = await prisma.person.create({
+              data: {
+                company_id: locationID,
+                email: email || undefined,
+                phone: phone || undefined,
+                first_name: firstName || undefined,
+                last_name: lastName || undefined,
+                full_name: fullName || undefined,
+              },
+            })
+
+            personId = person.id
+
+            // Create TRACKING profile
+            await prisma.profile.create({
+              data: {
+                person_id: personId,
+                source: DataSource.TRACKING,
+                external_id: anonymous_id,
+                email: email || undefined,
+                phone: phone || undefined,
+                first_name: firstName || undefined,
+                last_name: lastName || undefined,
+                full_name: fullName || undefined,
+                raw: identifyEvent.metadata,
+              },
+            })
+          }
+
+          // Update all events with this anonymous_id to link to person
+          await prisma.event.updateMany({
+            where: {
+              anonymous_id,
+              company_id: locationID,
+            },
+            data: {
+              person_id: personId,
+            },
           })
+
+          // Create the IDENTIFY event
+          await prisma.event.create({
+            data: {
+              source: DataSource.TRACKING,
+              type: identifyEvent.type,
+              timestamp: identifyEvent.timestamp,
+              anonymous_id,
+              session_id,
+              company_id: locationID,
+              person_id: personId,
+              metadata: identifyEvent.metadata,
+            },
+          })
+
+          // Process other events (non-IDENTIFY)
+          const otherEvents = events.filter(
+            (e) => e.type !== EventType.IDENTIFY,
+          )
+
+          if (otherEvents.length > 0) {
+            const rows = otherEvents.map((event) => ({
+              source: DataSource.TRACKING,
+              type: event.type,
+              timestamp: event.timestamp,
+              anonymous_id,
+              session_id,
+              company_id: locationID,
+              person_id: personId,
+              metadata: event.metadata,
+            }))
+
+            await prisma.event.createMany({
+              data: rows,
+              skipDuplicates: false,
+            })
+          }
+        } else {
+          // No IDENTIFY event - process events normally
+          const rows = events.map((event) => ({
+            source: DataSource.TRACKING,
+            type: event.type,
+            timestamp: event.timestamp,
+            anonymous_id,
+            session_id,
+            company_id: locationID,
+            metadata: event.metadata,
+          }))
+
+          try {
+            await prisma.event.createMany({
+              data: rows,
+              skipDuplicates: false,
+            })
+          } catch (err) {
+            console.error('Event ingestion error:', err)
+            return new Response('Failed to persist events', {
+              status: 500,
+              headers: corsHeaders,
+            })
+          }
         }
 
         return new Response(null, { status: 204, headers: corsHeaders })

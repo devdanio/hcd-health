@@ -105,8 +105,6 @@ ORDER BY c."firstSeenAt" DESC;
 select count(\*), data->'contact'->'attributionSource'->'sessionSource'
 src from "Event" where "type" = 'SCHEDULED_CALL' group by src;
 
-## Architecture
-
 ### Revenue/patient shopify and patient
 
 SELECT
@@ -128,3 +126,24 @@ FROM purchase pur
 INNER JOIN person p ON pur.person_id = p.id
 WHERE p.company_id = 'cmjq8rjqi0000doap08up0s41'
 AND pur.source IN ('SHOPIFY', 'JASMINE');
+
+## Integration
+
+### GHL Chat widget
+
+Add the following before loading the chat widget script
+
+<script>
+    function beforeSubmit(values, host) {
+    window.__HCH.identify({ email: values?.email, phone: values?.phone })
+    return true;
+    }
+
+    window.addEventListener(
+    "LC_chatWidgetLoaded",
+    function (e) {
+        window.leadConnector.chatWidget.registerBeforeSubmit(beforeSubmit);
+    },
+    false
+    );
+</script>

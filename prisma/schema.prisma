@@ -68,6 +68,7 @@ model person {
 
   email         String?
   phone         String?
+  full_name     String?
   first_name    String?
   last_name     String?
 
@@ -90,6 +91,7 @@ model profile {
   // Raw source data (do NOT over-normalize)
   first_name String?
   last_name  String?
+    full_name     String?
   email      String?
   phone      String?
   gender        String?
@@ -148,6 +150,7 @@ enum EventType {
   FB_FORM_SUBMISSION
   SCHEDULED_CALL
   BACKFILL
+  IDENTIFY
   // Used for data imports where we have attribution data but no events
   UNKNOWN
 }
