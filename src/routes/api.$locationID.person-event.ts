@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
 import { DataSource, EventType } from '@/generated/prisma/enums'
 import { prisma } from '@/server/db/client'
+import { sanitizeEmail, sanitizePhone } from '@/utils/helpers'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -17,6 +18,8 @@ const PersonEventSchema = z.union([
     person_id: z.string(),
     external_id: z.string().optional(),
     source: z.enum(DataSource).optional(),
+    email: z.email().optional(),
+    phone: z.string().optional(),
     event_type: z.enum(EventType),
     timestamp: z.string().pipe(z.coerce.date()),
     metadata: z.record(z.string(), z.any()).optional(),
@@ -25,6 +28,28 @@ const PersonEventSchema = z.union([
     person_id: z.string().optional(),
     external_id: z.string(),
     source: z.enum(DataSource),
+    email: z.email().optional(),
+    phone: z.string().optional(),
+    event_type: z.enum(EventType),
+    timestamp: z.string().pipe(z.coerce.date()),
+    metadata: z.record(z.string(), z.any()).optional(),
+  }),
+  z.object({
+    person_id: z.string().optional(),
+    external_id: z.string().optional(),
+    source: z.enum(DataSource),
+    email: z.email(),
+    phone: z.string().optional(),
+    event_type: z.enum(EventType),
+    timestamp: z.string().pipe(z.coerce.date()),
+    metadata: z.record(z.string(), z.any()).optional(),
+  }),
+  z.object({
+    person_id: z.string().optional(),
+    external_id: z.string().optional(),
+    source: z.enum(DataSource),
+    email: z.email().optional(),
+    phone: z.string(),
     event_type: z.enum(EventType),
     timestamp: z.string().pipe(z.coerce.date()),
     metadata: z.record(z.string(), z.any()).optional(),
@@ -75,6 +100,8 @@ export const Route = createFileRoute('/api/$locationID/person-event')({
           source,
           person_id,
           timestamp,
+          email,
+          phone,
         } = parsed.data
 
         // Determine the person_id to use
@@ -112,22 +139,60 @@ export const Route = createFileRoute('/api/$locationID/person-event')({
             },
           })
 
-          if (!profile) {
-            return new Response(
-              'No person found with this external_id and source',
-              {
-                status: 404,
-                headers: corsHeaders,
+          if (profile) {
+            finalPersonId = profile.person_id
+          }
+        }
+
+        // Last resort: try to find person by email or phone
+        if (!finalPersonId && (email || phone)) {
+          const sanitizedEmail = sanitizeEmail(email)
+          const sanitizedPhone = sanitizePhone(phone)
+
+          // Try person table first
+          let person = await prisma.person.findFirst({
+            where: {
+              company_id: locationID,
+              OR: [
+                ...(sanitizedEmail ? [{ email: sanitizedEmail }] : []),
+                ...(sanitizedPhone ? [{ phone: sanitizedPhone }] : []),
+              ],
+            },
+          })
+
+          // If not found in person table, check profile table
+          if (!person && (sanitizedEmail || sanitizedPhone)) {
+            const profile = await prisma.profile.findFirst({
+              where: {
+                person: {
+                  company_id: locationID,
+                },
+                OR: [
+                  ...(sanitizedEmail ? [{ email: sanitizedEmail }] : []),
+                  ...(sanitizedPhone ? [{ phone: sanitizedPhone }] : []),
+                ],
               },
-            )
+              include: {
+                person: true,
+              },
+            })
+
+            if (profile) {
+              person = profile.person
+            }
           }
 
-          finalPersonId = profile.person_id
-        } else {
+          if (person) {
+            finalPersonId = person.id
+          }
+        }
+
+        // If still no person found, return error
+        if (!finalPersonId) {
           return new Response(
-            'Must provide either person_id or (external_id + source)',
+            'No person found with the provided identifiers (person_id, external_id+source, email, or phone)',
             {
-              status: 400,
+              status: 404,
               headers: corsHeaders,
             },
           )
