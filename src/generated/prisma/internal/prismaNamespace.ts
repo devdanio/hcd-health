@@ -1391,16 +1391,8 @@ export const PersonScalarFieldEnum = {
   company_id: 'company_id',
   email: 'email',
   phone: 'phone',
-  full_name: 'full_name',
   first_name: 'first_name',
-  last_name: 'last_name',
-  gender: 'gender',
-  date_of_birth: 'date_of_birth',
-  address1: 'address1',
-  address2: 'address2',
-  zip: 'zip',
-  city: 'city',
-  state: 'state'
+  last_name: 'last_name'
 } as const
 
 export type PersonScalarFieldEnum = (typeof PersonScalarFieldEnum)[keyof typeof PersonScalarFieldEnum]
@@ -1415,8 +1407,18 @@ export const ProfileScalarFieldEnum = {
   last_name: 'last_name',
   email: 'email',
   phone: 'phone',
+  gender: 'gender',
+  date_of_birth: 'date_of_birth',
+  address1: 'address1',
+  address2: 'address2',
+  zip: 'zip',
+  city: 'city',
+  state: 'state',
+  country: 'country',
   raw: 'raw',
-  created_at: 'created_at'
+  external_created_at: 'external_created_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
 } as const
 
 export type ProfileScalarFieldEnum = (typeof ProfileScalarFieldEnum)[keyof typeof ProfileScalarFieldEnum]
@@ -1450,6 +1452,8 @@ export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeo
 
 export const PurchaseScalarFieldEnum = {
   id: 'id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
   person_id: 'person_id',
   source: 'source',
   external_id: 'external_id',
@@ -1527,19 +1531,19 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-export const JsonNullValueInput = {
-  JsonNull: JsonNull
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
-
-
 export const NullableJsonNullValueInput = {
   DbNull: DbNull,
   JsonNull: JsonNull
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {

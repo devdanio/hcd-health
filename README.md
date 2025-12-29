@@ -119,3 +119,5 @@ AND p.status = 'posted';
 
 select count(\*), data->'contact'->'attributionSource'->'sessionSource'
 src from "Event" where "type" = 'SCHEDULED_CALL' group by src;
+
+## Architecture
