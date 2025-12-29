@@ -19,7 +19,7 @@ const PersonEventSchema = z.union([
     source: z.enum(DataSource).optional(),
     event_type: z.enum(EventType),
     timestamp: z.string().pipe(z.coerce.date()),
-    metadata: z.record(z.string(), z.any()),
+    metadata: z.record(z.string(), z.any()).optional(),
   }),
   z.object({
     person_id: z.string().optional(),
@@ -27,7 +27,7 @@ const PersonEventSchema = z.union([
     source: z.enum(DataSource),
     event_type: z.enum(EventType),
     timestamp: z.string().pipe(z.coerce.date()),
-    metadata: z.record(z.string(), z.any()),
+    metadata: z.record(z.string(), z.any()).optional(),
   }),
 ])
 
