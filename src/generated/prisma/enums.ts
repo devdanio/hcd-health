@@ -34,6 +34,7 @@ export type DataSource = (typeof DataSource)[keyof typeof DataSource]
 export const EventType = {
   PAGE_VIEW: 'PAGE_VIEW',
   CONTACT_CREATED: 'CONTACT_CREATED',
+  FORM_SUBMITTED: 'FORM_SUBMITTED',
   CALL_RECEIVED: 'CALL_RECEIVED',
   CHAT: 'CHAT',
   FB_FORM_SUBMISSION: 'FB_FORM_SUBMISSION',

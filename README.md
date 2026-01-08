@@ -127,16 +127,11 @@ INNER JOIN person p ON pur.person_id = p.id
 WHERE p.company_id = 'cmjq8rjqi0000doap08up0s41'
 AND pur.source IN ('SHOPIFY', 'JASMINE');
 
-## Integration
+## GHL Chat Widget
 
-Recommended setup:
+Since we can't inject the anonymous_id into the chat widget, we register an onBeforeSubmit event handler to the chat widget, call "identify", then the chat is sent. On the server we use a workflow to send the "CHAT_MESSAGE" event along w/ the email/phone and can match the people that way
 
-- Chat widget - client side identification. Use GHL for chat message recieved event to fire a server side event of "CHAT_MESSAGE"
-- Forms - Inject the anonymous ID using URL parameters
-
-### GHL Chat widget
-
-Add the following before loading the chat widget script
+Add the following BEFORE loading the GHL chat script
 
 <script>
     function beforeSubmit(values, host) {
@@ -156,6 +151,8 @@ Add the following before loading the chat widget script
 ### GHL Forms
 
 Inside the funnel tracking code add the following code an ensure that the HCH id is added and hidden to the form.
+
+Create a "form submitted" workflow that calls both identify AND form_submitted
 
 <script>
 (function () {
@@ -187,3 +184,45 @@ Inside the funnel tracking code add the following code an ensure that the HCH id
   }, INTERVAL_MS);
 })();
 </script>
+
+## RUDDERSTACK
+
+### CHAT
+
+See EHI codebase for implementation. Workflow goes as follows
+
+1. Once rudder loads, then register an onBeforeSubmit event to the GHL Chat widget
+2. Call identify when the chat message is sent w/ the rudder anonymous ID
+3. In GHL, create a workflow for when a new chat that is received where we call identify again and "chat recieved" event
+
+### Form submissions
+
+1. GHL - on form submit send track + form submitted events
+2. Forms - ensure that the rudderstack SDK is loaded and you dynamically insert it into the form
+
+## IFRAME SCRIPT, ensure you add the hch_id as hidden input
+
+<script>
+(function() {
+  let injected = false;
+
+  function inject(value) {
+    if (injected) return;
+    const input = document.querySelector('input[data-q="hch_id"]');
+    if (input) {
+      input.value = value;
+      injected = true;
+    }
+  }
+
+  window.addEventListener('message', function(event) {
+    if (event.data.type === 'hch_id') {
+      inject(event.data.value);
+    }
+  });
+    window.parent.postMessage({ type: 'IFRAME_READY' }, '*');
+})();
+</script>
+
+Identify
+Page views

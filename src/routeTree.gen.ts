@@ -36,6 +36,7 @@ import { Route as CompaniesCompanyIdSettingsProvidersIndexRouteImport } from './
 import { Route as CompaniesCompanyIdSettingsIntegrationsIndexRouteImport } from './routes/companies/$companyId/settings/integrations/index'
 import { Route as CompaniesCompanyIdSettingsCompanyIndexRouteImport } from './routes/companies/$companyId/settings/company/index'
 import { Route as CompaniesCompanyIdReportsRoiIndexRouteImport } from './routes/companies/$companyId/reports/roi/index'
+import { Route as CompaniesCompanyIdReportsPeopleIndexRouteImport } from './routes/companies/$companyId/reports/people/index'
 import { Route as CompaniesCompanyIdReportsPatientsIndexRouteImport } from './routes/companies/$companyId/reports/patients/index'
 import { Route as CompaniesCompanyIdReportsMarketingIndexRouteImport } from './routes/companies/$companyId/reports/marketing/index'
 import { Route as CompaniesCompanyIdReportsKpisIndexRouteImport } from './routes/companies/$companyId/reports/kpis/index'
@@ -195,6 +196,12 @@ const CompaniesCompanyIdReportsRoiIndexRoute =
     path: '/reports/roi/',
     getParentRoute: () => CompaniesCompanyIdRouteRoute,
   } as any)
+const CompaniesCompanyIdReportsPeopleIndexRoute =
+  CompaniesCompanyIdReportsPeopleIndexRouteImport.update({
+    id: '/reports/people/',
+    path: '/reports/people/',
+    getParentRoute: () => CompaniesCompanyIdRouteRoute,
+  } as any)
 const CompaniesCompanyIdReportsPatientsIndexRoute =
   CompaniesCompanyIdReportsPatientsIndexRouteImport.update({
     id: '/reports/patients/',
@@ -260,6 +267,7 @@ export interface FileRoutesByFullPath {
   '/companies/$companyId/reports/kpis': typeof CompaniesCompanyIdReportsKpisIndexRoute
   '/companies/$companyId/reports/marketing': typeof CompaniesCompanyIdReportsMarketingIndexRoute
   '/companies/$companyId/reports/patients': typeof CompaniesCompanyIdReportsPatientsIndexRoute
+  '/companies/$companyId/reports/people': typeof CompaniesCompanyIdReportsPeopleIndexRoute
   '/companies/$companyId/reports/roi': typeof CompaniesCompanyIdReportsRoiIndexRoute
   '/companies/$companyId/settings/company': typeof CompaniesCompanyIdSettingsCompanyIndexRoute
   '/companies/$companyId/settings/integrations': typeof CompaniesCompanyIdSettingsIntegrationsIndexRoute
@@ -292,6 +300,7 @@ export interface FileRoutesByTo {
   '/companies/$companyId/reports/kpis': typeof CompaniesCompanyIdReportsKpisIndexRoute
   '/companies/$companyId/reports/marketing': typeof CompaniesCompanyIdReportsMarketingIndexRoute
   '/companies/$companyId/reports/patients': typeof CompaniesCompanyIdReportsPatientsIndexRoute
+  '/companies/$companyId/reports/people': typeof CompaniesCompanyIdReportsPeopleIndexRoute
   '/companies/$companyId/reports/roi': typeof CompaniesCompanyIdReportsRoiIndexRoute
   '/companies/$companyId/settings/company': typeof CompaniesCompanyIdSettingsCompanyIndexRoute
   '/companies/$companyId/settings/integrations': typeof CompaniesCompanyIdSettingsIntegrationsIndexRoute
@@ -328,6 +337,7 @@ export interface FileRoutesById {
   '/companies/$companyId/reports/kpis/': typeof CompaniesCompanyIdReportsKpisIndexRoute
   '/companies/$companyId/reports/marketing/': typeof CompaniesCompanyIdReportsMarketingIndexRoute
   '/companies/$companyId/reports/patients/': typeof CompaniesCompanyIdReportsPatientsIndexRoute
+  '/companies/$companyId/reports/people/': typeof CompaniesCompanyIdReportsPeopleIndexRoute
   '/companies/$companyId/reports/roi/': typeof CompaniesCompanyIdReportsRoiIndexRoute
   '/companies/$companyId/settings/company/': typeof CompaniesCompanyIdSettingsCompanyIndexRoute
   '/companies/$companyId/settings/integrations/': typeof CompaniesCompanyIdSettingsIntegrationsIndexRoute
@@ -365,6 +375,7 @@ export interface FileRouteTypes {
     | '/companies/$companyId/reports/kpis'
     | '/companies/$companyId/reports/marketing'
     | '/companies/$companyId/reports/patients'
+    | '/companies/$companyId/reports/people'
     | '/companies/$companyId/reports/roi'
     | '/companies/$companyId/settings/company'
     | '/companies/$companyId/settings/integrations'
@@ -397,6 +408,7 @@ export interface FileRouteTypes {
     | '/companies/$companyId/reports/kpis'
     | '/companies/$companyId/reports/marketing'
     | '/companies/$companyId/reports/patients'
+    | '/companies/$companyId/reports/people'
     | '/companies/$companyId/reports/roi'
     | '/companies/$companyId/settings/company'
     | '/companies/$companyId/settings/integrations'
@@ -432,6 +444,7 @@ export interface FileRouteTypes {
     | '/companies/$companyId/reports/kpis/'
     | '/companies/$companyId/reports/marketing/'
     | '/companies/$companyId/reports/patients/'
+    | '/companies/$companyId/reports/people/'
     | '/companies/$companyId/reports/roi/'
     | '/companies/$companyId/settings/company/'
     | '/companies/$companyId/settings/integrations/'
@@ -643,6 +656,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompaniesCompanyIdReportsRoiIndexRouteImport
       parentRoute: typeof CompaniesCompanyIdRouteRoute
     }
+    '/companies/$companyId/reports/people/': {
+      id: '/companies/$companyId/reports/people/'
+      path: '/reports/people'
+      fullPath: '/companies/$companyId/reports/people'
+      preLoaderRoute: typeof CompaniesCompanyIdReportsPeopleIndexRouteImport
+      parentRoute: typeof CompaniesCompanyIdRouteRoute
+    }
     '/companies/$companyId/reports/patients/': {
       id: '/companies/$companyId/reports/patients/'
       path: '/reports/patients'
@@ -730,6 +750,7 @@ interface CompaniesCompanyIdRouteRouteChildren {
   CompaniesCompanyIdReportsKpisIndexRoute: typeof CompaniesCompanyIdReportsKpisIndexRoute
   CompaniesCompanyIdReportsMarketingIndexRoute: typeof CompaniesCompanyIdReportsMarketingIndexRoute
   CompaniesCompanyIdReportsPatientsIndexRoute: typeof CompaniesCompanyIdReportsPatientsIndexRoute
+  CompaniesCompanyIdReportsPeopleIndexRoute: typeof CompaniesCompanyIdReportsPeopleIndexRoute
   CompaniesCompanyIdReportsRoiIndexRoute: typeof CompaniesCompanyIdReportsRoiIndexRoute
   CompaniesCompanyIdReportsKpisServicesServiceIdRoute: typeof CompaniesCompanyIdReportsKpisServicesServiceIdRoute
 }
@@ -760,6 +781,8 @@ const CompaniesCompanyIdRouteRouteChildren: CompaniesCompanyIdRouteRouteChildren
       CompaniesCompanyIdReportsMarketingIndexRoute,
     CompaniesCompanyIdReportsPatientsIndexRoute:
       CompaniesCompanyIdReportsPatientsIndexRoute,
+    CompaniesCompanyIdReportsPeopleIndexRoute:
+      CompaniesCompanyIdReportsPeopleIndexRoute,
     CompaniesCompanyIdReportsRoiIndexRoute:
       CompaniesCompanyIdReportsRoiIndexRoute,
     CompaniesCompanyIdReportsKpisServicesServiceIdRoute:

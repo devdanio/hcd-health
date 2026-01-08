@@ -152,25 +152,22 @@ export const Route = createFileRoute('/api/$locationID/event')({
                 first_name: firstName || undefined,
                 last_name: lastName || undefined,
                 full_name: fullName || undefined,
+                profiles: {
+                  create: {
+                    source: DataSource.TRACKING,
+                    external_id: anonymous_id,
+                    email: email || undefined,
+                    phone: phone || undefined,
+                    first_name: firstName || undefined,
+                    last_name: lastName || undefined,
+                    full_name: fullName || undefined,
+                    raw: identifyEvent.metadata,
+                  },
+                },
               },
             })
 
             personId = person.id
-
-            // Create TRACKING profile
-            await prisma.profile.create({
-              data: {
-                person_id: personId,
-                source: DataSource.TRACKING,
-                external_id: anonymous_id,
-                email: email || undefined,
-                phone: phone || undefined,
-                first_name: firstName || undefined,
-                last_name: lastName || undefined,
-                full_name: fullName || undefined,
-                raw: identifyEvent.metadata,
-              },
-            })
           }
 
           // Get all profiles for this person to find all possible event matches
@@ -189,7 +186,12 @@ export const Route = createFileRoute('/api/$locationID/event')({
             AND: [
               { company_id: locationID },
               { source: profile.source },
-              { metadata: { path: ['external_id'], equals: profile.external_id } },
+              {
+                metadata: {
+                  path: ['external_id'],
+                  equals: profile.external_id,
+                },
+              },
             ],
           }))
 
