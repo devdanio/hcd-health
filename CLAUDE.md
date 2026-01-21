@@ -219,3 +219,27 @@ ANTHROPIC_API_KEY=...
 - **Server Functions**: Use `createServerFn()` from `@tanstack/react-start` for server-side operations
 - **Collections**: Use TanStack DB collections for type-safe data access with TanStack Query
 - **Production Build**: Includes widget build step (`build:widget`)
+
+## Database Naming Conventions
+
+**IMPORTANT: All database schema uses snake_case naming:**
+
+- **Model names**: Use lowercase snake_case (e.g., `canonical_user`, `unified_event`, `company`)
+- **Column names**: Use snake_case (e.g., `created_at`, `updated_at`, `canonical_user_id`)
+- **Enum names**: Use lowercase snake_case (e.g., `identifier_type`, `source_table`)
+- **Enum values**: Use SCREAMING_SNAKE_CASE (e.g., `EMAIL`, `ANONYMOUS_ID`)
+
+**Prisma accessor examples:**
+```typescript
+// Model access uses snake_case
+prisma.company.findMany()
+prisma.canonical_user.findMany()
+prisma.unified_event.create()
+
+// Relations use snake_case
+prisma.canonical_user.findMany({
+  include: { unified_events: true }
+})
+```
+
+**When adding new models or columns, always use snake_case.**

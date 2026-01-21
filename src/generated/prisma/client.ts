@@ -29,8 +29,8 @@ export * from "./enums.ts"
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Calls
- * const calls = await prisma.call.findMany()
+ * // Fetch zero or more Companies
+ * const companies = await prisma.company.findMany()
  * ```
  * 
  * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
@@ -40,32 +40,37 @@ export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts exten
 export { Prisma }
 
 /**
- * Model Call
+ * Model company
  * 
  */
-export type Call = Prisma.CallModel
+export type company = Prisma.companyModel
 /**
- * Model CanonicalUser
+ * Model call
  * 
  */
-export type CanonicalUser = Prisma.CanonicalUserModel
+export type call = Prisma.callModel
 /**
- * Model Identifier
+ * Model canonical_user
  * 
  */
-export type Identifier = Prisma.IdentifierModel
+export type canonical_user = Prisma.canonical_userModel
 /**
- * Model Page
+ * Model identifier
  * 
  */
-export type Page = Prisma.PageModel
+export type identifier = Prisma.identifierModel
 /**
- * Model Track
+ * Model page
  * 
  */
-export type Track = Prisma.TrackModel
+export type page = Prisma.pageModel
 /**
- * Model UnifiedEvent
+ * Model track
  * 
  */
-export type UnifiedEvent = Prisma.UnifiedEventModel
+export type track = Prisma.trackModel
+/**
+ * Model unified_event
+ * 
+ */
+export type unified_event = Prisma.unified_eventModel

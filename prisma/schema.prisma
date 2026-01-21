@@ -7,7 +7,14 @@ datasource db {
   provider = "postgresql"
 }
 
-model Call {
+model company {
+  id         String   @id @default(cuid())
+  name       String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model call {
   id         String   @id
   email      String?
   phone      String?
@@ -22,9 +29,9 @@ model Call {
   @@index([user_id])
 }
 
-model CanonicalUser {
-  id            String         @id
-  created_at    DateTime       @default(now())
+model canonical_user {
+  id            String          @id
+  created_at    DateTime        @default(now())
   updated_at    DateTime
   emails        String[]
   phones        String[]
@@ -32,24 +39,24 @@ model CanonicalUser {
   anonymous_ids String[]
   first_name    String?
   last_name     String?
-  Identifier    Identifier[]
-  UnifiedEvent  UnifiedEvent[]
+  identifiers   identifier[]
+  unified_events unified_event[]
 }
 
-model Identifier {
-  id                String         @id
-  type              IdentifierType
+model identifier {
+  id                String          @id
+  type              identifier_type
   value             String
   canonical_user_id String
-  created_at        DateTime       @default(now())
-  CanonicalUser     CanonicalUser  @relation(fields: [canonical_user_id], references: [id])
+  created_at        DateTime        @default(now())
+  canonical_user    canonical_user  @relation(fields: [canonical_user_id], references: [id])
 
   @@unique([type, value])
   @@index([canonical_user_id])
   @@index([type, value])
 }
 
-model Page {
+model page {
   id           String   @id
   anonymous_id String?
   user_id      String?
@@ -62,7 +69,7 @@ model Page {
   @@index([user_id])
 }
 
-model Track {
+model track {
   id           String   @id
   anonymous_id String?
   email        String?
@@ -76,16 +83,16 @@ model Track {
   @@index([user_id])
 }
 
-model UnifiedEvent {
-  id                String        @id
+model unified_event {
+  id                String         @id
   canonical_user_id String
-  source_table      SourceTable
+  source_table      source_table
   source_id         String
   event_type        String?
   timestamp         DateTime
   properties        Json?
-  created_at        DateTime      @default(now())
-  CanonicalUser     CanonicalUser @relation(fields: [canonical_user_id], references: [id])
+  created_at        DateTime       @default(now())
+  canonical_user    canonical_user @relation(fields: [canonical_user_id], references: [id])
 
   @@unique([source_table, source_id])
   @@index([canonical_user_id])
@@ -93,14 +100,14 @@ model UnifiedEvent {
   @@index([timestamp])
 }
 
-enum IdentifierType {
+enum identifier_type {
   EMAIL
   PHONE
   USER_ID
   ANONYMOUS_ID
 }
 
-enum SourceTable {
+enum source_table {
   PAGES
   TRACKS
   CALLS

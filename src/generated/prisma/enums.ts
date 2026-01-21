@@ -9,20 +9,20 @@
 * 🟢 You can import this file directly.
 */
 
-export const IdentifierType = {
+export const identifier_type = {
   EMAIL: 'EMAIL',
   PHONE: 'PHONE',
   USER_ID: 'USER_ID',
   ANONYMOUS_ID: 'ANONYMOUS_ID'
 } as const
 
-export type IdentifierType = (typeof IdentifierType)[keyof typeof IdentifierType]
+export type identifier_type = (typeof identifier_type)[keyof typeof identifier_type]
 
 
-export const SourceTable = {
+export const source_table = {
   PAGES: 'PAGES',
   TRACKS: 'TRACKS',
   CALLS: 'CALLS'
 } as const
 
-export type SourceTable = (typeof SourceTable)[keyof typeof SourceTable]
+export type source_table = (typeof source_table)[keyof typeof source_table]

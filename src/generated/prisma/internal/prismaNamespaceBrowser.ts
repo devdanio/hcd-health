@@ -51,12 +51,13 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  Call: 'Call',
-  CanonicalUser: 'CanonicalUser',
-  Identifier: 'Identifier',
-  Page: 'Page',
-  Track: 'Track',
-  UnifiedEvent: 'UnifiedEvent'
+  company: 'company',
+  call: 'call',
+  canonical_user: 'canonical_user',
+  identifier: 'identifier',
+  page: 'page',
+  track: 'track',
+  unified_event: 'unified_event'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -75,6 +76,16 @@ export const TransactionIsolationLevel = {
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const CompanyScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeof CompanyScalarFieldEnum]
+
+
 export const CallScalarFieldEnum = {
   id: 'id',
   email: 'email',
@@ -89,7 +100,7 @@ export const CallScalarFieldEnum = {
 export type CallScalarFieldEnum = (typeof CallScalarFieldEnum)[keyof typeof CallScalarFieldEnum]
 
 
-export const CanonicalUserScalarFieldEnum = {
+export const Canonical_userScalarFieldEnum = {
   id: 'id',
   created_at: 'created_at',
   updated_at: 'updated_at',
@@ -101,7 +112,7 @@ export const CanonicalUserScalarFieldEnum = {
   last_name: 'last_name'
 } as const
 
-export type CanonicalUserScalarFieldEnum = (typeof CanonicalUserScalarFieldEnum)[keyof typeof CanonicalUserScalarFieldEnum]
+export type Canonical_userScalarFieldEnum = (typeof Canonical_userScalarFieldEnum)[keyof typeof Canonical_userScalarFieldEnum]
 
 
 export const IdentifierScalarFieldEnum = {
@@ -141,7 +152,7 @@ export const TrackScalarFieldEnum = {
 export type TrackScalarFieldEnum = (typeof TrackScalarFieldEnum)[keyof typeof TrackScalarFieldEnum]
 
 
-export const UnifiedEventScalarFieldEnum = {
+export const Unified_eventScalarFieldEnum = {
   id: 'id',
   canonical_user_id: 'canonical_user_id',
   source_table: 'source_table',
@@ -152,7 +163,7 @@ export const UnifiedEventScalarFieldEnum = {
   created_at: 'created_at'
 } as const
 
-export type UnifiedEventScalarFieldEnum = (typeof UnifiedEventScalarFieldEnum)[keyof typeof UnifiedEventScalarFieldEnum]
+export type Unified_eventScalarFieldEnum = (typeof Unified_eventScalarFieldEnum)[keyof typeof Unified_eventScalarFieldEnum]
 
 
 export const SortOrder = {

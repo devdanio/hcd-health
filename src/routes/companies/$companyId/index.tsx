@@ -21,9 +21,9 @@ export const Route = createFileRoute('/companies/$companyId/')({
 
 const getUsersWithEvents = createServerFn({ method: 'GET' }).handler(
   async () => {
-    const users = await prisma.canonicalUser.findMany({
+    const users = await prisma.canonical_user.findMany({
       include: {
-        UnifiedEvent: true,
+        unified_events: true,
       },
     })
     return users
@@ -60,7 +60,7 @@ function RouteComponent() {
     const campaignUserMap = new Map<string, Set<string>>()
 
     users.forEach((user) => {
-      user.UnifiedEvent.forEach((event) => {
+      user.unified_events.forEach((event) => {
         const campaignName = getEventProperty(event, 'context_campaign_name')
         if (campaignName && campaignName !== '-') {
           if (!campaignUserMap.has(campaignName)) {
@@ -129,9 +129,9 @@ function RouteComponent() {
               <TableCell>{user.phones.join(', ') || '-'}</TableCell>
               <TableCell>{user.emails.join(', ') || '-'}</TableCell>
               <TableCell>
-                {user.UnifiedEvent.length > 0 ? (
+                {user.unified_events.length > 0 ? (
                   <div className="space-y-2">
-                    {user.UnifiedEvent.map((event) => (
+                    {user.unified_events.map((event) => (
                       <div
                         key={event.id}
                         className="border rounded-md p-3 bg-muted/50"
