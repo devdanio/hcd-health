@@ -18,62 +18,32 @@ export { Prisma }
 export * as $Enums from './enums.ts'
 export * from './enums.ts';
 /**
- * Model city_lat_lng
+ * Model Call
  * 
  */
-export type city_lat_lng = Prisma.city_lat_lngModel
+export type Call = Prisma.CallModel
 /**
- * Model lead_calculator
+ * Model CanonicalUser
  * 
  */
-export type lead_calculator = Prisma.lead_calculatorModel
+export type CanonicalUser = Prisma.CanonicalUserModel
 /**
- * Model company
+ * Model Identifier
  * 
  */
-export type company = Prisma.companyModel
+export type Identifier = Prisma.IdentifierModel
 /**
- * Model person
+ * Model Page
  * 
  */
-export type person = Prisma.personModel
+export type Page = Prisma.PageModel
 /**
- * Model profile
+ * Model Track
  * 
  */
-export type profile = Prisma.profileModel
+export type Track = Prisma.TrackModel
 /**
- * Model event
+ * Model UnifiedEvent
  * 
  */
-export type event = Prisma.eventModel
-/**
- * Model service
- * 
- */
-export type service = Prisma.serviceModel
-/**
- * Model purchase
- * 
- */
-export type purchase = Prisma.purchaseModel
-/**
- * Model provider
- * 
- */
-export type provider = Prisma.providerModel
-/**
- * Model appointment
- * 
- */
-export type appointment = Prisma.appointmentModel
-/**
- * Model appointment_procedure
- * 
- */
-export type appointment_procedure = Prisma.appointment_procedureModel
-/**
- * Model cms_page
- * 
- */
-export type cms_page = Prisma.cms_pageModel
+export type UnifiedEvent = Prisma.UnifiedEventModel

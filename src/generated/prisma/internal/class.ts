@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.0.1",
   "engineVersion": "f09f2815f091dbba658cdcd2264306d88bb5bda6",
   "activeProvider": "postgresql",
-  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel city_lat_lng {\n  city      String\n  state     String\n  latitude  Float\n  longitude Float\n\n  @@unique([city, state])\n}\n\nmodel lead_calculator {\n  id                String   @id @default(cuid())\n  name              String\n  email             String\n  revenue           Float\n  patients          Int\n  new_patients      Int\n  avg_visits        Float\n  marketing_costs   Float\n  direct_care_costs Float\n  overhead_costs    Float\n  created_at        DateTime @default(now())\n  updated_at        DateTime @updatedAt\n}\n\n// Companies - Multi-tenant root\nmodel company {\n  id            String   @id @default(cuid())\n  name          String\n  domain        String\n  company_brief String?\n  ehr           EhrType?\n  address       String?\n\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n\n  people       person[]\n  services     service[]\n  providers    provider[]\n  appointments appointment[]\n  cms_pages    cms_page[]\n  events       event[]\n}\n\nenum EhrType {\n  UNIFIED_PRACTICE\n  JASMINE\n  CHIROTOUCH\n}\n\n// The name, gender, DOB etc can be set by any \"profile\", but the source of truth will be the EHR, CRM, then contact form in that order.\nmodel person {\n  id         String   @id @default(cuid())\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n\n  company_id String\n  company    company @relation(fields: [company_id], references: [id], onDelete: Cascade)\n\n  email      String?\n  phone      String?\n  full_name  String?\n  first_name String?\n  last_name  String?\n\n  purchases    purchase[]\n  appointments appointment[]\n  events       event[]\n  profiles     profile[]\n\n  @@index([company_id, email])\n  @@index([company_id, phone])\n  @@index([company_id])\n}\n\nmodel profile {\n  id          String     @id @default(cuid())\n  person_id   String\n  source      DataSource\n  external_id String\n\n  // Raw source data (do NOT over-normalize)\n  first_name    String?\n  last_name     String?\n  full_name     String?\n  email         String?\n  phone         String?\n  gender        String?\n  date_of_birth DateTime?\n\n  address1 String?\n  address2 String?\n  zip      String?\n  city     String?\n  state    String?\n  country  String?\n\n  raw                 Json? // full payload snapshot\n  external_created_at DateTime?\n  created_at          DateTime  @default(now())\n  updated_at          DateTime  @updatedAt\n\n  person person @relation(fields: [person_id], references: [id])\n\n  @@unique([source, external_id])\n}\n\nenum DataSource {\n  TRACKING\n  POSTHOG\n  GHL\n  CHIROTOUCH\n  SHOPIFY\n  UNIFIED_PRACTICE\n  JASMINE\n}\n\nmodel event {\n  id           String     @id @default(cuid())\n  person_id    String?\n  anonymous_id String?\n  session_id   String?\n  company_id   String\n  company      company    @relation(fields: [company_id], references: [id])\n  source       DataSource\n  type         EventType\n  timestamp    DateTime\n  metadata     Json\n\n  person person? @relation(fields: [person_id], references: [id])\n\n  @@index([person_id, timestamp])\n  @@index([company_id])\n}\n\nenum EventType {\n  PAGE_VIEW\n  CONTACT_CREATED\n  FORM_SUBMITTED\n  CALL_RECEIVED\n  CHAT\n  FB_FORM_SUBMISSION\n  SCHEDULED_CALL\n  BACKFILL\n  IDENTIFY\n  // Used for data imports where we have attribution data but no events\n  UNKNOWN\n}\n\n// Services\nmodel service {\n  id         String  @id @default(cuid())\n  company_id String\n  company    company @relation(fields: [company_id], references: [id], onDelete: Cascade)\n  name       String\n\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n\n  providers    provider[]\n  appointments appointment[]\n\n  @@index([company_id])\n}\n\nmodel purchase {\n  id              String     @id @default(cuid())\n  created_at      DateTime   @default(now())\n  updated_at      DateTime   @updatedAt\n  person_id       String\n  source          DataSource\n  external_id     String\n  amount_in_cents Decimal\n  currency        String\n  purchased_at    DateTime\n  metadata        Json\n\n  person person @relation(fields: [person_id], references: [id])\n\n  @@unique([source, external_id])\n}\n\n// Providers\nmodel provider {\n  id         String  @id @default(cuid())\n  company_id String\n  company    company @relation(fields: [company_id], references: [id], onDelete: Cascade)\n  name       String\n  service_id String\n  service    service @relation(fields: [service_id], references: [id])\n\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n\n  appointments appointment[]\n\n  @@index([company_id])\n  @@index([service_id])\n}\n\n// Appointments\nmodel appointment {\n  id String @id @default(cuid())\n\n  company_id String\n  company    company @relation(fields: [company_id], references: [id], onDelete: Cascade)\n\n  person_id String\n  person    person @relation(fields: [person_id], references: [id], onDelete: Cascade)\n\n  date_of_service DateTime\n  service         String?\n  service_id      String?\n  service_rel     service?  @relation(fields: [service_id], references: [id])\n  provider_id     String?\n  provider        provider? @relation(fields: [provider_id], references: [id])\n\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n\n  procedures appointment_procedure[]\n}\n\n// Appointment Procedures - Revenue tracking\nmodel appointment_procedure {\n  id             String      @id @default(cuid())\n  appointment_id String\n  appointment    appointment @relation(fields: [appointment_id], references: [id], onDelete: Cascade)\n  procedure_code String\n  charge_amount  Float\n\n  // High level grouping of insurance\n  case_type  String?\n  // Specific insurance pan that is paying\n  payer_name String?\n\n  charge_date DateTime?\n\n  created_at DateTime @default(now())\n\n  @@index([appointment_id])\n  @@index([appointment_id, procedure_code])\n}\n\n// CMS Pages\nmodel cms_page {\n  id         String  @id @default(cuid())\n  company_id String\n  company    company @relation(fields: [company_id], references: [id], onDelete: Cascade)\n\n  h1               String\n  page_title       String\n  page_description String\n  json_schema      Json?\n  slug             String\n  markdown_content String @db.Text\n\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n\n  @@unique([company_id, slug])\n  @@index([company_id])\n}\n",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel Call {\n  id         String   @id\n  email      String?\n  phone      String?\n  user_id    String?\n  timestamp  DateTime @default(now())\n  duration   Int?\n  status     String?\n  properties Json?\n\n  @@index([email])\n  @@index([phone])\n  @@index([user_id])\n}\n\nmodel CanonicalUser {\n  id            String         @id\n  created_at    DateTime       @default(now())\n  updated_at    DateTime\n  emails        String[]\n  phones        String[]\n  user_ids      String[]\n  anonymous_ids String[]\n  first_name    String?\n  last_name     String?\n  Identifier    Identifier[]\n  UnifiedEvent  UnifiedEvent[]\n}\n\nmodel Identifier {\n  id                String         @id\n  type              IdentifierType\n  value             String\n  canonical_user_id String\n  created_at        DateTime       @default(now())\n  CanonicalUser     CanonicalUser  @relation(fields: [canonical_user_id], references: [id])\n\n  @@unique([type, value])\n  @@index([canonical_user_id])\n  @@index([type, value])\n}\n\nmodel Page {\n  id           String   @id\n  anonymous_id String?\n  user_id      String?\n  timestamp    DateTime @default(now())\n  url          String?\n  title        String?\n  properties   Json?\n\n  @@index([anonymous_id])\n  @@index([user_id])\n}\n\nmodel Track {\n  id           String   @id\n  anonymous_id String?\n  email        String?\n  user_id      String?\n  timestamp    DateTime @default(now())\n  event        String?\n  properties   Json?\n\n  @@index([anonymous_id])\n  @@index([email])\n  @@index([user_id])\n}\n\nmodel UnifiedEvent {\n  id                String        @id\n  canonical_user_id String\n  source_table      SourceTable\n  source_id         String\n  event_type        String?\n  timestamp         DateTime\n  properties        Json?\n  created_at        DateTime      @default(now())\n  CanonicalUser     CanonicalUser @relation(fields: [canonical_user_id], references: [id])\n\n  @@unique([source_table, source_id])\n  @@index([canonical_user_id])\n  @@index([source_table, source_id])\n  @@index([timestamp])\n}\n\nenum IdentifierType {\n  EMAIL\n  PHONE\n  USER_ID\n  ANONYMOUS_ID\n}\n\nenum SourceTable {\n  PAGES\n  TRACKS\n  CALLS\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -28,7 +28,7 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"city_lat_lng\":{\"fields\":[{\"name\":\"city\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"state\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"latitude\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"longitude\",\"kind\":\"scalar\",\"type\":\"Float\"}],\"dbName\":null},\"lead_calculator\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"revenue\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"patients\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"new_patients\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"avg_visits\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"marketing_costs\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"direct_care_costs\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"overhead_costs\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"company\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"domain\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"company_brief\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"ehr\",\"kind\":\"enum\",\"type\":\"EhrType\"},{\"name\":\"address\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"people\",\"kind\":\"object\",\"type\":\"person\",\"relationName\":\"companyToperson\"},{\"name\":\"services\",\"kind\":\"object\",\"type\":\"service\",\"relationName\":\"companyToservice\"},{\"name\":\"providers\",\"kind\":\"object\",\"type\":\"provider\",\"relationName\":\"companyToprovider\"},{\"name\":\"appointments\",\"kind\":\"object\",\"type\":\"appointment\",\"relationName\":\"appointmentTocompany\"},{\"name\":\"cms_pages\",\"kind\":\"object\",\"type\":\"cms_page\",\"relationName\":\"cms_pageTocompany\"},{\"name\":\"events\",\"kind\":\"object\",\"type\":\"event\",\"relationName\":\"companyToevent\"}],\"dbName\":null},\"person\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"company_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"company\",\"kind\":\"object\",\"type\":\"company\",\"relationName\":\"companyToperson\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"full_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"first_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"last_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"purchases\",\"kind\":\"object\",\"type\":\"purchase\",\"relationName\":\"personTopurchase\"},{\"name\":\"appointments\",\"kind\":\"object\",\"type\":\"appointment\",\"relationName\":\"appointmentToperson\"},{\"name\":\"events\",\"kind\":\"object\",\"type\":\"event\",\"relationName\":\"eventToperson\"},{\"name\":\"profiles\",\"kind\":\"object\",\"type\":\"profile\",\"relationName\":\"personToprofile\"}],\"dbName\":null},\"profile\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"person_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"source\",\"kind\":\"enum\",\"type\":\"DataSource\"},{\"name\":\"external_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"first_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"last_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"full_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"gender\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"date_of_birth\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"address1\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"address2\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"zip\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"city\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"state\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"country\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"raw\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"external_created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"person\",\"kind\":\"object\",\"type\":\"person\",\"relationName\":\"personToprofile\"}],\"dbName\":null},\"event\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"person_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"anonymous_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"session_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"company_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"company\",\"kind\":\"object\",\"type\":\"company\",\"relationName\":\"companyToevent\"},{\"name\":\"source\",\"kind\":\"enum\",\"type\":\"DataSource\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"EventType\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"person\",\"kind\":\"object\",\"type\":\"person\",\"relationName\":\"eventToperson\"}],\"dbName\":null},\"service\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"company_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"company\",\"kind\":\"object\",\"type\":\"company\",\"relationName\":\"companyToservice\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"providers\",\"kind\":\"object\",\"type\":\"provider\",\"relationName\":\"providerToservice\"},{\"name\":\"appointments\",\"kind\":\"object\",\"type\":\"appointment\",\"relationName\":\"appointmentToservice\"}],\"dbName\":null},\"purchase\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"person_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"source\",\"kind\":\"enum\",\"type\":\"DataSource\"},{\"name\":\"external_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"amount_in_cents\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"currency\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"purchased_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"person\",\"kind\":\"object\",\"type\":\"person\",\"relationName\":\"personTopurchase\"}],\"dbName\":null},\"provider\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"company_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"company\",\"kind\":\"object\",\"type\":\"company\",\"relationName\":\"companyToprovider\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"service_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"service\",\"kind\":\"object\",\"type\":\"service\",\"relationName\":\"providerToservice\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"appointments\",\"kind\":\"object\",\"type\":\"appointment\",\"relationName\":\"appointmentToprovider\"}],\"dbName\":null},\"appointment\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"company_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"company\",\"kind\":\"object\",\"type\":\"company\",\"relationName\":\"appointmentTocompany\"},{\"name\":\"person_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"person\",\"kind\":\"object\",\"type\":\"person\",\"relationName\":\"appointmentToperson\"},{\"name\":\"date_of_service\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"service\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"service_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"service_rel\",\"kind\":\"object\",\"type\":\"service\",\"relationName\":\"appointmentToservice\"},{\"name\":\"provider_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"provider\",\"kind\":\"object\",\"type\":\"provider\",\"relationName\":\"appointmentToprovider\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"procedures\",\"kind\":\"object\",\"type\":\"appointment_procedure\",\"relationName\":\"appointmentToappointment_procedure\"}],\"dbName\":null},\"appointment_procedure\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"appointment_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"appointment\",\"kind\":\"object\",\"type\":\"appointment\",\"relationName\":\"appointmentToappointment_procedure\"},{\"name\":\"procedure_code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"charge_amount\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"case_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"payer_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"charge_date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"cms_page\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"company_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"company\",\"kind\":\"object\",\"type\":\"company\",\"relationName\":\"cms_pageTocompany\"},{\"name\":\"h1\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"page_title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"page_description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"json_schema\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"markdown_content\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Call\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"duration\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"properties\",\"kind\":\"scalar\",\"type\":\"Json\"}],\"dbName\":null},\"CanonicalUser\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"emails\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phones\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_ids\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"anonymous_ids\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"first_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"last_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"Identifier\",\"kind\":\"object\",\"type\":\"Identifier\",\"relationName\":\"CanonicalUserToIdentifier\"},{\"name\":\"UnifiedEvent\",\"kind\":\"object\",\"type\":\"UnifiedEvent\",\"relationName\":\"CanonicalUserToUnifiedEvent\"}],\"dbName\":null},\"Identifier\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"IdentifierType\"},{\"name\":\"value\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"canonical_user_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"CanonicalUser\",\"kind\":\"object\",\"type\":\"CanonicalUser\",\"relationName\":\"CanonicalUserToIdentifier\"}],\"dbName\":null},\"Page\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"anonymous_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"url\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"properties\",\"kind\":\"scalar\",\"type\":\"Json\"}],\"dbName\":null},\"Track\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"anonymous_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"event\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"properties\",\"kind\":\"scalar\",\"type\":\"Json\"}],\"dbName\":null},\"UnifiedEvent\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"canonical_user_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"source_table\",\"kind\":\"enum\",\"type\":\"SourceTable\"},{\"name\":\"source_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"event_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"properties\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"CanonicalUser\",\"kind\":\"object\",\"type\":\"CanonicalUser\",\"relationName\":\"CanonicalUserToUnifiedEvent\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
   const { Buffer } = await import('node:buffer')
@@ -58,8 +58,8 @@ export interface PrismaClientConstructor {
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more City_lat_lngs
-   * const city_lat_lngs = await prisma.city_lat_lng.findMany()
+   * // Fetch zero or more Calls
+   * const calls = await prisma.call.findMany()
    * ```
    * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
@@ -80,8 +80,8 @@ export interface PrismaClientConstructor {
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more City_lat_lngs
- * const city_lat_lngs = await prisma.city_lat_lng.findMany()
+ * // Fetch zero or more Calls
+ * const calls = await prisma.call.findMany()
  * ```
  * 
  * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
@@ -175,124 +175,64 @@ export interface PrismaClient<
   }>>
 
       /**
-   * `prisma.city_lat_lng`: Exposes CRUD operations for the **city_lat_lng** model.
+   * `prisma.call`: Exposes CRUD operations for the **Call** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more City_lat_lngs
-    * const city_lat_lngs = await prisma.city_lat_lng.findMany()
+    * // Fetch zero or more Calls
+    * const calls = await prisma.call.findMany()
     * ```
     */
-  get city_lat_lng(): Prisma.city_lat_lngDelegate<ExtArgs, { omit: OmitOpts }>;
+  get call(): Prisma.CallDelegate<ExtArgs, { omit: OmitOpts }>;
 
   /**
-   * `prisma.lead_calculator`: Exposes CRUD operations for the **lead_calculator** model.
+   * `prisma.canonicalUser`: Exposes CRUD operations for the **CanonicalUser** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Lead_calculators
-    * const lead_calculators = await prisma.lead_calculator.findMany()
+    * // Fetch zero or more CanonicalUsers
+    * const canonicalUsers = await prisma.canonicalUser.findMany()
     * ```
     */
-  get lead_calculator(): Prisma.lead_calculatorDelegate<ExtArgs, { omit: OmitOpts }>;
+  get canonicalUser(): Prisma.CanonicalUserDelegate<ExtArgs, { omit: OmitOpts }>;
 
   /**
-   * `prisma.company`: Exposes CRUD operations for the **company** model.
+   * `prisma.identifier`: Exposes CRUD operations for the **Identifier** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Companies
-    * const companies = await prisma.company.findMany()
+    * // Fetch zero or more Identifiers
+    * const identifiers = await prisma.identifier.findMany()
     * ```
     */
-  get company(): Prisma.companyDelegate<ExtArgs, { omit: OmitOpts }>;
+  get identifier(): Prisma.IdentifierDelegate<ExtArgs, { omit: OmitOpts }>;
 
   /**
-   * `prisma.person`: Exposes CRUD operations for the **person** model.
+   * `prisma.page`: Exposes CRUD operations for the **Page** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more People
-    * const people = await prisma.person.findMany()
+    * // Fetch zero or more Pages
+    * const pages = await prisma.page.findMany()
     * ```
     */
-  get person(): Prisma.personDelegate<ExtArgs, { omit: OmitOpts }>;
+  get page(): Prisma.PageDelegate<ExtArgs, { omit: OmitOpts }>;
 
   /**
-   * `prisma.profile`: Exposes CRUD operations for the **profile** model.
+   * `prisma.track`: Exposes CRUD operations for the **Track** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Profiles
-    * const profiles = await prisma.profile.findMany()
+    * // Fetch zero or more Tracks
+    * const tracks = await prisma.track.findMany()
     * ```
     */
-  get profile(): Prisma.profileDelegate<ExtArgs, { omit: OmitOpts }>;
+  get track(): Prisma.TrackDelegate<ExtArgs, { omit: OmitOpts }>;
 
   /**
-   * `prisma.event`: Exposes CRUD operations for the **event** model.
+   * `prisma.unifiedEvent`: Exposes CRUD operations for the **UnifiedEvent** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Events
-    * const events = await prisma.event.findMany()
+    * // Fetch zero or more UnifiedEvents
+    * const unifiedEvents = await prisma.unifiedEvent.findMany()
     * ```
     */
-  get event(): Prisma.eventDelegate<ExtArgs, { omit: OmitOpts }>;
-
-  /**
-   * `prisma.service`: Exposes CRUD operations for the **service** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Services
-    * const services = await prisma.service.findMany()
-    * ```
-    */
-  get service(): Prisma.serviceDelegate<ExtArgs, { omit: OmitOpts }>;
-
-  /**
-   * `prisma.purchase`: Exposes CRUD operations for the **purchase** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Purchases
-    * const purchases = await prisma.purchase.findMany()
-    * ```
-    */
-  get purchase(): Prisma.purchaseDelegate<ExtArgs, { omit: OmitOpts }>;
-
-  /**
-   * `prisma.provider`: Exposes CRUD operations for the **provider** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Providers
-    * const providers = await prisma.provider.findMany()
-    * ```
-    */
-  get provider(): Prisma.providerDelegate<ExtArgs, { omit: OmitOpts }>;
-
-  /**
-   * `prisma.appointment`: Exposes CRUD operations for the **appointment** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Appointments
-    * const appointments = await prisma.appointment.findMany()
-    * ```
-    */
-  get appointment(): Prisma.appointmentDelegate<ExtArgs, { omit: OmitOpts }>;
-
-  /**
-   * `prisma.appointment_procedure`: Exposes CRUD operations for the **appointment_procedure** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Appointment_procedures
-    * const appointment_procedures = await prisma.appointment_procedure.findMany()
-    * ```
-    */
-  get appointment_procedure(): Prisma.appointment_procedureDelegate<ExtArgs, { omit: OmitOpts }>;
-
-  /**
-   * `prisma.cms_page`: Exposes CRUD operations for the **cms_page** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Cms_pages
-    * const cms_pages = await prisma.cms_page.findMany()
-    * ```
-    */
-  get cms_page(): Prisma.cms_pageDelegate<ExtArgs, { omit: OmitOpts }>;
+  get unifiedEvent(): Prisma.UnifiedEventDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
 export function getPrismaClientClass(): PrismaClientConstructor {

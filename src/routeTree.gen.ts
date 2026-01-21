@@ -9,471 +9,87 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as CompaniesRouteImport } from './routes/companies'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CompaniesIndexRouteImport } from './routes/companies/index'
 import { Route as UsersSignInRouteImport } from './routes/users/sign-in'
-import { Route as HealthcarePracticeMetricsCalculatorIdRouteImport } from './routes/healthcare-practice-metrics-calculator.$id'
-import { Route as ApiValidateHchUuidRouteImport } from './routes/api.validate-hch-uuid'
-import { Route as ApiCreateContactRouteImport } from './routes/api.create-contact'
 import { Route as CompaniesCompanyIdRouteRouteImport } from './routes/companies/$companyId/route'
 import { Route as CompaniesCompanyIdIndexRouteImport } from './routes/companies/$companyId/index'
-import { Route as ApiLocationIDPersonEventRouteImport } from './routes/api.$locationID.person-event'
-import { Route as ApiLocationIDEventRouteImport } from './routes/api.$locationID.event'
-import { Route as CompaniesCompanyIdSettingsRouteRouteImport } from './routes/companies/$companyId/settings/route'
-import { Route as CompaniesCompanyIdVisitorsIndexRouteImport } from './routes/companies/$companyId/visitors/index'
-import { Route as CompaniesCompanyIdTrackingIndexRouteImport } from './routes/companies/$companyId/tracking/index'
-import { Route as CompaniesCompanyIdSettingsIndexRouteImport } from './routes/companies/$companyId/settings/index'
-import { Route as CompaniesCompanyIdPatientsIndexRouteImport } from './routes/companies/$companyId/patients/index'
-import { Route as CompaniesCompanyIdContactsIndexRouteImport } from './routes/companies/$companyId/contacts/index'
-import { Route as CompaniesCompanyIdCmsPagesIndexRouteImport } from './routes/companies/$companyId/cms-pages/index'
-import { Route as CompaniesCompanyIdPatientsPatientIdRouteImport } from './routes/companies/$companyId/patients/$patientId'
-import { Route as CompaniesCompanyIdCmsPagesCreateRouteImport } from './routes/companies/$companyId/cms-pages/create'
-import { Route as CompaniesCompanyIdCmsPagesPageIdRouteImport } from './routes/companies/$companyId/cms-pages/$pageId'
-import { Route as ApiWebhooksGhlCompanyIdRouteImport } from './routes/api.webhooks.ghl.$companyId'
-import { Route as CompaniesCompanyIdSettingsServicesIndexRouteImport } from './routes/companies/$companyId/settings/services/index'
-import { Route as CompaniesCompanyIdSettingsProvidersIndexRouteImport } from './routes/companies/$companyId/settings/providers/index'
-import { Route as CompaniesCompanyIdSettingsIntegrationsIndexRouteImport } from './routes/companies/$companyId/settings/integrations/index'
-import { Route as CompaniesCompanyIdSettingsCompanyIndexRouteImport } from './routes/companies/$companyId/settings/company/index'
-import { Route as CompaniesCompanyIdReportsRoiIndexRouteImport } from './routes/companies/$companyId/reports/roi/index'
-import { Route as CompaniesCompanyIdReportsPeopleIndexRouteImport } from './routes/companies/$companyId/reports/people/index'
-import { Route as CompaniesCompanyIdReportsPatientsIndexRouteImport } from './routes/companies/$companyId/reports/patients/index'
-import { Route as CompaniesCompanyIdReportsMarketingIndexRouteImport } from './routes/companies/$companyId/reports/marketing/index'
-import { Route as CompaniesCompanyIdReportsKpisIndexRouteImport } from './routes/companies/$companyId/reports/kpis/index'
-import { Route as CompaniesCompanyIdReportsAppointmentsIndexRouteImport } from './routes/companies/$companyId/reports/appointments/index'
-import { Route as CompaniesCompanyIdContactsContactIdIndexRouteImport } from './routes/companies/$companyId/contacts/$contactId/index'
-import { Route as CompaniesCompanyIdReportsKpisServicesServiceIdRouteImport } from './routes/companies/$companyId/reports/kpis/services/$serviceId'
 
-const CompaniesRoute = CompaniesRouteImport.update({
-  id: '/companies',
-  path: '/companies',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CompaniesIndexRoute = CompaniesIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => CompaniesRoute,
+  id: '/companies/',
+  path: '/companies/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const UsersSignInRoute = UsersSignInRouteImport.update({
   id: '/users/sign-in',
   path: '/users/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
-const HealthcarePracticeMetricsCalculatorIdRoute =
-  HealthcarePracticeMetricsCalculatorIdRouteImport.update({
-    id: '/healthcare-practice-metrics-calculator/$id',
-    path: '/healthcare-practice-metrics-calculator/$id',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ApiValidateHchUuidRoute = ApiValidateHchUuidRouteImport.update({
-  id: '/api/validate-hch-uuid',
-  path: '/api/validate-hch-uuid',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiCreateContactRoute = ApiCreateContactRouteImport.update({
-  id: '/api/create-contact',
-  path: '/api/create-contact',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const CompaniesCompanyIdRouteRoute = CompaniesCompanyIdRouteRouteImport.update({
-  id: '/$companyId',
-  path: '/$companyId',
-  getParentRoute: () => CompaniesRoute,
+  id: '/companies/$companyId',
+  path: '/companies/$companyId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const CompaniesCompanyIdIndexRoute = CompaniesCompanyIdIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => CompaniesCompanyIdRouteRoute,
 } as any)
-const ApiLocationIDPersonEventRoute =
-  ApiLocationIDPersonEventRouteImport.update({
-    id: '/api/$locationID/person-event',
-    path: '/api/$locationID/person-event',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ApiLocationIDEventRoute = ApiLocationIDEventRouteImport.update({
-  id: '/api/$locationID/event',
-  path: '/api/$locationID/event',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CompaniesCompanyIdSettingsRouteRoute =
-  CompaniesCompanyIdSettingsRouteRouteImport.update({
-    id: '/settings',
-    path: '/settings',
-    getParentRoute: () => CompaniesCompanyIdRouteRoute,
-  } as any)
-const CompaniesCompanyIdVisitorsIndexRoute =
-  CompaniesCompanyIdVisitorsIndexRouteImport.update({
-    id: '/visitors/',
-    path: '/visitors/',
-    getParentRoute: () => CompaniesCompanyIdRouteRoute,
-  } as any)
-const CompaniesCompanyIdTrackingIndexRoute =
-  CompaniesCompanyIdTrackingIndexRouteImport.update({
-    id: '/tracking/',
-    path: '/tracking/',
-    getParentRoute: () => CompaniesCompanyIdRouteRoute,
-  } as any)
-const CompaniesCompanyIdSettingsIndexRoute =
-  CompaniesCompanyIdSettingsIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => CompaniesCompanyIdSettingsRouteRoute,
-  } as any)
-const CompaniesCompanyIdPatientsIndexRoute =
-  CompaniesCompanyIdPatientsIndexRouteImport.update({
-    id: '/patients/',
-    path: '/patients/',
-    getParentRoute: () => CompaniesCompanyIdRouteRoute,
-  } as any)
-const CompaniesCompanyIdContactsIndexRoute =
-  CompaniesCompanyIdContactsIndexRouteImport.update({
-    id: '/contacts/',
-    path: '/contacts/',
-    getParentRoute: () => CompaniesCompanyIdRouteRoute,
-  } as any)
-const CompaniesCompanyIdCmsPagesIndexRoute =
-  CompaniesCompanyIdCmsPagesIndexRouteImport.update({
-    id: '/cms-pages/',
-    path: '/cms-pages/',
-    getParentRoute: () => CompaniesCompanyIdRouteRoute,
-  } as any)
-const CompaniesCompanyIdPatientsPatientIdRoute =
-  CompaniesCompanyIdPatientsPatientIdRouteImport.update({
-    id: '/patients/$patientId',
-    path: '/patients/$patientId',
-    getParentRoute: () => CompaniesCompanyIdRouteRoute,
-  } as any)
-const CompaniesCompanyIdCmsPagesCreateRoute =
-  CompaniesCompanyIdCmsPagesCreateRouteImport.update({
-    id: '/cms-pages/create',
-    path: '/cms-pages/create',
-    getParentRoute: () => CompaniesCompanyIdRouteRoute,
-  } as any)
-const CompaniesCompanyIdCmsPagesPageIdRoute =
-  CompaniesCompanyIdCmsPagesPageIdRouteImport.update({
-    id: '/cms-pages/$pageId',
-    path: '/cms-pages/$pageId',
-    getParentRoute: () => CompaniesCompanyIdRouteRoute,
-  } as any)
-const ApiWebhooksGhlCompanyIdRoute = ApiWebhooksGhlCompanyIdRouteImport.update({
-  id: '/api/webhooks/ghl/$companyId',
-  path: '/api/webhooks/ghl/$companyId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CompaniesCompanyIdSettingsServicesIndexRoute =
-  CompaniesCompanyIdSettingsServicesIndexRouteImport.update({
-    id: '/services/',
-    path: '/services/',
-    getParentRoute: () => CompaniesCompanyIdSettingsRouteRoute,
-  } as any)
-const CompaniesCompanyIdSettingsProvidersIndexRoute =
-  CompaniesCompanyIdSettingsProvidersIndexRouteImport.update({
-    id: '/providers/',
-    path: '/providers/',
-    getParentRoute: () => CompaniesCompanyIdSettingsRouteRoute,
-  } as any)
-const CompaniesCompanyIdSettingsIntegrationsIndexRoute =
-  CompaniesCompanyIdSettingsIntegrationsIndexRouteImport.update({
-    id: '/integrations/',
-    path: '/integrations/',
-    getParentRoute: () => CompaniesCompanyIdSettingsRouteRoute,
-  } as any)
-const CompaniesCompanyIdSettingsCompanyIndexRoute =
-  CompaniesCompanyIdSettingsCompanyIndexRouteImport.update({
-    id: '/company/',
-    path: '/company/',
-    getParentRoute: () => CompaniesCompanyIdSettingsRouteRoute,
-  } as any)
-const CompaniesCompanyIdReportsRoiIndexRoute =
-  CompaniesCompanyIdReportsRoiIndexRouteImport.update({
-    id: '/reports/roi/',
-    path: '/reports/roi/',
-    getParentRoute: () => CompaniesCompanyIdRouteRoute,
-  } as any)
-const CompaniesCompanyIdReportsPeopleIndexRoute =
-  CompaniesCompanyIdReportsPeopleIndexRouteImport.update({
-    id: '/reports/people/',
-    path: '/reports/people/',
-    getParentRoute: () => CompaniesCompanyIdRouteRoute,
-  } as any)
-const CompaniesCompanyIdReportsPatientsIndexRoute =
-  CompaniesCompanyIdReportsPatientsIndexRouteImport.update({
-    id: '/reports/patients/',
-    path: '/reports/patients/',
-    getParentRoute: () => CompaniesCompanyIdRouteRoute,
-  } as any)
-const CompaniesCompanyIdReportsMarketingIndexRoute =
-  CompaniesCompanyIdReportsMarketingIndexRouteImport.update({
-    id: '/reports/marketing/',
-    path: '/reports/marketing/',
-    getParentRoute: () => CompaniesCompanyIdRouteRoute,
-  } as any)
-const CompaniesCompanyIdReportsKpisIndexRoute =
-  CompaniesCompanyIdReportsKpisIndexRouteImport.update({
-    id: '/reports/kpis/',
-    path: '/reports/kpis/',
-    getParentRoute: () => CompaniesCompanyIdRouteRoute,
-  } as any)
-const CompaniesCompanyIdReportsAppointmentsIndexRoute =
-  CompaniesCompanyIdReportsAppointmentsIndexRouteImport.update({
-    id: '/reports/appointments/',
-    path: '/reports/appointments/',
-    getParentRoute: () => CompaniesCompanyIdRouteRoute,
-  } as any)
-const CompaniesCompanyIdContactsContactIdIndexRoute =
-  CompaniesCompanyIdContactsContactIdIndexRouteImport.update({
-    id: '/contacts/$contactId/',
-    path: '/contacts/$contactId/',
-    getParentRoute: () => CompaniesCompanyIdRouteRoute,
-  } as any)
-const CompaniesCompanyIdReportsKpisServicesServiceIdRoute =
-  CompaniesCompanyIdReportsKpisServicesServiceIdRouteImport.update({
-    id: '/reports/kpis/services/$serviceId',
-    path: '/reports/kpis/services/$serviceId',
-    getParentRoute: () => CompaniesCompanyIdRouteRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/companies': typeof CompaniesRouteWithChildren
   '/companies/$companyId': typeof CompaniesCompanyIdRouteRouteWithChildren
-  '/api/create-contact': typeof ApiCreateContactRoute
-  '/api/validate-hch-uuid': typeof ApiValidateHchUuidRoute
-  '/healthcare-practice-metrics-calculator/$id': typeof HealthcarePracticeMetricsCalculatorIdRoute
   '/users/sign-in': typeof UsersSignInRoute
-  '/companies/': typeof CompaniesIndexRoute
-  '/companies/$companyId/settings': typeof CompaniesCompanyIdSettingsRouteRouteWithChildren
-  '/api/$locationID/event': typeof ApiLocationIDEventRoute
-  '/api/$locationID/person-event': typeof ApiLocationIDPersonEventRoute
+  '/companies': typeof CompaniesIndexRoute
   '/companies/$companyId/': typeof CompaniesCompanyIdIndexRoute
-  '/api/webhooks/ghl/$companyId': typeof ApiWebhooksGhlCompanyIdRoute
-  '/companies/$companyId/cms-pages/$pageId': typeof CompaniesCompanyIdCmsPagesPageIdRoute
-  '/companies/$companyId/cms-pages/create': typeof CompaniesCompanyIdCmsPagesCreateRoute
-  '/companies/$companyId/patients/$patientId': typeof CompaniesCompanyIdPatientsPatientIdRoute
-  '/companies/$companyId/cms-pages': typeof CompaniesCompanyIdCmsPagesIndexRoute
-  '/companies/$companyId/contacts': typeof CompaniesCompanyIdContactsIndexRoute
-  '/companies/$companyId/patients': typeof CompaniesCompanyIdPatientsIndexRoute
-  '/companies/$companyId/settings/': typeof CompaniesCompanyIdSettingsIndexRoute
-  '/companies/$companyId/tracking': typeof CompaniesCompanyIdTrackingIndexRoute
-  '/companies/$companyId/visitors': typeof CompaniesCompanyIdVisitorsIndexRoute
-  '/companies/$companyId/contacts/$contactId': typeof CompaniesCompanyIdContactsContactIdIndexRoute
-  '/companies/$companyId/reports/appointments': typeof CompaniesCompanyIdReportsAppointmentsIndexRoute
-  '/companies/$companyId/reports/kpis': typeof CompaniesCompanyIdReportsKpisIndexRoute
-  '/companies/$companyId/reports/marketing': typeof CompaniesCompanyIdReportsMarketingIndexRoute
-  '/companies/$companyId/reports/patients': typeof CompaniesCompanyIdReportsPatientsIndexRoute
-  '/companies/$companyId/reports/people': typeof CompaniesCompanyIdReportsPeopleIndexRoute
-  '/companies/$companyId/reports/roi': typeof CompaniesCompanyIdReportsRoiIndexRoute
-  '/companies/$companyId/settings/company': typeof CompaniesCompanyIdSettingsCompanyIndexRoute
-  '/companies/$companyId/settings/integrations': typeof CompaniesCompanyIdSettingsIntegrationsIndexRoute
-  '/companies/$companyId/settings/providers': typeof CompaniesCompanyIdSettingsProvidersIndexRoute
-  '/companies/$companyId/settings/services': typeof CompaniesCompanyIdSettingsServicesIndexRoute
-  '/companies/$companyId/reports/kpis/services/$serviceId': typeof CompaniesCompanyIdReportsKpisServicesServiceIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/api/create-contact': typeof ApiCreateContactRoute
-  '/api/validate-hch-uuid': typeof ApiValidateHchUuidRoute
-  '/healthcare-practice-metrics-calculator/$id': typeof HealthcarePracticeMetricsCalculatorIdRoute
   '/users/sign-in': typeof UsersSignInRoute
   '/companies': typeof CompaniesIndexRoute
-  '/api/$locationID/event': typeof ApiLocationIDEventRoute
-  '/api/$locationID/person-event': typeof ApiLocationIDPersonEventRoute
   '/companies/$companyId': typeof CompaniesCompanyIdIndexRoute
-  '/api/webhooks/ghl/$companyId': typeof ApiWebhooksGhlCompanyIdRoute
-  '/companies/$companyId/cms-pages/$pageId': typeof CompaniesCompanyIdCmsPagesPageIdRoute
-  '/companies/$companyId/cms-pages/create': typeof CompaniesCompanyIdCmsPagesCreateRoute
-  '/companies/$companyId/patients/$patientId': typeof CompaniesCompanyIdPatientsPatientIdRoute
-  '/companies/$companyId/cms-pages': typeof CompaniesCompanyIdCmsPagesIndexRoute
-  '/companies/$companyId/contacts': typeof CompaniesCompanyIdContactsIndexRoute
-  '/companies/$companyId/patients': typeof CompaniesCompanyIdPatientsIndexRoute
-  '/companies/$companyId/settings': typeof CompaniesCompanyIdSettingsIndexRoute
-  '/companies/$companyId/tracking': typeof CompaniesCompanyIdTrackingIndexRoute
-  '/companies/$companyId/visitors': typeof CompaniesCompanyIdVisitorsIndexRoute
-  '/companies/$companyId/contacts/$contactId': typeof CompaniesCompanyIdContactsContactIdIndexRoute
-  '/companies/$companyId/reports/appointments': typeof CompaniesCompanyIdReportsAppointmentsIndexRoute
-  '/companies/$companyId/reports/kpis': typeof CompaniesCompanyIdReportsKpisIndexRoute
-  '/companies/$companyId/reports/marketing': typeof CompaniesCompanyIdReportsMarketingIndexRoute
-  '/companies/$companyId/reports/patients': typeof CompaniesCompanyIdReportsPatientsIndexRoute
-  '/companies/$companyId/reports/people': typeof CompaniesCompanyIdReportsPeopleIndexRoute
-  '/companies/$companyId/reports/roi': typeof CompaniesCompanyIdReportsRoiIndexRoute
-  '/companies/$companyId/settings/company': typeof CompaniesCompanyIdSettingsCompanyIndexRoute
-  '/companies/$companyId/settings/integrations': typeof CompaniesCompanyIdSettingsIntegrationsIndexRoute
-  '/companies/$companyId/settings/providers': typeof CompaniesCompanyIdSettingsProvidersIndexRoute
-  '/companies/$companyId/settings/services': typeof CompaniesCompanyIdSettingsServicesIndexRoute
-  '/companies/$companyId/reports/kpis/services/$serviceId': typeof CompaniesCompanyIdReportsKpisServicesServiceIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/companies': typeof CompaniesRouteWithChildren
   '/companies/$companyId': typeof CompaniesCompanyIdRouteRouteWithChildren
-  '/api/create-contact': typeof ApiCreateContactRoute
-  '/api/validate-hch-uuid': typeof ApiValidateHchUuidRoute
-  '/healthcare-practice-metrics-calculator/$id': typeof HealthcarePracticeMetricsCalculatorIdRoute
   '/users/sign-in': typeof UsersSignInRoute
   '/companies/': typeof CompaniesIndexRoute
-  '/companies/$companyId/settings': typeof CompaniesCompanyIdSettingsRouteRouteWithChildren
-  '/api/$locationID/event': typeof ApiLocationIDEventRoute
-  '/api/$locationID/person-event': typeof ApiLocationIDPersonEventRoute
   '/companies/$companyId/': typeof CompaniesCompanyIdIndexRoute
-  '/api/webhooks/ghl/$companyId': typeof ApiWebhooksGhlCompanyIdRoute
-  '/companies/$companyId/cms-pages/$pageId': typeof CompaniesCompanyIdCmsPagesPageIdRoute
-  '/companies/$companyId/cms-pages/create': typeof CompaniesCompanyIdCmsPagesCreateRoute
-  '/companies/$companyId/patients/$patientId': typeof CompaniesCompanyIdPatientsPatientIdRoute
-  '/companies/$companyId/cms-pages/': typeof CompaniesCompanyIdCmsPagesIndexRoute
-  '/companies/$companyId/contacts/': typeof CompaniesCompanyIdContactsIndexRoute
-  '/companies/$companyId/patients/': typeof CompaniesCompanyIdPatientsIndexRoute
-  '/companies/$companyId/settings/': typeof CompaniesCompanyIdSettingsIndexRoute
-  '/companies/$companyId/tracking/': typeof CompaniesCompanyIdTrackingIndexRoute
-  '/companies/$companyId/visitors/': typeof CompaniesCompanyIdVisitorsIndexRoute
-  '/companies/$companyId/contacts/$contactId/': typeof CompaniesCompanyIdContactsContactIdIndexRoute
-  '/companies/$companyId/reports/appointments/': typeof CompaniesCompanyIdReportsAppointmentsIndexRoute
-  '/companies/$companyId/reports/kpis/': typeof CompaniesCompanyIdReportsKpisIndexRoute
-  '/companies/$companyId/reports/marketing/': typeof CompaniesCompanyIdReportsMarketingIndexRoute
-  '/companies/$companyId/reports/patients/': typeof CompaniesCompanyIdReportsPatientsIndexRoute
-  '/companies/$companyId/reports/people/': typeof CompaniesCompanyIdReportsPeopleIndexRoute
-  '/companies/$companyId/reports/roi/': typeof CompaniesCompanyIdReportsRoiIndexRoute
-  '/companies/$companyId/settings/company/': typeof CompaniesCompanyIdSettingsCompanyIndexRoute
-  '/companies/$companyId/settings/integrations/': typeof CompaniesCompanyIdSettingsIntegrationsIndexRoute
-  '/companies/$companyId/settings/providers/': typeof CompaniesCompanyIdSettingsProvidersIndexRoute
-  '/companies/$companyId/settings/services/': typeof CompaniesCompanyIdSettingsServicesIndexRoute
-  '/companies/$companyId/reports/kpis/services/$serviceId': typeof CompaniesCompanyIdReportsKpisServicesServiceIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/companies'
     | '/companies/$companyId'
-    | '/api/create-contact'
-    | '/api/validate-hch-uuid'
-    | '/healthcare-practice-metrics-calculator/$id'
     | '/users/sign-in'
-    | '/companies/'
-    | '/companies/$companyId/settings'
-    | '/api/$locationID/event'
-    | '/api/$locationID/person-event'
+    | '/companies'
     | '/companies/$companyId/'
-    | '/api/webhooks/ghl/$companyId'
-    | '/companies/$companyId/cms-pages/$pageId'
-    | '/companies/$companyId/cms-pages/create'
-    | '/companies/$companyId/patients/$patientId'
-    | '/companies/$companyId/cms-pages'
-    | '/companies/$companyId/contacts'
-    | '/companies/$companyId/patients'
-    | '/companies/$companyId/settings/'
-    | '/companies/$companyId/tracking'
-    | '/companies/$companyId/visitors'
-    | '/companies/$companyId/contacts/$contactId'
-    | '/companies/$companyId/reports/appointments'
-    | '/companies/$companyId/reports/kpis'
-    | '/companies/$companyId/reports/marketing'
-    | '/companies/$companyId/reports/patients'
-    | '/companies/$companyId/reports/people'
-    | '/companies/$companyId/reports/roi'
-    | '/companies/$companyId/settings/company'
-    | '/companies/$companyId/settings/integrations'
-    | '/companies/$companyId/settings/providers'
-    | '/companies/$companyId/settings/services'
-    | '/companies/$companyId/reports/kpis/services/$serviceId'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/api/create-contact'
-    | '/api/validate-hch-uuid'
-    | '/healthcare-practice-metrics-calculator/$id'
-    | '/users/sign-in'
-    | '/companies'
-    | '/api/$locationID/event'
-    | '/api/$locationID/person-event'
-    | '/companies/$companyId'
-    | '/api/webhooks/ghl/$companyId'
-    | '/companies/$companyId/cms-pages/$pageId'
-    | '/companies/$companyId/cms-pages/create'
-    | '/companies/$companyId/patients/$patientId'
-    | '/companies/$companyId/cms-pages'
-    | '/companies/$companyId/contacts'
-    | '/companies/$companyId/patients'
-    | '/companies/$companyId/settings'
-    | '/companies/$companyId/tracking'
-    | '/companies/$companyId/visitors'
-    | '/companies/$companyId/contacts/$contactId'
-    | '/companies/$companyId/reports/appointments'
-    | '/companies/$companyId/reports/kpis'
-    | '/companies/$companyId/reports/marketing'
-    | '/companies/$companyId/reports/patients'
-    | '/companies/$companyId/reports/people'
-    | '/companies/$companyId/reports/roi'
-    | '/companies/$companyId/settings/company'
-    | '/companies/$companyId/settings/integrations'
-    | '/companies/$companyId/settings/providers'
-    | '/companies/$companyId/settings/services'
-    | '/companies/$companyId/reports/kpis/services/$serviceId'
+  to: '/' | '/users/sign-in' | '/companies' | '/companies/$companyId'
   id:
     | '__root__'
     | '/'
-    | '/companies'
     | '/companies/$companyId'
-    | '/api/create-contact'
-    | '/api/validate-hch-uuid'
-    | '/healthcare-practice-metrics-calculator/$id'
     | '/users/sign-in'
     | '/companies/'
-    | '/companies/$companyId/settings'
-    | '/api/$locationID/event'
-    | '/api/$locationID/person-event'
     | '/companies/$companyId/'
-    | '/api/webhooks/ghl/$companyId'
-    | '/companies/$companyId/cms-pages/$pageId'
-    | '/companies/$companyId/cms-pages/create'
-    | '/companies/$companyId/patients/$patientId'
-    | '/companies/$companyId/cms-pages/'
-    | '/companies/$companyId/contacts/'
-    | '/companies/$companyId/patients/'
-    | '/companies/$companyId/settings/'
-    | '/companies/$companyId/tracking/'
-    | '/companies/$companyId/visitors/'
-    | '/companies/$companyId/contacts/$contactId/'
-    | '/companies/$companyId/reports/appointments/'
-    | '/companies/$companyId/reports/kpis/'
-    | '/companies/$companyId/reports/marketing/'
-    | '/companies/$companyId/reports/patients/'
-    | '/companies/$companyId/reports/people/'
-    | '/companies/$companyId/reports/roi/'
-    | '/companies/$companyId/settings/company/'
-    | '/companies/$companyId/settings/integrations/'
-    | '/companies/$companyId/settings/providers/'
-    | '/companies/$companyId/settings/services/'
-    | '/companies/$companyId/reports/kpis/services/$serviceId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CompaniesRoute: typeof CompaniesRouteWithChildren
-  ApiCreateContactRoute: typeof ApiCreateContactRoute
-  ApiValidateHchUuidRoute: typeof ApiValidateHchUuidRoute
-  HealthcarePracticeMetricsCalculatorIdRoute: typeof HealthcarePracticeMetricsCalculatorIdRoute
+  CompaniesCompanyIdRouteRoute: typeof CompaniesCompanyIdRouteRouteWithChildren
   UsersSignInRoute: typeof UsersSignInRoute
-  ApiLocationIDEventRoute: typeof ApiLocationIDEventRoute
-  ApiLocationIDPersonEventRoute: typeof ApiLocationIDPersonEventRoute
-  ApiWebhooksGhlCompanyIdRoute: typeof ApiWebhooksGhlCompanyIdRoute
+  CompaniesIndexRoute: typeof CompaniesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/companies': {
-      id: '/companies'
-      path: '/companies'
-      fullPath: '/companies'
-      preLoaderRoute: typeof CompaniesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -483,10 +99,10 @@ declare module '@tanstack/react-router' {
     }
     '/companies/': {
       id: '/companies/'
-      path: '/'
-      fullPath: '/companies/'
+      path: '/companies'
+      fullPath: '/companies'
       preLoaderRoute: typeof CompaniesIndexRouteImport
-      parentRoute: typeof CompaniesRoute
+      parentRoute: typeof rootRouteImport
     }
     '/users/sign-in': {
       id: '/users/sign-in'
@@ -495,33 +111,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UsersSignInRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/healthcare-practice-metrics-calculator/$id': {
-      id: '/healthcare-practice-metrics-calculator/$id'
-      path: '/healthcare-practice-metrics-calculator/$id'
-      fullPath: '/healthcare-practice-metrics-calculator/$id'
-      preLoaderRoute: typeof HealthcarePracticeMetricsCalculatorIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/validate-hch-uuid': {
-      id: '/api/validate-hch-uuid'
-      path: '/api/validate-hch-uuid'
-      fullPath: '/api/validate-hch-uuid'
-      preLoaderRoute: typeof ApiValidateHchUuidRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/create-contact': {
-      id: '/api/create-contact'
-      path: '/api/create-contact'
-      fullPath: '/api/create-contact'
-      preLoaderRoute: typeof ApiCreateContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/companies/$companyId': {
       id: '/companies/$companyId'
-      path: '/$companyId'
+      path: '/companies/$companyId'
       fullPath: '/companies/$companyId'
       preLoaderRoute: typeof CompaniesCompanyIdRouteRouteImport
-      parentRoute: typeof CompaniesRoute
+      parentRoute: typeof rootRouteImport
     }
     '/companies/$companyId/': {
       id: '/companies/$companyId/'
@@ -530,263 +125,16 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompaniesCompanyIdIndexRouteImport
       parentRoute: typeof CompaniesCompanyIdRouteRoute
     }
-    '/api/$locationID/person-event': {
-      id: '/api/$locationID/person-event'
-      path: '/api/$locationID/person-event'
-      fullPath: '/api/$locationID/person-event'
-      preLoaderRoute: typeof ApiLocationIDPersonEventRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/$locationID/event': {
-      id: '/api/$locationID/event'
-      path: '/api/$locationID/event'
-      fullPath: '/api/$locationID/event'
-      preLoaderRoute: typeof ApiLocationIDEventRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/companies/$companyId/settings': {
-      id: '/companies/$companyId/settings'
-      path: '/settings'
-      fullPath: '/companies/$companyId/settings'
-      preLoaderRoute: typeof CompaniesCompanyIdSettingsRouteRouteImport
-      parentRoute: typeof CompaniesCompanyIdRouteRoute
-    }
-    '/companies/$companyId/visitors/': {
-      id: '/companies/$companyId/visitors/'
-      path: '/visitors'
-      fullPath: '/companies/$companyId/visitors'
-      preLoaderRoute: typeof CompaniesCompanyIdVisitorsIndexRouteImport
-      parentRoute: typeof CompaniesCompanyIdRouteRoute
-    }
-    '/companies/$companyId/tracking/': {
-      id: '/companies/$companyId/tracking/'
-      path: '/tracking'
-      fullPath: '/companies/$companyId/tracking'
-      preLoaderRoute: typeof CompaniesCompanyIdTrackingIndexRouteImport
-      parentRoute: typeof CompaniesCompanyIdRouteRoute
-    }
-    '/companies/$companyId/settings/': {
-      id: '/companies/$companyId/settings/'
-      path: '/'
-      fullPath: '/companies/$companyId/settings/'
-      preLoaderRoute: typeof CompaniesCompanyIdSettingsIndexRouteImport
-      parentRoute: typeof CompaniesCompanyIdSettingsRouteRoute
-    }
-    '/companies/$companyId/patients/': {
-      id: '/companies/$companyId/patients/'
-      path: '/patients'
-      fullPath: '/companies/$companyId/patients'
-      preLoaderRoute: typeof CompaniesCompanyIdPatientsIndexRouteImport
-      parentRoute: typeof CompaniesCompanyIdRouteRoute
-    }
-    '/companies/$companyId/contacts/': {
-      id: '/companies/$companyId/contacts/'
-      path: '/contacts'
-      fullPath: '/companies/$companyId/contacts'
-      preLoaderRoute: typeof CompaniesCompanyIdContactsIndexRouteImport
-      parentRoute: typeof CompaniesCompanyIdRouteRoute
-    }
-    '/companies/$companyId/cms-pages/': {
-      id: '/companies/$companyId/cms-pages/'
-      path: '/cms-pages'
-      fullPath: '/companies/$companyId/cms-pages'
-      preLoaderRoute: typeof CompaniesCompanyIdCmsPagesIndexRouteImport
-      parentRoute: typeof CompaniesCompanyIdRouteRoute
-    }
-    '/companies/$companyId/patients/$patientId': {
-      id: '/companies/$companyId/patients/$patientId'
-      path: '/patients/$patientId'
-      fullPath: '/companies/$companyId/patients/$patientId'
-      preLoaderRoute: typeof CompaniesCompanyIdPatientsPatientIdRouteImport
-      parentRoute: typeof CompaniesCompanyIdRouteRoute
-    }
-    '/companies/$companyId/cms-pages/create': {
-      id: '/companies/$companyId/cms-pages/create'
-      path: '/cms-pages/create'
-      fullPath: '/companies/$companyId/cms-pages/create'
-      preLoaderRoute: typeof CompaniesCompanyIdCmsPagesCreateRouteImport
-      parentRoute: typeof CompaniesCompanyIdRouteRoute
-    }
-    '/companies/$companyId/cms-pages/$pageId': {
-      id: '/companies/$companyId/cms-pages/$pageId'
-      path: '/cms-pages/$pageId'
-      fullPath: '/companies/$companyId/cms-pages/$pageId'
-      preLoaderRoute: typeof CompaniesCompanyIdCmsPagesPageIdRouteImport
-      parentRoute: typeof CompaniesCompanyIdRouteRoute
-    }
-    '/api/webhooks/ghl/$companyId': {
-      id: '/api/webhooks/ghl/$companyId'
-      path: '/api/webhooks/ghl/$companyId'
-      fullPath: '/api/webhooks/ghl/$companyId'
-      preLoaderRoute: typeof ApiWebhooksGhlCompanyIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/companies/$companyId/settings/services/': {
-      id: '/companies/$companyId/settings/services/'
-      path: '/services'
-      fullPath: '/companies/$companyId/settings/services'
-      preLoaderRoute: typeof CompaniesCompanyIdSettingsServicesIndexRouteImport
-      parentRoute: typeof CompaniesCompanyIdSettingsRouteRoute
-    }
-    '/companies/$companyId/settings/providers/': {
-      id: '/companies/$companyId/settings/providers/'
-      path: '/providers'
-      fullPath: '/companies/$companyId/settings/providers'
-      preLoaderRoute: typeof CompaniesCompanyIdSettingsProvidersIndexRouteImport
-      parentRoute: typeof CompaniesCompanyIdSettingsRouteRoute
-    }
-    '/companies/$companyId/settings/integrations/': {
-      id: '/companies/$companyId/settings/integrations/'
-      path: '/integrations'
-      fullPath: '/companies/$companyId/settings/integrations'
-      preLoaderRoute: typeof CompaniesCompanyIdSettingsIntegrationsIndexRouteImport
-      parentRoute: typeof CompaniesCompanyIdSettingsRouteRoute
-    }
-    '/companies/$companyId/settings/company/': {
-      id: '/companies/$companyId/settings/company/'
-      path: '/company'
-      fullPath: '/companies/$companyId/settings/company'
-      preLoaderRoute: typeof CompaniesCompanyIdSettingsCompanyIndexRouteImport
-      parentRoute: typeof CompaniesCompanyIdSettingsRouteRoute
-    }
-    '/companies/$companyId/reports/roi/': {
-      id: '/companies/$companyId/reports/roi/'
-      path: '/reports/roi'
-      fullPath: '/companies/$companyId/reports/roi'
-      preLoaderRoute: typeof CompaniesCompanyIdReportsRoiIndexRouteImport
-      parentRoute: typeof CompaniesCompanyIdRouteRoute
-    }
-    '/companies/$companyId/reports/people/': {
-      id: '/companies/$companyId/reports/people/'
-      path: '/reports/people'
-      fullPath: '/companies/$companyId/reports/people'
-      preLoaderRoute: typeof CompaniesCompanyIdReportsPeopleIndexRouteImport
-      parentRoute: typeof CompaniesCompanyIdRouteRoute
-    }
-    '/companies/$companyId/reports/patients/': {
-      id: '/companies/$companyId/reports/patients/'
-      path: '/reports/patients'
-      fullPath: '/companies/$companyId/reports/patients'
-      preLoaderRoute: typeof CompaniesCompanyIdReportsPatientsIndexRouteImport
-      parentRoute: typeof CompaniesCompanyIdRouteRoute
-    }
-    '/companies/$companyId/reports/marketing/': {
-      id: '/companies/$companyId/reports/marketing/'
-      path: '/reports/marketing'
-      fullPath: '/companies/$companyId/reports/marketing'
-      preLoaderRoute: typeof CompaniesCompanyIdReportsMarketingIndexRouteImport
-      parentRoute: typeof CompaniesCompanyIdRouteRoute
-    }
-    '/companies/$companyId/reports/kpis/': {
-      id: '/companies/$companyId/reports/kpis/'
-      path: '/reports/kpis'
-      fullPath: '/companies/$companyId/reports/kpis'
-      preLoaderRoute: typeof CompaniesCompanyIdReportsKpisIndexRouteImport
-      parentRoute: typeof CompaniesCompanyIdRouteRoute
-    }
-    '/companies/$companyId/reports/appointments/': {
-      id: '/companies/$companyId/reports/appointments/'
-      path: '/reports/appointments'
-      fullPath: '/companies/$companyId/reports/appointments'
-      preLoaderRoute: typeof CompaniesCompanyIdReportsAppointmentsIndexRouteImport
-      parentRoute: typeof CompaniesCompanyIdRouteRoute
-    }
-    '/companies/$companyId/contacts/$contactId/': {
-      id: '/companies/$companyId/contacts/$contactId/'
-      path: '/contacts/$contactId'
-      fullPath: '/companies/$companyId/contacts/$contactId'
-      preLoaderRoute: typeof CompaniesCompanyIdContactsContactIdIndexRouteImport
-      parentRoute: typeof CompaniesCompanyIdRouteRoute
-    }
-    '/companies/$companyId/reports/kpis/services/$serviceId': {
-      id: '/companies/$companyId/reports/kpis/services/$serviceId'
-      path: '/reports/kpis/services/$serviceId'
-      fullPath: '/companies/$companyId/reports/kpis/services/$serviceId'
-      preLoaderRoute: typeof CompaniesCompanyIdReportsKpisServicesServiceIdRouteImport
-      parentRoute: typeof CompaniesCompanyIdRouteRoute
-    }
   }
 }
-
-interface CompaniesCompanyIdSettingsRouteRouteChildren {
-  CompaniesCompanyIdSettingsIndexRoute: typeof CompaniesCompanyIdSettingsIndexRoute
-  CompaniesCompanyIdSettingsCompanyIndexRoute: typeof CompaniesCompanyIdSettingsCompanyIndexRoute
-  CompaniesCompanyIdSettingsIntegrationsIndexRoute: typeof CompaniesCompanyIdSettingsIntegrationsIndexRoute
-  CompaniesCompanyIdSettingsProvidersIndexRoute: typeof CompaniesCompanyIdSettingsProvidersIndexRoute
-  CompaniesCompanyIdSettingsServicesIndexRoute: typeof CompaniesCompanyIdSettingsServicesIndexRoute
-}
-
-const CompaniesCompanyIdSettingsRouteRouteChildren: CompaniesCompanyIdSettingsRouteRouteChildren =
-  {
-    CompaniesCompanyIdSettingsIndexRoute: CompaniesCompanyIdSettingsIndexRoute,
-    CompaniesCompanyIdSettingsCompanyIndexRoute:
-      CompaniesCompanyIdSettingsCompanyIndexRoute,
-    CompaniesCompanyIdSettingsIntegrationsIndexRoute:
-      CompaniesCompanyIdSettingsIntegrationsIndexRoute,
-    CompaniesCompanyIdSettingsProvidersIndexRoute:
-      CompaniesCompanyIdSettingsProvidersIndexRoute,
-    CompaniesCompanyIdSettingsServicesIndexRoute:
-      CompaniesCompanyIdSettingsServicesIndexRoute,
-  }
-
-const CompaniesCompanyIdSettingsRouteRouteWithChildren =
-  CompaniesCompanyIdSettingsRouteRoute._addFileChildren(
-    CompaniesCompanyIdSettingsRouteRouteChildren,
-  )
 
 interface CompaniesCompanyIdRouteRouteChildren {
-  CompaniesCompanyIdSettingsRouteRoute: typeof CompaniesCompanyIdSettingsRouteRouteWithChildren
   CompaniesCompanyIdIndexRoute: typeof CompaniesCompanyIdIndexRoute
-  CompaniesCompanyIdCmsPagesPageIdRoute: typeof CompaniesCompanyIdCmsPagesPageIdRoute
-  CompaniesCompanyIdCmsPagesCreateRoute: typeof CompaniesCompanyIdCmsPagesCreateRoute
-  CompaniesCompanyIdPatientsPatientIdRoute: typeof CompaniesCompanyIdPatientsPatientIdRoute
-  CompaniesCompanyIdCmsPagesIndexRoute: typeof CompaniesCompanyIdCmsPagesIndexRoute
-  CompaniesCompanyIdContactsIndexRoute: typeof CompaniesCompanyIdContactsIndexRoute
-  CompaniesCompanyIdPatientsIndexRoute: typeof CompaniesCompanyIdPatientsIndexRoute
-  CompaniesCompanyIdTrackingIndexRoute: typeof CompaniesCompanyIdTrackingIndexRoute
-  CompaniesCompanyIdVisitorsIndexRoute: typeof CompaniesCompanyIdVisitorsIndexRoute
-  CompaniesCompanyIdContactsContactIdIndexRoute: typeof CompaniesCompanyIdContactsContactIdIndexRoute
-  CompaniesCompanyIdReportsAppointmentsIndexRoute: typeof CompaniesCompanyIdReportsAppointmentsIndexRoute
-  CompaniesCompanyIdReportsKpisIndexRoute: typeof CompaniesCompanyIdReportsKpisIndexRoute
-  CompaniesCompanyIdReportsMarketingIndexRoute: typeof CompaniesCompanyIdReportsMarketingIndexRoute
-  CompaniesCompanyIdReportsPatientsIndexRoute: typeof CompaniesCompanyIdReportsPatientsIndexRoute
-  CompaniesCompanyIdReportsPeopleIndexRoute: typeof CompaniesCompanyIdReportsPeopleIndexRoute
-  CompaniesCompanyIdReportsRoiIndexRoute: typeof CompaniesCompanyIdReportsRoiIndexRoute
-  CompaniesCompanyIdReportsKpisServicesServiceIdRoute: typeof CompaniesCompanyIdReportsKpisServicesServiceIdRoute
 }
 
 const CompaniesCompanyIdRouteRouteChildren: CompaniesCompanyIdRouteRouteChildren =
   {
-    CompaniesCompanyIdSettingsRouteRoute:
-      CompaniesCompanyIdSettingsRouteRouteWithChildren,
     CompaniesCompanyIdIndexRoute: CompaniesCompanyIdIndexRoute,
-    CompaniesCompanyIdCmsPagesPageIdRoute:
-      CompaniesCompanyIdCmsPagesPageIdRoute,
-    CompaniesCompanyIdCmsPagesCreateRoute:
-      CompaniesCompanyIdCmsPagesCreateRoute,
-    CompaniesCompanyIdPatientsPatientIdRoute:
-      CompaniesCompanyIdPatientsPatientIdRoute,
-    CompaniesCompanyIdCmsPagesIndexRoute: CompaniesCompanyIdCmsPagesIndexRoute,
-    CompaniesCompanyIdContactsIndexRoute: CompaniesCompanyIdContactsIndexRoute,
-    CompaniesCompanyIdPatientsIndexRoute: CompaniesCompanyIdPatientsIndexRoute,
-    CompaniesCompanyIdTrackingIndexRoute: CompaniesCompanyIdTrackingIndexRoute,
-    CompaniesCompanyIdVisitorsIndexRoute: CompaniesCompanyIdVisitorsIndexRoute,
-    CompaniesCompanyIdContactsContactIdIndexRoute:
-      CompaniesCompanyIdContactsContactIdIndexRoute,
-    CompaniesCompanyIdReportsAppointmentsIndexRoute:
-      CompaniesCompanyIdReportsAppointmentsIndexRoute,
-    CompaniesCompanyIdReportsKpisIndexRoute:
-      CompaniesCompanyIdReportsKpisIndexRoute,
-    CompaniesCompanyIdReportsMarketingIndexRoute:
-      CompaniesCompanyIdReportsMarketingIndexRoute,
-    CompaniesCompanyIdReportsPatientsIndexRoute:
-      CompaniesCompanyIdReportsPatientsIndexRoute,
-    CompaniesCompanyIdReportsPeopleIndexRoute:
-      CompaniesCompanyIdReportsPeopleIndexRoute,
-    CompaniesCompanyIdReportsRoiIndexRoute:
-      CompaniesCompanyIdReportsRoiIndexRoute,
-    CompaniesCompanyIdReportsKpisServicesServiceIdRoute:
-      CompaniesCompanyIdReportsKpisServicesServiceIdRoute,
   }
 
 const CompaniesCompanyIdRouteRouteWithChildren =
@@ -794,31 +142,11 @@ const CompaniesCompanyIdRouteRouteWithChildren =
     CompaniesCompanyIdRouteRouteChildren,
   )
 
-interface CompaniesRouteChildren {
-  CompaniesCompanyIdRouteRoute: typeof CompaniesCompanyIdRouteRouteWithChildren
-  CompaniesIndexRoute: typeof CompaniesIndexRoute
-}
-
-const CompaniesRouteChildren: CompaniesRouteChildren = {
-  CompaniesCompanyIdRouteRoute: CompaniesCompanyIdRouteRouteWithChildren,
-  CompaniesIndexRoute: CompaniesIndexRoute,
-}
-
-const CompaniesRouteWithChildren = CompaniesRoute._addFileChildren(
-  CompaniesRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CompaniesRoute: CompaniesRouteWithChildren,
-  ApiCreateContactRoute: ApiCreateContactRoute,
-  ApiValidateHchUuidRoute: ApiValidateHchUuidRoute,
-  HealthcarePracticeMetricsCalculatorIdRoute:
-    HealthcarePracticeMetricsCalculatorIdRoute,
+  CompaniesCompanyIdRouteRoute: CompaniesCompanyIdRouteRouteWithChildren,
   UsersSignInRoute: UsersSignInRoute,
-  ApiLocationIDEventRoute: ApiLocationIDEventRoute,
-  ApiLocationIDPersonEventRoute: ApiLocationIDPersonEventRoute,
-  ApiWebhooksGhlCompanyIdRoute: ApiWebhooksGhlCompanyIdRoute,
+  CompaniesIndexRoute: CompaniesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

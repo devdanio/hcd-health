@@ -1,23 +1,13 @@
-import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from '@clerk/tanstack-react-start'
+import { ClerkProvider } from '@clerk/tanstack-react-start'
 import {
   HeadContent,
   Outlet,
   Scripts,
   createRootRouteWithContext,
 } from '@tanstack/react-router'
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
-import { TanStackDevtools } from '@tanstack/react-devtools'
-
-import Header from '../components/Header'
 
 import { QueryClientProvider } from '@tanstack/react-query'
-import { createContext, useContext, useEffect, useMemo } from 'react'
+import { createContext, useContext, useMemo } from 'react'
 
 import { createCollections, type Collections } from '@/collections'
 import { queryClient } from '@/lib/queryClient'

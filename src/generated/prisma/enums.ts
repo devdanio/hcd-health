@@ -9,39 +9,20 @@
 * 🟢 You can import this file directly.
 */
 
-export const EhrType = {
-  UNIFIED_PRACTICE: 'UNIFIED_PRACTICE',
-  JASMINE: 'JASMINE',
-  CHIROTOUCH: 'CHIROTOUCH'
+export const IdentifierType = {
+  EMAIL: 'EMAIL',
+  PHONE: 'PHONE',
+  USER_ID: 'USER_ID',
+  ANONYMOUS_ID: 'ANONYMOUS_ID'
 } as const
 
-export type EhrType = (typeof EhrType)[keyof typeof EhrType]
+export type IdentifierType = (typeof IdentifierType)[keyof typeof IdentifierType]
 
 
-export const DataSource = {
-  TRACKING: 'TRACKING',
-  POSTHOG: 'POSTHOG',
-  GHL: 'GHL',
-  CHIROTOUCH: 'CHIROTOUCH',
-  SHOPIFY: 'SHOPIFY',
-  UNIFIED_PRACTICE: 'UNIFIED_PRACTICE',
-  JASMINE: 'JASMINE'
+export const SourceTable = {
+  PAGES: 'PAGES',
+  TRACKS: 'TRACKS',
+  CALLS: 'CALLS'
 } as const
 
-export type DataSource = (typeof DataSource)[keyof typeof DataSource]
-
-
-export const EventType = {
-  PAGE_VIEW: 'PAGE_VIEW',
-  CONTACT_CREATED: 'CONTACT_CREATED',
-  FORM_SUBMITTED: 'FORM_SUBMITTED',
-  CALL_RECEIVED: 'CALL_RECEIVED',
-  CHAT: 'CHAT',
-  FB_FORM_SUBMISSION: 'FB_FORM_SUBMISSION',
-  SCHEDULED_CALL: 'SCHEDULED_CALL',
-  BACKFILL: 'BACKFILL',
-  IDENTIFY: 'IDENTIFY',
-  UNKNOWN: 'UNKNOWN'
-} as const
-
-export type EventType = (typeof EventType)[keyof typeof EventType]
+export type SourceTable = (typeof SourceTable)[keyof typeof SourceTable]

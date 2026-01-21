@@ -7,266 +7,101 @@ datasource db {
   provider = "postgresql"
 }
 
-model city_lat_lng {
-  city      String
-  state     String
-  latitude  Float
-  longitude Float
-
-  @@unique([city, state])
-}
-
-model lead_calculator {
-  id                String   @id @default(cuid())
-  name              String
-  email             String
-  revenue           Float
-  patients          Int
-  new_patients      Int
-  avg_visits        Float
-  marketing_costs   Float
-  direct_care_costs Float
-  overhead_costs    Float
-  created_at        DateTime @default(now())
-  updated_at        DateTime @updatedAt
-}
-
-// Companies - Multi-tenant root
-model company {
-  id            String   @id @default(cuid())
-  name          String
-  domain        String
-  company_brief String?
-  ehr           EhrType?
-  address       String?
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  people       person[]
-  services     service[]
-  providers    provider[]
-  appointments appointment[]
-  cms_pages    cms_page[]
-  events       event[]
-}
-
-enum EhrType {
-  UNIFIED_PRACTICE
-  JASMINE
-  CHIROTOUCH
-}
-
-// The name, gender, DOB etc can be set by any "profile", but the source of truth will be the EHR, CRM, then contact form in that order.
-model person {
-  id         String   @id @default(cuid())
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  company_id String
-  company    company @relation(fields: [company_id], references: [id], onDelete: Cascade)
-
-  email         String?
-  phone         String?
-  full_name     String?
-  first_name    String?
-  last_name     String?
-
-  purchases    purchase[]
-  appointments appointment[]
-  events       event[]
-  profiles     profile[]
-
-  @@index([company_id, email])
-  @@index([company_id, phone])
-  @@index([company_id])
-}
-
-model profile {
-  id          String     @id @default(cuid())
-  person_id   String
-  source      DataSource
-  external_id String
-
-  // Raw source data (do NOT over-normalize)
-  first_name String?
-  last_name  String?
-    full_name     String?
+model Call {
+  id         String   @id
   email      String?
   phone      String?
-  gender        String?
-  date_of_birth DateTime?
+  user_id    String?
+  timestamp  DateTime @default(now())
+  duration   Int?
+  status     String?
+  properties Json?
 
-  address1 String?
-  address2 String?
-  zip      String?
-  city     String?
-  state    String?
-  country  String?
-
-  raw        Json? // full payload snapshot
-  external_created_at DateTime?
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  person person @relation(fields: [person_id], references: [id])
-
-  @@unique([source, external_id])
+  @@index([email])
+  @@index([phone])
+  @@index([user_id])
 }
 
-enum DataSource {
-  TRACKING
-  POSTHOG
-  GHL
-  CHIROTOUCH
-  SHOPIFY
-  UNIFIED_PRACTICE
-  JASMINE
+model CanonicalUser {
+  id            String         @id
+  created_at    DateTime       @default(now())
+  updated_at    DateTime
+  emails        String[]
+  phones        String[]
+  user_ids      String[]
+  anonymous_ids String[]
+  first_name    String?
+  last_name     String?
+  Identifier    Identifier[]
+  UnifiedEvent  UnifiedEvent[]
 }
 
-model event {
-  id           String     @id @default(cuid())
-  person_id    String?
+model Identifier {
+  id                String         @id
+  type              IdentifierType
+  value             String
+  canonical_user_id String
+  created_at        DateTime       @default(now())
+  CanonicalUser     CanonicalUser  @relation(fields: [canonical_user_id], references: [id])
+
+  @@unique([type, value])
+  @@index([canonical_user_id])
+  @@index([type, value])
+}
+
+model Page {
+  id           String   @id
   anonymous_id String?
-  session_id   String?
-  company_id   String
-  company      company    @relation(fields: [company_id], references: [id])
-  source       DataSource
-  type         EventType
-  timestamp    DateTime
-  metadata     Json
+  user_id      String?
+  timestamp    DateTime @default(now())
+  url          String?
+  title        String?
+  properties   Json?
 
-  person person? @relation(fields: [person_id], references: [id])
-
-  @@index([person_id, timestamp])
-  @@index([company_id])
+  @@index([anonymous_id])
+  @@index([user_id])
 }
 
-enum EventType {
-  PAGE_VIEW
-  CONTACT_CREATED
-  FORM_SUBMITTED
-  CALL_RECEIVED
-  CHAT
-  FB_FORM_SUBMISSION
-  SCHEDULED_CALL
-  BACKFILL
-  IDENTIFY
-  // Used for data imports where we have attribution data but no events
-  UNKNOWN
+model Track {
+  id           String   @id
+  anonymous_id String?
+  email        String?
+  user_id      String?
+  timestamp    DateTime @default(now())
+  event        String?
+  properties   Json?
+
+  @@index([anonymous_id])
+  @@index([email])
+  @@index([user_id])
 }
 
-// Services
-model service {
-  id         String  @id @default(cuid())
-  company_id String
-  company    company @relation(fields: [company_id], references: [id], onDelete: Cascade)
-  name       String
+model UnifiedEvent {
+  id                String        @id
+  canonical_user_id String
+  source_table      SourceTable
+  source_id         String
+  event_type        String?
+  timestamp         DateTime
+  properties        Json?
+  created_at        DateTime      @default(now())
+  CanonicalUser     CanonicalUser @relation(fields: [canonical_user_id], references: [id])
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  providers    provider[]
-  appointments appointment[]
-
-  @@index([company_id])
+  @@unique([source_table, source_id])
+  @@index([canonical_user_id])
+  @@index([source_table, source_id])
+  @@index([timestamp])
 }
 
-model purchase {
-  id              String     @id @default(cuid())
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  person_id       String
-  source          DataSource
-  external_id     String
-  amount_in_cents Decimal
-  currency        String
-  purchased_at    DateTime
-  metadata        Json
-
-  person person @relation(fields: [person_id], references: [id])
-
-  @@unique([source, external_id])
+enum IdentifierType {
+  EMAIL
+  PHONE
+  USER_ID
+  ANONYMOUS_ID
 }
 
-// Providers
-model provider {
-  id         String  @id @default(cuid())
-  company_id String
-  company    company @relation(fields: [company_id], references: [id], onDelete: Cascade)
-  name       String
-  service_id String
-  service    service @relation(fields: [service_id], references: [id])
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  appointments appointment[]
-
-  @@index([company_id])
-  @@index([service_id])
-}
-
-// Appointments
-model appointment {
-  id String @id @default(cuid())
-
-  company_id String
-  company    company @relation(fields: [company_id], references: [id], onDelete: Cascade)
-
-  person_id String
-  person    person @relation(fields: [person_id], references: [id], onDelete: Cascade)
-
-  date_of_service DateTime
-  service         String?
-  service_id      String?
-  service_rel     service?  @relation(fields: [service_id], references: [id])
-  provider_id     String?
-  provider        provider? @relation(fields: [provider_id], references: [id])
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  procedures appointment_procedure[]
-}
-
-// Appointment Procedures - Revenue tracking
-model appointment_procedure {
-  id             String      @id @default(cuid())
-  appointment_id String
-  appointment    appointment @relation(fields: [appointment_id], references: [id], onDelete: Cascade)
-  procedure_code String
-  charge_amount  Float
-
-  // High level grouping of insurance
-  case_type  String?
-  // Specific insurance pan that is paying
-  payer_name String?
-
-  charge_date DateTime?
-
-  created_at DateTime @default(now())
-
-  @@index([appointment_id])
-  @@index([appointment_id, procedure_code])
-}
-
-// CMS Pages
-model cms_page {
-  id         String  @id @default(cuid())
-  company_id String
-  company    company @relation(fields: [company_id], references: [id], onDelete: Cascade)
-
-  h1               String
-  page_title       String
-  page_description String
-  json_schema      Json?
-  slug             String
-  markdown_content String @db.Text
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  @@unique([company_id, slug])
-  @@index([company_id])
+enum SourceTable {
+  PAGES
+  TRACKS
+  CALLS
 }

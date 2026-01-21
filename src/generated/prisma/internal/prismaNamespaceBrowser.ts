@@ -51,18 +51,12 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  city_lat_lng: 'city_lat_lng',
-  lead_calculator: 'lead_calculator',
-  company: 'company',
-  person: 'person',
-  profile: 'profile',
-  event: 'event',
-  service: 'service',
-  purchase: 'purchase',
-  provider: 'provider',
-  appointment: 'appointment',
-  appointment_procedure: 'appointment_procedure',
-  cms_page: 'cms_page'
+  Call: 'Call',
+  CanonicalUser: 'CanonicalUser',
+  Identifier: 'Identifier',
+  Page: 'Page',
+  Track: 'Track',
+  UnifiedEvent: 'UnifiedEvent'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -81,187 +75,84 @@ export const TransactionIsolationLevel = {
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const City_lat_lngScalarFieldEnum = {
-  city: 'city',
-  state: 'state',
-  latitude: 'latitude',
-  longitude: 'longitude'
-} as const
-
-export type City_lat_lngScalarFieldEnum = (typeof City_lat_lngScalarFieldEnum)[keyof typeof City_lat_lngScalarFieldEnum]
-
-
-export const Lead_calculatorScalarFieldEnum = {
+export const CallScalarFieldEnum = {
   id: 'id',
-  name: 'name',
   email: 'email',
-  revenue: 'revenue',
-  patients: 'patients',
-  new_patients: 'new_patients',
-  avg_visits: 'avg_visits',
-  marketing_costs: 'marketing_costs',
-  direct_care_costs: 'direct_care_costs',
-  overhead_costs: 'overhead_costs',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
+  phone: 'phone',
+  user_id: 'user_id',
+  timestamp: 'timestamp',
+  duration: 'duration',
+  status: 'status',
+  properties: 'properties'
 } as const
 
-export type Lead_calculatorScalarFieldEnum = (typeof Lead_calculatorScalarFieldEnum)[keyof typeof Lead_calculatorScalarFieldEnum]
+export type CallScalarFieldEnum = (typeof CallScalarFieldEnum)[keyof typeof CallScalarFieldEnum]
 
 
-export const CompanyScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  domain: 'domain',
-  company_brief: 'company_brief',
-  ehr: 'ehr',
-  address: 'address',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-} as const
-
-export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeof CompanyScalarFieldEnum]
-
-
-export const PersonScalarFieldEnum = {
+export const CanonicalUserScalarFieldEnum = {
   id: 'id',
   created_at: 'created_at',
   updated_at: 'updated_at',
-  company_id: 'company_id',
-  email: 'email',
-  phone: 'phone',
-  full_name: 'full_name',
+  emails: 'emails',
+  phones: 'phones',
+  user_ids: 'user_ids',
+  anonymous_ids: 'anonymous_ids',
   first_name: 'first_name',
   last_name: 'last_name'
 } as const
 
-export type PersonScalarFieldEnum = (typeof PersonScalarFieldEnum)[keyof typeof PersonScalarFieldEnum]
+export type CanonicalUserScalarFieldEnum = (typeof CanonicalUserScalarFieldEnum)[keyof typeof CanonicalUserScalarFieldEnum]
 
 
-export const ProfileScalarFieldEnum = {
+export const IdentifierScalarFieldEnum = {
   id: 'id',
-  person_id: 'person_id',
-  source: 'source',
-  external_id: 'external_id',
-  first_name: 'first_name',
-  last_name: 'last_name',
-  full_name: 'full_name',
-  email: 'email',
-  phone: 'phone',
-  gender: 'gender',
-  date_of_birth: 'date_of_birth',
-  address1: 'address1',
-  address2: 'address2',
-  zip: 'zip',
-  city: 'city',
-  state: 'state',
-  country: 'country',
-  raw: 'raw',
-  external_created_at: 'external_created_at',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-} as const
-
-export type ProfileScalarFieldEnum = (typeof ProfileScalarFieldEnum)[keyof typeof ProfileScalarFieldEnum]
-
-
-export const EventScalarFieldEnum = {
-  id: 'id',
-  person_id: 'person_id',
-  anonymous_id: 'anonymous_id',
-  session_id: 'session_id',
-  company_id: 'company_id',
-  source: 'source',
   type: 'type',
-  timestamp: 'timestamp',
-  metadata: 'metadata'
-} as const
-
-export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof EventScalarFieldEnum]
-
-
-export const ServiceScalarFieldEnum = {
-  id: 'id',
-  company_id: 'company_id',
-  name: 'name',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-} as const
-
-export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
-
-
-export const PurchaseScalarFieldEnum = {
-  id: 'id',
-  created_at: 'created_at',
-  updated_at: 'updated_at',
-  person_id: 'person_id',
-  source: 'source',
-  external_id: 'external_id',
-  amount_in_cents: 'amount_in_cents',
-  currency: 'currency',
-  purchased_at: 'purchased_at',
-  metadata: 'metadata'
-} as const
-
-export type PurchaseScalarFieldEnum = (typeof PurchaseScalarFieldEnum)[keyof typeof PurchaseScalarFieldEnum]
-
-
-export const ProviderScalarFieldEnum = {
-  id: 'id',
-  company_id: 'company_id',
-  name: 'name',
-  service_id: 'service_id',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-} as const
-
-export type ProviderScalarFieldEnum = (typeof ProviderScalarFieldEnum)[keyof typeof ProviderScalarFieldEnum]
-
-
-export const AppointmentScalarFieldEnum = {
-  id: 'id',
-  company_id: 'company_id',
-  person_id: 'person_id',
-  date_of_service: 'date_of_service',
-  service: 'service',
-  service_id: 'service_id',
-  provider_id: 'provider_id',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-} as const
-
-export type AppointmentScalarFieldEnum = (typeof AppointmentScalarFieldEnum)[keyof typeof AppointmentScalarFieldEnum]
-
-
-export const Appointment_procedureScalarFieldEnum = {
-  id: 'id',
-  appointment_id: 'appointment_id',
-  procedure_code: 'procedure_code',
-  charge_amount: 'charge_amount',
-  case_type: 'case_type',
-  payer_name: 'payer_name',
-  charge_date: 'charge_date',
+  value: 'value',
+  canonical_user_id: 'canonical_user_id',
   created_at: 'created_at'
 } as const
 
-export type Appointment_procedureScalarFieldEnum = (typeof Appointment_procedureScalarFieldEnum)[keyof typeof Appointment_procedureScalarFieldEnum]
+export type IdentifierScalarFieldEnum = (typeof IdentifierScalarFieldEnum)[keyof typeof IdentifierScalarFieldEnum]
 
 
-export const Cms_pageScalarFieldEnum = {
+export const PageScalarFieldEnum = {
   id: 'id',
-  company_id: 'company_id',
-  h1: 'h1',
-  page_title: 'page_title',
-  page_description: 'page_description',
-  json_schema: 'json_schema',
-  slug: 'slug',
-  markdown_content: 'markdown_content',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
+  anonymous_id: 'anonymous_id',
+  user_id: 'user_id',
+  timestamp: 'timestamp',
+  url: 'url',
+  title: 'title',
+  properties: 'properties'
 } as const
 
-export type Cms_pageScalarFieldEnum = (typeof Cms_pageScalarFieldEnum)[keyof typeof Cms_pageScalarFieldEnum]
+export type PageScalarFieldEnum = (typeof PageScalarFieldEnum)[keyof typeof PageScalarFieldEnum]
+
+
+export const TrackScalarFieldEnum = {
+  id: 'id',
+  anonymous_id: 'anonymous_id',
+  email: 'email',
+  user_id: 'user_id',
+  timestamp: 'timestamp',
+  event: 'event',
+  properties: 'properties'
+} as const
+
+export type TrackScalarFieldEnum = (typeof TrackScalarFieldEnum)[keyof typeof TrackScalarFieldEnum]
+
+
+export const UnifiedEventScalarFieldEnum = {
+  id: 'id',
+  canonical_user_id: 'canonical_user_id',
+  source_table: 'source_table',
+  source_id: 'source_id',
+  event_type: 'event_type',
+  timestamp: 'timestamp',
+  properties: 'properties',
+  created_at: 'created_at'
+} as const
+
+export type UnifiedEventScalarFieldEnum = (typeof UnifiedEventScalarFieldEnum)[keyof typeof UnifiedEventScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -280,27 +171,12 @@ export const NullableJsonNullValueInput = {
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
-export const JsonNullValueInput = {
-  JsonNull: 'JsonNull'
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
-
-
 export const QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
-
-
-export const NullsOrder = {
-  first: 'first',
-  last: 'last'
-} as const
-
-export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
 export const JsonNullValueFilter = {
@@ -310,4 +186,12 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
