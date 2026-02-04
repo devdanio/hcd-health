@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.0.1",
   "engineVersion": "f09f2815f091dbba658cdcd2264306d88bb5bda6",
   "activeProvider": "postgresql",
-  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel company {\n  id         String   @id @default(cuid())\n  name       String\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n}\n\nmodel call {\n  id         String   @id\n  email      String?\n  phone      String?\n  user_id    String?\n  timestamp  DateTime @default(now())\n  duration   Int?\n  status     String?\n  properties Json?\n\n  @@index([email])\n  @@index([phone])\n  @@index([user_id])\n}\n\nmodel canonical_user {\n  id             String          @id\n  created_at     DateTime        @default(now())\n  updated_at     DateTime\n  emails         String[]\n  phones         String[]\n  user_ids       String[]\n  anonymous_ids  String[]\n  first_name     String?\n  last_name      String?\n  identifiers    identifier[]\n  unified_events unified_event[]\n}\n\nmodel identifier {\n  id                String          @id\n  type              identifier_type\n  value             String\n  canonical_user_id String\n  created_at        DateTime        @default(now())\n  canonical_user    canonical_user  @relation(fields: [canonical_user_id], references: [id])\n\n  @@unique([type, value])\n  @@index([canonical_user_id])\n  @@index([type, value])\n}\n\nmodel page {\n  id           String   @id\n  anonymous_id String?\n  user_id      String?\n  timestamp    DateTime @default(now())\n  url          String?\n  title        String?\n  properties   Json?\n\n  @@index([anonymous_id])\n  @@index([user_id])\n}\n\nmodel track {\n  id           String   @id\n  anonymous_id String?\n  email        String?\n  user_id      String?\n  timestamp    DateTime @default(now())\n  event        String?\n  properties   Json?\n\n  @@index([anonymous_id])\n  @@index([email])\n  @@index([user_id])\n}\n\nmodel unified_event {\n  id                String         @id\n  canonical_user_id String\n  source_table      source_table\n  source_id         String\n  event_type        String?\n  timestamp         DateTime\n  properties        Json?\n  created_at        DateTime       @default(now())\n  canonical_user    canonical_user @relation(fields: [canonical_user_id], references: [id])\n\n  @@unique([source_table, source_id])\n  @@index([canonical_user_id])\n  @@index([source_table, source_id])\n  @@index([timestamp])\n}\n\nenum identifier_type {\n  EMAIL\n  PHONE\n  USER_ID\n  ANONYMOUS_ID\n}\n\nenum source_table {\n  PAGES\n  TRACKS\n  CALLS\n}\n",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -28,7 +28,7 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"company\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"call\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"duration\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"properties\",\"kind\":\"scalar\",\"type\":\"Json\"}],\"dbName\":null},\"canonical_user\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"emails\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phones\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_ids\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"anonymous_ids\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"first_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"last_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"identifiers\",\"kind\":\"object\",\"type\":\"identifier\",\"relationName\":\"canonical_userToidentifier\"},{\"name\":\"unified_events\",\"kind\":\"object\",\"type\":\"unified_event\",\"relationName\":\"canonical_userTounified_event\"}],\"dbName\":null},\"identifier\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"identifier_type\"},{\"name\":\"value\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"canonical_user_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"canonical_user\",\"kind\":\"object\",\"type\":\"canonical_user\",\"relationName\":\"canonical_userToidentifier\"}],\"dbName\":null},\"page\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"anonymous_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"url\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"properties\",\"kind\":\"scalar\",\"type\":\"Json\"}],\"dbName\":null},\"track\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"anonymous_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"event\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"properties\",\"kind\":\"scalar\",\"type\":\"Json\"}],\"dbName\":null},\"unified_event\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"canonical_user_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"source_table\",\"kind\":\"enum\",\"type\":\"source_table\"},{\"name\":\"source_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"event_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"properties\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"canonical_user\",\"kind\":\"object\",\"type\":\"canonical_user\",\"relationName\":\"canonical_userTounified_event\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{},\"enums\":{},\"types\":{}}")
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
   const { Buffer } = await import('node:buffer')
@@ -58,8 +58,8 @@ export interface PrismaClientConstructor {
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more Companies
-   * const companies = await prisma.company.findMany()
+   * // Fetch zero or more Users
+   * const users = await prisma.user.findMany()
    * ```
    * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
@@ -80,8 +80,8 @@ export interface PrismaClientConstructor {
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Companies
- * const companies = await prisma.company.findMany()
+ * // Fetch zero or more Users
+ * const users = await prisma.user.findMany()
  * ```
  * 
  * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
@@ -174,75 +174,7 @@ export interface PrismaClient<
     extArgs: ExtArgs
   }>>
 
-      /**
-   * `prisma.company`: Exposes CRUD operations for the **company** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Companies
-    * const companies = await prisma.company.findMany()
-    * ```
-    */
-  get company(): Prisma.companyDelegate<ExtArgs, { omit: OmitOpts }>;
-
-  /**
-   * `prisma.call`: Exposes CRUD operations for the **call** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Calls
-    * const calls = await prisma.call.findMany()
-    * ```
-    */
-  get call(): Prisma.callDelegate<ExtArgs, { omit: OmitOpts }>;
-
-  /**
-   * `prisma.canonical_user`: Exposes CRUD operations for the **canonical_user** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Canonical_users
-    * const canonical_users = await prisma.canonical_user.findMany()
-    * ```
-    */
-  get canonical_user(): Prisma.canonical_userDelegate<ExtArgs, { omit: OmitOpts }>;
-
-  /**
-   * `prisma.identifier`: Exposes CRUD operations for the **identifier** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Identifiers
-    * const identifiers = await prisma.identifier.findMany()
-    * ```
-    */
-  get identifier(): Prisma.identifierDelegate<ExtArgs, { omit: OmitOpts }>;
-
-  /**
-   * `prisma.page`: Exposes CRUD operations for the **page** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Pages
-    * const pages = await prisma.page.findMany()
-    * ```
-    */
-  get page(): Prisma.pageDelegate<ExtArgs, { omit: OmitOpts }>;
-
-  /**
-   * `prisma.track`: Exposes CRUD operations for the **track** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Tracks
-    * const tracks = await prisma.track.findMany()
-    * ```
-    */
-  get track(): Prisma.trackDelegate<ExtArgs, { omit: OmitOpts }>;
-
-  /**
-   * `prisma.unified_event`: Exposes CRUD operations for the **unified_event** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Unified_events
-    * const unified_events = await prisma.unified_event.findMany()
-    * ```
-    */
-  get unified_event(): Prisma.unified_eventDelegate<ExtArgs, { omit: OmitOpts }>;
+    
 }
 
 export function getPrismaClientClass(): PrismaClientConstructor {

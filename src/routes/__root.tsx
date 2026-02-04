@@ -9,23 +9,11 @@ import {
 import { QueryClientProvider } from '@tanstack/react-query'
 import { createContext, useContext, useMemo } from 'react'
 
-import { createCollections, type Collections } from '@/collections'
 import { queryClient } from '@/lib/queryClient'
 
 import appCss from '../styles.css?url'
 import { auth } from '@clerk/tanstack-react-start/server'
 import { createServerFn } from '@tanstack/react-start'
-
-// Collections Context
-const CollectionsContext = createContext<Collections | null>(null)
-
-export const useCollections = () => {
-  const collections = useContext(CollectionsContext)
-  if (!collections) {
-    throw new Error('useCollections must be used within CollectionsProvider')
-  }
-  return collections
-}
 
 const fetchClerkAuth = createServerFn({ method: 'GET' }).handler(async () => {
   const { userId } = await auth()
@@ -116,10 +104,6 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-  // Create collections once
-
-  const collections = useMemo(() => createCollections(queryClient), [])
-
   return (
     <html lang="en" className="light">
       <head>
@@ -127,9 +111,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body className="bg-background text-foreground">
         <QueryClientProvider client={queryClient}>
-          <CollectionsContext.Provider value={collections}>
-            {children}
-          </CollectionsContext.Provider>
+          {children}
         </QueryClientProvider>
         <Scripts />
         <script

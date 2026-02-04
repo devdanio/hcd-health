@@ -8,11 +8,4 @@
  *
  * 🟢 You can import this file directly.
  */
-export type * from './models/company.ts'
-export type * from './models/call.ts'
-export type * from './models/canonical_user.ts'
-export type * from './models/identifier.ts'
-export type * from './models/page.ts'
-export type * from './models/track.ts'
-export type * from './models/unified_event.ts'
 export type * from './commonInputTypes.ts'

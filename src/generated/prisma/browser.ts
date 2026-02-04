@@ -17,38 +17,4 @@ import * as Prisma from './internal/prismaNamespaceBrowser.ts'
 export { Prisma }
 export * as $Enums from './enums.ts'
 export * from './enums.ts';
-/**
- * Model company
- * 
- */
-export type company = Prisma.companyModel
-/**
- * Model call
- * 
- */
-export type call = Prisma.callModel
-/**
- * Model canonical_user
- * 
- */
-export type canonical_user = Prisma.canonical_userModel
-/**
- * Model identifier
- * 
- */
-export type identifier = Prisma.identifierModel
-/**
- * Model page
- * 
- */
-export type page = Prisma.pageModel
-/**
- * Model track
- * 
- */
-export type track = Prisma.trackModel
-/**
- * Model unified_event
- * 
- */
-export type unified_event = Prisma.unified_eventModel
+
