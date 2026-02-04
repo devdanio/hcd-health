@@ -17,4 +17,53 @@ import * as Prisma from './internal/prismaNamespaceBrowser.ts'
 export { Prisma }
 export * as $Enums from './enums.ts'
 export * from './enums.ts';
-
+/**
+ * Model organizations
+ * 
+ */
+export type organizations = Prisma.organizationsModel
+/**
+ * Model locations
+ * 
+ */
+export type locations = Prisma.locationsModel
+/**
+ * Model users
+ * 
+ */
+export type users = Prisma.usersModel
+/**
+ * Model organization_api_keys
+ * 
+ */
+export type organization_api_keys = Prisma.organization_api_keysModel
+/**
+ * Model leads
+ * 
+ */
+export type leads = Prisma.leadsModel
+/**
+ * Model lead_events
+ * 
+ */
+export type lead_events = Prisma.lead_eventsModel
+/**
+ * Model patient_values
+ * 
+ */
+export type patient_values = Prisma.patient_valuesModel
+/**
+ * Model campaigns
+ * 
+ */
+export type campaigns = Prisma.campaignsModel
+/**
+ * Model campaign_settings
+ * 
+ */
+export type campaign_settings = Prisma.campaign_settingsModel
+/**
+ * Model ad_spend_daily
+ * 
+ */
+export type ad_spend_daily = Prisma.ad_spend_dailyModel

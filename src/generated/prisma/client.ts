@@ -29,8 +29,8 @@ export * from "./enums.ts"
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Users
- * const users = await prisma.user.findMany()
+ * // Fetch zero or more Organizations
+ * const organizations = await prisma.organizations.findMany()
  * ```
  * 
  * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
@@ -39,4 +39,53 @@ export const PrismaClient = $Class.getPrismaClientClass()
 export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts extends Prisma.PrismaClientOptions["omit"] = Prisma.PrismaClientOptions["omit"], ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = $Class.PrismaClient<LogOpts, OmitOpts, ExtArgs>
 export { Prisma }
 
-
+/**
+ * Model organizations
+ * 
+ */
+export type organizations = Prisma.organizationsModel
+/**
+ * Model locations
+ * 
+ */
+export type locations = Prisma.locationsModel
+/**
+ * Model users
+ * 
+ */
+export type users = Prisma.usersModel
+/**
+ * Model organization_api_keys
+ * 
+ */
+export type organization_api_keys = Prisma.organization_api_keysModel
+/**
+ * Model leads
+ * 
+ */
+export type leads = Prisma.leadsModel
+/**
+ * Model lead_events
+ * 
+ */
+export type lead_events = Prisma.lead_eventsModel
+/**
+ * Model patient_values
+ * 
+ */
+export type patient_values = Prisma.patient_valuesModel
+/**
+ * Model campaigns
+ * 
+ */
+export type campaigns = Prisma.campaignsModel
+/**
+ * Model campaign_settings
+ * 
+ */
+export type campaign_settings = Prisma.campaign_settingsModel
+/**
+ * Model ad_spend_daily
+ * 
+ */
+export type ad_spend_daily = Prisma.ad_spend_dailyModel

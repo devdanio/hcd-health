@@ -7,3 +7,260 @@ datasource db {
   provider = "postgresql"
 }
 
+enum lead_status {
+  new
+  patient
+  not_patient
+}
+
+enum lead_event_type {
+  form
+  chat
+  booking
+  call
+  import
+}
+
+enum revenue_model {
+  ltv
+  projection
+}
+
+enum campaign_status {
+  unknown
+  enabled
+  paused
+  removed
+}
+
+enum campaign_category {
+  branded
+  non_branded
+  other
+}
+
+model organizations {
+  id   String @id @default(cuid())
+  name String
+
+  qualified_call_duration_threshold_sec Int @default(60)
+  default_revenue_model                 revenue_model @default(ltv)
+
+  google_ads_customer_id String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  locations             locations[]
+  users                 users[]
+  organization_api_keys organization_api_keys[]
+  leads                 leads[]
+  lead_events           lead_events[]
+  patient_values        patient_values[]
+  campaigns             campaigns[]
+  campaign_settings     campaign_settings[]
+  ad_spend_daily        ad_spend_daily[]
+}
+
+model locations {
+  id              String @id @default(cuid())
+  organization_id String
+  organization    organizations @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+
+  name String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  campaign_settings campaign_settings[]
+
+  @@index([organization_id])
+  @@unique([organization_id, name])
+}
+
+model users {
+  id              String @id
+  organization_id String
+  organization    organizations @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+
+  email String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([organization_id])
+}
+
+model organization_api_keys {
+  id              String @id @default(cuid())
+  organization_id String
+  organization    organizations @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+
+  key_prefix String
+  key_hash   String @unique
+  label      String?
+
+  last_used_at DateTime?
+  revoked_at   DateTime?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([organization_id])
+  @@index([revoked_at])
+}
+
+model leads {
+  id              String @id @default(cuid())
+  organization_id String
+  organization    organizations @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+
+  phone String
+  name  String?
+
+  status    lead_status @default(new)
+  qualified Boolean     @default(false)
+
+  first_event_at DateTime
+  last_event_at  DateTime
+
+  // first-event attribution snapshot
+  platform     String?
+  campaign_id  String?
+  gclid        String?
+  utm_source   String?
+  utm_medium   String?
+  utm_campaign String?
+  utm_content  String?
+  utm_term     String?
+  referrer     String?
+  landing_page String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  lead_events    lead_events[]
+  patient_values patient_values?
+
+  @@unique([organization_id, phone])
+  @@index([organization_id, last_event_at])
+  @@index([organization_id, first_event_at])
+  @@index([organization_id, status])
+}
+
+model lead_events {
+  id              String @id @default(cuid())
+  organization_id String
+  organization    organizations @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+
+  lead_id String?
+  lead    leads? @relation(fields: [lead_id], references: [id], onDelete: SetNull)
+
+  event_type lead_event_type
+  occurred_at DateTime
+  phone       String
+  name        String?
+
+  platform     String?
+  campaign_id  String?
+  gclid        String?
+  utm_source   String?
+  utm_medium   String?
+  utm_campaign String?
+  utm_content  String?
+  utm_term     String?
+  referrer     String?
+  landing_page String?
+
+  duration_sec Int?
+  qualified    Boolean @default(false)
+
+  raw_payload Json
+
+  created_at DateTime @default(now())
+
+  @@index([organization_id, occurred_at])
+  @@index([lead_id, occurred_at])
+  @@index([organization_id, event_type])
+}
+
+model patient_values {
+  id              String @id @default(cuid())
+  organization_id String
+  organization    organizations @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+
+  lead_id String @unique
+  lead    leads  @relation(fields: [lead_id], references: [id], onDelete: Cascade)
+
+  model revenue_model @default(ltv)
+
+  ltv_cents               Int?
+  cash_collected_to_date_cents Int?
+
+  account_balance_cents         Int?
+  expected_collection_rate_bps  Int?
+  projected_cash_cents          Int?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([organization_id])
+}
+
+model campaigns {
+  id              String @id @default(cuid())
+  organization_id String
+  organization    organizations @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+
+  campaign_id   String
+  campaign_name String?
+  status        campaign_status @default(unknown)
+  last_synced_at DateTime?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@unique([organization_id, campaign_id])
+  @@index([organization_id])
+}
+
+model campaign_settings {
+  id              String @id @default(cuid())
+  organization_id String
+  organization    organizations @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+
+  campaign_id String
+
+  location_id String?
+  location    locations? @relation(fields: [location_id], references: [id], onDelete: SetNull)
+
+  include_in_reporting Boolean @default(true)
+  campaign_category    campaign_category?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@unique([organization_id, campaign_id])
+  @@index([organization_id])
+  @@index([location_id])
+}
+
+model ad_spend_daily {
+  id              String @id @default(cuid())
+  organization_id String
+  organization    organizations @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+
+  date        DateTime @db.Date
+  campaign_id String
+  campaign_name String?
+
+  cost_cents     Int
+  currency_code  String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@unique([organization_id, campaign_id, date])
+  @@index([organization_id, date])
+  @@index([organization_id, campaign_id])
+}

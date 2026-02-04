@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.0.1",
   "engineVersion": "f09f2815f091dbba658cdcd2264306d88bb5bda6",
   "activeProvider": "postgresql",
-  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nenum lead_status {\n  new\n  patient\n  not_patient\n}\n\nenum lead_event_type {\n  form\n  chat\n  booking\n  call\n  import\n}\n\nenum revenue_model {\n  ltv\n  projection\n}\n\nenum campaign_status {\n  unknown\n  enabled\n  paused\n  removed\n}\n\nenum campaign_category {\n  branded\n  non_branded\n  other\n}\n\nmodel organizations {\n  id   String @id @default(cuid())\n  name String\n\n  qualified_call_duration_threshold_sec Int           @default(60)\n  default_revenue_model                 revenue_model @default(ltv)\n\n  google_ads_customer_id String?\n\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n\n  locations             locations[]\n  users                 users[]\n  organization_api_keys organization_api_keys[]\n  leads                 leads[]\n  lead_events           lead_events[]\n  patient_values        patient_values[]\n  campaigns             campaigns[]\n  campaign_settings     campaign_settings[]\n  ad_spend_daily        ad_spend_daily[]\n}\n\nmodel locations {\n  id              String        @id @default(cuid())\n  organization_id String\n  organization    organizations @relation(fields: [organization_id], references: [id], onDelete: Cascade)\n\n  name String\n\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n\n  campaign_settings campaign_settings[]\n\n  @@unique([organization_id, name])\n  @@index([organization_id])\n}\n\nmodel users {\n  id              String        @id\n  organization_id String\n  organization    organizations @relation(fields: [organization_id], references: [id], onDelete: Cascade)\n\n  email String?\n\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n\n  @@index([organization_id])\n}\n\nmodel organization_api_keys {\n  id              String        @id @default(cuid())\n  organization_id String\n  organization    organizations @relation(fields: [organization_id], references: [id], onDelete: Cascade)\n\n  key_prefix String\n  key_hash   String  @unique\n  label      String?\n\n  last_used_at DateTime?\n  revoked_at   DateTime?\n\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n\n  @@index([organization_id])\n  @@index([revoked_at])\n}\n\nmodel leads {\n  id              String        @id @default(cuid())\n  organization_id String\n  organization    organizations @relation(fields: [organization_id], references: [id], onDelete: Cascade)\n\n  phone String\n  name  String?\n\n  status    lead_status @default(new)\n  qualified Boolean     @default(false)\n\n  first_event_at DateTime\n  last_event_at  DateTime\n\n  // first-event attribution snapshot\n  platform     String?\n  campaign_id  String?\n  gclid        String?\n  utm_source   String?\n  utm_medium   String?\n  utm_campaign String?\n  utm_content  String?\n  utm_term     String?\n  referrer     String?\n  landing_page String?\n\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n\n  lead_events    lead_events[]\n  patient_values patient_values?\n\n  @@unique([organization_id, phone])\n  @@index([organization_id, last_event_at])\n  @@index([organization_id, first_event_at])\n  @@index([organization_id, status])\n}\n\nmodel lead_events {\n  id              String        @id @default(cuid())\n  organization_id String\n  organization    organizations @relation(fields: [organization_id], references: [id], onDelete: Cascade)\n\n  lead_id String?\n  lead    leads?  @relation(fields: [lead_id], references: [id], onDelete: SetNull)\n\n  event_type  lead_event_type\n  occurred_at DateTime\n  phone       String\n  name        String?\n\n  platform     String?\n  campaign_id  String?\n  gclid        String?\n  utm_source   String?\n  utm_medium   String?\n  utm_campaign String?\n  utm_content  String?\n  utm_term     String?\n  referrer     String?\n  landing_page String?\n\n  duration_sec Int?\n  qualified    Boolean @default(false)\n\n  raw_payload Json\n\n  created_at DateTime @default(now())\n\n  @@index([organization_id, occurred_at])\n  @@index([lead_id, occurred_at])\n  @@index([organization_id, event_type])\n}\n\nmodel patient_values {\n  id              String        @id @default(cuid())\n  organization_id String\n  organization    organizations @relation(fields: [organization_id], references: [id], onDelete: Cascade)\n\n  lead_id String @unique\n  lead    leads  @relation(fields: [lead_id], references: [id], onDelete: Cascade)\n\n  model revenue_model @default(ltv)\n\n  ltv_cents                    Int?\n  cash_collected_to_date_cents Int?\n\n  account_balance_cents        Int?\n  expected_collection_rate_bps Int?\n  projected_cash_cents         Int?\n\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n\n  @@index([organization_id])\n}\n\nmodel campaigns {\n  id              String        @id @default(cuid())\n  organization_id String\n  organization    organizations @relation(fields: [organization_id], references: [id], onDelete: Cascade)\n\n  campaign_id    String\n  campaign_name  String?\n  status         campaign_status @default(unknown)\n  last_synced_at DateTime?\n\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n\n  @@unique([organization_id, campaign_id])\n  @@index([organization_id])\n}\n\nmodel campaign_settings {\n  id              String        @id @default(cuid())\n  organization_id String\n  organization    organizations @relation(fields: [organization_id], references: [id], onDelete: Cascade)\n\n  campaign_id String\n\n  location_id String?\n  location    locations? @relation(fields: [location_id], references: [id], onDelete: SetNull)\n\n  include_in_reporting Boolean            @default(true)\n  campaign_category    campaign_category?\n\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n\n  @@unique([organization_id, campaign_id])\n  @@index([organization_id])\n  @@index([location_id])\n}\n\nmodel ad_spend_daily {\n  id              String        @id @default(cuid())\n  organization_id String\n  organization    organizations @relation(fields: [organization_id], references: [id], onDelete: Cascade)\n\n  date          DateTime @db.Date\n  campaign_id   String\n  campaign_name String?\n\n  cost_cents    Int\n  currency_code String?\n\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n\n  @@unique([organization_id, campaign_id, date])\n  @@index([organization_id, date])\n  @@index([organization_id, campaign_id])\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -28,7 +28,7 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"organizations\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"qualified_call_duration_threshold_sec\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"default_revenue_model\",\"kind\":\"enum\",\"type\":\"revenue_model\"},{\"name\":\"google_ads_customer_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"locations\",\"kind\":\"object\",\"type\":\"locations\",\"relationName\":\"locationsToorganizations\"},{\"name\":\"users\",\"kind\":\"object\",\"type\":\"users\",\"relationName\":\"organizationsTousers\"},{\"name\":\"organization_api_keys\",\"kind\":\"object\",\"type\":\"organization_api_keys\",\"relationName\":\"organization_api_keysToorganizations\"},{\"name\":\"leads\",\"kind\":\"object\",\"type\":\"leads\",\"relationName\":\"leadsToorganizations\"},{\"name\":\"lead_events\",\"kind\":\"object\",\"type\":\"lead_events\",\"relationName\":\"lead_eventsToorganizations\"},{\"name\":\"patient_values\",\"kind\":\"object\",\"type\":\"patient_values\",\"relationName\":\"organizationsTopatient_values\"},{\"name\":\"campaigns\",\"kind\":\"object\",\"type\":\"campaigns\",\"relationName\":\"campaignsToorganizations\"},{\"name\":\"campaign_settings\",\"kind\":\"object\",\"type\":\"campaign_settings\",\"relationName\":\"campaign_settingsToorganizations\"},{\"name\":\"ad_spend_daily\",\"kind\":\"object\",\"type\":\"ad_spend_daily\",\"relationName\":\"ad_spend_dailyToorganizations\"}],\"dbName\":null},\"locations\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organization_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organization\",\"kind\":\"object\",\"type\":\"organizations\",\"relationName\":\"locationsToorganizations\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"campaign_settings\",\"kind\":\"object\",\"type\":\"campaign_settings\",\"relationName\":\"campaign_settingsTolocations\"}],\"dbName\":null},\"users\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organization_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organization\",\"kind\":\"object\",\"type\":\"organizations\",\"relationName\":\"organizationsTousers\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"organization_api_keys\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organization_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organization\",\"kind\":\"object\",\"type\":\"organizations\",\"relationName\":\"organization_api_keysToorganizations\"},{\"name\":\"key_prefix\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"key_hash\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"label\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"last_used_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"revoked_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"leads\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organization_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organization\",\"kind\":\"object\",\"type\":\"organizations\",\"relationName\":\"leadsToorganizations\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"lead_status\"},{\"name\":\"qualified\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"first_event_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"last_event_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"platform\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"campaign_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"gclid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"utm_source\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"utm_medium\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"utm_campaign\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"utm_content\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"utm_term\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"referrer\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"landing_page\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"lead_events\",\"kind\":\"object\",\"type\":\"lead_events\",\"relationName\":\"lead_eventsToleads\"},{\"name\":\"patient_values\",\"kind\":\"object\",\"type\":\"patient_values\",\"relationName\":\"leadsTopatient_values\"}],\"dbName\":null},\"lead_events\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organization_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organization\",\"kind\":\"object\",\"type\":\"organizations\",\"relationName\":\"lead_eventsToorganizations\"},{\"name\":\"lead_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lead\",\"kind\":\"object\",\"type\":\"leads\",\"relationName\":\"lead_eventsToleads\"},{\"name\":\"event_type\",\"kind\":\"enum\",\"type\":\"lead_event_type\"},{\"name\":\"occurred_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"platform\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"campaign_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"gclid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"utm_source\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"utm_medium\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"utm_campaign\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"utm_content\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"utm_term\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"referrer\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"landing_page\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"duration_sec\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"qualified\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"raw_payload\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"patient_values\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organization_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organization\",\"kind\":\"object\",\"type\":\"organizations\",\"relationName\":\"organizationsTopatient_values\"},{\"name\":\"lead_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lead\",\"kind\":\"object\",\"type\":\"leads\",\"relationName\":\"leadsTopatient_values\"},{\"name\":\"model\",\"kind\":\"enum\",\"type\":\"revenue_model\"},{\"name\":\"ltv_cents\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"cash_collected_to_date_cents\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"account_balance_cents\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"expected_collection_rate_bps\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"projected_cash_cents\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"campaigns\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organization_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organization\",\"kind\":\"object\",\"type\":\"organizations\",\"relationName\":\"campaignsToorganizations\"},{\"name\":\"campaign_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"campaign_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"campaign_status\"},{\"name\":\"last_synced_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"campaign_settings\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organization_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organization\",\"kind\":\"object\",\"type\":\"organizations\",\"relationName\":\"campaign_settingsToorganizations\"},{\"name\":\"campaign_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"location_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"location\",\"kind\":\"object\",\"type\":\"locations\",\"relationName\":\"campaign_settingsTolocations\"},{\"name\":\"include_in_reporting\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"campaign_category\",\"kind\":\"enum\",\"type\":\"campaign_category\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"ad_spend_daily\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organization_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organization\",\"kind\":\"object\",\"type\":\"organizations\",\"relationName\":\"ad_spend_dailyToorganizations\"},{\"name\":\"date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"campaign_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"campaign_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"cost_cents\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"currency_code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
   const { Buffer } = await import('node:buffer')
@@ -58,8 +58,8 @@ export interface PrismaClientConstructor {
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more Users
-   * const users = await prisma.user.findMany()
+   * // Fetch zero or more Organizations
+   * const organizations = await prisma.organizations.findMany()
    * ```
    * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
@@ -80,8 +80,8 @@ export interface PrismaClientConstructor {
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Users
- * const users = await prisma.user.findMany()
+ * // Fetch zero or more Organizations
+ * const organizations = await prisma.organizations.findMany()
  * ```
  * 
  * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
@@ -174,7 +174,105 @@ export interface PrismaClient<
     extArgs: ExtArgs
   }>>
 
-    
+      /**
+   * `prisma.organizations`: Exposes CRUD operations for the **organizations** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Organizations
+    * const organizations = await prisma.organizations.findMany()
+    * ```
+    */
+  get organizations(): Prisma.organizationsDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.locations`: Exposes CRUD operations for the **locations** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Locations
+    * const locations = await prisma.locations.findMany()
+    * ```
+    */
+  get locations(): Prisma.locationsDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.users`: Exposes CRUD operations for the **users** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Users
+    * const users = await prisma.users.findMany()
+    * ```
+    */
+  get users(): Prisma.usersDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.organization_api_keys`: Exposes CRUD operations for the **organization_api_keys** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Organization_api_keys
+    * const organization_api_keys = await prisma.organization_api_keys.findMany()
+    * ```
+    */
+  get organization_api_keys(): Prisma.organization_api_keysDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.leads`: Exposes CRUD operations for the **leads** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Leads
+    * const leads = await prisma.leads.findMany()
+    * ```
+    */
+  get leads(): Prisma.leadsDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.lead_events`: Exposes CRUD operations for the **lead_events** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Lead_events
+    * const lead_events = await prisma.lead_events.findMany()
+    * ```
+    */
+  get lead_events(): Prisma.lead_eventsDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.patient_values`: Exposes CRUD operations for the **patient_values** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Patient_values
+    * const patient_values = await prisma.patient_values.findMany()
+    * ```
+    */
+  get patient_values(): Prisma.patient_valuesDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.campaigns`: Exposes CRUD operations for the **campaigns** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Campaigns
+    * const campaigns = await prisma.campaigns.findMany()
+    * ```
+    */
+  get campaigns(): Prisma.campaignsDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.campaign_settings`: Exposes CRUD operations for the **campaign_settings** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Campaign_settings
+    * const campaign_settings = await prisma.campaign_settings.findMany()
+    * ```
+    */
+  get campaign_settings(): Prisma.campaign_settingsDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.ad_spend_daily`: Exposes CRUD operations for the **ad_spend_daily** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Ad_spend_dailies
+    * const ad_spend_dailies = await prisma.ad_spend_daily.findMany()
+    * ```
+    */
+  get ad_spend_daily(): Prisma.ad_spend_dailyDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
 export function getPrismaClientClass(): PrismaClientConstructor {

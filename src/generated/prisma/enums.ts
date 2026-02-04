@@ -9,7 +9,48 @@
 * 🟢 You can import this file directly.
 */
 
+export const lead_status = {
+  new: 'new',
+  patient: 'patient',
+  not_patient: 'not_patient'
+} as const
+
+export type lead_status = (typeof lead_status)[keyof typeof lead_status]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const lead_event_type = {
+  form: 'form',
+  chat: 'chat',
+  booking: 'booking',
+  call: 'call',
+  import: 'import'
+} as const
+
+export type lead_event_type = (typeof lead_event_type)[keyof typeof lead_event_type]
+
+
+export const revenue_model = {
+  ltv: 'ltv',
+  projection: 'projection'
+} as const
+
+export type revenue_model = (typeof revenue_model)[keyof typeof revenue_model]
+
+
+export const campaign_status = {
+  unknown: 'unknown',
+  enabled: 'enabled',
+  paused: 'paused',
+  removed: 'removed'
+} as const
+
+export type campaign_status = (typeof campaign_status)[keyof typeof campaign_status]
+
+
+export const campaign_category = {
+  branded: 'branded',
+  non_branded: 'non_branded',
+  other: 'other'
+} as const
+
+export type campaign_category = (typeof campaign_category)[keyof typeof campaign_category]

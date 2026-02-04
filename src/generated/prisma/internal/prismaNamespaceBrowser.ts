@@ -51,7 +51,16 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-
+  organizations: 'organizations',
+  locations: 'locations',
+  users: 'users',
+  organization_api_keys: 'organization_api_keys',
+  leads: 'leads',
+  lead_events: 'lead_events',
+  patient_values: 'patient_values',
+  campaigns: 'campaigns',
+  campaign_settings: 'campaign_settings',
+  ad_spend_daily: 'ad_spend_daily'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -68,4 +77,207 @@ export const TransactionIsolationLevel = {
 } as const
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const OrganizationsScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  qualified_call_duration_threshold_sec: 'qualified_call_duration_threshold_sec',
+  default_revenue_model: 'default_revenue_model',
+  google_ads_customer_id: 'google_ads_customer_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type OrganizationsScalarFieldEnum = (typeof OrganizationsScalarFieldEnum)[keyof typeof OrganizationsScalarFieldEnum]
+
+
+export const LocationsScalarFieldEnum = {
+  id: 'id',
+  organization_id: 'organization_id',
+  name: 'name',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type LocationsScalarFieldEnum = (typeof LocationsScalarFieldEnum)[keyof typeof LocationsScalarFieldEnum]
+
+
+export const UsersScalarFieldEnum = {
+  id: 'id',
+  organization_id: 'organization_id',
+  email: 'email',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type UsersScalarFieldEnum = (typeof UsersScalarFieldEnum)[keyof typeof UsersScalarFieldEnum]
+
+
+export const Organization_api_keysScalarFieldEnum = {
+  id: 'id',
+  organization_id: 'organization_id',
+  key_prefix: 'key_prefix',
+  key_hash: 'key_hash',
+  label: 'label',
+  last_used_at: 'last_used_at',
+  revoked_at: 'revoked_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Organization_api_keysScalarFieldEnum = (typeof Organization_api_keysScalarFieldEnum)[keyof typeof Organization_api_keysScalarFieldEnum]
+
+
+export const LeadsScalarFieldEnum = {
+  id: 'id',
+  organization_id: 'organization_id',
+  phone: 'phone',
+  name: 'name',
+  status: 'status',
+  qualified: 'qualified',
+  first_event_at: 'first_event_at',
+  last_event_at: 'last_event_at',
+  platform: 'platform',
+  campaign_id: 'campaign_id',
+  gclid: 'gclid',
+  utm_source: 'utm_source',
+  utm_medium: 'utm_medium',
+  utm_campaign: 'utm_campaign',
+  utm_content: 'utm_content',
+  utm_term: 'utm_term',
+  referrer: 'referrer',
+  landing_page: 'landing_page',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type LeadsScalarFieldEnum = (typeof LeadsScalarFieldEnum)[keyof typeof LeadsScalarFieldEnum]
+
+
+export const Lead_eventsScalarFieldEnum = {
+  id: 'id',
+  organization_id: 'organization_id',
+  lead_id: 'lead_id',
+  event_type: 'event_type',
+  occurred_at: 'occurred_at',
+  phone: 'phone',
+  name: 'name',
+  platform: 'platform',
+  campaign_id: 'campaign_id',
+  gclid: 'gclid',
+  utm_source: 'utm_source',
+  utm_medium: 'utm_medium',
+  utm_campaign: 'utm_campaign',
+  utm_content: 'utm_content',
+  utm_term: 'utm_term',
+  referrer: 'referrer',
+  landing_page: 'landing_page',
+  duration_sec: 'duration_sec',
+  qualified: 'qualified',
+  raw_payload: 'raw_payload',
+  created_at: 'created_at'
+} as const
+
+export type Lead_eventsScalarFieldEnum = (typeof Lead_eventsScalarFieldEnum)[keyof typeof Lead_eventsScalarFieldEnum]
+
+
+export const Patient_valuesScalarFieldEnum = {
+  id: 'id',
+  organization_id: 'organization_id',
+  lead_id: 'lead_id',
+  model: 'model',
+  ltv_cents: 'ltv_cents',
+  cash_collected_to_date_cents: 'cash_collected_to_date_cents',
+  account_balance_cents: 'account_balance_cents',
+  expected_collection_rate_bps: 'expected_collection_rate_bps',
+  projected_cash_cents: 'projected_cash_cents',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Patient_valuesScalarFieldEnum = (typeof Patient_valuesScalarFieldEnum)[keyof typeof Patient_valuesScalarFieldEnum]
+
+
+export const CampaignsScalarFieldEnum = {
+  id: 'id',
+  organization_id: 'organization_id',
+  campaign_id: 'campaign_id',
+  campaign_name: 'campaign_name',
+  status: 'status',
+  last_synced_at: 'last_synced_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type CampaignsScalarFieldEnum = (typeof CampaignsScalarFieldEnum)[keyof typeof CampaignsScalarFieldEnum]
+
+
+export const Campaign_settingsScalarFieldEnum = {
+  id: 'id',
+  organization_id: 'organization_id',
+  campaign_id: 'campaign_id',
+  location_id: 'location_id',
+  include_in_reporting: 'include_in_reporting',
+  campaign_category: 'campaign_category',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Campaign_settingsScalarFieldEnum = (typeof Campaign_settingsScalarFieldEnum)[keyof typeof Campaign_settingsScalarFieldEnum]
+
+
+export const Ad_spend_dailyScalarFieldEnum = {
+  id: 'id',
+  organization_id: 'organization_id',
+  date: 'date',
+  campaign_id: 'campaign_id',
+  campaign_name: 'campaign_name',
+  cost_cents: 'cost_cents',
+  currency_code: 'currency_code',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Ad_spend_dailyScalarFieldEnum = (typeof Ad_spend_dailyScalarFieldEnum)[keyof typeof Ad_spend_dailyScalarFieldEnum]
+
+
+export const SortOrder = {
+  asc: 'asc',
+  desc: 'desc'
+} as const
+
+export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const JsonNullValueInput = {
+  JsonNull: 'JsonNull'
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: 'DbNull',
+  JsonNull: 'JsonNull',
+  AnyNull: 'AnyNull'
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

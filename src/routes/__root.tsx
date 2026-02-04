@@ -1,4 +1,7 @@
 import { ClerkProvider } from '@clerk/tanstack-react-start'
+import { auth } from '@clerk/tanstack-react-start/server'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { createServerFn } from '@tanstack/react-start'
 import {
   HeadContent,
   Outlet,
@@ -6,14 +9,9 @@ import {
   createRootRouteWithContext,
 } from '@tanstack/react-router'
 
-import { QueryClientProvider } from '@tanstack/react-query'
-import { createContext, useContext, useMemo } from 'react'
-
 import { queryClient } from '@/lib/queryClient'
 
 import appCss from '../styles.css?url'
-import { auth } from '@clerk/tanstack-react-start/server'
-import { createServerFn } from '@tanstack/react-start'
 
 const fetchClerkAuth = createServerFn({ method: 'GET' }).handler(async () => {
   const { userId } = await auth()
