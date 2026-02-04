@@ -39,8 +39,8 @@ function RouteComponent() {
       <AppLayout>
         <div className="flex flex-col gap-4">
           <div>
-            <h1 className="text-xl font-semibold text-gray-900">Leads</h1>
-            <p className="text-sm text-gray-600">
+            <h1 className="text-xl font-semibold text-foreground">Leads</h1>
+            <p className="text-sm text-muted-foreground">
               Inbox for front desk conversion + value entry.
             </p>
           </div>
@@ -50,11 +50,11 @@ function RouteComponent() {
             <CardTitle className="text-base">Filters</CardTitle>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
               <div className="flex flex-col gap-1">
-                <label className="text-xs text-gray-600">Status</label>
+                <label className="text-xs text-muted-foreground">Status</label>
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
-                  className="border rounded-md px-2 py-1 text-sm bg-white"
+                  className="border rounded-md px-2 py-1 text-sm bg-background"
                 >
                   <option value="">All</option>
                   <option value="new">New</option>
@@ -64,11 +64,11 @@ function RouteComponent() {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-xs text-gray-600">Location</label>
+                <label className="text-xs text-muted-foreground">Location</label>
                 <select
                   value={locationId}
                   onChange={(e) => setLocationId(e.target.value)}
-                  className="border rounded-md px-2 py-1 text-sm bg-white"
+                  className="border rounded-md px-2 py-1 text-sm bg-background"
                 >
                   <option value="">All</option>
                   {(locationsQuery.data ?? []).map((l) => (
@@ -80,17 +80,17 @@ function RouteComponent() {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-xs text-gray-600">Search</label>
+                <label className="text-xs text-muted-foreground">Search</label>
                 <input
                   value={q}
                   onChange={(e) => setQ(e.target.value)}
                   placeholder="Phone or name"
-                  className="border rounded-md px-2 py-1 text-sm bg-white"
+                  className="border rounded-md px-2 py-1 text-sm bg-background"
                 />
               </div>
 
               <div className="flex items-end gap-2">
-                <label className="flex items-center gap-2 text-sm text-gray-700">
+                <label className="flex items-center gap-2 text-sm text-muted-foreground">
                   <input
                     type="checkbox"
                     checked={qualifiedOnly}
@@ -109,7 +109,7 @@ function RouteComponent() {
             <div className="overflow-auto">
               <table className="min-w-full text-sm">
                 <thead>
-                  <tr className="text-left text-gray-600 border-b">
+                  <tr className="text-left text-muted-foreground border-b">
                     <th className="py-2 pr-4">Lead</th>
                     <th className="py-2 pr-4">Campaign</th>
                     <th className="py-2 pr-4">Qualified</th>
@@ -125,17 +125,17 @@ function RouteComponent() {
                           <Link
                             to="/leads/$leadId"
                             params={{ leadId: lead.id }}
-                            className="text-gray-900 hover:underline"
+                            className="text-foreground hover:underline"
                           >
                             {lead.name ?? lead.phone}
                           </Link>
-                          <span className="text-xs text-gray-600">{lead.phone}</span>
+                          <span className="text-xs text-muted-foreground">{lead.phone}</span>
                         </div>
                       </td>
                       <td className="py-2 pr-4">
                         <div className="flex flex-col">
                           <span>{lead.campaign_name ?? lead.campaign_id ?? 'Unknown/Direct'}</span>
-                          <span className="text-xs text-gray-600">{lead.platform ?? '—'}</span>
+                          <span className="text-xs text-muted-foreground">{lead.platform ?? '—'}</span>
                         </div>
                       </td>
                       <td className="py-2 pr-4">{lead.qualified ? 'Yes' : 'No'}</td>
@@ -147,7 +147,7 @@ function RouteComponent() {
                   ))}
                   {leadsQuery.data?.length === 0 ? (
                     <tr>
-                      <td className="py-3 text-gray-600" colSpan={5}>
+                      <td className="py-3 text-muted-foreground" colSpan={5}>
                         No leads found.
                       </td>
                     </tr>

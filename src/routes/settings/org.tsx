@@ -92,8 +92,8 @@ function RouteComponent() {
       <AppLayout>
       <div className="flex flex-col gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">Organization</h1>
-          <p className="text-sm text-gray-600">
+          <h1 className="text-xl font-semibold text-foreground">Organization</h1>
+          <p className="text-sm text-muted-foreground">
             Ingestion API keys and org-level defaults.
           </p>
         </div>
@@ -103,15 +103,15 @@ function RouteComponent() {
             <CardTitle className="text-base">Org Details</CardTitle>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
               <div className="flex flex-col gap-1">
-                <label className="text-xs text-gray-600">Org ID</label>
+                <label className="text-xs text-muted-foreground">Org ID</label>
                 <input
                   value={org?.id ?? ''}
                   readOnly
-                  className="border rounded-md px-2 py-1 text-sm bg-gray-50"
+                  className="border rounded-md px-2 py-1 text-sm bg-background"
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <label className="text-xs text-gray-600">Name</label>
+                <label className="text-xs text-muted-foreground">Name</label>
                 <input
                   defaultValue={org?.name ?? ''}
                   onBlur={(e) => {
@@ -120,11 +120,11 @@ function RouteComponent() {
                       updateOrgMutation.mutate({ name })
                     }
                   }}
-                  className="border rounded-md px-2 py-1 text-sm bg-white"
+                  className="border rounded-md px-2 py-1 text-sm bg-background"
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <label className="text-xs text-gray-600">
+                <label className="text-xs text-muted-foreground">
                   Call qualified threshold (sec)
                 </label>
                 <input
@@ -138,11 +138,11 @@ function RouteComponent() {
                       })
                     }
                   }}
-                  className="border rounded-md px-2 py-1 text-sm bg-white"
+                  className="border rounded-md px-2 py-1 text-sm bg-background"
                 />
               </div>
             </div>
-            <div className="text-xs text-gray-600">
+            <div className="text-xs text-muted-foreground">
               Ingestion endpoint: <code>/api/ingest/events</code>
             </div>
           </CardContent>
@@ -154,12 +154,12 @@ function RouteComponent() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
               <div className="flex flex-col gap-1 md:col-span-2">
-                <label className="text-xs text-gray-600">New key label</label>
+                <label className="text-xs text-muted-foreground">New key label</label>
                 <input
                   value={newKeyLabel}
                   onChange={(e) => setNewKeyLabel(e.target.value)}
                   placeholder="e.g. RudderStack Prod"
-                  className="border rounded-md px-2 py-1 text-sm bg-white"
+                  className="border rounded-md px-2 py-1 text-sm bg-background"
                 />
               </div>
               <button
@@ -173,11 +173,11 @@ function RouteComponent() {
 
             {createKeyMutation.data?.api_key ? (
               <div className="border rounded-md p-3 bg-yellow-50 text-sm">
-                <div className="font-medium text-gray-900">New API key</div>
-                <div className="text-gray-700 break-all">
+                <div className="font-medium text-foreground">New API key</div>
+                <div className="text-muted-foreground break-all">
                   {createKeyMutation.data.api_key}
                 </div>
-                <div className="text-xs text-gray-600">
+                <div className="text-xs text-muted-foreground">
                   Copy this now — it won’t be shown again.
                 </div>
               </div>
@@ -186,7 +186,7 @@ function RouteComponent() {
             <div className="overflow-auto">
               <table className="min-w-full text-sm">
                 <thead>
-                  <tr className="text-left text-gray-600 border-b">
+                  <tr className="text-left text-muted-foreground border-b">
                     <th className="py-2 pr-4">Prefix</th>
                     <th className="py-2 pr-4">Label</th>
                     <th className="py-2 pr-4">Created</th>
@@ -224,7 +224,7 @@ function RouteComponent() {
                   ))}
                   {(keysQuery.data?.length ?? 0) === 0 ? (
                     <tr>
-                      <td className="py-3 text-gray-600" colSpan={6}>
+                      <td className="py-3 text-muted-foreground" colSpan={6}>
                         No API keys yet.
                       </td>
                     </tr>
@@ -240,23 +240,23 @@ function RouteComponent() {
             <CardTitle className="text-base">Locations</CardTitle>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
               <div className="flex flex-col gap-1 md:col-span-2">
-                <label className="text-xs text-gray-600">New location name</label>
+                <label className="text-xs text-muted-foreground">New location name</label>
                 <input
                   value={newLocationName}
                   onChange={(e) => setNewLocationName(e.target.value)}
                   placeholder="e.g. Denver"
-                  className="border rounded-md px-2 py-1 text-sm bg-white"
+                  className="border rounded-md px-2 py-1 text-sm bg-background"
                 />
               </div>
               <button
-                className="rounded-md border bg-white px-3 py-2 text-sm"
+                className="rounded-md border bg-background px-3 py-2 text-sm"
                 onClick={() => createLocationMutation.mutate()}
                 disabled={createLocationMutation.isPending || newLocationName.trim().length === 0}
               >
                 Add location
               </button>
             </div>
-            <div className="text-sm text-gray-700">
+            <div className="text-sm text-muted-foreground">
               {(locationsQuery.data ?? []).map((l) => l.name).join(', ') || '—'}
             </div>
           </CardContent>
@@ -265,14 +265,14 @@ function RouteComponent() {
         <Card>
           <CardContent className="p-4 space-y-3">
             <CardTitle className="text-base">Google Ads Sync</CardTitle>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-muted-foreground">
               Set your Google Ads customer ID and run a manual sync. For production,
               schedule this daily.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
               <div className="flex flex-col gap-1">
-                <label className="text-xs text-gray-600">Customer ID</label>
+                <label className="text-xs text-muted-foreground">Customer ID</label>
                 <input
                   defaultValue={org?.google_ads_customer_id ?? ''}
                   onBlur={(e) => {
@@ -280,25 +280,25 @@ function RouteComponent() {
                     updateOrgMutation.mutate({ google_ads_customer_id: v.length > 0 ? v : null })
                   }}
                   placeholder="123-456-7890"
-                  className="border rounded-md px-2 py-1 text-sm bg-white"
+                  className="border rounded-md px-2 py-1 text-sm bg-background"
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <label className="text-xs text-gray-600">From</label>
+                <label className="text-xs text-muted-foreground">From</label>
                 <input
                   type="date"
                   value={syncFrom}
                   onChange={(e) => setSyncFrom(e.target.value)}
-                  className="border rounded-md px-2 py-1 text-sm bg-white"
+                  className="border rounded-md px-2 py-1 text-sm bg-background"
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <label className="text-xs text-gray-600">To</label>
+                <label className="text-xs text-muted-foreground">To</label>
                 <input
                   type="date"
                   value={syncTo}
                   onChange={(e) => setSyncTo(e.target.value)}
-                  className="border rounded-md px-2 py-1 text-sm bg-white"
+                  className="border rounded-md px-2 py-1 text-sm bg-background"
                 />
               </div>
             </div>
@@ -312,7 +312,7 @@ function RouteComponent() {
             </button>
 
             {syncMutation.data ? (
-              <div className="text-sm text-gray-700">
+              <div className="text-sm text-muted-foreground">
                 Synced: {syncMutation.data.campaigns_upserted} campaigns,{' '}
                 {syncMutation.data.spend_rows_upserted} spend rows.
               </div>

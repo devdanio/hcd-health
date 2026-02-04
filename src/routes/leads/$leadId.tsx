@@ -83,7 +83,7 @@ function RouteComponent() {
     return (
       <RequireSignedIn>
         <AppLayout>
-          <div className="text-sm text-gray-600">Loading…</div>
+          <div className="text-sm text-muted-foreground">Loading…</div>
         </AppLayout>
       </RequireSignedIn>
     )
@@ -93,7 +93,7 @@ function RouteComponent() {
     return (
       <RequireSignedIn>
         <AppLayout>
-          <div className="text-sm text-gray-600">Lead not found.</div>
+          <div className="text-sm text-muted-foreground">Lead not found.</div>
         </AppLayout>
       </RequireSignedIn>
     )
@@ -109,23 +109,23 @@ function RouteComponent() {
       <div className="flex flex-col gap-4">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-3">
           <div>
-            <h1 className="text-xl font-semibold text-gray-900">
+            <h1 className="text-xl font-semibold text-foreground">
               {lead.name ?? lead.phone}
             </h1>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-muted-foreground">
               {lead.phone} • Created {new Date(lead.first_event_at).toLocaleString()}
             </p>
           </div>
           <div className="flex gap-2">
             <button
-              className="rounded-md border bg-white px-3 py-2 text-sm"
+              className="rounded-md border bg-background px-3 py-2 text-sm"
               onClick={() => markStatusMutation.mutate('patient')}
               disabled={markStatusMutation.isPending}
             >
               Mark as Patient
             </button>
             <button
-              className="rounded-md border bg-white px-3 py-2 text-sm"
+              className="rounded-md border bg-background px-3 py-2 text-sm"
               onClick={() => markStatusMutation.mutate('not_patient')}
               disabled={markStatusMutation.isPending}
             >
@@ -138,8 +138,8 @@ function RouteComponent() {
           <Card>
             <CardContent className="p-4 space-y-2">
               <CardTitle className="text-base">Status</CardTitle>
-              <div className="text-sm text-gray-900">{lead.status}</div>
-              <div className="text-sm text-gray-900">
+              <div className="text-sm text-foreground">{lead.status}</div>
+              <div className="text-sm text-foreground">
                 Qualified: {lead.qualified ? 'Yes' : 'No'}
               </div>
             </CardContent>
@@ -150,28 +150,28 @@ function RouteComponent() {
               <CardTitle className="text-base">Attribution (first event)</CardTitle>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
                 <div>
-                  <span className="text-gray-600">Campaign</span>
-                  <div className="text-gray-900">
+                  <span className="text-muted-foreground">Campaign</span>
+                  <div className="text-foreground">
                     {lead.utm_campaign ?? lead.campaign_id ?? 'Unknown/Direct'}
                   </div>
                 </div>
                 <div>
-                  <span className="text-gray-600">Platform</span>
-                  <div className="text-gray-900">{lead.platform ?? '—'}</div>
+                  <span className="text-muted-foreground">Platform</span>
+                  <div className="text-foreground">{lead.platform ?? '—'}</div>
                 </div>
                 <div>
-                  <span className="text-gray-600">gclid</span>
-                  <div className="text-gray-900 break-all">{lead.gclid ?? '—'}</div>
+                  <span className="text-muted-foreground">gclid</span>
+                  <div className="text-foreground break-all">{lead.gclid ?? '—'}</div>
                 </div>
                 <div>
-                  <span className="text-gray-600">Landing page</span>
-                  <div className="text-gray-900 break-all">
+                  <span className="text-muted-foreground">Landing page</span>
+                  <div className="text-foreground break-all">
                     {lead.landing_page ?? '—'}
                   </div>
                 </div>
                 <div className="md:col-span-2">
-                  <span className="text-gray-600">Referrer</span>
-                  <div className="text-gray-900 break-all">{lead.referrer ?? '—'}</div>
+                  <span className="text-muted-foreground">Referrer</span>
+                  <div className="text-foreground break-all">{lead.referrer ?? '—'}</div>
                 </div>
               </div>
             </CardContent>
@@ -183,21 +183,21 @@ function RouteComponent() {
             <CardTitle className="text-base">Patient Value (LTV)</CardTitle>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
               <div className="flex flex-col gap-1">
-                <label className="text-xs text-gray-600">LTV ($)</label>
+                <label className="text-xs text-muted-foreground">LTV ($)</label>
                 <input
                   value={ltv}
                   onChange={(e) => setLtv(e.target.value)}
                   placeholder={initialValues.ltv || 'e.g. 2500'}
-                  className="border rounded-md px-2 py-1 text-sm bg-white"
+                  className="border rounded-md px-2 py-1 text-sm bg-background"
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <label className="text-xs text-gray-600">Cash collected to date ($)</label>
+                <label className="text-xs text-muted-foreground">Cash collected to date ($)</label>
                 <input
                   value={cash}
                   onChange={(e) => setCash(e.target.value)}
                   placeholder={initialValues.cash || 'e.g. 500'}
-                  className="border rounded-md px-2 py-1 text-sm bg-white"
+                  className="border rounded-md px-2 py-1 text-sm bg-background"
                 />
               </div>
               <div className="flex gap-2">
@@ -211,7 +211,7 @@ function RouteComponent() {
               </div>
             </div>
 
-            <div className="text-sm text-gray-700">
+            <div className="text-sm text-muted-foreground">
               Current LTV:{' '}
               <span className="font-medium">
                 {ltvCents != null ? formatCents(ltvCents) : '—'}
@@ -238,9 +238,9 @@ function RouteComponent() {
             <CardTitle className="text-base mb-3">Timeline</CardTitle>
             <div className="space-y-2">
               {lead.lead_events.map((e) => (
-                <div key={e.id} className="border rounded-md p-3 bg-white">
+                <div key={e.id} className="border rounded-md p-3 bg-background">
                   <div className="flex items-center justify-between">
-                    <div className="text-sm font-medium text-gray-900">
+                    <div className="text-sm font-medium text-foreground">
                       {e.event_type}
                       {e.qualified ? (
                         <span className="ml-2 text-xs text-green-700">
@@ -248,17 +248,17 @@ function RouteComponent() {
                         </span>
                       ) : null}
                     </div>
-                    <div className="text-xs text-gray-600">
+                    <div className="text-xs text-muted-foreground">
                       {new Date(e.occurred_at).toLocaleString()}
                     </div>
                   </div>
-                  <div className="mt-2 grid grid-cols-1 md:grid-cols-3 gap-2 text-xs text-gray-700">
+                  <div className="mt-2 grid grid-cols-1 md:grid-cols-3 gap-2 text-xs text-muted-foreground">
                     <div>campaign_id: {e.campaign_id ?? '—'}</div>
                     <div>utm_campaign: {e.utm_campaign ?? '—'}</div>
                     <div>gclid: {e.gclid ?? '—'}</div>
                   </div>
                   {typeof e.duration_sec === 'number' ? (
-                    <div className="mt-1 text-xs text-gray-700">
+                    <div className="mt-1 text-xs text-muted-foreground">
                       duration_sec: {e.duration_sec}
                     </div>
                   ) : null}

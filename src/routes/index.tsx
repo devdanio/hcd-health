@@ -1,13 +1,37 @@
-import { SignInButton, SignedIn, SignedOut } from '@clerk/tanstack-react-start'
-import { useQuery } from '@tanstack/react-query'
-import { createFileRoute } from '@tanstack/react-router'
-import dayjs from 'dayjs'
-import { useMemo, useState } from 'react'
+import { SignInButton, SignedIn, SignedOut } from "@clerk/tanstack-react-start"
+import { useQuery } from "@tanstack/react-query"
+import { createFileRoute } from "@tanstack/react-router"
+import dayjs from "dayjs"
+import { useMemo, useState } from "react"
 
-import { AppLayout } from '@/components/app/AppLayout'
-import { Card, CardContent, CardTitle } from '@/components/ui/card'
-import { getDashboard, listLocations } from '@/server/ri/serverFns'
-import { formatCents, formatPercent } from '@/utils/money'
+import { AppLayout } from "@/components/app/AppLayout"
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { getDashboard, listLocations } from "@/server/ri/serverFns"
+import { formatCents, formatPercent } from "@/utils/money"
 
 export const Route = createFileRoute('/')({ component: App })
 
@@ -26,26 +50,40 @@ function App() {
 
 function Landing() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div className="min-h-screen bg-background">
+      <header className="border-b border-border/60 bg-background/70 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <img
             src="/images/high-country-health-logo.svg"
             alt="High Country Health"
-            className="w-20 md:w-24 h-auto"
+            className="h-9 w-auto"
           />
         </div>
       </header>
-      <Card className="max-w-md mx-auto mt-10">
-        <CardContent className="space-y-3">
-          <CardTitle className="text-lg">Revenue Intelligence</CardTitle>
-          <SignInButton>
-            <button className="w-full rounded-md bg-black text-white py-2 text-sm">
-              Sign In
-            </button>
-          </SignInButton>
-        </CardContent>
-      </Card>
+      <div className="mx-auto flex max-w-2xl flex-col items-center gap-6 px-6 py-16 text-center">
+        <div className="text-label text-muted-foreground">
+          Revenue Intelligence
+        </div>
+        <h1 className="text-3xl font-semibold tracking-tight">
+          High Country Health Dashboard
+        </h1>
+        <p className="text-muted-foreground">
+          Track spend to patients with a single, connected view of ROI.
+        </p>
+        <Card className="w-full max-w-md border-border/60 bg-card/80">
+          <CardHeader>
+            <CardTitle>Welcome back</CardTitle>
+            <CardDescription>
+              Sign in to view your live performance overview.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <SignInButton>
+              <Button className="w-full">Sign In</Button>
+            </SignInButton>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }
@@ -82,37 +120,37 @@ function Dashboard() {
       <div className="flex flex-col gap-4">
         <div className="flex flex-col md:flex-row gap-3 md:items-end justify-between">
           <div>
-            <h1 className="text-xl font-semibold text-gray-900">Dashboard</h1>
-            <p className="text-sm text-gray-600">
+            <h1 className="text-xl font-semibold text-foreground">Dashboard</h1>
+            <p className="text-sm text-muted-foreground">
               Spend → Leads → Patients → Revenue → ROI
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-600">From</label>
+              <label className="text-xs text-muted-foreground">From</label>
               <input
                 type="date"
                 value={fromDate}
                 onChange={(e) => setFromDate(e.target.value)}
-                className="border rounded-md px-2 py-1 text-sm bg-white"
+                className="border rounded-md px-2 py-1 text-sm bg-background"
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-600">To</label>
+              <label className="text-xs text-muted-foreground">To</label>
               <input
                 type="date"
                 value={toDate}
                 onChange={(e) => setToDate(e.target.value)}
-                className="border rounded-md px-2 py-1 text-sm bg-white"
+                className="border rounded-md px-2 py-1 text-sm bg-background"
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-600">Location</label>
+              <label className="text-xs text-muted-foreground">Location</label>
               <select
                 value={locationId}
                 onChange={(e) => setLocationId(e.target.value)}
-                className="border rounded-md px-2 py-1 text-sm bg-white"
+                className="border rounded-md px-2 py-1 text-sm bg-background"
               >
                 <option value="">All</option>
                 {(locationsQuery.data ?? []).map((l) => (
@@ -136,7 +174,7 @@ function Dashboard() {
             <div className="overflow-auto">
               <table className="min-w-full text-sm">
                 <thead>
-                  <tr className="text-left text-gray-600 border-b">
+                  <tr className="text-left text-muted-foreground border-b">
                     <th className="py-2 pr-4">Campaign</th>
                     <th className="py-2 pr-4">Location</th>
                     <th className="py-2 pr-4">Spend</th>
@@ -162,7 +200,7 @@ function Dashboard() {
                   ))}
                   {dashboardQuery.data?.campaigns.length === 0 ? (
                     <tr>
-                      <td className="py-3 text-gray-600" colSpan={7}>
+                      <td className="py-3 text-muted-foreground" colSpan={7}>
                         No data for this range yet.
                       </td>
                     </tr>
@@ -203,8 +241,8 @@ function KpiGrid(props: {
       {items.map((item) => (
         <Card key={item.label}>
           <CardContent className="p-4">
-            <div className="text-xs text-gray-600">{item.label}</div>
-            <div className="text-lg font-semibold text-gray-900">
+            <div className="text-xs text-muted-foreground">{item.label}</div>
+            <div className="text-lg font-semibold text-foreground">
               {props.loading ? '…' : item.value}
             </div>
           </CardContent>

@@ -14,8 +14,8 @@ function RouteComponent() {
       <AppLayout>
         <div className="flex flex-col gap-4">
           <div>
-            <h1 className="text-xl font-semibold text-gray-900">Settings</h1>
-            <p className="text-sm text-gray-600">
+            <h1 className="text-xl font-semibold text-foreground">Settings</h1>
+            <p className="text-sm text-muted-foreground">
               Campaign mapping, ingestion API keys, and org preferences.
             </p>
           </div>
@@ -24,7 +24,7 @@ function RouteComponent() {
           <Card>
             <CardContent className="p-4 space-y-2">
               <CardTitle className="text-base">Campaigns</CardTitle>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground">
                 Map campaigns to locations and hide excluded campaigns from reports.
               </p>
               <Link
@@ -39,7 +39,7 @@ function RouteComponent() {
           <Card>
             <CardContent className="p-4 space-y-2">
               <CardTitle className="text-base">Organization</CardTitle>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground">
                 Ingestion API keys, call qualification threshold, Google Ads customer ID.
               </p>
               <Link

@@ -39,8 +39,8 @@ function RouteComponent() {
       <AppLayout>
       <div className="flex flex-col gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">Campaign Settings</h1>
-          <p className="text-sm text-gray-600">
+          <h1 className="text-xl font-semibold text-foreground">Campaign Settings</h1>
+          <p className="text-sm text-muted-foreground">
             Map campaigns to locations and include/exclude them from reporting.
           </p>
         </div>
@@ -51,7 +51,7 @@ function RouteComponent() {
             <div className="overflow-auto">
               <table className="min-w-full text-sm">
                 <thead>
-                  <tr className="text-left text-gray-600 border-b">
+                  <tr className="text-left text-muted-foreground border-b">
                     <th className="py-2 pr-4">Campaign</th>
                     <th className="py-2 pr-4">Status</th>
                     <th className="py-2 pr-4">Last 7d Spend</th>
@@ -65,10 +65,10 @@ function RouteComponent() {
                     <tr key={c.campaign_id} className="border-b">
                       <td className="py-2 pr-4">
                         <div className="flex flex-col">
-                          <span className="text-gray-900">
+                          <span className="text-foreground">
                             {c.campaign_name ?? c.campaign_id}
                           </span>
-                          <span className="text-xs text-gray-600">
+                          <span className="text-xs text-muted-foreground">
                             id: {c.campaign_id}
                           </span>
                         </div>
@@ -88,7 +88,7 @@ function RouteComponent() {
                               campaign_category: c.campaign_category,
                             })
                           }
-                          className="border rounded-md px-2 py-1 text-sm bg-white"
+                          className="border rounded-md px-2 py-1 text-sm bg-background"
                         >
                           <option value="">Unassigned/Shared</option>
                           {(data?.locations ?? []).map((l) => (
@@ -128,7 +128,7 @@ function RouteComponent() {
                                   | '') || null,
                             })
                           }
-                          className="border rounded-md px-2 py-1 text-sm bg-white"
+                          className="border rounded-md px-2 py-1 text-sm bg-background"
                         >
                           <option value="">—</option>
                           <option value="branded">branded</option>
@@ -140,7 +140,7 @@ function RouteComponent() {
                   ))}
                   {(data?.campaigns.length ?? 0) === 0 ? (
                     <tr>
-                      <td className="py-3 text-gray-600" colSpan={6}>
+                      <td className="py-3 text-muted-foreground" colSpan={6}>
                         No campaigns yet. Run a Google Ads sync or ingest leads with a
                         `campaign_id`.
                       </td>

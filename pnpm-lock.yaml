@@ -252,7 +252,7 @@ importers:
         specifier: ^0.18.5
         version: 0.18.5
       zod:
-        specifier: ^4.1.12
+        specifier: ^4.1.13
         version: 4.1.13
     devDependencies:
       '@preact/preset-vite':

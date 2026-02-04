@@ -6,7 +6,7 @@ export function RequireSignedIn(props: { children: React.ReactNode }) {
   return (
     <>
       <SignedOut>
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-background">
           <div className="max-w-md mx-auto pt-20">
             <Card>
               <CardContent className="p-6 space-y-3">
