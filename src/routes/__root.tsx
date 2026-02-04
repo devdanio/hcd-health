@@ -9,9 +9,9 @@ import {
   createRootRouteWithContext,
 } from '@tanstack/react-router'
 
-import { queryClient } from '@/lib/queryClient'
-
 import appCss from '../styles.css?url'
+
+import { queryClient } from '@/lib/queryClient'
 
 const fetchClerkAuth = createServerFn({ method: 'GET' }).handler(async () => {
   const { userId } = await auth()

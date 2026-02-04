@@ -7,6 +7,18 @@
     "vite.config.js",
     "src/routes/companies/$companyId"
   ],
+  "exclude": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/.nitro/**",
+    "**/.output/**",
+    "**/coverage/**",
+    "data-scripts/**",
+    "public/**",
+    "public-components/**",
+    "src/generated/**",
+    "prisma/migrations/**"
+  ],
 
   "compilerOptions": {
     "target": "ES2022",

@@ -1,6 +1,11 @@
+import type { Prisma } from '@/generated/prisma/client'
 import { prisma } from '@/db'
 import { sanitizePhone } from '@/utils/helpers'
 import { ingestEventSchema } from '@/server/ri/ingestSchema'
+
+function toInputJsonValue(value: unknown): Prisma.InputJsonValue {
+  return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue
+}
 
 function parseOccurredAt(occurredAt: string | undefined): Date {
   if (!occurredAt) return new Date()
@@ -106,7 +111,7 @@ export async function ingestEvent(opts: {
       duration_sec: durationSec,
       qualified,
       ...attributionSnapshot,
-      raw_payload: parsed.data,
+      raw_payload: toInputJsonValue(opts.payload),
     },
     select: { id: true },
   })
@@ -132,4 +137,3 @@ export async function ingestEvent(opts: {
 
   return { leadId: lead.id, leadEventId: leadEvent.id }
 }
-

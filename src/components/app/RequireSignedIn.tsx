@@ -1,20 +1,19 @@
-import { SignInButton, SignedIn, SignedOut } from '@clerk/tanstack-react-start'
+import { SignInButton, SignedIn, SignedOut } from "@clerk/tanstack-react-start"
 
-import { Card, CardContent, CardTitle } from '@/components/ui/card'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardTitle } from "@/components/ui/card"
 
 export function RequireSignedIn(props: { children: React.ReactNode }) {
   return (
     <>
       <SignedOut>
         <div className="min-h-screen bg-background">
-          <div className="max-w-md mx-auto pt-20">
-            <Card>
-              <CardContent className="p-6 space-y-3">
+          <div className="mx-auto max-w-md pt-20">
+            <Card className="border-border/60 bg-card/80">
+              <CardContent className="space-y-3 p-6">
                 <CardTitle className="text-lg">Sign in required</CardTitle>
                 <SignInButton>
-                  <button className="w-full rounded-md bg-black text-white py-2 text-sm">
-                    Sign In
-                  </button>
+                  <Button className="w-full">Sign In</Button>
                 </SignInButton>
               </CardContent>
             </Card>

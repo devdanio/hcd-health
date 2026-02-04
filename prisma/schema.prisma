@@ -40,8 +40,8 @@ enum campaign_category {
 }
 
 model organizations {
-  id   String @id @default(cuid())
-  name String
+  id   String @id
+  name String @default("Organization")
 
   qualified_call_duration_threshold_sec Int @default(60)
   default_revenue_model                 revenue_model @default(ltv)
@@ -52,7 +52,6 @@ model organizations {
   updated_at DateTime @updatedAt
 
   locations             locations[]
-  users                 users[]
   organization_api_keys organization_api_keys[]
   leads                 leads[]
   lead_events           lead_events[]
@@ -76,19 +75,6 @@ model locations {
 
   @@index([organization_id])
   @@unique([organization_id, name])
-}
-
-model users {
-  id              String @id
-  organization_id String
-  organization    organizations @relation(fields: [organization_id], references: [id], onDelete: Cascade)
-
-  email String?
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  @@index([organization_id])
 }
 
 model organization_api_keys {

@@ -1,58 +1,39 @@
-import { Link, createFileRoute } from '@tanstack/react-router'
+import { useAuth } from "@clerk/tanstack-react-start"
+import { createFileRoute, useNavigate } from "@tanstack/react-router"
+import { useEffect } from "react"
 
-import { AppLayout } from '@/components/app/AppLayout'
-import { RequireSignedIn } from '@/components/app/RequireSignedIn'
-import { Card, CardContent, CardTitle } from '@/components/ui/card'
+import { RequireSignedIn } from "@/components/app/RequireSignedIn"
 
-export const Route = createFileRoute('/settings/')({
+export const Route = createFileRoute("/settings/")({
   component: RouteComponent,
 })
 
 function RouteComponent() {
+  const navigate = useNavigate()
+  const { isLoaded, orgId } = useAuth()
+
+  useEffect(() => {
+    if (!isLoaded) return
+    if (!orgId) {
+      void navigate({ to: "/organizations", replace: true })
+      return
+    }
+
+    void navigate({
+      to: "/organizations/$orgId/settings",
+      params: { orgId },
+      replace: true,
+    })
+  }, [isLoaded, navigate, orgId])
+
   return (
     <RequireSignedIn>
-      <AppLayout>
-        <div className="flex flex-col gap-4">
-          <div>
-            <h1 className="text-xl font-semibold text-foreground">Settings</h1>
-            <p className="text-sm text-muted-foreground">
-              Campaign mapping, ingestion API keys, and org preferences.
-            </p>
-          </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <Card>
-            <CardContent className="p-4 space-y-2">
-              <CardTitle className="text-base">Campaigns</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Map campaigns to locations and hide excluded campaigns from reports.
-              </p>
-              <Link
-                to="/settings/campaigns"
-                className="inline-block text-sm text-blue-600 hover:underline"
-              >
-                Open campaigns settings →
-              </Link>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4 space-y-2">
-              <CardTitle className="text-base">Organization</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Ingestion API keys, call qualification threshold, Google Ads customer ID.
-              </p>
-              <Link
-                to="/settings/org"
-                className="inline-block text-sm text-blue-600 hover:underline"
-              >
-                Open org settings →
-              </Link>
-            </CardContent>
-          </Card>
+      <div className="min-h-screen bg-background">
+        <div className="mx-auto max-w-md pt-20 text-center text-sm text-muted-foreground">
+          Redirecting…
         </div>
-        </div>
-    </AppLayout>
+      </div>
     </RequireSignedIn>
   )
 }
+

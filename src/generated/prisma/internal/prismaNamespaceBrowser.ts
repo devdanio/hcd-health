@@ -53,7 +53,6 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   organizations: 'organizations',
   locations: 'locations',
-  users: 'users',
   organization_api_keys: 'organization_api_keys',
   leads: 'leads',
   lead_events: 'lead_events',
@@ -101,17 +100,6 @@ export const LocationsScalarFieldEnum = {
 } as const
 
 export type LocationsScalarFieldEnum = (typeof LocationsScalarFieldEnum)[keyof typeof LocationsScalarFieldEnum]
-
-
-export const UsersScalarFieldEnum = {
-  id: 'id',
-  organization_id: 'organization_id',
-  email: 'email',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-} as const
-
-export type UsersScalarFieldEnum = (typeof UsersScalarFieldEnum)[keyof typeof UsersScalarFieldEnum]
 
 
 export const Organization_api_keysScalarFieldEnum = {

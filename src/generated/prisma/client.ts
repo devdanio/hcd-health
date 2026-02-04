@@ -50,11 +50,6 @@ export type organizations = Prisma.organizationsModel
  */
 export type locations = Prisma.locationsModel
 /**
- * Model users
- * 
- */
-export type users = Prisma.usersModel
-/**
  * Model organization_api_keys
  * 
  */

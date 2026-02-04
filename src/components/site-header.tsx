@@ -1,20 +1,22 @@
-import { UserButton } from "@clerk/tanstack-react-start"
+import { OrganizationSwitcher, UserButton } from "@clerk/tanstack-react-start"
 import { useRouterState } from "@tanstack/react-router"
 
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 
-export function SiteHeader() {
+export function SiteHeader(props: { orgId: string }) {
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   })
 
+  const base = `/organizations/${props.orgId}`
+
   const title =
-    pathname === "/"
+    pathname === base || pathname === `${base}/`
       ? "Dashboard"
-      : pathname.startsWith("/leads")
+      : pathname.startsWith(`${base}/leads`)
         ? "Leads"
-        : pathname.startsWith("/settings")
+        : pathname.startsWith(`${base}/settings`)
           ? "Settings"
           : "Revenue Intelligence"
 
@@ -28,6 +30,11 @@ export function SiteHeader() {
         />
         <h1 className="text-base font-medium">{title}</h1>
         <div className="ml-auto flex items-center gap-2">
+          <OrganizationSwitcher
+            afterCreateOrganizationUrl={(org) => `/organizations/${org.id}`}
+            afterSelectOrganizationUrl={(org) => `/organizations/${org.id}`}
+            afterSelectPersonalUrl="/organizations"
+          />
           <UserButton />
         </div>
       </div>

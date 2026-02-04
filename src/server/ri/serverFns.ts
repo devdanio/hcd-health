@@ -1,13 +1,11 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+
+import { requireActiveOrganizationFromAuth } from '@/server/ri/orgContext'
 import { toIsoString } from '@/server/ri/serializers'
 
 async function requireOrganizationId(): Promise<string> {
-  const { requireUserId, getOrCreateOrganizationForUser } = await import(
-    '@/server/ri/session'
-  )
-  const userId = await requireUserId()
-  const { organizationId } = await getOrCreateOrganizationForUser({ userId })
+  const { organizationId } = await requireActiveOrganizationFromAuth()
   return organizationId
 }
 
@@ -35,7 +33,8 @@ export const updateOrg = createServerFn({ method: 'POST' })
       google_ads_customer_id: z.string().min(1).optional().nullable(),
     }),
   )
-  .handler(async ({ input }) => {
+  .handler(async ({ data }) => {
+    const input = data
     const organizationId = await requireOrganizationId()
     const { prisma } = await import('@/db')
     const updated = await prisma.organizations.update({
@@ -75,7 +74,8 @@ export const createLocation = createServerFn({ method: 'POST' })
       name: z.string().min(1),
     }),
   )
-  .handler(async ({ input }) => {
+  .handler(async ({ data }) => {
+    const input = data
     const organizationId = await requireOrganizationId()
     const { prisma } = await import('@/db')
     const location = await prisma.locations.create({
@@ -117,7 +117,8 @@ export const generateNewApiKey = createServerFn({ method: 'POST' })
       label: z.string().min(1).optional(),
     }),
   )
-  .handler(async ({ input }) => {
+  .handler(async ({ data }) => {
+    const input = data
     const organizationId = await requireOrganizationId()
     const { prisma } = await import('@/db')
     const { generateApiKey, hashApiKey } = await import('@/server/ri/apiKeys')
@@ -148,7 +149,8 @@ export const revokeApiKey = createServerFn({ method: 'POST' })
       id: z.string().min(1),
     }),
   )
-  .handler(async ({ input }) => {
+  .handler(async ({ data }) => {
+    const input = data
     const organizationId = await requireOrganizationId()
     const { prisma } = await import('@/db')
     await prisma.organization_api_keys.updateMany({
@@ -171,7 +173,8 @@ const leadsListInput = z.object({
 
 export const listLeads = createServerFn({ method: 'POST' })
   .inputValidator(leadsListInput)
-  .handler(async ({ input }) => {
+  .handler(async ({ data }) => {
+    const input = data
     const organizationId = await requireOrganizationId()
     const { prisma } = await import('@/db')
 
@@ -236,7 +239,8 @@ export const listLeads = createServerFn({ method: 'POST' })
 
 export const getLeadDetail = createServerFn({ method: 'POST' })
   .inputValidator(z.object({ lead_id: z.string().min(1) }))
-  .handler(async ({ input }) => {
+  .handler(async ({ data }) => {
+    const input = data
     const organizationId = await requireOrganizationId()
     const { prisma } = await import('@/db')
     const lead = await prisma.leads.findFirstOrThrow({
@@ -305,7 +309,8 @@ export const setLeadStatus = createServerFn({ method: 'POST' })
       status: z.enum(['new', 'patient', 'not_patient']),
     }),
   )
-  .handler(async ({ input }) => {
+  .handler(async ({ data }) => {
+    const input = data
     const organizationId = await requireOrganizationId()
     const { prisma } = await import('@/db')
     const updated = await prisma.leads.updateMany({
@@ -323,7 +328,8 @@ export const upsertPatientValue = createServerFn({ method: 'POST' })
       cash_collected_to_date_cents: z.number().int().min(0).nullable().optional(),
     }),
   )
-  .handler(async ({ input }) => {
+  .handler(async ({ data }) => {
+    const input = data
     const organizationId = await requireOrganizationId()
     const { prisma } = await import('@/db')
     const lead = await prisma.leads.findFirstOrThrow({
@@ -447,7 +453,8 @@ export const upsertCampaignSetting = createServerFn({ method: 'POST' })
       campaign_category: z.enum(['branded', 'non_branded', 'other']).nullable().optional(),
     }),
   )
-  .handler(async ({ input }) => {
+  .handler(async ({ data }) => {
+    const input = data
     const organizationId = await requireOrganizationId()
     const { prisma } = await import('@/db')
     const setting = await prisma.campaign_settings.upsert({
@@ -490,7 +497,8 @@ const dashboardInput = z.object({
 
 export const getDashboard = createServerFn({ method: 'POST' })
   .inputValidator(dashboardInput)
-  .handler(async ({ input }) => {
+  .handler(async ({ data }) => {
+    const input = data
     const organizationId = await requireOrganizationId()
     const { prisma } = await import('@/db')
 
@@ -667,7 +675,8 @@ export const syncGoogleAdsNow = createServerFn({ method: 'POST' })
       to_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
     }),
   )
-  .handler(async ({ input }) => {
+  .handler(async ({ data }) => {
+    const input = data
     const organizationId = await requireOrganizationId()
     const { syncGoogleAdsForOrganization } = await import(
       '@/server/ri/syncGoogleAds'
@@ -682,7 +691,8 @@ export const syncGoogleAdsNow = createServerFn({ method: 'POST' })
 
 export const validateIngestionApiKey = createServerFn({ method: 'POST' })
   .inputValidator(z.object({ authorization: z.string().min(1) }))
-  .handler(async ({ input }) => {
+  .handler(async ({ data }) => {
+    const input = data
     const organizationId = await requireOrganizationId()
     const { prisma } = await import('@/db')
     const { extractBearerToken, hashApiKey } = await import('@/server/ri/apiKeys')

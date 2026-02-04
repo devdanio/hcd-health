@@ -10,7 +10,6 @@
  */
 export type * from './models/organizations.ts'
 export type * from './models/locations.ts'
-export type * from './models/users.ts'
 export type * from './models/organization_api_keys.ts'
 export type * from './models/leads.ts'
 export type * from './models/lead_events.ts'

@@ -1,5 +1,5 @@
 import * as React from "react"
-import { UserButton } from "@clerk/tanstack-react-start"
+import { OrganizationSwitcher, UserButton } from "@clerk/tanstack-react-start"
 import { Link, useRouterState } from "@tanstack/react-router"
 import {
   IconDashboard,
@@ -19,24 +19,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
-const navMain = [
-  {
-    title: "Dashboard",
-    url: "/",
-    icon: IconDashboard,
-  },
-  {
-    title: "Leads",
-    url: "/leads",
-    icon: IconUsers,
-  },
-  {
-    title: "Settings",
-    url: "/settings",
-    icon: IconSettings,
-  },
-]
-
 const navSecondary = [
   {
     title: "Support",
@@ -45,14 +27,37 @@ const navSecondary = [
   },
 ]
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({
+  orgId,
+  ...props
+}: React.ComponentProps<typeof Sidebar> & { orgId: string }) {
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   })
 
+  const base = `/organizations/${orgId}`
+
+  const navMain = [
+    {
+      title: "Dashboard",
+      url: `${base}`,
+      icon: IconDashboard,
+    },
+    {
+      title: "Leads",
+      url: `${base}/leads`,
+      icon: IconUsers,
+    },
+    {
+      title: "Settings",
+      url: `${base}/settings`,
+      icon: IconSettings,
+    },
+  ]
+
   const isActive = (url: string) =>
-    url === "/"
-      ? pathname === "/"
+    url === base
+      ? pathname === base || pathname === `${base}/`
       : pathname === url || pathname.startsWith(`${url}/`)
 
   return (
@@ -64,7 +69,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <Link to="/">
+              <Link to={base}>
                 <img
                   src="/images/high-country-health-logo.svg"
                   alt="High Country Health"
@@ -75,6 +80,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </span>
               </Link>
             </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <div className="px-1.5 py-1">
+              <OrganizationSwitcher
+                afterCreateOrganizationUrl={(org) => `/organizations/${org.id}`}
+                afterSelectOrganizationUrl={(org) => `/organizations/${org.id}`}
+                afterSelectPersonalUrl="/organizations"
+              />
+            </div>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>

@@ -11,12 +11,19 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
+import { Route as OrganizationsIndexRouteImport } from './routes/organizations/index'
 import { Route as LeadsIndexRouteImport } from './routes/leads/index'
 import { Route as UsersSignInRouteImport } from './routes/users/sign-in'
 import { Route as SettingsOrgRouteImport } from './routes/settings/org'
 import { Route as SettingsCampaignsRouteImport } from './routes/settings/campaigns'
 import { Route as LeadsLeadIdRouteImport } from './routes/leads/$leadId'
+import { Route as OrganizationsOrgIdIndexRouteImport } from './routes/organizations/$orgId/index'
 import { Route as ApiIngestEventsRouteImport } from './routes/api/ingest/events'
+import { Route as OrganizationsOrgIdSettingsIndexRouteImport } from './routes/organizations/$orgId/settings/index'
+import { Route as OrganizationsOrgIdLeadsIndexRouteImport } from './routes/organizations/$orgId/leads/index'
+import { Route as OrganizationsOrgIdSettingsOrgRouteImport } from './routes/organizations/$orgId/settings/org'
+import { Route as OrganizationsOrgIdSettingsCampaignsRouteImport } from './routes/organizations/$orgId/settings/campaigns'
+import { Route as OrganizationsOrgIdLeadsLeadIdRouteImport } from './routes/organizations/$orgId/leads/$leadId'
 import { Route as ApiInternalGoogleAdsSyncRouteImport } from './routes/api/internal/google-ads/sync'
 
 const IndexRoute = IndexRouteImport.update({
@@ -27,6 +34,11 @@ const IndexRoute = IndexRouteImport.update({
 const SettingsIndexRoute = SettingsIndexRouteImport.update({
   id: '/settings/',
   path: '/settings/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrganizationsIndexRoute = OrganizationsIndexRouteImport.update({
+  id: '/organizations/',
+  path: '/organizations/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LeadsIndexRoute = LeadsIndexRouteImport.update({
@@ -54,11 +66,46 @@ const LeadsLeadIdRoute = LeadsLeadIdRouteImport.update({
   path: '/leads/$leadId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OrganizationsOrgIdIndexRoute = OrganizationsOrgIdIndexRouteImport.update({
+  id: '/organizations/$orgId/',
+  path: '/organizations/$orgId/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiIngestEventsRoute = ApiIngestEventsRouteImport.update({
   id: '/api/ingest/events',
   path: '/api/ingest/events',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OrganizationsOrgIdSettingsIndexRoute =
+  OrganizationsOrgIdSettingsIndexRouteImport.update({
+    id: '/organizations/$orgId/settings/',
+    path: '/organizations/$orgId/settings/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const OrganizationsOrgIdLeadsIndexRoute =
+  OrganizationsOrgIdLeadsIndexRouteImport.update({
+    id: '/organizations/$orgId/leads/',
+    path: '/organizations/$orgId/leads/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const OrganizationsOrgIdSettingsOrgRoute =
+  OrganizationsOrgIdSettingsOrgRouteImport.update({
+    id: '/organizations/$orgId/settings/org',
+    path: '/organizations/$orgId/settings/org',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const OrganizationsOrgIdSettingsCampaignsRoute =
+  OrganizationsOrgIdSettingsCampaignsRouteImport.update({
+    id: '/organizations/$orgId/settings/campaigns',
+    path: '/organizations/$orgId/settings/campaigns',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const OrganizationsOrgIdLeadsLeadIdRoute =
+  OrganizationsOrgIdLeadsLeadIdRouteImport.update({
+    id: '/organizations/$orgId/leads/$leadId',
+    path: '/organizations/$orgId/leads/$leadId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiInternalGoogleAdsSyncRoute =
   ApiInternalGoogleAdsSyncRouteImport.update({
     id: '/api/internal/google-ads/sync',
@@ -73,9 +120,16 @@ export interface FileRoutesByFullPath {
   '/settings/org': typeof SettingsOrgRoute
   '/users/sign-in': typeof UsersSignInRoute
   '/leads': typeof LeadsIndexRoute
+  '/organizations': typeof OrganizationsIndexRoute
   '/settings': typeof SettingsIndexRoute
   '/api/ingest/events': typeof ApiIngestEventsRoute
+  '/organizations/$orgId': typeof OrganizationsOrgIdIndexRoute
   '/api/internal/google-ads/sync': typeof ApiInternalGoogleAdsSyncRoute
+  '/organizations/$orgId/leads/$leadId': typeof OrganizationsOrgIdLeadsLeadIdRoute
+  '/organizations/$orgId/settings/campaigns': typeof OrganizationsOrgIdSettingsCampaignsRoute
+  '/organizations/$orgId/settings/org': typeof OrganizationsOrgIdSettingsOrgRoute
+  '/organizations/$orgId/leads': typeof OrganizationsOrgIdLeadsIndexRoute
+  '/organizations/$orgId/settings': typeof OrganizationsOrgIdSettingsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -84,9 +138,16 @@ export interface FileRoutesByTo {
   '/settings/org': typeof SettingsOrgRoute
   '/users/sign-in': typeof UsersSignInRoute
   '/leads': typeof LeadsIndexRoute
+  '/organizations': typeof OrganizationsIndexRoute
   '/settings': typeof SettingsIndexRoute
   '/api/ingest/events': typeof ApiIngestEventsRoute
+  '/organizations/$orgId': typeof OrganizationsOrgIdIndexRoute
   '/api/internal/google-ads/sync': typeof ApiInternalGoogleAdsSyncRoute
+  '/organizations/$orgId/leads/$leadId': typeof OrganizationsOrgIdLeadsLeadIdRoute
+  '/organizations/$orgId/settings/campaigns': typeof OrganizationsOrgIdSettingsCampaignsRoute
+  '/organizations/$orgId/settings/org': typeof OrganizationsOrgIdSettingsOrgRoute
+  '/organizations/$orgId/leads': typeof OrganizationsOrgIdLeadsIndexRoute
+  '/organizations/$orgId/settings': typeof OrganizationsOrgIdSettingsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -96,9 +157,16 @@ export interface FileRoutesById {
   '/settings/org': typeof SettingsOrgRoute
   '/users/sign-in': typeof UsersSignInRoute
   '/leads/': typeof LeadsIndexRoute
+  '/organizations/': typeof OrganizationsIndexRoute
   '/settings/': typeof SettingsIndexRoute
   '/api/ingest/events': typeof ApiIngestEventsRoute
+  '/organizations/$orgId/': typeof OrganizationsOrgIdIndexRoute
   '/api/internal/google-ads/sync': typeof ApiInternalGoogleAdsSyncRoute
+  '/organizations/$orgId/leads/$leadId': typeof OrganizationsOrgIdLeadsLeadIdRoute
+  '/organizations/$orgId/settings/campaigns': typeof OrganizationsOrgIdSettingsCampaignsRoute
+  '/organizations/$orgId/settings/org': typeof OrganizationsOrgIdSettingsOrgRoute
+  '/organizations/$orgId/leads/': typeof OrganizationsOrgIdLeadsIndexRoute
+  '/organizations/$orgId/settings/': typeof OrganizationsOrgIdSettingsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -109,9 +177,16 @@ export interface FileRouteTypes {
     | '/settings/org'
     | '/users/sign-in'
     | '/leads'
+    | '/organizations'
     | '/settings'
     | '/api/ingest/events'
+    | '/organizations/$orgId'
     | '/api/internal/google-ads/sync'
+    | '/organizations/$orgId/leads/$leadId'
+    | '/organizations/$orgId/settings/campaigns'
+    | '/organizations/$orgId/settings/org'
+    | '/organizations/$orgId/leads'
+    | '/organizations/$orgId/settings'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -120,9 +195,16 @@ export interface FileRouteTypes {
     | '/settings/org'
     | '/users/sign-in'
     | '/leads'
+    | '/organizations'
     | '/settings'
     | '/api/ingest/events'
+    | '/organizations/$orgId'
     | '/api/internal/google-ads/sync'
+    | '/organizations/$orgId/leads/$leadId'
+    | '/organizations/$orgId/settings/campaigns'
+    | '/organizations/$orgId/settings/org'
+    | '/organizations/$orgId/leads'
+    | '/organizations/$orgId/settings'
   id:
     | '__root__'
     | '/'
@@ -131,9 +213,16 @@ export interface FileRouteTypes {
     | '/settings/org'
     | '/users/sign-in'
     | '/leads/'
+    | '/organizations/'
     | '/settings/'
     | '/api/ingest/events'
+    | '/organizations/$orgId/'
     | '/api/internal/google-ads/sync'
+    | '/organizations/$orgId/leads/$leadId'
+    | '/organizations/$orgId/settings/campaigns'
+    | '/organizations/$orgId/settings/org'
+    | '/organizations/$orgId/leads/'
+    | '/organizations/$orgId/settings/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -143,9 +232,16 @@ export interface RootRouteChildren {
   SettingsOrgRoute: typeof SettingsOrgRoute
   UsersSignInRoute: typeof UsersSignInRoute
   LeadsIndexRoute: typeof LeadsIndexRoute
+  OrganizationsIndexRoute: typeof OrganizationsIndexRoute
   SettingsIndexRoute: typeof SettingsIndexRoute
   ApiIngestEventsRoute: typeof ApiIngestEventsRoute
+  OrganizationsOrgIdIndexRoute: typeof OrganizationsOrgIdIndexRoute
   ApiInternalGoogleAdsSyncRoute: typeof ApiInternalGoogleAdsSyncRoute
+  OrganizationsOrgIdLeadsLeadIdRoute: typeof OrganizationsOrgIdLeadsLeadIdRoute
+  OrganizationsOrgIdSettingsCampaignsRoute: typeof OrganizationsOrgIdSettingsCampaignsRoute
+  OrganizationsOrgIdSettingsOrgRoute: typeof OrganizationsOrgIdSettingsOrgRoute
+  OrganizationsOrgIdLeadsIndexRoute: typeof OrganizationsOrgIdLeadsIndexRoute
+  OrganizationsOrgIdSettingsIndexRoute: typeof OrganizationsOrgIdSettingsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -162,6 +258,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/organizations/': {
+      id: '/organizations/'
+      path: '/organizations'
+      fullPath: '/organizations'
+      preLoaderRoute: typeof OrganizationsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/leads/': {
@@ -199,11 +302,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LeadsLeadIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/organizations/$orgId/': {
+      id: '/organizations/$orgId/'
+      path: '/organizations/$orgId'
+      fullPath: '/organizations/$orgId'
+      preLoaderRoute: typeof OrganizationsOrgIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/ingest/events': {
       id: '/api/ingest/events'
       path: '/api/ingest/events'
       fullPath: '/api/ingest/events'
       preLoaderRoute: typeof ApiIngestEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/organizations/$orgId/settings/': {
+      id: '/organizations/$orgId/settings/'
+      path: '/organizations/$orgId/settings'
+      fullPath: '/organizations/$orgId/settings'
+      preLoaderRoute: typeof OrganizationsOrgIdSettingsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/organizations/$orgId/leads/': {
+      id: '/organizations/$orgId/leads/'
+      path: '/organizations/$orgId/leads'
+      fullPath: '/organizations/$orgId/leads'
+      preLoaderRoute: typeof OrganizationsOrgIdLeadsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/organizations/$orgId/settings/org': {
+      id: '/organizations/$orgId/settings/org'
+      path: '/organizations/$orgId/settings/org'
+      fullPath: '/organizations/$orgId/settings/org'
+      preLoaderRoute: typeof OrganizationsOrgIdSettingsOrgRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/organizations/$orgId/settings/campaigns': {
+      id: '/organizations/$orgId/settings/campaigns'
+      path: '/organizations/$orgId/settings/campaigns'
+      fullPath: '/organizations/$orgId/settings/campaigns'
+      preLoaderRoute: typeof OrganizationsOrgIdSettingsCampaignsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/organizations/$orgId/leads/$leadId': {
+      id: '/organizations/$orgId/leads/$leadId'
+      path: '/organizations/$orgId/leads/$leadId'
+      fullPath: '/organizations/$orgId/leads/$leadId'
+      preLoaderRoute: typeof OrganizationsOrgIdLeadsLeadIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/internal/google-ads/sync': {
@@ -223,9 +368,17 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsOrgRoute: SettingsOrgRoute,
   UsersSignInRoute: UsersSignInRoute,
   LeadsIndexRoute: LeadsIndexRoute,
+  OrganizationsIndexRoute: OrganizationsIndexRoute,
   SettingsIndexRoute: SettingsIndexRoute,
   ApiIngestEventsRoute: ApiIngestEventsRoute,
+  OrganizationsOrgIdIndexRoute: OrganizationsOrgIdIndexRoute,
   ApiInternalGoogleAdsSyncRoute: ApiInternalGoogleAdsSyncRoute,
+  OrganizationsOrgIdLeadsLeadIdRoute: OrganizationsOrgIdLeadsLeadIdRoute,
+  OrganizationsOrgIdSettingsCampaignsRoute:
+    OrganizationsOrgIdSettingsCampaignsRoute,
+  OrganizationsOrgIdSettingsOrgRoute: OrganizationsOrgIdSettingsOrgRoute,
+  OrganizationsOrgIdLeadsIndexRoute: OrganizationsOrgIdLeadsIndexRoute,
+  OrganizationsOrgIdSettingsIndexRoute: OrganizationsOrgIdSettingsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
