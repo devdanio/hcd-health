@@ -1,4 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
+import dayjs from 'dayjs'
 import { z } from 'zod'
 
 import { requireActiveOrganizationFromAuth } from '@/server/ri/orgContext'
@@ -8,6 +9,29 @@ function normalizeOptionalString(value: string | null | undefined): string | und
   if (typeof value !== 'string') return undefined
   const trimmed = value.trim()
   return trimmed.length > 0 ? trimmed : undefined
+}
+
+function campaignKey(
+  platform: string | null | undefined,
+  campaignId: string | null | undefined,
+): string {
+  const platformValue = platform ?? 'unknown'
+  const campaignValue = campaignId ?? 'unknown'
+  return `${platformValue}::${campaignValue}`
+}
+
+function parseCampaignKey(key: string): { platform: string | null; campaign_id: string | null } {
+  const separator = '::'
+  const splitIndex = key.indexOf(separator)
+  if (splitIndex === -1) {
+    return { platform: null, campaign_id: null }
+  }
+  const platformValue = key.slice(0, splitIndex)
+  const campaignValue = key.slice(splitIndex + separator.length)
+  return {
+    platform: platformValue === 'unknown' ? null : platformValue,
+    campaign_id: campaignValue === 'unknown' ? null : campaignValue,
+  }
 }
 
 async function requireOrganizationId(): Promise<string> {
@@ -26,6 +50,7 @@ export const getOrg = createServerFn({ method: 'GET' }).handler(async () => {
       qualified_call_duration_threshold_sec: true,
       default_revenue_model: true,
       google_ads_customer_id: true,
+      facebook_ads_account_id: true,
     },
   })
   return org
@@ -37,6 +62,7 @@ export const updateOrg = createServerFn({ method: 'POST' })
       name: z.string().min(1).optional(),
       qualified_call_duration_threshold_sec: z.number().int().min(0).optional(),
       google_ads_customer_id: z.string().min(1).optional().nullable(),
+      facebook_ads_account_id: z.string().min(1).optional().nullable(),
     }),
   )
   .handler(async ({ data }) => {
@@ -49,6 +75,7 @@ export const updateOrg = createServerFn({ method: 'POST' })
         name: input.name,
         qualified_call_duration_threshold_sec: input.qualified_call_duration_threshold_sec,
         google_ads_customer_id: input.google_ads_customer_id ?? undefined,
+        facebook_ads_account_id: input.facebook_ads_account_id ?? undefined,
       },
       select: {
         id: true,
@@ -56,6 +83,7 @@ export const updateOrg = createServerFn({ method: 'POST' })
         qualified_call_duration_threshold_sec: true,
         default_revenue_model: true,
         google_ads_customer_id: true,
+        facebook_ads_account_id: true,
       },
     })
     return updated
@@ -154,6 +182,7 @@ const orgSettingsInput = z.object({
   data_sync_start_date: z.string().optional(),
   allowed_ips: z.string().optional(),
   notes: z.string().optional(),
+  facebook_business_id: z.string().optional(),
 })
 
 export const getOrgSettings = createServerFn({ method: 'GET' }).handler(
@@ -182,6 +211,10 @@ export const getOrgSettings = createServerFn({ method: 'GET' }).handler(
             : '',
         allowed_ips: typeof config.allowed_ips === 'string' ? config.allowed_ips : '',
         notes: typeof config.notes === 'string' ? config.notes : '',
+        facebook_business_id:
+          typeof config.facebook_business_id === 'string'
+            ? config.facebook_business_id
+            : '',
       },
       updated_at: record ? toIsoString(record.updated_at) : null,
     }
@@ -203,6 +236,7 @@ export const updateOrgSettings = createServerFn({ method: 'POST' })
       data_sync_start_date: normalizeOptionalString(input.data_sync_start_date) ?? '',
       allowed_ips: normalizeOptionalString(input.allowed_ips) ?? '',
       notes: normalizeOptionalString(input.notes) ?? '',
+      facebook_business_id: normalizeOptionalString(input.facebook_business_id) ?? '',
     } as const
 
     const updated = await prisma.organization_settings.upsert({
@@ -401,26 +435,30 @@ export const listLeads = createServerFn({ method: 'POST' })
     const organizationId = await requireOrganizationId()
     const { prisma } = await import('@/db')
 
-    const campaignIdsForLocation = input.location_id
+    const campaignPairsForLocation = input.location_id
       ? await prisma.campaign_settings
           .findMany({
             where: { organization_id: organizationId, location_id: input.location_id },
-            select: { campaign_id: true },
+            select: { campaign_id: true, platform: true },
           })
-          .then((rows) => rows.map((r) => r.campaign_id))
-      : null
+          .then((rows) =>
+            rows.map((r) => ({ campaign_id: r.campaign_id, platform: r.platform })),
+          )
+      : []
 
     const where = {
       organization_id: organizationId,
       ...(input.status ? { status: input.status } : {}),
       ...(input.qualified_only ? { qualified: true } : {}),
       ...(input.campaign_id ? { campaign_id: input.campaign_id } : {}),
-      ...(campaignIdsForLocation ? { campaign_id: { in: campaignIdsForLocation } } : {}),
+      ...(campaignPairsForLocation.length > 0
+        ? { OR: campaignPairsForLocation }
+        : {}),
       ...(input.from || input.to
         ? {
             first_event_at: {
-              ...(input.from ? { gte: new Date(input.from) } : {}),
-              ...(input.to ? { lte: new Date(input.to) } : {}),
+              ...(input.from ? { gte: dayjs(input.from).toDate() } : {}),
+              ...(input.to ? { lte: dayjs(input.to).toDate() } : {}),
             },
           }
         : {}),
@@ -590,22 +628,29 @@ export const listCampaignSettings = createServerFn({ method: 'GET' }).handler(
     const organizationId = await requireOrganizationId()
     const { prisma } = await import('@/db')
 
+    const last7dStart = dayjs().subtract(7, 'day').toDate()
+
     const [campaignRows, leadCampaignRows, last7dSpend, locations, settings] =
       await Promise.all([
         prisma.campaigns.findMany({
           where: { organization_id: organizationId },
-          select: { campaign_id: true, campaign_name: true, status: true },
+          select: {
+            campaign_id: true,
+            campaign_name: true,
+            status: true,
+            platform: true,
+          },
         }),
         prisma.leads.findMany({
           where: { organization_id: organizationId, campaign_id: { not: null } },
-          distinct: ['campaign_id'],
-          select: { campaign_id: true, utm_campaign: true },
+          distinct: ['campaign_id', 'platform'],
+          select: { campaign_id: true, utm_campaign: true, platform: true },
         }),
         prisma.ad_spend_daily.groupBy({
-          by: ['campaign_id'],
+          by: ['campaign_id', 'platform'],
           where: {
             organization_id: organizationId,
-            date: { gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) },
+            date: { gte: last7dStart },
           },
           _sum: { cost_cents: true },
         }),
@@ -618,6 +663,7 @@ export const listCampaignSettings = createServerFn({ method: 'GET' }).handler(
           where: { organization_id: organizationId },
           select: {
             campaign_id: true,
+            platform: true,
             location_id: true,
             include_in_reporting: true,
             campaign_category: true,
@@ -627,38 +673,55 @@ export const listCampaignSettings = createServerFn({ method: 'GET' }).handler(
 
     const spendByCampaign = new Map<string, number>()
     for (const row of last7dSpend) {
-      spendByCampaign.set(row.campaign_id, row._sum.cost_cents ?? 0)
+      spendByCampaign.set(
+        campaignKey(row.platform, row.campaign_id),
+        row._sum.cost_cents ?? 0,
+      )
     }
 
     const locationById = new Map(locations.map((l) => [l.id, l.name] as const))
-    const settingsByCampaignId = new Map(
-      settings.map((s) => [s.campaign_id, s] as const),
+    const settingsByCampaignKey = new Map(
+      settings.map((s) => [campaignKey(s.platform, s.campaign_id), s] as const),
     )
 
-    const campaignIds = new Set<string>()
-    for (const c of campaignRows) campaignIds.add(c.campaign_id)
+    const campaignKeys = new Set<string>()
+    for (const c of campaignRows) {
+      campaignKeys.add(campaignKey(c.platform, c.campaign_id))
+    }
     for (const c of leadCampaignRows) {
-      if (c.campaign_id) campaignIds.add(c.campaign_id)
+      if (c.campaign_id) {
+        campaignKeys.add(campaignKey(c.platform, c.campaign_id))
+      }
     }
 
-    const campaigns = Array.from(campaignIds).map((campaignId) => {
-      const campaign = campaignRows.find((c) => c.campaign_id === campaignId)
-      const leadCampaign = leadCampaignRows.find((c) => c.campaign_id === campaignId)
-      const setting = settingsByCampaignId.get(campaignId)
+    const campaigns = Array.from(campaignKeys).flatMap((key) => {
+      const parsed = parseCampaignKey(key)
+      if (!parsed.campaign_id) return []
+      const platform = parsed.platform ?? 'unknown'
+      const campaign = campaignRows.find(
+        (c) => c.campaign_id === parsed.campaign_id && c.platform === platform,
+      )
+      const leadCampaign = leadCampaignRows.find(
+        (c) => c.campaign_id === parsed.campaign_id && c.platform === platform,
+      )
+      const setting = settingsByCampaignKey.get(key)
       const locationName = setting?.location_id
         ? locationById.get(setting.location_id) ?? null
         : null
 
-      return {
-        campaign_id: campaignId,
-        campaign_name: campaign?.campaign_name ?? leadCampaign?.utm_campaign ?? null,
-        status: campaign?.status ?? 'unknown',
-        include_in_reporting: setting?.include_in_reporting ?? true,
-        campaign_category: setting?.campaign_category ?? null,
-        location_id: setting?.location_id ?? null,
-        location_name: locationName,
-        last_7d_spend_cents: spendByCampaign.get(campaignId) ?? 0,
-      }
+      return [
+        {
+          platform,
+          campaign_id: parsed.campaign_id,
+          campaign_name: campaign?.campaign_name ?? leadCampaign?.utm_campaign ?? null,
+          status: campaign?.status ?? 'unknown',
+          include_in_reporting: setting?.include_in_reporting ?? true,
+          campaign_category: setting?.campaign_category ?? null,
+          location_id: setting?.location_id ?? null,
+          location_name: locationName,
+          last_7d_spend_cents: spendByCampaign.get(key) ?? 0,
+        },
+      ]
     })
 
     campaigns.sort((a, b) => b.last_7d_spend_cents - a.last_7d_spend_cents)
@@ -670,6 +733,7 @@ export const listCampaignSettings = createServerFn({ method: 'GET' }).handler(
 export const upsertCampaignSetting = createServerFn({ method: 'POST' })
   .inputValidator(
     z.object({
+      platform: z.string().min(1),
       campaign_id: z.string().min(1),
       location_id: z.string().min(1).nullable(),
       include_in_reporting: z.boolean().optional(),
@@ -682,13 +746,15 @@ export const upsertCampaignSetting = createServerFn({ method: 'POST' })
     const { prisma } = await import('@/db')
     const setting = await prisma.campaign_settings.upsert({
       where: {
-        organization_id_campaign_id: {
+        organization_id_platform_campaign_id: {
           organization_id: organizationId,
+          platform: input.platform,
           campaign_id: input.campaign_id,
         },
       },
       create: {
         organization_id: organizationId,
+        platform: input.platform,
         campaign_id: input.campaign_id,
         location_id: input.location_id,
         include_in_reporting: input.include_in_reporting ?? true,
@@ -700,6 +766,7 @@ export const upsertCampaignSetting = createServerFn({ method: 'POST' })
         campaign_category: input.campaign_category ?? undefined,
       },
       select: {
+        platform: true,
         campaign_id: true,
         location_id: true,
         include_in_reporting: true,
@@ -725,14 +792,17 @@ export const getDashboard = createServerFn({ method: 'POST' })
     const organizationId = await requireOrganizationId()
     const { prisma } = await import('@/db')
 
-    const fromDate = new Date(`${input.from_date}T00:00:00.000Z`)
-    const toDate = new Date(`${input.to_date}T23:59:59.999Z`)
+    const fromDate = dayjs(`${input.from_date}T00:00:00.000Z`).toDate()
+    const toDate = dayjs(`${input.to_date}T23:59:59.999Z`).toDate()
+    const spendFrom = dayjs(`${input.from_date}T00:00:00.000Z`).toDate()
+    const spendTo = dayjs(`${input.to_date}T23:59:59.999Z`).toDate()
 
     const [campaignSettings, locations] = await Promise.all([
       prisma.campaign_settings.findMany({
         where: { organization_id: organizationId },
         select: {
           campaign_id: true,
+          platform: true,
           location_id: true,
           include_in_reporting: true,
         },
@@ -743,33 +813,41 @@ export const getDashboard = createServerFn({ method: 'POST' })
       }),
     ])
 
-    const settingsByCampaignId = new Map(
-      campaignSettings.map((s) => [s.campaign_id, s] as const),
+    const settingsByCampaignKey = new Map(
+      campaignSettings.map((s) => [campaignKey(s.platform, s.campaign_id), s] as const),
     )
     const locationById = new Map(locations.map((l) => [l.id, l.name] as const))
 
-    const campaignIdsForLocation = input.location_id
-      ? campaignSettings
-          .filter((s) => s.location_id === input.location_id)
-          .map((s) => s.campaign_id)
-      : null
+    const locationCampaignFilters = input.location_id
+      ? campaignSettings.filter(
+          (s) =>
+            s.location_id === input.location_id &&
+            (!input.platform || s.platform === input.platform),
+        )
+      : []
+
+    const locationCampaignPairs = locationCampaignFilters.map((s) => ({
+      campaign_id: s.campaign_id,
+      platform: s.platform,
+    }))
 
     const leadWhere = {
       organization_id: organizationId,
       first_event_at: { gte: fromDate, lte: toDate },
       ...(input.platform ? { platform: input.platform } : {}),
       ...(input.campaign_id ? { campaign_id: input.campaign_id } : {}),
-      ...(campaignIdsForLocation ? { campaign_id: { in: campaignIdsForLocation } } : {}),
+      ...(locationCampaignPairs.length > 0 ? { OR: locationCampaignPairs } : {}),
     } as const
 
     const [spendRows, leads, patients] = await Promise.all([
       prisma.ad_spend_daily.groupBy({
-        by: ['campaign_id'],
+        by: ['campaign_id', 'platform'],
         where: {
           organization_id: organizationId,
-          date: { gte: new Date(input.from_date), lte: new Date(input.to_date) },
+          date: { gte: spendFrom, lte: spendTo },
+          ...(input.platform ? { platform: input.platform } : {}),
           ...(input.campaign_id ? { campaign_id: input.campaign_id } : {}),
-          ...(campaignIdsForLocation ? { campaign_id: { in: campaignIdsForLocation } } : {}),
+          ...(locationCampaignPairs.length > 0 ? { OR: locationCampaignPairs } : {}),
         },
         _sum: { cost_cents: true },
       }),
@@ -778,6 +856,7 @@ export const getDashboard = createServerFn({ method: 'POST' })
         select: {
           id: true,
           campaign_id: true,
+          platform: true,
           utm_campaign: true,
           qualified: true,
           status: true,
@@ -788,6 +867,7 @@ export const getDashboard = createServerFn({ method: 'POST' })
         select: {
           id: true,
           campaign_id: true,
+          platform: true,
           patient_values: { select: { ltv_cents: true, cash_collected_to_date_cents: true } },
         },
       }),
@@ -795,46 +875,82 @@ export const getDashboard = createServerFn({ method: 'POST' })
 
     const spendByCampaign = new Map<string, number>()
     for (const row of spendRows) {
-      spendByCampaign.set(row.campaign_id, row._sum.cost_cents ?? 0)
+      spendByCampaign.set(
+        campaignKey(row.platform, row.campaign_id),
+        row._sum.cost_cents ?? 0,
+      )
     }
 
     const leadsByCampaign = new Map<string, number>()
     const qualifiedLeadsByCampaign = new Map<string, number>()
     const patientsByCampaign = new Map<string, number>()
     const revenueByCampaign = new Map<string, number>()
-    const campaignNameById = new Map<string, string | null>()
+    const campaignNameByKey = new Map<string, string | null>()
 
     for (const l of leads) {
-      const cid = l.campaign_id ?? 'unknown'
-      leadsByCampaign.set(cid, (leadsByCampaign.get(cid) ?? 0) + 1)
+      const key = campaignKey(l.platform, l.campaign_id)
+      leadsByCampaign.set(key, (leadsByCampaign.get(key) ?? 0) + 1)
       if (l.qualified) {
-        qualifiedLeadsByCampaign.set(cid, (qualifiedLeadsByCampaign.get(cid) ?? 0) + 1)
+        qualifiedLeadsByCampaign.set(
+          key,
+          (qualifiedLeadsByCampaign.get(key) ?? 0) + 1,
+        )
       }
-      if (l.utm_campaign) campaignNameById.set(cid, l.utm_campaign)
+      if (l.utm_campaign) campaignNameByKey.set(key, l.utm_campaign)
     }
 
     for (const p of patients) {
-      const cid = p.campaign_id ?? 'unknown'
-      patientsByCampaign.set(cid, (patientsByCampaign.get(cid) ?? 0) + 1)
+      const key = campaignKey(p.platform, p.campaign_id)
+      patientsByCampaign.set(key, (patientsByCampaign.get(key) ?? 0) + 1)
       const ltv = p.patient_values?.ltv_cents ?? 0
-      revenueByCampaign.set(cid, (revenueByCampaign.get(cid) ?? 0) + ltv)
+      revenueByCampaign.set(key, (revenueByCampaign.get(key) ?? 0) + ltv)
     }
 
-    const campaignIds = new Set<string>([
+    const campaignKeys = new Set<string>([
       ...Array.from(spendByCampaign.keys()),
       ...Array.from(leadsByCampaign.keys()),
       ...Array.from(patientsByCampaign.keys()),
     ])
 
-    const rows = Array.from(campaignIds).map((cid) => {
-      const campaignId = cid === 'unknown' ? null : cid
-      const spend = campaignId ? spendByCampaign.get(campaignId) ?? 0 : 0
-      const leadCount = leadsByCampaign.get(cid) ?? 0
-      const qualifiedCount = qualifiedLeadsByCampaign.get(cid) ?? 0
-      const patientCount = patientsByCampaign.get(cid) ?? 0
-      const revenue = revenueByCampaign.get(cid) ?? 0
+    const campaignPairs = Array.from(campaignKeys)
+      .map((key) => parseCampaignKey(key))
+      .filter(
+        (pair): pair is { platform: string; campaign_id: string } =>
+          !!pair.campaign_id && !!pair.platform,
+      )
 
-      const setting = campaignId ? settingsByCampaignId.get(campaignId) : undefined
+    const syncedCampaigns =
+      campaignPairs.length > 0
+        ? await prisma.campaigns.findMany({
+            where: {
+              organization_id: organizationId,
+              OR: campaignPairs.map((pair) => ({
+                campaign_id: pair.campaign_id,
+                platform: pair.platform,
+              })),
+            },
+            select: { campaign_id: true, campaign_name: true, platform: true },
+          })
+        : []
+
+    const syncedCampaignNameByKey = new Map<string, string | null>(
+      syncedCampaigns.map((c) => [campaignKey(c.platform, c.campaign_id), c.campaign_name] as const),
+    )
+
+    const rows = Array.from(campaignKeys).map((key) => {
+      const parsed = parseCampaignKey(key)
+      const campaignId = parsed.campaign_id
+      const platform = parsed.platform ?? 'unknown'
+      const spend = campaignId ? spendByCampaign.get(key) ?? 0 : 0
+      const leadCount = leadsByCampaign.get(key) ?? 0
+      const qualifiedCount = qualifiedLeadsByCampaign.get(key) ?? 0
+      const patientCount = patientsByCampaign.get(key) ?? 0
+      const revenue = revenueByCampaign.get(key) ?? 0
+
+      const setting =
+        campaignId && platform !== 'unknown'
+          ? settingsByCampaignKey.get(key)
+          : undefined
       const includeInReporting = setting?.include_in_reporting ?? true
 
       const locationId = setting?.location_id ?? null
@@ -845,9 +961,10 @@ export const getDashboard = createServerFn({ method: 'POST' })
       const displayName =
         campaignId === null
           ? 'Unknown/Direct'
-          : campaignNameById.get(cid) ?? null
+          : syncedCampaignNameByKey.get(key) ?? campaignNameByKey.get(key) ?? null
 
       return {
+        platform,
         campaign_id: campaignId,
         campaign_name: displayName,
         location_id: locationId,
@@ -910,6 +1027,65 @@ export const syncGoogleAdsNow = createServerFn({ method: 'POST' })
       toDate: input.to_date,
     })
     return result
+  })
+
+export const syncFacebookAdsNow = createServerFn({ method: 'POST' })
+  .inputValidator(
+    z.object({
+      from_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+      to_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    }),
+  )
+  .handler(async ({ data }) => {
+    const input = data
+    const organizationId = await requireOrganizationId()
+    const { syncFacebookAdsForOrganization } = await import(
+      '@/server/ri/syncFacebookAds'
+    )
+    const result = await syncFacebookAdsForOrganization({
+      organizationId,
+      fromDate: input.from_date,
+      toDate: input.to_date,
+    })
+    return result
+  })
+
+export const syncFacebookBusinessCampaignsNow = createServerFn({ method: 'POST' })
+  .inputValidator(
+    z.object({
+      business_id: z.string().min(1).optional(),
+    }),
+  )
+  .handler(async ({ data }) => {
+    const input = data
+    const organizationId = await requireOrganizationId()
+    const { prisma } = await import('@/db')
+    const record = await prisma.organization_settings.findUnique({
+      where: { organization_id: organizationId },
+      select: { config_json: true },
+    })
+
+    const config = (record?.config_json ?? {}) as Record<string, unknown>
+    const savedBusinessId =
+      typeof config.facebook_business_id === 'string'
+        ? config.facebook_business_id
+        : ''
+
+    const businessId =
+      normalizeOptionalString(input.business_id) ??
+      normalizeOptionalString(savedBusinessId)
+
+    if (!businessId) {
+      throw new Error('Missing facebook_business_id')
+    }
+
+    const { syncFacebookBusinessCampaigns } = await import(
+      '@/server/ri/syncFacebookAds'
+    )
+    return await syncFacebookBusinessCampaigns({
+      organizationId,
+      businessId,
+    })
   })
 
 export const validateIngestionApiKey = createServerFn({ method: 'POST' })

@@ -81,6 +81,26 @@ function RouteComponent() {
 
                 <Card className="border-border/60 bg-card/80">
                   <CardHeader>
+                    <CardTitle>Facebook Ads</CardTitle>
+                    <CardDescription>
+                      Store your Business ID and sync campaigns from all ad
+                      accounts.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Button variant="link" asChild className="px-0">
+                      <Link
+                        to="/organizations/$orgId/settings/facebook-ads"
+                        params={{ orgId }}
+                      >
+                        Open Facebook Ads settings →
+                      </Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-border/60 bg-card/80">
+                  <CardHeader>
                     <CardTitle>Organization</CardTitle>
                     <CardDescription>
                       Ingestion API keys, call qualification threshold, Google Ads

@@ -80,3 +80,7 @@ pnpm dlx shadcn@latest add <component>
 ### Demo Files
 
 Files prefixed with `demo` are starter examples and can be deleted.
+
+## Restrictions
+
+Never anlayze data from the data-scripts directory unless explicitly told to

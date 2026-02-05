@@ -170,9 +170,22 @@ function RouteComponent() {
                     </TableHeader>
                     <TableBody>
                       {(dashboardQuery.data?.campaigns ?? []).map((r) => (
-                        <TableRow key={r.campaign_id ?? "unknown"}>
+                        <TableRow
+                          key={`${r.platform ?? "unknown"}:${r.campaign_id ?? "unknown"}`}
+                        >
                           <TableCell className="font-medium">
-                            {r.campaign_name ?? r.campaign_id ?? "Unknown"}
+                            <div className="flex flex-col">
+                              <span>
+                                {r.campaign_name ?? r.campaign_id ?? "Unknown"}
+                              </span>
+                              <span className="text-xs text-muted-foreground">
+                                {r.platform === "google_ads"
+                                  ? "Google Ads"
+                                  : r.platform === "facebook_ads"
+                                    ? "Facebook Ads"
+                                    : r.platform ?? "Unknown"}
+                              </span>
+                            </div>
                           </TableCell>
                           <TableCell>{r.location_name ?? "—"}</TableCell>
                           <TableCell>{formatCents(r.spend_cents)}</TableCell>

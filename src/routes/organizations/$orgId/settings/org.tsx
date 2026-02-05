@@ -32,6 +32,7 @@ import {
   listApiKeys,
   listLocations,
   revokeApiKey,
+  syncFacebookAdsNow,
   syncGoogleAdsNow,
   updateOrg,
 } from "@/server/ri/serverFns"
@@ -79,6 +80,7 @@ function RouteComponent() {
       name?: string
       qualified_call_duration_threshold_sec?: number
       google_ads_customer_id?: string | null
+      facebook_ads_account_id?: string | null
     }) => updateOrg({ data: input }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["org", orgId] })
@@ -117,6 +119,19 @@ function RouteComponent() {
   const syncMutation = useMutation({
     mutationFn: () =>
       syncGoogleAdsNow({ data: { from_date: syncFrom, to_date: syncTo } }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["org", orgId, "campaign-settings"],
+      })
+      await queryClient.invalidateQueries({
+        queryKey: ["org", orgId, "dashboard"],
+      })
+    },
+  })
+
+  const syncFacebookMutation = useMutation({
+    mutationFn: () =>
+      syncFacebookAdsNow({ data: { from_date: syncFrom, to_date: syncTo } }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ["org", orgId, "campaign-settings"],
@@ -206,6 +221,23 @@ function RouteComponent() {
                         const value = e.target.value.trim()
                         updateOrgMutation.mutate({
                           google_ads_customer_id: value.length > 0 ? value : null,
+                        })
+                      }}
+                      disabled={!orgReady}
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="facebook-ads-account-id">
+                      Facebook Ads account ID
+                    </Label>
+                    <Input
+                      id="facebook-ads-account-id"
+                      defaultValue={org?.facebook_ads_account_id ?? ""}
+                      placeholder="e.g. act_1234567890"
+                      onBlur={(e) => {
+                        const value = e.target.value.trim()
+                        updateOrgMutation.mutate({
+                          facebook_ads_account_id: value.length > 0 ? value : null,
                         })
                       }}
                       disabled={!orgReady}
@@ -409,6 +441,51 @@ function RouteComponent() {
                 {syncMutation.error instanceof Error ? (
                   <div className="text-sm text-destructive">
                     {syncMutation.error.message}
+                  </div>
+                ) : null}
+              </CardContent>
+            </Card>
+
+            <Card className="border-border/60 bg-card/80">
+              <CardHeader>
+                <CardTitle>Facebook Ads Sync</CardTitle>
+                <CardDescription>
+                  Manual spend + campaign sync using the shared access token.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="grid grid-cols-1 items-end gap-3 md:grid-cols-3">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="facebook-sync-from">From</Label>
+                    <Input
+                      id="facebook-sync-from"
+                      type="date"
+                      value={syncFrom}
+                      onChange={(e) => setSyncFrom(e.target.value)}
+                      disabled={!orgReady}
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="facebook-sync-to">To</Label>
+                    <Input
+                      id="facebook-sync-to"
+                      type="date"
+                      value={syncTo}
+                      onChange={(e) => setSyncTo(e.target.value)}
+                      disabled={!orgReady}
+                    />
+                  </div>
+                  <Button
+                    onClick={() => syncFacebookMutation.mutate()}
+                    disabled={!orgReady || syncFacebookMutation.isPending}
+                  >
+                    Sync now
+                  </Button>
+                </div>
+
+                {syncFacebookMutation.error instanceof Error ? (
+                  <div className="text-sm text-destructive">
+                    {syncFacebookMutation.error.message}
                   </div>
                 ) : null}
               </CardContent>

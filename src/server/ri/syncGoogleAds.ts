@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import { GoogleAdsApi } from 'google-ads-api'
 
 function requireEnv(name: string): string {
@@ -119,6 +120,7 @@ export async function syncGoogleAdsForOrganization(opts: {
 
   const campaignsRes = (await customer.query(campaignsQuery)) as Array<Record<string, unknown>>
 
+  const syncedAt = dayjs().toDate()
   let campaignsUpserted = 0
   for (const row of campaignsRes) {
     const campaign = row.campaign as Record<string, unknown> | undefined
@@ -130,22 +132,24 @@ export async function syncGoogleAdsForOrganization(opts: {
 
     await prisma.campaigns.upsert({
       where: {
-        organization_id_campaign_id: {
+        organization_id_platform_campaign_id: {
           organization_id: opts.organizationId,
+          platform: 'google_ads',
           campaign_id: campaignId,
         },
       },
       create: {
         organization_id: opts.organizationId,
+        platform: 'google_ads',
         campaign_id: campaignId,
         campaign_name: name,
         status,
-        last_synced_at: new Date(),
+        last_synced_at: syncedAt,
       },
       update: {
         campaign_name: name ?? undefined,
         status,
-        last_synced_at: new Date(),
+        last_synced_at: syncedAt,
       },
     })
     campaignsUpserted++
@@ -187,18 +191,20 @@ export async function syncGoogleAdsForOrganization(opts: {
         ? customerObj.currency_code
         : null
 
-    const dateObj = new Date(`${date}T00:00:00.000Z`)
+    const dateObj = dayjs(`${date}T00:00:00.000Z`).toDate()
 
     await prisma.ad_spend_daily.upsert({
       where: {
-        organization_id_campaign_id_date: {
+        organization_id_platform_campaign_id_date: {
           organization_id: opts.organizationId,
+          platform: 'google_ads',
           campaign_id: campaignId,
           date: dateObj,
         },
       },
       create: {
         organization_id: opts.organizationId,
+        platform: 'google_ads',
         campaign_id: campaignId,
         campaign_name: campaignName,
         date: dateObj,

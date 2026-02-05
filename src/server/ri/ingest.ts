@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import type { Prisma } from '@/generated/prisma/client'
 import { prisma } from '@/db'
 import { sanitizePhone } from '@/utils/helpers'
@@ -8,10 +9,10 @@ function toInputJsonValue(value: unknown): Prisma.InputJsonValue {
 }
 
 function parseOccurredAt(occurredAt: string | undefined): Date {
-  if (!occurredAt) return new Date()
-  const dt = new Date(occurredAt)
-  if (Number.isNaN(dt.valueOf())) return new Date()
-  return dt
+  if (!occurredAt) return dayjs().toDate()
+  const dt = dayjs(occurredAt)
+  if (!dt.isValid()) return dayjs().toDate()
+  return dt.toDate()
 }
 
 export async function ingestEvent(opts: {
@@ -117,15 +118,18 @@ export async function ingestEvent(opts: {
   })
 
   if (parsed.data.campaign_id) {
+    const platform = parsed.data.platform ?? 'unknown'
     await prisma.campaigns.upsert({
       where: {
-        organization_id_campaign_id: {
+        organization_id_platform_campaign_id: {
           organization_id: opts.organizationId,
+          platform,
           campaign_id: parsed.data.campaign_id,
         },
       },
       create: {
         organization_id: opts.organizationId,
+        platform,
         campaign_id: parsed.data.campaign_id,
         campaign_name: parsed.data.utm_campaign ?? null,
       },

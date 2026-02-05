@@ -24,9 +24,11 @@ import { Route as ApiIngestEventsRouteImport } from './routes/api/ingest/events'
 import { Route as OrganizationsOrgIdSettingsIndexRouteImport } from './routes/organizations/$orgId/settings/index'
 import { Route as OrganizationsOrgIdLeadsIndexRouteImport } from './routes/organizations/$orgId/leads/index'
 import { Route as OrganizationsOrgIdSettingsOrgRouteImport } from './routes/organizations/$orgId/settings/org'
+import { Route as OrganizationsOrgIdSettingsFacebookAdsRouteImport } from './routes/organizations/$orgId/settings/facebook-ads'
 import { Route as OrganizationsOrgIdSettingsCampaignsRouteImport } from './routes/organizations/$orgId/settings/campaigns'
 import { Route as OrganizationsOrgIdLeadsLeadIdRouteImport } from './routes/organizations/$orgId/leads/$leadId'
 import { Route as ApiInternalGoogleAdsSyncRouteImport } from './routes/api/internal/google-ads/sync'
+import { Route as ApiInternalFacebookAdsSyncRouteImport } from './routes/api/internal/facebook-ads/sync'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
@@ -107,6 +109,12 @@ const OrganizationsOrgIdSettingsOrgRoute =
     path: '/organizations/$orgId/settings/org',
     getParentRoute: () => rootRouteImport,
   } as any)
+const OrganizationsOrgIdSettingsFacebookAdsRoute =
+  OrganizationsOrgIdSettingsFacebookAdsRouteImport.update({
+    id: '/organizations/$orgId/settings/facebook-ads',
+    path: '/organizations/$orgId/settings/facebook-ads',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const OrganizationsOrgIdSettingsCampaignsRoute =
   OrganizationsOrgIdSettingsCampaignsRouteImport.update({
     id: '/organizations/$orgId/settings/campaigns',
@@ -125,6 +133,12 @@ const ApiInternalGoogleAdsSyncRoute =
     path: '/api/internal/google-ads/sync',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiInternalFacebookAdsSyncRoute =
+  ApiInternalFacebookAdsSyncRouteImport.update({
+    id: '/api/internal/facebook-ads/sync',
+    path: '/api/internal/facebook-ads/sync',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -139,9 +153,11 @@ export interface FileRoutesByFullPath {
   '/api/ingest/events': typeof ApiIngestEventsRoute
   '/organizations/$orgId/onboarding': typeof OrganizationsOrgIdOnboardingRoute
   '/organizations/$orgId': typeof OrganizationsOrgIdIndexRoute
+  '/api/internal/facebook-ads/sync': typeof ApiInternalFacebookAdsSyncRoute
   '/api/internal/google-ads/sync': typeof ApiInternalGoogleAdsSyncRoute
   '/organizations/$orgId/leads/$leadId': typeof OrganizationsOrgIdLeadsLeadIdRoute
   '/organizations/$orgId/settings/campaigns': typeof OrganizationsOrgIdSettingsCampaignsRoute
+  '/organizations/$orgId/settings/facebook-ads': typeof OrganizationsOrgIdSettingsFacebookAdsRoute
   '/organizations/$orgId/settings/org': typeof OrganizationsOrgIdSettingsOrgRoute
   '/organizations/$orgId/leads': typeof OrganizationsOrgIdLeadsIndexRoute
   '/organizations/$orgId/settings': typeof OrganizationsOrgIdSettingsIndexRoute
@@ -159,9 +175,11 @@ export interface FileRoutesByTo {
   '/api/ingest/events': typeof ApiIngestEventsRoute
   '/organizations/$orgId/onboarding': typeof OrganizationsOrgIdOnboardingRoute
   '/organizations/$orgId': typeof OrganizationsOrgIdIndexRoute
+  '/api/internal/facebook-ads/sync': typeof ApiInternalFacebookAdsSyncRoute
   '/api/internal/google-ads/sync': typeof ApiInternalGoogleAdsSyncRoute
   '/organizations/$orgId/leads/$leadId': typeof OrganizationsOrgIdLeadsLeadIdRoute
   '/organizations/$orgId/settings/campaigns': typeof OrganizationsOrgIdSettingsCampaignsRoute
+  '/organizations/$orgId/settings/facebook-ads': typeof OrganizationsOrgIdSettingsFacebookAdsRoute
   '/organizations/$orgId/settings/org': typeof OrganizationsOrgIdSettingsOrgRoute
   '/organizations/$orgId/leads': typeof OrganizationsOrgIdLeadsIndexRoute
   '/organizations/$orgId/settings': typeof OrganizationsOrgIdSettingsIndexRoute
@@ -180,9 +198,11 @@ export interface FileRoutesById {
   '/api/ingest/events': typeof ApiIngestEventsRoute
   '/organizations/$orgId/onboarding': typeof OrganizationsOrgIdOnboardingRoute
   '/organizations/$orgId/': typeof OrganizationsOrgIdIndexRoute
+  '/api/internal/facebook-ads/sync': typeof ApiInternalFacebookAdsSyncRoute
   '/api/internal/google-ads/sync': typeof ApiInternalGoogleAdsSyncRoute
   '/organizations/$orgId/leads/$leadId': typeof OrganizationsOrgIdLeadsLeadIdRoute
   '/organizations/$orgId/settings/campaigns': typeof OrganizationsOrgIdSettingsCampaignsRoute
+  '/organizations/$orgId/settings/facebook-ads': typeof OrganizationsOrgIdSettingsFacebookAdsRoute
   '/organizations/$orgId/settings/org': typeof OrganizationsOrgIdSettingsOrgRoute
   '/organizations/$orgId/leads/': typeof OrganizationsOrgIdLeadsIndexRoute
   '/organizations/$orgId/settings/': typeof OrganizationsOrgIdSettingsIndexRoute
@@ -202,9 +222,11 @@ export interface FileRouteTypes {
     | '/api/ingest/events'
     | '/organizations/$orgId/onboarding'
     | '/organizations/$orgId'
+    | '/api/internal/facebook-ads/sync'
     | '/api/internal/google-ads/sync'
     | '/organizations/$orgId/leads/$leadId'
     | '/organizations/$orgId/settings/campaigns'
+    | '/organizations/$orgId/settings/facebook-ads'
     | '/organizations/$orgId/settings/org'
     | '/organizations/$orgId/leads'
     | '/organizations/$orgId/settings'
@@ -222,9 +244,11 @@ export interface FileRouteTypes {
     | '/api/ingest/events'
     | '/organizations/$orgId/onboarding'
     | '/organizations/$orgId'
+    | '/api/internal/facebook-ads/sync'
     | '/api/internal/google-ads/sync'
     | '/organizations/$orgId/leads/$leadId'
     | '/organizations/$orgId/settings/campaigns'
+    | '/organizations/$orgId/settings/facebook-ads'
     | '/organizations/$orgId/settings/org'
     | '/organizations/$orgId/leads'
     | '/organizations/$orgId/settings'
@@ -242,9 +266,11 @@ export interface FileRouteTypes {
     | '/api/ingest/events'
     | '/organizations/$orgId/onboarding'
     | '/organizations/$orgId/'
+    | '/api/internal/facebook-ads/sync'
     | '/api/internal/google-ads/sync'
     | '/organizations/$orgId/leads/$leadId'
     | '/organizations/$orgId/settings/campaigns'
+    | '/organizations/$orgId/settings/facebook-ads'
     | '/organizations/$orgId/settings/org'
     | '/organizations/$orgId/leads/'
     | '/organizations/$orgId/settings/'
@@ -263,9 +289,11 @@ export interface RootRouteChildren {
   ApiIngestEventsRoute: typeof ApiIngestEventsRoute
   OrganizationsOrgIdOnboardingRoute: typeof OrganizationsOrgIdOnboardingRoute
   OrganizationsOrgIdIndexRoute: typeof OrganizationsOrgIdIndexRoute
+  ApiInternalFacebookAdsSyncRoute: typeof ApiInternalFacebookAdsSyncRoute
   ApiInternalGoogleAdsSyncRoute: typeof ApiInternalGoogleAdsSyncRoute
   OrganizationsOrgIdLeadsLeadIdRoute: typeof OrganizationsOrgIdLeadsLeadIdRoute
   OrganizationsOrgIdSettingsCampaignsRoute: typeof OrganizationsOrgIdSettingsCampaignsRoute
+  OrganizationsOrgIdSettingsFacebookAdsRoute: typeof OrganizationsOrgIdSettingsFacebookAdsRoute
   OrganizationsOrgIdSettingsOrgRoute: typeof OrganizationsOrgIdSettingsOrgRoute
   OrganizationsOrgIdLeadsIndexRoute: typeof OrganizationsOrgIdLeadsIndexRoute
   OrganizationsOrgIdSettingsIndexRoute: typeof OrganizationsOrgIdSettingsIndexRoute
@@ -378,6 +406,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrganizationsOrgIdSettingsOrgRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/organizations/$orgId/settings/facebook-ads': {
+      id: '/organizations/$orgId/settings/facebook-ads'
+      path: '/organizations/$orgId/settings/facebook-ads'
+      fullPath: '/organizations/$orgId/settings/facebook-ads'
+      preLoaderRoute: typeof OrganizationsOrgIdSettingsFacebookAdsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/organizations/$orgId/settings/campaigns': {
       id: '/organizations/$orgId/settings/campaigns'
       path: '/organizations/$orgId/settings/campaigns'
@@ -399,6 +434,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiInternalGoogleAdsSyncRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/internal/facebook-ads/sync': {
+      id: '/api/internal/facebook-ads/sync'
+      path: '/api/internal/facebook-ads/sync'
+      fullPath: '/api/internal/facebook-ads/sync'
+      preLoaderRoute: typeof ApiInternalFacebookAdsSyncRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -415,10 +457,13 @@ const rootRouteChildren: RootRouteChildren = {
   ApiIngestEventsRoute: ApiIngestEventsRoute,
   OrganizationsOrgIdOnboardingRoute: OrganizationsOrgIdOnboardingRoute,
   OrganizationsOrgIdIndexRoute: OrganizationsOrgIdIndexRoute,
+  ApiInternalFacebookAdsSyncRoute: ApiInternalFacebookAdsSyncRoute,
   ApiInternalGoogleAdsSyncRoute: ApiInternalGoogleAdsSyncRoute,
   OrganizationsOrgIdLeadsLeadIdRoute: OrganizationsOrgIdLeadsLeadIdRoute,
   OrganizationsOrgIdSettingsCampaignsRoute:
     OrganizationsOrgIdSettingsCampaignsRoute,
+  OrganizationsOrgIdSettingsFacebookAdsRoute:
+    OrganizationsOrgIdSettingsFacebookAdsRoute,
   OrganizationsOrgIdSettingsOrgRoute: OrganizationsOrgIdSettingsOrgRoute,
   OrganizationsOrgIdLeadsIndexRoute: OrganizationsOrgIdLeadsIndexRoute,
   OrganizationsOrgIdSettingsIndexRoute: OrganizationsOrgIdSettingsIndexRoute,

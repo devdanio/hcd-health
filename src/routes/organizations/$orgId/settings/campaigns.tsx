@@ -52,6 +52,7 @@ function RouteComponent() {
 
   const updateMutation = useMutation({
     mutationFn: (input: {
+      platform: string
       campaign_id: string
       location_id: string | null
       include_in_reporting: boolean
@@ -86,9 +87,9 @@ function RouteComponent() {
 
             <Card className="border-border/60 bg-card/80">
               <CardHeader>
-                <CardTitle>Google Ads Campaigns</CardTitle>
+                <CardTitle>Campaigns</CardTitle>
                 <CardDescription>
-                  Assign locations and categorize campaigns.
+                  Assign locations and categorize campaigns across platforms.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -96,6 +97,7 @@ function RouteComponent() {
                   <Table>
                     <TableHeader>
                       <TableRow>
+                        <TableHead>Platform</TableHead>
                         <TableHead>Campaign</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead>Last 7d Spend</TableHead>
@@ -106,7 +108,14 @@ function RouteComponent() {
                     </TableHeader>
                     <TableBody>
                       {(data?.campaigns ?? []).map((c) => (
-                        <TableRow key={c.campaign_id}>
+                        <TableRow key={`${c.platform}:${c.campaign_id}`}>
+                          <TableCell className="text-sm text-muted-foreground">
+                            {c.platform === "google_ads"
+                              ? "Google Ads"
+                              : c.platform === "facebook_ads"
+                                ? "Facebook Ads"
+                                : c.platform}
+                          </TableCell>
                           <TableCell>
                             <div className="flex flex-col">
                               <span className="font-medium text-foreground">
@@ -126,6 +135,7 @@ function RouteComponent() {
                               value={c.location_id ?? "unassigned"}
                               onValueChange={(value) =>
                                 updateMutation.mutate({
+                                  platform: c.platform,
                                   campaign_id: c.campaign_id,
                                   location_id:
                                     value === "unassigned" ? null : value,
@@ -154,6 +164,7 @@ function RouteComponent() {
                               checked={c.include_in_reporting}
                               onCheckedChange={(value) =>
                                 updateMutation.mutate({
+                                  platform: c.platform,
                                   campaign_id: c.campaign_id,
                                   location_id: c.location_id,
                                   include_in_reporting: !!value,
@@ -167,6 +178,7 @@ function RouteComponent() {
                               value={c.campaign_category ?? "none"}
                               onValueChange={(value) =>
                                 updateMutation.mutate({
+                                  platform: c.platform,
                                   campaign_id: c.campaign_id,
                                   location_id: c.location_id,
                                   include_in_reporting: c.include_in_reporting,
@@ -201,9 +213,9 @@ function RouteComponent() {
                       ))}
                       {data?.campaigns.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={6} className="text-muted-foreground">
-                            No campaigns yet. Run a Google Ads sync or ingest leads
-                            with a `campaign_id`.
+                          <TableCell colSpan={7} className="text-muted-foreground">
+                            No campaigns yet. Run a Google or Facebook Ads sync or
+                            ingest leads with a `campaign_id`.
                           </TableCell>
                         </TableRow>
                       ) : null}

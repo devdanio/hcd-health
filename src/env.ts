@@ -14,6 +14,10 @@ const serverSchema = z.object({
   GOOGLE_ADS_CLIENT_SECRET: z.string().min(1).optional(),
   GOOGLE_ADS_REFRESH_TOKEN: z.string().min(1).optional(),
   GOOGLE_ADS_LOGIN_CUSTOMER_ID: z.string().min(1).optional(),
+
+  // Optional until Facebook Ads sync is enabled
+  FACEBOOK_ADS_ACCESS_TOKEN: z.string().min(1).optional(),
+  FACEBOOK_GRAPH_VERSION: z.string().min(1).optional(),
 })
 
 const clientSchema = z.object({

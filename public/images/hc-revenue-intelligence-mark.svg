@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="HC Revenue Intelligence mark">
+  <g transform="translate(120 130)">
+    <path d="M8 168 L88 84 L124 124 L184 56 L264 168 L8 168 Z" fill="#425163" />
+    <rect x="8" y="184" width="256" height="20" rx="10" fill="#425163" />
+    <circle cx="72" cy="150" r="10" fill="#425163" />
+    <circle cx="116" cy="118" r="10" fill="#425163" />
+    <circle cx="148" cy="132" r="10" fill="#425163" />
+    <circle cx="196" cy="96" r="10" fill="#425163" />
+  </g>
+</svg>

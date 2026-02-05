@@ -78,11 +78,13 @@ function RouteComponent() {
   const [orgFormInitialized, setOrgFormInitialized] = useState(false)
   const [orgName, setOrgName] = useState("")
   const [googleAdsCustomerId, setGoogleAdsCustomerId] = useState("")
+  const [facebookAdsAccountId, setFacebookAdsAccountId] = useState("")
 
   useEffect(() => {
     if (!orgQuery.data || orgFormInitialized) return
     setOrgName(orgQuery.data.name ?? "")
     setGoogleAdsCustomerId(orgQuery.data.google_ads_customer_id ?? "")
+    setFacebookAdsAccountId(orgQuery.data.facebook_ads_account_id ?? "")
     setOrgFormInitialized(true)
   }, [orgFormInitialized, orgQuery.data])
 
@@ -121,6 +123,7 @@ function RouteComponent() {
     mutationFn: (input: {
       name?: string
       google_ads_customer_id?: string | null
+      facebook_ads_account_id?: string | null
     }) => updateOrg({ data: input }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["org", orgId] })
@@ -259,6 +262,19 @@ function RouteComponent() {
                         placeholder="123-456-7890"
                       />
                     </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="facebook-ads-account-id">
+                        Facebook Ads account ID
+                      </Label>
+                      <Input
+                        id="facebook-ads-account-id"
+                        value={facebookAdsAccountId}
+                        onChange={(event) =>
+                          setFacebookAdsAccountId(event.target.value)
+                        }
+                        placeholder="act_1234567890"
+                      />
+                    </div>
                   </div>
 
                   <div className="flex flex-wrap items-center gap-2">
@@ -269,6 +285,10 @@ function RouteComponent() {
                           google_ads_customer_id:
                             googleAdsCustomerId.trim().length > 0
                               ? googleAdsCustomerId.trim()
+                              : null,
+                          facebook_ads_account_id:
+                            facebookAdsAccountId.trim().length > 0
+                              ? facebookAdsAccountId.trim()
                               : null,
                         })
                       }}

@@ -86,6 +86,7 @@ export const OrganizationsScalarFieldEnum = {
   qualified_call_duration_threshold_sec: 'qualified_call_duration_threshold_sec',
   default_revenue_model: 'default_revenue_model',
   google_ads_customer_id: 'google_ads_customer_id',
+  facebook_ads_account_id: 'facebook_ads_account_id',
   created_at: 'created_at',
   updated_at: 'updated_at'
 } as const
@@ -215,6 +216,7 @@ export type Patient_valuesScalarFieldEnum = (typeof Patient_valuesScalarFieldEnu
 export const CampaignsScalarFieldEnum = {
   id: 'id',
   organization_id: 'organization_id',
+  platform: 'platform',
   campaign_id: 'campaign_id',
   campaign_name: 'campaign_name',
   status: 'status',
@@ -229,6 +231,7 @@ export type CampaignsScalarFieldEnum = (typeof CampaignsScalarFieldEnum)[keyof t
 export const Campaign_settingsScalarFieldEnum = {
   id: 'id',
   organization_id: 'organization_id',
+  platform: 'platform',
   campaign_id: 'campaign_id',
   location_id: 'location_id',
   include_in_reporting: 'include_in_reporting',
@@ -244,6 +247,7 @@ export const Ad_spend_dailyScalarFieldEnum = {
   id: 'id',
   organization_id: 'organization_id',
   date: 'date',
+  platform: 'platform',
   campaign_id: 'campaign_id',
   campaign_name: 'campaign_name',
   cost_cents: 'cost_cents',
