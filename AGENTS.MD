@@ -49,6 +49,7 @@ pnpm dlx shadcn@latest add <component>
 
 - Always use Typescript
 - Never use "any"
+- Use dayjs for any and all date values
 
 ### Database
 

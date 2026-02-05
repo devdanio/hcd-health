@@ -40,6 +40,7 @@ export async function syncGoogleAdsForOrganization(opts: {
   toDate: string // YYYY-MM-DD
 }): Promise<{ campaigns_upserted: number; spend_rows_upserted: number }> {
   const { prisma } = await import('@/db')
+  const { decryptToken } = await import('@/server/lib/encryption')
   const org = await prisma.organizations.findUniqueOrThrow({
     where: { id: opts.organizationId },
     select: { google_ads_customer_id: true },
@@ -50,16 +51,62 @@ export async function syncGoogleAdsForOrganization(opts: {
     throw new Error('Missing organization google_ads_customer_id')
   }
 
+  const credentialRecord = await prisma.organization_credentials.findUnique({
+    where: {
+      organization_id_provider: {
+        organization_id: opts.organizationId,
+        provider: 'google_ads',
+      },
+    },
+    select: { encrypted_payload: true },
+  })
+
+  let credentialOverrides: {
+    developer_token?: string
+    client_id?: string
+    client_secret?: string
+    refresh_token?: string
+    mcc_id?: string
+  } | null = null
+
+  if (credentialRecord) {
+    try {
+      const decrypted = await decryptToken(credentialRecord.encrypted_payload)
+      const parsed = JSON.parse(decrypted) as Record<string, unknown>
+      credentialOverrides = {
+        developer_token:
+          typeof parsed.developer_token === 'string' ? parsed.developer_token : undefined,
+        client_id: typeof parsed.client_id === 'string' ? parsed.client_id : undefined,
+        client_secret:
+          typeof parsed.client_secret === 'string' ? parsed.client_secret : undefined,
+        refresh_token:
+          typeof parsed.refresh_token === 'string' ? parsed.refresh_token : undefined,
+        mcc_id: typeof parsed.mcc_id === 'string' ? parsed.mcc_id : undefined,
+      }
+    } catch (error) {
+      throw new Error(
+        error instanceof Error
+          ? error.message
+          : 'Failed to decrypt Google Ads credentials',
+      )
+    }
+  }
+
   const api = new GoogleAdsApi({
-    client_id: requireEnv('GOOGLE_ADS_CLIENT_ID'),
-    client_secret: requireEnv('GOOGLE_ADS_CLIENT_SECRET'),
-    developer_token: requireEnv('GOOGLE_ADS_DEVELOPER_TOKEN'),
+    client_id: credentialOverrides?.client_id ?? requireEnv('GOOGLE_ADS_CLIENT_ID'),
+    client_secret:
+      credentialOverrides?.client_secret ?? requireEnv('GOOGLE_ADS_CLIENT_SECRET'),
+    developer_token:
+      credentialOverrides?.developer_token ?? requireEnv('GOOGLE_ADS_DEVELOPER_TOKEN'),
   })
 
   const customer = api.Customer({
     customer_id: customerIdRaw,
-    refresh_token: requireEnv('GOOGLE_ADS_REFRESH_TOKEN'),
-    login_customer_id: process.env.GOOGLE_ADS_LOGIN_CUSTOMER_ID?.replace(/\D/g, '') || undefined,
+    refresh_token:
+      credentialOverrides?.refresh_token ?? requireEnv('GOOGLE_ADS_REFRESH_TOKEN'),
+    login_customer_id:
+      (credentialOverrides?.mcc_id ?? process.env.GOOGLE_ADS_LOGIN_CUSTOMER_ID)
+        ?.replace(/\D/g, '') || undefined,
   })
 
   const campaignsQuery = `

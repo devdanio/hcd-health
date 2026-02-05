@@ -4,6 +4,12 @@ import { z } from 'zod'
 import { requireActiveOrganizationFromAuth } from '@/server/ri/orgContext'
 import { toIsoString } from '@/server/ri/serializers'
 
+function normalizeOptionalString(value: string | null | undefined): string | undefined {
+  if (typeof value !== 'string') return undefined
+  const trimmed = value.trim()
+  return trimmed.length > 0 ? trimmed : undefined
+}
+
 async function requireOrganizationId(): Promise<string> {
   const { organizationId } = await requireActiveOrganizationFromAuth()
   return organizationId
@@ -53,6 +59,218 @@ export const updateOrg = createServerFn({ method: 'POST' })
       },
     })
     return updated
+  })
+
+const googleAdsCredentialsInput = z.object({
+  customer_id: z.string().optional(),
+  mcc_id: z.string().optional(),
+  developer_token: z.string().optional(),
+  refresh_token: z.string().optional(),
+  client_id: z.string().optional(),
+  client_secret: z.string().optional(),
+})
+
+export const getGoogleAdsCredentialsStatus = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    const organizationId = await requireOrganizationId()
+    const { prisma } = await import('@/db')
+    const record = await prisma.organization_credentials.findUnique({
+      where: {
+        organization_id_provider: {
+          organization_id: organizationId,
+          provider: 'google_ads',
+        },
+      },
+      select: { id: true, updated_at: true },
+    })
+
+    return {
+      has_credentials: !!record,
+      updated_at: record ? toIsoString(record.updated_at) : null,
+    }
+  },
+)
+
+export const saveGoogleAdsCredentials = createServerFn({ method: 'POST' })
+  .inputValidator(googleAdsCredentialsInput)
+  .handler(async ({ data }) => {
+    const input = data
+    const organizationId = await requireOrganizationId()
+    const { prisma } = await import('@/db')
+    const { encryptToken } = await import('@/server/lib/encryption')
+
+    const payload = {
+      customer_id: normalizeOptionalString(input.customer_id),
+      mcc_id: normalizeOptionalString(input.mcc_id),
+      developer_token: normalizeOptionalString(input.developer_token),
+      refresh_token: normalizeOptionalString(input.refresh_token),
+      client_id: normalizeOptionalString(input.client_id),
+      client_secret: normalizeOptionalString(input.client_secret),
+    }
+
+    const hasValues = Object.values(payload).some((value) => value)
+
+    if (!hasValues) {
+      await prisma.organization_credentials.deleteMany({
+        where: { organization_id: organizationId, provider: 'google_ads' },
+      })
+      return { ok: true, cleared: true as const }
+    }
+
+    const encryptedPayload = await encryptToken(JSON.stringify(payload))
+
+    await prisma.organization_credentials.upsert({
+      where: {
+        organization_id_provider: {
+          organization_id: organizationId,
+          provider: 'google_ads',
+        },
+      },
+      create: {
+        organization_id: organizationId,
+        provider: 'google_ads',
+        encrypted_payload: encryptedPayload,
+      },
+      update: {
+        encrypted_payload: encryptedPayload,
+      },
+    })
+
+    if (payload.customer_id) {
+      await prisma.organizations.update({
+        where: { id: organizationId },
+        data: { google_ads_customer_id: payload.customer_id },
+      })
+    }
+
+    return { ok: true, cleared: false as const }
+  })
+
+const orgSettingsInput = z.object({
+  primary_contact_email: z.string().optional(),
+  timezone: z.string().optional(),
+  account_ids: z.string().optional(),
+  webhook_url: z.string().optional(),
+  data_sync_start_date: z.string().optional(),
+  allowed_ips: z.string().optional(),
+  notes: z.string().optional(),
+})
+
+export const getOrgSettings = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    const organizationId = await requireOrganizationId()
+    const { prisma } = await import('@/db')
+    const record = await prisma.organization_settings.findUnique({
+      where: { organization_id: organizationId },
+      select: { config_json: true, updated_at: true },
+    })
+
+    const config = (record?.config_json ?? {}) as Record<string, unknown>
+
+    return {
+      config: {
+        primary_contact_email:
+          typeof config.primary_contact_email === 'string'
+            ? config.primary_contact_email
+            : '',
+        timezone: typeof config.timezone === 'string' ? config.timezone : '',
+        account_ids: typeof config.account_ids === 'string' ? config.account_ids : '',
+        webhook_url: typeof config.webhook_url === 'string' ? config.webhook_url : '',
+        data_sync_start_date:
+          typeof config.data_sync_start_date === 'string'
+            ? config.data_sync_start_date
+            : '',
+        allowed_ips: typeof config.allowed_ips === 'string' ? config.allowed_ips : '',
+        notes: typeof config.notes === 'string' ? config.notes : '',
+      },
+      updated_at: record ? toIsoString(record.updated_at) : null,
+    }
+  },
+)
+
+export const updateOrgSettings = createServerFn({ method: 'POST' })
+  .inputValidator(orgSettingsInput)
+  .handler(async ({ data }) => {
+    const input = data
+    const organizationId = await requireOrganizationId()
+    const { prisma } = await import('@/db')
+
+    const config = {
+      primary_contact_email: normalizeOptionalString(input.primary_contact_email) ?? '',
+      timezone: normalizeOptionalString(input.timezone) ?? '',
+      account_ids: normalizeOptionalString(input.account_ids) ?? '',
+      webhook_url: normalizeOptionalString(input.webhook_url) ?? '',
+      data_sync_start_date: normalizeOptionalString(input.data_sync_start_date) ?? '',
+      allowed_ips: normalizeOptionalString(input.allowed_ips) ?? '',
+      notes: normalizeOptionalString(input.notes) ?? '',
+    } as const
+
+    const updated = await prisma.organization_settings.upsert({
+      where: { organization_id: organizationId },
+      create: { organization_id: organizationId, config_json: config },
+      update: { config_json: config },
+      select: { updated_at: true },
+    })
+
+    return { ok: true, updated_at: toIsoString(updated.updated_at) }
+  })
+
+export const getActiveApiKey = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    const organizationId = await requireOrganizationId()
+    const { prisma } = await import('@/db')
+    const active = await prisma.organization_api_keys.findFirst({
+      where: { organization_id: organizationId, revoked_at: null },
+      orderBy: { created_at: 'desc' },
+      select: { id: true, key_prefix: true, label: true, created_at: true },
+    })
+
+    if (!active) return null
+    return {
+      id: active.id,
+      key_prefix: active.key_prefix,
+      label: active.label,
+      created_at: toIsoString(active.created_at),
+    }
+  },
+)
+
+export const rotateApiKey = createServerFn({ method: 'POST' })
+  .inputValidator(
+    z.object({
+      label: z.string().min(1).optional(),
+    }),
+  )
+  .handler(async ({ data }) => {
+    const input = data
+    const organizationId = await requireOrganizationId()
+    const { prisma } = await import('@/db')
+    const { generateApiKey, hashApiKey } = await import('@/server/ri/apiKeys')
+
+    await prisma.organization_api_keys.updateMany({
+      where: { organization_id: organizationId, revoked_at: null },
+      data: { revoked_at: new Date() },
+    })
+
+    const { apiKey, keyPrefix } = generateApiKey()
+    const keyHash = hashApiKey(apiKey)
+
+    const created = await prisma.organization_api_keys.create({
+      data: {
+        organization_id: organizationId,
+        key_prefix: keyPrefix,
+        key_hash: keyHash,
+        label: input.label,
+      },
+      select: { id: true, key_prefix: true, created_at: true },
+    })
+
+    return {
+      id: created.id,
+      key_prefix: created.key_prefix,
+      created_at: toIsoString(created.created_at),
+      api_key: apiKey,
+    }
   })
 
 export const listLocations = createServerFn({ method: 'GET' }).handler(
@@ -124,6 +342,11 @@ export const generateNewApiKey = createServerFn({ method: 'POST' })
     const { generateApiKey, hashApiKey } = await import('@/server/ri/apiKeys')
     const { apiKey, keyPrefix } = generateApiKey()
     const keyHash = hashApiKey(apiKey)
+
+    await prisma.organization_api_keys.updateMany({
+      where: { organization_id: organizationId, revoked_at: null },
+      data: { revoked_at: new Date() },
+    })
 
     const created = await prisma.organization_api_keys.create({
       data: {

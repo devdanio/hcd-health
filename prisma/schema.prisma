@@ -53,12 +53,42 @@ model organizations {
 
   locations             locations[]
   organization_api_keys organization_api_keys[]
+  organization_credentials organization_credentials[]
+  organization_settings organization_settings?
   leads                 leads[]
   lead_events           lead_events[]
   patient_values        patient_values[]
   campaigns             campaigns[]
   campaign_settings     campaign_settings[]
   ad_spend_daily        ad_spend_daily[]
+}
+
+model organization_credentials {
+  id              String @id @default(cuid())
+  organization_id String
+  organization    organizations @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+
+  provider          String
+  encrypted_payload String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@unique([organization_id, provider])
+  @@index([organization_id])
+}
+
+model organization_settings {
+  id              String @id @default(cuid())
+  organization_id String @unique
+  organization    organizations @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+
+  config_json Json
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([organization_id])
 }
 
 model locations {

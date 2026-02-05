@@ -385,6 +385,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   organizations: 'organizations',
+  organization_credentials: 'organization_credentials',
+  organization_settings: 'organization_settings',
   locations: 'locations',
   organization_api_keys: 'organization_api_keys',
   leads: 'leads',
@@ -408,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "organizations" | "locations" | "organization_api_keys" | "leads" | "lead_events" | "patient_values" | "campaigns" | "campaign_settings" | "ad_spend_daily"
+    modelProps: "organizations" | "organization_credentials" | "organization_settings" | "locations" | "organization_api_keys" | "leads" | "lead_events" | "patient_values" | "campaigns" | "campaign_settings" | "ad_spend_daily"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -483,6 +485,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.organizationsCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.OrganizationsCountAggregateOutputType> | number
+        }
+      }
+    }
+    organization_credentials: {
+      payload: Prisma.$organization_credentialsPayload<ExtArgs>
+      fields: Prisma.organization_credentialsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.organization_credentialsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$organization_credentialsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.organization_credentialsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$organization_credentialsPayload>
+        }
+        findFirst: {
+          args: Prisma.organization_credentialsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$organization_credentialsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.organization_credentialsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$organization_credentialsPayload>
+        }
+        findMany: {
+          args: Prisma.organization_credentialsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$organization_credentialsPayload>[]
+        }
+        create: {
+          args: Prisma.organization_credentialsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$organization_credentialsPayload>
+        }
+        createMany: {
+          args: Prisma.organization_credentialsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.organization_credentialsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$organization_credentialsPayload>[]
+        }
+        delete: {
+          args: Prisma.organization_credentialsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$organization_credentialsPayload>
+        }
+        update: {
+          args: Prisma.organization_credentialsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$organization_credentialsPayload>
+        }
+        deleteMany: {
+          args: Prisma.organization_credentialsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.organization_credentialsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.organization_credentialsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$organization_credentialsPayload>[]
+        }
+        upsert: {
+          args: Prisma.organization_credentialsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$organization_credentialsPayload>
+        }
+        aggregate: {
+          args: Prisma.Organization_credentialsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOrganization_credentials>
+        }
+        groupBy: {
+          args: Prisma.organization_credentialsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Organization_credentialsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.organization_credentialsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Organization_credentialsCountAggregateOutputType> | number
+        }
+      }
+    }
+    organization_settings: {
+      payload: Prisma.$organization_settingsPayload<ExtArgs>
+      fields: Prisma.organization_settingsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.organization_settingsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$organization_settingsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.organization_settingsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$organization_settingsPayload>
+        }
+        findFirst: {
+          args: Prisma.organization_settingsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$organization_settingsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.organization_settingsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$organization_settingsPayload>
+        }
+        findMany: {
+          args: Prisma.organization_settingsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$organization_settingsPayload>[]
+        }
+        create: {
+          args: Prisma.organization_settingsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$organization_settingsPayload>
+        }
+        createMany: {
+          args: Prisma.organization_settingsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.organization_settingsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$organization_settingsPayload>[]
+        }
+        delete: {
+          args: Prisma.organization_settingsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$organization_settingsPayload>
+        }
+        update: {
+          args: Prisma.organization_settingsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$organization_settingsPayload>
+        }
+        deleteMany: {
+          args: Prisma.organization_settingsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.organization_settingsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.organization_settingsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$organization_settingsPayload>[]
+        }
+        upsert: {
+          args: Prisma.organization_settingsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$organization_settingsPayload>
+        }
+        aggregate: {
+          args: Prisma.Organization_settingsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOrganization_settings>
+        }
+        groupBy: {
+          args: Prisma.organization_settingsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Organization_settingsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.organization_settingsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Organization_settingsCountAggregateOutputType> | number
         }
       }
     }
@@ -1130,6 +1280,29 @@ export const OrganizationsScalarFieldEnum = {
 export type OrganizationsScalarFieldEnum = (typeof OrganizationsScalarFieldEnum)[keyof typeof OrganizationsScalarFieldEnum]
 
 
+export const Organization_credentialsScalarFieldEnum = {
+  id: 'id',
+  organization_id: 'organization_id',
+  provider: 'provider',
+  encrypted_payload: 'encrypted_payload',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Organization_credentialsScalarFieldEnum = (typeof Organization_credentialsScalarFieldEnum)[keyof typeof Organization_credentialsScalarFieldEnum]
+
+
+export const Organization_settingsScalarFieldEnum = {
+  id: 'id',
+  organization_id: 'organization_id',
+  config_json: 'config_json',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Organization_settingsScalarFieldEnum = (typeof Organization_settingsScalarFieldEnum)[keyof typeof Organization_settingsScalarFieldEnum]
+
+
 export const LocationsScalarFieldEnum = {
   id: 'id',
   organization_id: 'organization_id',
@@ -1372,6 +1545,20 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
  * Reference to a field of type 'lead_status'
  */
 export type Enumlead_statusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'lead_status'>
@@ -1403,20 +1590,6 @@ export type Enumlead_event_typeFieldRefInput<$PrismaModel> = FieldRefInputType<$
  * Reference to a field of type 'lead_event_type[]'
  */
 export type ListEnumlead_event_typeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'lead_event_type[]'>
-    
-
-
-/**
- * Reference to a field of type 'Json'
- */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-/**
- * Reference to a field of type 'QueryMode'
- */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -1541,6 +1714,8 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   organizations?: Prisma.organizationsOmit
+  organization_credentials?: Prisma.organization_credentialsOmit
+  organization_settings?: Prisma.organization_settingsOmit
   locations?: Prisma.locationsOmit
   organization_api_keys?: Prisma.organization_api_keysOmit
   leads?: Prisma.leadsOmit

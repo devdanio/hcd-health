@@ -18,6 +18,7 @@ const serverSchema = z.object({
 
 const clientSchema = z.object({
   // Add client env vars here (must be VITE_*)
+  VITE_API_HOST_URL: z.string().min(1).optional(),
 })
 
 const isServer = typeof window === 'undefined'

@@ -52,6 +52,8 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   organizations: 'organizations',
+  organization_credentials: 'organization_credentials',
+  organization_settings: 'organization_settings',
   locations: 'locations',
   organization_api_keys: 'organization_api_keys',
   leads: 'leads',
@@ -89,6 +91,29 @@ export const OrganizationsScalarFieldEnum = {
 } as const
 
 export type OrganizationsScalarFieldEnum = (typeof OrganizationsScalarFieldEnum)[keyof typeof OrganizationsScalarFieldEnum]
+
+
+export const Organization_credentialsScalarFieldEnum = {
+  id: 'id',
+  organization_id: 'organization_id',
+  provider: 'provider',
+  encrypted_payload: 'encrypted_payload',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Organization_credentialsScalarFieldEnum = (typeof Organization_credentialsScalarFieldEnum)[keyof typeof Organization_credentialsScalarFieldEnum]
+
+
+export const Organization_settingsScalarFieldEnum = {
+  id: 'id',
+  organization_id: 'organization_id',
+  config_json: 'config_json',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type Organization_settingsScalarFieldEnum = (typeof Organization_settingsScalarFieldEnum)[keyof typeof Organization_settingsScalarFieldEnum]
 
 
 export const LocationsScalarFieldEnum = {

@@ -9,6 +9,8 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/organizations.ts'
+export type * from './models/organization_credentials.ts'
+export type * from './models/organization_settings.ts'
 export type * from './models/locations.ts'
 export type * from './models/organization_api_keys.ts'
 export type * from './models/leads.ts'

@@ -41,6 +41,26 @@ function RouteComponent() {
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                 <Card className="border-border/60 bg-card/80">
                   <CardHeader>
+                    <CardTitle>Onboarding</CardTitle>
+                    <CardDescription>
+                      Guided setup for credentials, API keys, and integration
+                      steps.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Button variant="link" asChild className="px-0">
+                      <Link
+                        to="/organizations/$orgId/onboarding"
+                        params={{ orgId }}
+                      >
+                        Open onboarding →
+                      </Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-border/60 bg-card/80">
+                  <CardHeader>
                     <CardTitle>Campaigns</CardTitle>
                     <CardDescription>
                       Map campaigns to locations and hide excluded campaigns from

@@ -45,6 +45,16 @@ export { Prisma }
  */
 export type organizations = Prisma.organizationsModel
 /**
+ * Model organization_credentials
+ * 
+ */
+export type organization_credentials = Prisma.organization_credentialsModel
+/**
+ * Model organization_settings
+ * 
+ */
+export type organization_settings = Prisma.organization_settingsModel
+/**
  * Model locations
  * 
  */

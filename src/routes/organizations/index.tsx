@@ -5,7 +5,7 @@ import {
   SignedOut,
   useOrganizationList,
 } from "@clerk/tanstack-react-start"
-import { createFileRoute, useNavigate } from "@tanstack/react-router"
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router"
 import { useEffect, useMemo, useState } from "react"
 
 import { Button } from "@/components/ui/button"
@@ -169,6 +169,22 @@ function OrganizationsScreen() {
               afterSelectOrganizationUrl={(org) => `/organizations/${org.id}`}
               afterSelectPersonalUrl="/organizations"
             />
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="pt-2">
+            <Card className="border-border/60 bg-card/80">
+              <CardHeader>
+                <CardTitle>New client onboarding</CardTitle>
+                <CardDescription>
+                  Start a guided setup for a new organization.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button asChild variant="outline">
+                  <Link to="/onboarding">Start onboarding</Link>
+                </Button>
               </CardContent>
             </Card>
           </div>
