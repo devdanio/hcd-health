@@ -50,7 +50,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'High Country Health',
+        title: 'High Country Digital',
       },
     ],
     links: [

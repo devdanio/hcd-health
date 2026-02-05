@@ -1,17 +1,17 @@
-import { SignInButton, SignedIn, SignedOut } from "@clerk/tanstack-react-start"
-import { createFileRoute, useNavigate } from "@tanstack/react-router"
-import { useEffect } from "react"
+import { SignInButton, SignedIn, SignedOut } from '@clerk/tanstack-react-start'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useEffect } from 'react'
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from '@/components/ui/card'
 
-export const Route = createFileRoute("/")({ component: RouteComponent })
+export const Route = createFileRoute('/')({ component: RouteComponent })
 
 function RouteComponent() {
   return (
@@ -30,7 +30,7 @@ function RedirectToOrganizations() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    void navigate({ to: "/organizations", replace: true })
+    void navigate({ to: '/organizations', replace: true })
   }, [navigate])
 
   return (
@@ -49,7 +49,7 @@ function Landing() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <img
             src="/images/high-country-health-logo.svg"
-            alt="High Country Health"
+            alt="High Country Digital"
             className="h-9 w-auto"
           />
         </div>
@@ -59,7 +59,7 @@ function Landing() {
           Revenue Intelligence
         </div>
         <h1 className="text-3xl font-semibold tracking-tight">
-          High Country Health Dashboard
+          High Country Digital Dashboard
         </h1>
         <p className="text-muted-foreground">
           Track spend to patients with a single, connected view of ROI.
@@ -81,4 +81,3 @@ function Landing() {
     </div>
   )
 }
-

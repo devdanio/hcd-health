@@ -1,5 +1,4 @@
 import dayjs from 'dayjs'
-import { GoogleAdsApi } from 'google-ads-api'
 
 function requireEnv(name: string): string {
   const value = process.env[name]
@@ -40,6 +39,7 @@ export async function syncGoogleAdsForOrganization(opts: {
   fromDate: string // YYYY-MM-DD
   toDate: string // YYYY-MM-DD
 }): Promise<{ campaigns_upserted: number; spend_rows_upserted: number }> {
+  const { GoogleAdsApi } = await import('google-ads-api')
   const { prisma } = await import('@/db')
   const { decryptToken } = await import('@/server/lib/encryption')
   const org = await prisma.organizations.findUniqueOrThrow({

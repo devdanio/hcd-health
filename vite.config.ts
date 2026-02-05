@@ -51,7 +51,13 @@ export default defineConfig(({ mode }) => {
       },
     },
     ssr: {
-      external: ['@prisma/client', '@prisma/adapter-pg', 'pg', 'pg-pool'],
+      external: [
+        '@prisma/client',
+        '@prisma/adapter-pg',
+        'pg',
+        'pg-pool',
+        'google-ads-api',
+      ],
     },
     plugins: [
       viteTsConfigPaths({

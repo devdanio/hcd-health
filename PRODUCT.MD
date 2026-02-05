@@ -34,7 +34,7 @@ new HCHTracker({ apiKey:'756e492d359a44b5c86c28eaff272d599043d14a1de8dcc476f49ac
 
 ## DEPRECTATED SEE EDCGECASESE BELOW
 
-- High Country Health is the singular source of truth
+- High Country Digital is the singular source of truth
 - New contact created in GHL sends a webhook req to /api/$locationID/ghl-event = stores the raw payload w/ attributation data
   - upserts into Contact using Contact.ExternalId. ExternalId.source = ExternalIdSource.GHL
 

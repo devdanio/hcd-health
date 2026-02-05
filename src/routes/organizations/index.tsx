@@ -4,20 +4,20 @@ import {
   SignedIn,
   SignedOut,
   useOrganizationList,
-} from "@clerk/tanstack-react-start"
-import { Link, createFileRoute, useNavigate } from "@tanstack/react-router"
-import { useEffect, useMemo, useState } from "react"
+} from '@clerk/tanstack-react-start'
+import { Link, createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useEffect, useMemo, useState } from 'react'
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from '@/components/ui/card'
 
-export const Route = createFileRoute("/organizations/")({
+export const Route = createFileRoute('/organizations/')({
   component: RouteComponent,
 })
 
@@ -54,7 +54,10 @@ function OrganizationsScreen() {
   const [switchError, setSwitchError] = useState<string | null>(null)
   const [switchingOrgId, setSwitchingOrgId] = useState<string | null>(null)
 
-  const memberships = useMemo(() => userMemberships?.data ?? [], [userMemberships?.data])
+  const memberships = useMemo(
+    () => userMemberships?.data ?? [],
+    [userMemberships?.data],
+  )
   const membershipsLoading = !isLoaded || userMemberships.isLoading
 
   useEffect(() => {
@@ -69,7 +72,9 @@ function OrganizationsScreen() {
 
     setDidAutoRedirect(true)
     void setActive({ organization: org.id })
-      .then(() => navigate({ to: "/organizations/$orgId", params: { orgId: org.id } }))
+      .then(() =>
+        navigate({ to: '/organizations/$orgId', params: { orgId: org.id } }),
+      )
       .catch(() => {
         // If setting active fails, just show the org chooser UI
         setDidAutoRedirect(false)
@@ -78,16 +83,18 @@ function OrganizationsScreen() {
 
   const openOrganization = (orgId: string) => {
     if (!setActive) {
-      setSwitchError("Organization switching is not available yet.")
+      setSwitchError('Organization switching is not available yet.')
       return
     }
 
     setSwitchError(null)
     setSwitchingOrgId(orgId)
     void setActive({ organization: orgId })
-      .then(() => navigate({ to: "/organizations/$orgId", params: { orgId } }))
+      .then(() => navigate({ to: '/organizations/$orgId', params: { orgId } }))
       .catch((err: unknown) => {
-        setSwitchError(err instanceof Error ? err.message : "Failed to switch organization")
+        setSwitchError(
+          err instanceof Error ? err.message : 'Failed to switch organization',
+        )
         setSwitchingOrgId(null)
       })
   }
@@ -98,7 +105,7 @@ function OrganizationsScreen() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <img
             src="/images/high-country-health-logo.svg"
-            alt="High Country Health"
+            alt="High Country Digital"
             className="h-9 w-auto"
           />
           <div className="text-sm text-muted-foreground">
@@ -126,7 +133,7 @@ function OrganizationsScreen() {
                       {m.organization.name}
                     </div>
                     <div className="text-xs text-muted-foreground">
-                      {m.role ?? "member"} • {m.organization.id}
+                      {m.role ?? 'member'} • {m.organization.id}
                     </div>
                   </div>
                   <Button
@@ -134,7 +141,7 @@ function OrganizationsScreen() {
                     disabled={switchingOrgId === m.organization.id}
                     variant="outline"
                   >
-                    {switchingOrgId === m.organization.id ? "Opening…" : "Open"}
+                    {switchingOrgId === m.organization.id ? 'Opening…' : 'Open'}
                   </Button>
                 </CardContent>
               </Card>
@@ -164,11 +171,15 @@ function OrganizationsScreen() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-            <OrganizationList
-              afterCreateOrganizationUrl={(org) => `/organizations/${org.id}`}
-              afterSelectOrganizationUrl={(org) => `/organizations/${org.id}`}
-              afterSelectPersonalUrl="/organizations"
-            />
+                <OrganizationList
+                  afterCreateOrganizationUrl={(org) =>
+                    `/organizations/${org.id}`
+                  }
+                  afterSelectOrganizationUrl={(org) =>
+                    `/organizations/${org.id}`
+                  }
+                  afterSelectPersonalUrl="/organizations"
+                />
               </CardContent>
             </Card>
           </div>
@@ -176,14 +187,14 @@ function OrganizationsScreen() {
           <div className="pt-2">
             <Card className="border-border/60 bg-card/80">
               <CardHeader>
-                <CardTitle>New client onboarding</CardTitle>
+                <CardTitle>Organization settings</CardTitle>
                 <CardDescription>
-                  Start a guided setup for a new organization.
+                  Choose an organization to manage settings and integrations.
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <Button asChild variant="outline">
-                  <Link to="/onboarding">Start onboarding</Link>
+                  <Link to="/onboarding">Open settings</Link>
                 </Button>
               </CardContent>
             </Card>

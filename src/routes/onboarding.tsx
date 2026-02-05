@@ -3,19 +3,19 @@ import {
   SignInButton,
   SignedIn,
   SignedOut,
-} from "@clerk/tanstack-react-start"
-import { Link, createFileRoute } from "@tanstack/react-router"
+} from '@clerk/tanstack-react-start'
+import { Link, createFileRoute } from '@tanstack/react-router'
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from '@/components/ui/card'
 
-export const Route = createFileRoute("/onboarding")({
+export const Route = createFileRoute('/onboarding')({
   component: RouteComponent,
 })
 
@@ -50,7 +50,7 @@ function OnboardingChooser() {
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <img
             src="/images/high-country-health-logo.svg"
-            alt="High Country Health"
+            alt="High Country Digital"
             className="h-9 w-auto"
           />
           <Button variant="ghost" asChild>
@@ -61,13 +61,12 @@ function OnboardingChooser() {
 
       <div className="mx-auto flex max-w-3xl flex-col gap-6 px-6 py-10">
         <div>
-          <div className="text-label text-muted-foreground">Onboarding</div>
+          <div className="text-label text-muted-foreground">Settings</div>
           <h1 className="text-xl font-semibold text-foreground">
             Create or select an organization
           </h1>
           <p className="text-sm text-muted-foreground">
-            Once the organization exists, we will guide you through credentials,
-            API keys, and integration setup.
+            Create a new org or select an existing one to configure settings.
           </p>
         </div>
 
@@ -75,16 +74,16 @@ function OnboardingChooser() {
           <CardHeader>
             <CardTitle>Organizations</CardTitle>
             <CardDescription>
-              Create a new org or select an existing one to continue onboarding.
+              Create a new org or select an existing one to configure settings.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <OrganizationList
               afterCreateOrganizationUrl={(org) =>
-                `/organizations/${org.id}/onboarding`
+                `/organizations/${org.id}/settings/org`
               }
               afterSelectOrganizationUrl={(org) =>
-                `/organizations/${org.id}/onboarding`
+                `/organizations/${org.id}/settings/org`
               }
               afterSelectPersonalUrl="/organizations"
             />

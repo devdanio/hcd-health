@@ -1,5 +1,5 @@
 /**
- * High Country Health Tracker
+ * High Country Digital Tracker
  *
  * Robust, class-based tracking system for comprehensive user analytics.
  *

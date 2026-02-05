@@ -1,14 +1,14 @@
-import * as React from "react"
-import { OrganizationSwitcher, UserButton } from "@clerk/tanstack-react-start"
-import { Link, useRouterState } from "@tanstack/react-router"
+import * as React from 'react'
+import { OrganizationSwitcher, UserButton } from '@clerk/tanstack-react-start'
+import { Link, useRouterState } from '@tanstack/react-router'
 import {
   IconDashboard,
   IconHelp,
   IconSettings,
   IconUsers,
-} from "@tabler/icons-react"
+} from '@tabler/icons-react'
 
-import { NavSecondary } from "@/components/nav-secondary"
+import { NavSecondary } from '@/components/nav-secondary'
 import {
   Sidebar,
   SidebarContent,
@@ -17,12 +17,12 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from '@/components/ui/sidebar'
 
 const navSecondary = [
   {
-    title: "Support",
-    url: "https://highcountryhealth.com",
+    title: 'Support',
+    url: 'https://highcountryhealth.com',
     icon: IconHelp,
   },
 ]
@@ -39,17 +39,17 @@ export function AppSidebar({
 
   const navMain = [
     {
-      title: "Dashboard",
+      title: 'Dashboard',
       url: `${base}`,
       icon: IconDashboard,
     },
     {
-      title: "Leads",
+      title: 'Leads',
       url: `${base}/leads`,
       icon: IconUsers,
     },
     {
-      title: "Settings",
+      title: 'Settings',
       url: `${base}/settings`,
       icon: IconSettings,
     },
@@ -72,11 +72,11 @@ export function AppSidebar({
               <Link to={base}>
                 <img
                   src="/images/high-country-health-logo.svg"
-                  alt="High Country Health"
+                  alt="High Country Digital"
                   className="h-6 w-auto"
                 />
                 <span className="text-base font-semibold">
-                  High Country Health
+                  High Country Digital
                 </span>
               </Link>
             </SidebarMenuButton>
