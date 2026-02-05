@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import {
   Table,
   TableBody,
@@ -53,6 +54,10 @@ function RouteComponent() {
   const [fromDate, setFromDate] = useState(defaultFrom)
   const [toDate, setToDate] = useState(defaultTo)
   const [locationId, setLocationId] = useState<string>("")
+  const [platforms, setPlatforms] = useState<string[]>([
+    "google_ads",
+    "facebook_ads",
+  ])
 
   const locationsQuery = useQuery({
     queryKey: ["org", orgIdFromParams, "locations"],
@@ -61,13 +66,19 @@ function RouteComponent() {
   })
 
   const dashboardQuery = useQuery({
-    queryKey: ["org", orgIdFromParams, "dashboard", { fromDate, toDate, locationId }],
+    queryKey: [
+      "org",
+      orgIdFromParams,
+      "dashboard",
+      { fromDate, toDate, locationId, platforms },
+    ],
     queryFn: () =>
       getDashboard({
         data: {
           from_date: fromDate,
           to_date: toDate,
           location_id: locationId || undefined,
+          platforms,
           include_excluded: false,
         },
       }),
@@ -133,6 +144,26 @@ function RouteComponent() {
                   </Select>
                 </div>
               </div>
+
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="text-xs text-muted-foreground">Platforms</div>
+                <ToggleGroup
+                  type="multiple"
+                  value={platforms}
+                  onValueChange={(value) => setPlatforms(value)}
+                  variant="outline"
+                  size="sm"
+                >
+                  <ToggleGroupItem value="google_ads">
+                    <PlatformIcon platform="google_ads" />
+                    Google Ads
+                  </ToggleGroupItem>
+                  <ToggleGroupItem value="facebook_ads">
+                    <PlatformIcon platform="facebook_ads" />
+                    Facebook Ads
+                  </ToggleGroupItem>
+                </ToggleGroup>
+              </div>
             </div>
 
             <KpiGrid
@@ -174,10 +205,13 @@ function RouteComponent() {
                           key={`${r.platform ?? "unknown"}:${r.campaign_id ?? "unknown"}`}
                         >
                           <TableCell className="font-medium">
-                            <div className="flex flex-col">
-                              <span>
-                                {r.campaign_name ?? r.campaign_id ?? "Unknown"}
-                              </span>
+                            <div className="flex flex-col gap-1">
+                              <div className="flex items-center gap-2">
+                                <PlatformIcon platform={r.platform ?? "unknown"} />
+                                <span>
+                                  {r.campaign_name ?? r.campaign_id ?? "Unknown"}
+                                </span>
+                              </div>
                               <span className="text-xs text-muted-foreground">
                                 {r.platform === "google_ads"
                                   ? "Google Ads"
@@ -258,5 +292,27 @@ function KpiGrid(props: {
         </Card>
       ))}
     </div>
+  )
+}
+
+function PlatformIcon(props: { platform: string }) {
+  const isFacebook = props.platform === "facebook_ads"
+  const isGoogle = props.platform === "google_ads"
+  const label = isFacebook ? "Facebook Ads" : isGoogle ? "Google Ads" : "Unknown"
+  const text = isFacebook ? "f" : isGoogle ? "G" : "?"
+  const bgClass = isFacebook
+    ? "bg-[#1877F2]"
+    : isGoogle
+      ? "bg-[#4285F4]"
+      : "bg-muted text-foreground"
+
+  return (
+    <span
+      className={`inline-flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-semibold ${bgClass} ${isGoogle || isFacebook ? "text-white" : ""}`}
+      aria-label={label}
+      title={label}
+    >
+      {text}
+    </span>
   )
 }

@@ -2,6 +2,7 @@ import { useAuth } from "@clerk/tanstack-react-start"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import { useEffect, useMemo, useState } from "react"
+import { toast } from "sonner"
 
 import { AppLayout } from "@/components/app/AppLayout"
 import { RequireOrganization } from "@/components/app/RequireOrganization"
@@ -126,7 +127,13 @@ function RouteComponent() {
       facebook_ads_account_id?: string | null
     }) => updateOrg({ data: input }),
     onSuccess: async () => {
+      toast.success("Organization basics saved.")
       await queryClient.invalidateQueries({ queryKey: ["org", orgId] })
+    },
+    onError: (error) => {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to save organization.",
+      )
     },
   })
 
@@ -140,10 +147,18 @@ function RouteComponent() {
       client_secret?: string
     }) => saveGoogleAdsCredentials({ data: input }),
     onSuccess: async () => {
+      toast.success("Google Ads credentials saved.")
       await queryClient.invalidateQueries({
         queryKey: ["org", orgId, "google-ads-credentials"],
       })
       await queryClient.invalidateQueries({ queryKey: ["org", orgId] })
+    },
+    onError: (error) => {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to save Google Ads credentials.",
+      )
     },
   })
 
@@ -158,19 +173,31 @@ function RouteComponent() {
       notes?: string
     }) => updateOrgSettings({ data: input }),
     onSuccess: async () => {
+      toast.success("Organization settings saved.")
       await queryClient.invalidateQueries({
         queryKey: ["org", orgId, "settings"],
       })
+    },
+    onError: (error) => {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to save settings.",
+      )
     },
   })
 
   const rotateApiKeyMutation = useMutation({
     mutationFn: (label?: string) => rotateApiKey({ data: { label } }),
     onSuccess: async (data) => {
+      toast.success("API key generated.")
       setGeneratedApiKey(data.api_key)
       await queryClient.invalidateQueries({
         queryKey: ["org", orgId, "active-api-key"],
       })
+    },
+    onError: (error) => {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to generate API key.",
+      )
     },
   })
 

@@ -183,6 +183,7 @@ const orgSettingsInput = z.object({
   allowed_ips: z.string().optional(),
   notes: z.string().optional(),
   facebook_business_id: z.string().optional(),
+  facebook_ad_account_ids: z.array(z.string().min(1)).optional(),
 })
 
 export const getOrgSettings = createServerFn({ method: 'GET' }).handler(
@@ -215,6 +216,14 @@ export const getOrgSettings = createServerFn({ method: 'GET' }).handler(
           typeof config.facebook_business_id === 'string'
             ? config.facebook_business_id
             : '',
+        facebook_ad_account_ids: Array.isArray(config.facebook_ad_account_ids)
+          ? config.facebook_ad_account_ids.filter((id): id is string => typeof id === 'string')
+          : typeof config.facebook_ad_account_ids === 'string'
+            ? config.facebook_ad_account_ids
+                .split(',')
+                .map((id) => id.trim())
+                .filter((id) => id.length > 0)
+            : [],
       },
       updated_at: record ? toIsoString(record.updated_at) : null,
     }
@@ -228,15 +237,52 @@ export const updateOrgSettings = createServerFn({ method: 'POST' })
     const organizationId = await requireOrganizationId()
     const { prisma } = await import('@/db')
 
+    const existing = await prisma.organization_settings.findUnique({
+      where: { organization_id: organizationId },
+      select: { config_json: true },
+    })
+    const previous = (existing?.config_json ?? {}) as Record<string, unknown>
+
+    const priorFacebookAccounts = Array.isArray(previous.facebook_ad_account_ids)
+      ? previous.facebook_ad_account_ids.filter((id): id is string => typeof id === 'string')
+      : typeof previous.facebook_ad_account_ids === 'string'
+        ? previous.facebook_ad_account_ids
+            .split(',')
+            .map((id) => id.trim())
+            .filter((id) => id.length > 0)
+        : []
+
+    const resolveString = (
+      nextValue: string | undefined,
+      priorValue: unknown,
+    ): string => {
+      if (typeof nextValue !== 'undefined') {
+        return normalizeOptionalString(nextValue) ?? ''
+      }
+      return typeof priorValue === 'string' ? priorValue : ''
+    }
+
     const config = {
-      primary_contact_email: normalizeOptionalString(input.primary_contact_email) ?? '',
-      timezone: normalizeOptionalString(input.timezone) ?? '',
-      account_ids: normalizeOptionalString(input.account_ids) ?? '',
-      webhook_url: normalizeOptionalString(input.webhook_url) ?? '',
-      data_sync_start_date: normalizeOptionalString(input.data_sync_start_date) ?? '',
-      allowed_ips: normalizeOptionalString(input.allowed_ips) ?? '',
-      notes: normalizeOptionalString(input.notes) ?? '',
-      facebook_business_id: normalizeOptionalString(input.facebook_business_id) ?? '',
+      primary_contact_email: resolveString(
+        input.primary_contact_email,
+        previous.primary_contact_email,
+      ),
+      timezone: resolveString(input.timezone, previous.timezone),
+      account_ids: resolveString(input.account_ids, previous.account_ids),
+      webhook_url: resolveString(input.webhook_url, previous.webhook_url),
+      data_sync_start_date: resolveString(
+        input.data_sync_start_date,
+        previous.data_sync_start_date,
+      ),
+      allowed_ips: resolveString(input.allowed_ips, previous.allowed_ips),
+      notes: resolveString(input.notes, previous.notes),
+      facebook_business_id: resolveString(
+        input.facebook_business_id,
+        previous.facebook_business_id,
+      ),
+      facebook_ad_account_ids: Array.isArray(input.facebook_ad_account_ids)
+        ? input.facebook_ad_account_ids
+        : priorFacebookAccounts,
     } as const
 
     const updated = await prisma.organization_settings.upsert({
@@ -782,6 +828,7 @@ const dashboardInput = z.object({
   location_id: z.string().min(1).optional(),
   campaign_id: z.string().min(1).optional(),
   platform: z.string().min(1).optional(),
+  platforms: z.array(z.string().min(1)).optional(),
   include_excluded: z.boolean().default(false),
 })
 
@@ -813,17 +860,23 @@ export const getDashboard = createServerFn({ method: 'POST' })
       }),
     ])
 
+    const platformList = input.platforms
+      ? input.platforms
+      : input.platform
+        ? [input.platform]
+        : null
+
+    const filteredCampaignSettings = platformList
+      ? campaignSettings.filter((s) => platformList.includes(s.platform))
+      : campaignSettings
+
     const settingsByCampaignKey = new Map(
-      campaignSettings.map((s) => [campaignKey(s.platform, s.campaign_id), s] as const),
+      filteredCampaignSettings.map((s) => [campaignKey(s.platform, s.campaign_id), s] as const),
     )
     const locationById = new Map(locations.map((l) => [l.id, l.name] as const))
 
     const locationCampaignFilters = input.location_id
-      ? campaignSettings.filter(
-          (s) =>
-            s.location_id === input.location_id &&
-            (!input.platform || s.platform === input.platform),
-        )
+      ? filteredCampaignSettings.filter((s) => s.location_id === input.location_id)
       : []
 
     const locationCampaignPairs = locationCampaignFilters.map((s) => ({
@@ -834,7 +887,7 @@ export const getDashboard = createServerFn({ method: 'POST' })
     const leadWhere = {
       organization_id: organizationId,
       first_event_at: { gte: fromDate, lte: toDate },
-      ...(input.platform ? { platform: input.platform } : {}),
+      ...(platformList ? { platform: { in: platformList } } : {}),
       ...(input.campaign_id ? { campaign_id: input.campaign_id } : {}),
       ...(locationCampaignPairs.length > 0 ? { OR: locationCampaignPairs } : {}),
     } as const
@@ -845,7 +898,7 @@ export const getDashboard = createServerFn({ method: 'POST' })
         where: {
           organization_id: organizationId,
           date: { gte: spendFrom, lte: spendTo },
-          ...(input.platform ? { platform: input.platform } : {}),
+          ...(platformList ? { platform: { in: platformList } } : {}),
           ...(input.campaign_id ? { campaign_id: input.campaign_id } : {}),
           ...(locationCampaignPairs.length > 0 ? { OR: locationCampaignPairs } : {}),
         },
@@ -1029,6 +1082,41 @@ export const syncGoogleAdsNow = createServerFn({ method: 'POST' })
     return result
   })
 
+export const getFacebookBusinessAdAccounts = createServerFn({ method: 'POST' })
+  .inputValidator(
+    z.object({
+      business_id: z.string().min(1).optional(),
+    }),
+  )
+  .handler(async ({ data }) => {
+    const input = data
+    const organizationId = await requireOrganizationId()
+    const { prisma } = await import('@/db')
+    const record = await prisma.organization_settings.findUnique({
+      where: { organization_id: organizationId },
+      select: { config_json: true },
+    })
+
+    const config = (record?.config_json ?? {}) as Record<string, unknown>
+    const savedBusinessId =
+      typeof config.facebook_business_id === 'string'
+        ? config.facebook_business_id
+        : ''
+
+    const businessId =
+      normalizeOptionalString(input.business_id) ??
+      normalizeOptionalString(savedBusinessId)
+
+    if (!businessId) {
+      throw new Error('Missing facebook_business_id')
+    }
+
+    const { fetchFacebookBusinessAdAccounts } = await import(
+      '@/server/ri/syncFacebookAds'
+    )
+    return await fetchFacebookBusinessAdAccounts({ businessId })
+  })
+
 export const syncFacebookAdsNow = createServerFn({ method: 'POST' })
   .inputValidator(
     z.object({
@@ -1039,6 +1127,20 @@ export const syncFacebookAdsNow = createServerFn({ method: 'POST' })
   .handler(async ({ data }) => {
     const input = data
     const organizationId = await requireOrganizationId()
+    const { prisma } = await import('@/db')
+    const record = await prisma.organization_settings.findUnique({
+      where: { organization_id: organizationId },
+      select: { config_json: true },
+    })
+    const config = (record?.config_json ?? {}) as Record<string, unknown>
+    const businessId =
+      typeof config.facebook_business_id === 'string'
+        ? config.facebook_business_id
+        : undefined
+    const accountIds = Array.isArray(config.facebook_ad_account_ids)
+      ? config.facebook_ad_account_ids.filter((id): id is string => typeof id === 'string')
+      : []
+
     const { syncFacebookAdsForOrganization } = await import(
       '@/server/ri/syncFacebookAds'
     )
@@ -1046,6 +1148,8 @@ export const syncFacebookAdsNow = createServerFn({ method: 'POST' })
       organizationId,
       fromDate: input.from_date,
       toDate: input.to_date,
+      businessId,
+      accountIds,
     })
     return result
   })
@@ -1079,12 +1183,17 @@ export const syncFacebookBusinessCampaignsNow = createServerFn({ method: 'POST' 
       throw new Error('Missing facebook_business_id')
     }
 
+    const accountIds = Array.isArray(config.facebook_ad_account_ids)
+      ? config.facebook_ad_account_ids.filter((id): id is string => typeof id === 'string')
+      : []
+
     const { syncFacebookBusinessCampaigns } = await import(
       '@/server/ri/syncFacebookAds'
     )
     return await syncFacebookBusinessCampaigns({
       organizationId,
       businessId,
+      accountIds,
     })
   })
 

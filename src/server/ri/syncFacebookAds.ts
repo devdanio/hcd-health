@@ -161,9 +161,31 @@ async function listBusinessAdAccounts(opts: {
   }
 }
 
+export async function fetchFacebookBusinessAdAccounts(opts: {
+  businessId: string
+}): Promise<{
+  accounts: Array<{ id: string; name: string | null }>
+  owned_error: string | null
+  client_error: string | null
+  owned_count: number
+  client_count: number
+}> {
+  const accessToken = requireEnv('FACEBOOK_ADS_ACCESS_TOKEN')
+  const graphVersion = process.env.FACEBOOK_GRAPH_VERSION ?? 'v20.0'
+  const businessId = opts.businessId.trim()
+  if (!businessId) throw new Error('Missing facebook_business_id')
+
+  return await listBusinessAdAccounts({
+    businessId,
+    accessToken,
+    graphVersion,
+  })
+}
+
 export async function syncFacebookBusinessCampaigns(opts: {
   organizationId: string
   businessId: string
+  accountIds?: string[]
 }): Promise<{
   ad_accounts: number
   owned_ad_accounts: number
@@ -177,11 +199,27 @@ export async function syncFacebookBusinessCampaigns(opts: {
   const businessId = opts.businessId.trim()
   if (!businessId) throw new Error('Missing facebook_business_id')
 
-  const adAccountsResult = await listBusinessAdAccounts({
-    businessId,
-    accessToken,
-    graphVersion,
-  })
+  const explicitAccounts = (opts.accountIds ?? [])
+    .map((id) => normalizeAdAccountId(id))
+    .filter((id) => id.length > 0)
+
+  const adAccountsResult =
+    explicitAccounts.length > 0
+      ? {
+          accounts: Array.from(
+            new Map(explicitAccounts.map((id) => [id, { id, name: null }])).values(),
+          ),
+          owned_error: null,
+          client_error: null,
+          owned_count: 0,
+          client_count: 0,
+        }
+      : await listBusinessAdAccounts({
+          businessId,
+          accessToken,
+          graphVersion,
+        })
+
   const adAccounts = adAccountsResult.accounts
 
   const syncedAt = dayjs().toDate()
@@ -243,137 +281,159 @@ export async function syncFacebookAdsForOrganization(opts: {
   organizationId: string
   fromDate: string // YYYY-MM-DD
   toDate: string // YYYY-MM-DD
+  businessId?: string
+  accountIds?: string[]
 }): Promise<{ campaigns_upserted: number; spend_rows_upserted: number }> {
   const { prisma } = await import('@/db')
 
-  const org = await prisma.organizations.findUniqueOrThrow({
-    where: { id: opts.organizationId },
-    select: { facebook_ads_account_id: true },
-  })
-
-  const accountIdRaw = org.facebook_ads_account_id ?? ''
-  if (!accountIdRaw) {
-    throw new Error('Missing organization facebook_ads_account_id')
-  }
-
   const accessToken = requireEnv('FACEBOOK_ADS_ACCESS_TOKEN')
   const graphVersion = process.env.FACEBOOK_GRAPH_VERSION ?? 'v20.0'
-  const accountId = normalizeAdAccountId(accountIdRaw)
   const baseUrl = `https://graph.facebook.com/${graphVersion}`
 
-  const campaignsParams = new URLSearchParams({
-    access_token: accessToken,
-    fields: 'id,name,status,effective_status',
-    limit: '500',
-  })
-  const campaignsUrl = `${baseUrl}/${accountId}/campaigns?${campaignsParams.toString()}`
-  const campaignsRes = await fetchGraphAll(campaignsUrl)
+  const explicitAccounts = (opts.accountIds ?? [])
+    .map((id) => normalizeAdAccountId(id))
+    .filter((id) => id.length > 0)
+
+  let accountIds: string[] = []
+  if (explicitAccounts.length > 0) {
+    accountIds = Array.from(new Set(explicitAccounts))
+  } else if (opts.businessId) {
+    const adAccountsResult = await listBusinessAdAccounts({
+      businessId: opts.businessId,
+      accessToken,
+      graphVersion,
+    })
+    accountIds = adAccountsResult.accounts.map((a) => a.id)
+  } else {
+    const org = await prisma.organizations.findUniqueOrThrow({
+      where: { id: opts.organizationId },
+      select: { facebook_ads_account_id: true },
+    })
+    const accountIdRaw = org.facebook_ads_account_id ?? ''
+    if (!accountIdRaw) {
+      throw new Error('Missing organization facebook_ads_account_id')
+    }
+    accountIds = [normalizeAdAccountId(accountIdRaw)]
+  }
+
+  if (accountIds.length === 0) {
+    throw new Error('No Facebook ad accounts available to sync')
+  }
 
   const syncedAt = dayjs().toDate()
   let campaignsUpserted = 0
-
-  for (const row of campaignsRes) {
-    const id = row.id
-    if (typeof id !== 'string' && typeof id !== 'number') continue
-    const campaignId = String(id)
-    const name = typeof row.name === 'string' ? row.name : null
-    const status = mapFacebookStatus(
-      typeof row.status !== 'undefined' ? row.status : row.effective_status,
-    )
-
-    await prisma.campaigns.upsert({
-      where: {
-        organization_id_platform_campaign_id: {
-          organization_id: opts.organizationId,
-          platform: 'facebook_ads',
-          campaign_id: campaignId,
-        },
-      },
-      create: {
-        organization_id: opts.organizationId,
-        platform: 'facebook_ads',
-        campaign_id: campaignId,
-        campaign_name: name,
-        status,
-        last_synced_at: syncedAt,
-      },
-      update: {
-        campaign_name: name ?? undefined,
-        status,
-        last_synced_at: syncedAt,
-      },
-    })
-    campaignsUpserted++
-  }
-
-  const insightsParams = new URLSearchParams({
-    access_token: accessToken,
-    level: 'campaign',
-    time_increment: '1',
-    fields: 'campaign_id,campaign_name,spend,account_currency,date_start',
-    limit: '500',
-  })
-  insightsParams.set('time_range[since]', opts.fromDate)
-  insightsParams.set('time_range[until]', opts.toDate)
-
-  const insightsUrl = `${baseUrl}/${accountId}/insights?${insightsParams.toString()}`
-  const insightsRes = await fetchGraphAll(insightsUrl)
-
   let spendRowsUpserted = 0
 
-  for (const row of insightsRes) {
-    const campaignIdRaw = row.campaign_id
-    if (typeof campaignIdRaw !== 'string' && typeof campaignIdRaw !== 'number')
-      continue
-    const campaignId = String(campaignIdRaw)
+  for (const accountId of accountIds) {
+    const campaignsParams = new URLSearchParams({
+      access_token: accessToken,
+      fields: 'id,name,status,effective_status',
+      limit: '500',
+    })
+    const campaignsUrl = `${baseUrl}/${accountId}/campaigns?${campaignsParams.toString()}`
+    const campaignsRes = await fetchGraphAll(campaignsUrl)
 
-    const dateStart = row.date_start
-    const dateValue =
-      typeof dateStart === 'string'
-        ? dateStart
-        : typeof row.date === 'string'
-          ? row.date
-          : null
-    if (!dateValue) continue
+    for (const row of campaignsRes) {
+      const id = row.id
+      if (typeof id !== 'string' && typeof id !== 'number') continue
+      const campaignId = String(id)
+      const name = typeof row.name === 'string' ? row.name : null
+      const status = mapFacebookStatus(
+        typeof row.status !== 'undefined' ? row.status : row.effective_status,
+      )
 
-    const dateObj = dayjs(`${dateValue}T00:00:00.000Z`).toDate()
-    const costCents = spendToCents(row.spend)
-
-    const currencyCode =
-      typeof row.account_currency === 'string'
-        ? row.account_currency
-        : typeof row.currency === 'string'
-          ? row.currency
-          : null
-
-    const campaignName =
-      typeof row.campaign_name === 'string' ? row.campaign_name : null
-
-    await prisma.ad_spend_daily.upsert({
-      where: {
-        organization_id_platform_campaign_id_date: {
+      await prisma.campaigns.upsert({
+        where: {
+          organization_id_platform_campaign_id: {
+            organization_id: opts.organizationId,
+            platform: 'facebook_ads',
+            campaign_id: campaignId,
+          },
+        },
+        create: {
           organization_id: opts.organizationId,
           platform: 'facebook_ads',
           campaign_id: campaignId,
-          date: dateObj,
+          campaign_name: name,
+          status,
+          last_synced_at: syncedAt,
         },
-      },
-      create: {
-        organization_id: opts.organizationId,
-        platform: 'facebook_ads',
-        campaign_id: campaignId,
-        campaign_name: campaignName,
-        date: dateObj,
-        cost_cents: costCents,
-        currency_code: currencyCode,
-      },
-      update: {
-        campaign_name: campaignName ?? undefined,
-        cost_cents: costCents,
-        currency_code: currencyCode ?? undefined,
-      },
+        update: {
+          campaign_name: name ?? undefined,
+          status,
+          last_synced_at: syncedAt,
+        },
+      })
+      campaignsUpserted++
+    }
+
+    const insightsParams = new URLSearchParams({
+      access_token: accessToken,
+      level: 'campaign',
+      time_increment: '1',
+      fields: 'campaign_id,campaign_name,spend,account_currency,date_start',
+      limit: '500',
     })
-    spendRowsUpserted++
+    insightsParams.set('time_range[since]', opts.fromDate)
+    insightsParams.set('time_range[until]', opts.toDate)
+
+    const insightsUrl = `${baseUrl}/${accountId}/insights?${insightsParams.toString()}`
+    const insightsRes = await fetchGraphAll(insightsUrl)
+
+    for (const row of insightsRes) {
+      const campaignIdRaw = row.campaign_id
+      if (typeof campaignIdRaw !== 'string' && typeof campaignIdRaw !== 'number')
+        continue
+      const campaignId = String(campaignIdRaw)
+
+      const dateStart = row.date_start
+      const dateValue =
+        typeof dateStart === 'string'
+          ? dateStart
+          : typeof row.date === 'string'
+            ? row.date
+            : null
+      if (!dateValue) continue
+
+      const dateObj = dayjs(`${dateValue}T00:00:00.000Z`).toDate()
+      const costCents = spendToCents(row.spend)
+
+      const currencyCode =
+        typeof row.account_currency === 'string'
+          ? row.account_currency
+          : typeof row.currency === 'string'
+            ? row.currency
+            : null
+
+      const campaignName =
+        typeof row.campaign_name === 'string' ? row.campaign_name : null
+
+      await prisma.ad_spend_daily.upsert({
+        where: {
+          organization_id_platform_campaign_id_date: {
+            organization_id: opts.organizationId,
+            platform: 'facebook_ads',
+            campaign_id: campaignId,
+            date: dateObj,
+          },
+        },
+        create: {
+          organization_id: opts.organizationId,
+          platform: 'facebook_ads',
+          campaign_id: campaignId,
+          campaign_name: campaignName,
+          date: dateObj,
+          cost_cents: costCents,
+          currency_code: currencyCode,
+        },
+        update: {
+          campaign_name: campaignName ?? undefined,
+          cost_cents: costCents,
+          currency_code: currencyCode ?? undefined,
+        },
+      })
+      spendRowsUpserted++
+    }
   }
 
   return {

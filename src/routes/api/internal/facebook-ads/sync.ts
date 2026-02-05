@@ -42,10 +42,18 @@ export const Route = createFileRoute('/api/internal/facebook-ads/sync')({
         const from = parsed.data.from_date ?? defaultDate
         const to = parsed.data.to_date ?? defaultDate
 
-        const orgs = await prisma.organizations.findMany({
-          where: { facebook_ads_account_id: { not: null } },
-          select: { id: true },
-        })
+        const [orgs, settingsRows] = await Promise.all([
+          prisma.organizations.findMany({
+            select: { id: true, facebook_ads_account_id: true },
+          }),
+          prisma.organization_settings.findMany({
+            select: { organization_id: true, config_json: true },
+          }),
+        ])
+
+        const settingsByOrgId = new Map(
+          settingsRows.map((row) => [row.organization_id, row.config_json] as const),
+        )
 
         const results: Array<{
           organization_id: string
@@ -56,11 +64,28 @@ export const Route = createFileRoute('/api/internal/facebook-ads/sync')({
         }> = []
 
         for (const org of orgs) {
+          const config = (settingsByOrgId.get(org.id) ?? {}) as Record<string, unknown>
+          const businessId =
+            typeof config.facebook_business_id === 'string'
+              ? config.facebook_business_id
+              : undefined
+          const accountIds = Array.isArray(config.facebook_ad_account_ids)
+            ? config.facebook_ad_account_ids.filter(
+                (id): id is string => typeof id === 'string',
+              )
+            : []
+
+          if (!org.facebook_ads_account_id && !businessId && accountIds.length === 0) {
+            continue
+          }
+
           try {
             const r = await syncFacebookAdsForOrganization({
               organizationId: org.id,
               fromDate: from,
               toDate: to,
+              businessId,
+              accountIds,
             })
             results.push({
               organization_id: org.id,

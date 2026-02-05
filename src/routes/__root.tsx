@@ -12,6 +12,7 @@ import {
 import appCss from '../styles.css?url'
 
 import { queryClient } from '@/lib/queryClient'
+import { Toaster } from '@/components/ui/sonner'
 
 const fetchClerkAuth = createServerFn({ method: 'GET' }).handler(async () => {
   const { userId } = await auth()
@@ -110,6 +111,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body className="bg-background text-foreground">
         <QueryClientProvider client={queryClient}>
           {children}
+          <Toaster richColors />
         </QueryClientProvider>
         <Scripts />
         <script

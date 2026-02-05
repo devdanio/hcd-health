@@ -3,6 +3,7 @@ import dayjs from "dayjs"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import { useMemo, useState } from "react"
+import { toast } from "sonner"
 
 import { AppLayout } from "@/components/app/AppLayout"
 import { RequireOrganization } from "@/components/app/RequireOrganization"
@@ -106,6 +107,7 @@ function RouteComponent() {
   const createLocationMutation = useMutation({
     mutationFn: () => createLocation({ data: { name: newLocationName } }),
     onSuccess: async () => {
+      toast.success("Location saved.")
       setNewLocationName("")
       await queryClient.invalidateQueries({
         queryKey: ["org", orgId, "locations"],
@@ -114,12 +116,18 @@ function RouteComponent() {
         queryKey: ["org", orgId, "campaign-settings"],
       })
     },
+    onError: (error) => {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to save location.",
+      )
+    },
   })
 
   const syncMutation = useMutation({
     mutationFn: () =>
       syncGoogleAdsNow({ data: { from_date: syncFrom, to_date: syncTo } }),
     onSuccess: async () => {
+      toast.success("Google Ads sync completed.")
       await queryClient.invalidateQueries({
         queryKey: ["org", orgId, "campaign-settings"],
       })
@@ -127,18 +135,29 @@ function RouteComponent() {
         queryKey: ["org", orgId, "dashboard"],
       })
     },
+    onError: (error) => {
+      toast.error(
+        error instanceof Error ? error.message : "Google Ads sync failed.",
+      )
+    },
   })
 
   const syncFacebookMutation = useMutation({
     mutationFn: () =>
       syncFacebookAdsNow({ data: { from_date: syncFrom, to_date: syncTo } }),
     onSuccess: async () => {
+      toast.success("Facebook Ads sync completed.")
       await queryClient.invalidateQueries({
         queryKey: ["org", orgId, "campaign-settings"],
       })
       await queryClient.invalidateQueries({
         queryKey: ["org", orgId, "dashboard"],
       })
+    },
+    onError: (error) => {
+      toast.error(
+        error instanceof Error ? error.message : "Facebook Ads sync failed.",
+      )
     },
   })
 
