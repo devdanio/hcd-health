@@ -32,6 +32,7 @@ export const Route = createFileRoute('/api/fb-conversion/$companyName')({
   server: {
     handlers: {
       POST: async ({ request, params }) => {
+        console.log('FB conversion request received')
         const { companyName } = params
 
         if (companyName !== 'paom') {
