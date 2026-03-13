@@ -1,0 +1,2 @@
+thrive-patients-from-paid-chat.csv - this is all patients that came from chat and a paid source
+ghl-contacts-matched-patients.csv - these are phone calls

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iframe Test Form</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 20px;
+      background: #1e293b;
+      color: #ffffff;
+    }
+
+    h2 {
+      color: #22d3ee;
+      margin-top: 0;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #3a3a3a;
+      border-radius: 4px;
+      background: #2a2a2a;
+      color: #ffffff;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #22d3ee;
+    }
+
+    button {
+      background: #22d3ee;
+      color: #000;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      background: #06b6d4;
+    }
+
+    .status {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .status.success {
+      background: #10b98144;
+      border: 1px solid #10b981;
+      color: #10b981;
+    }
+
+    .status.error {
+      background: #ef444444;
+      border: 1px solid #ef4444;
+      color: #ef4444;
+    }
+
+    .status.info {
+      background: #22d3ee44;
+      border: 1px solid #22d3ee;
+      color: #22d3ee;
+    }
+  </style>
+
+  <!-- Leadalytics Iframe Tracker -->
+  <script src="/tracker/iframe-tracker.js"></script>
+</head>
+<body>
+  <h2>📝 Test Form in Iframe</h2>
+
+  <div id="statusBox" class="status info">
+    Connecting to parent page...
+  </div>
+
+  <form id="leadForm">
+    <div class="form-group">
+      <label for="name">Name *</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email *</label>
+      <input type="email" id="email" name="email" required>
+    </div>
+
+    <div class="form-group">
+      <label for="message">Message</label>
+      <textarea id="message" name="message" rows="4"></textarea>
+    </div>
+
+    <button type="submit">Submit Form</button>
+  </form>
+
+  <script>
+    const statusBox = document.getElementById('statusBox')
+
+    // Wait for session data from parent
+    window.Leadalytics.waitForReady(5000).then((isReady) => {
+      if (isReady) {
+        const sessionInfo = window.Leadalytics.getSessionInfo()
+        statusBox.className = 'status success'
+        statusBox.innerHTML = `
+          ✅ Connected to parent tracker<br>
+          <small>Session ID: ${sessionInfo.sessionId.slice(0, 16)}...</small>
+        `
+        console.log('Iframe tracker ready:', sessionInfo)
+      } else {
+        statusBox.className = 'status error'
+        statusBox.innerHTML = '❌ Could not connect to parent tracker. Make sure parent page has tracker installed.'
+      }
+    })
+
+    // Handle form submission
+    document.getElementById('leadForm').addEventListener('submit', async (e) => {
+      e.preventDefault()
+
+      const formData = new FormData(e.target)
+      const data = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        message: formData.get('message'),
+      }
+
+      // Check if tracker is ready
+      if (!window.Leadalytics.isReady()) {
+        statusBox.className = 'status error'
+        statusBox.innerHTML = '❌ Tracker not ready. Cannot track conversion.'
+        return
+      }
+
+      // Track conversion
+      try {
+        await window.trackConversion('lead_form_submit', {
+          metadata: {
+            formId: 'iframe-test-form',
+            name: data.name,
+            email: data.email,
+            source: 'iframe',
+            timestamp: Date.now()
+          }
+        })
+
+        statusBox.className = 'status success'
+        statusBox.innerHTML = '✅ Form submitted! Conversion tracked.'
+
+        console.log('Conversion tracked:', data)
+
+        // Reset form after 2 seconds
+        setTimeout(() => {
+          e.target.reset()
+          statusBox.className = 'status info'
+          statusBox.innerHTML = 'Form ready for another submission'
+        }, 2000)
+
+      } catch (error) {
+        statusBox.className = 'status error'
+        statusBox.innerHTML = `❌ Error: ${error.message}`
+        console.error('Error tracking conversion:', error)
+      }
+    })
+
+    console.log('%c📝 Iframe Tracker Test', 'font-size: 16px; font-weight: bold; color: #22d3ee')
+    console.log('Waiting for session data from parent...')
+  </script>
+</body>
+</html>

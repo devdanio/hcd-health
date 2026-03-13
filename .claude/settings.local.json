@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm run build)",
+      "Bash(pnpm exec tsc:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(pnpm exec tsr:*)",
+      "Bash(pnpm dev --help:*)",
+      "Bash(pnpm build:*)",
+      "Bash(cat:*)",
+      "Bash(pnpm add:*)",
+      "Bash(npx tsx:*)",
+      "Bash(openssl rand:*)",
+      "WebFetch(domain:tanstack.com)",
+      "Bash(find:*)",
+      "Bash(npx prisma init:*)",
+      "Bash(npx prisma migrate:*)",
+      "Bash(PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION=\"you can continue\" npx prisma migrate reset:*)",
+      "WebSearch",
+      "Bash(pnpm remove:*)",
+      "WebFetch(domain:frontendatscale.com)",
+      "Bash(pnpx shadcn@latest add:*)",
+      "Bash(ls:*)",
+      "Bash(npx prisma:*)",
+      "Bash(echo:*)",
+      "Bash(python3:*)",
+      "Bash(while IFS= read -r line)",
+      "Bash(do echo \"$line\")",
+      "Bash(done)",
+      "Bash(pnpm build:tracker:*)",
+      "Bash(node -e:*)",
+      "Bash(npx tsc:*)",
+      "Bash(curl:*)",
+      "Bash(node:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

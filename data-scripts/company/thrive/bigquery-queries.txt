@@ -1,0 +1,79 @@
+SELECT 
+  gc.attributionSource_campaign,
+  gc.attributionSource_sessionSource,
+  COUNT(*) AS count
+FROM `leadalytics-471218`.`thrive`.`chirotouch_patients` AS cp
+LEFT JOIN `leadalytics-471218`.`thrive`.`ghl_contacts` AS gc
+  ON cp.Phone = CAST(REGEXP_REPLACE(CAST(gc.phone AS STRING), r'^\+?1', '') AS INT64)
+  OR LOWER(cp.Email) = gc.emailLowerCase
+GROUP BY gc.attributionSource_campaign, gc.attributionSource_sessionSource
+ORDER BY count DESC;
+
+
+
+SELECT
+  FORMAT_DATE('%Y-%m', DATE(gc.dateAdded)) AS month,
+  gc.attributionSource_campaign,
+  COUNT(*) AS count
+FROM `leadalytics-471218`.`thrive`.`chirotouch_patients` AS cp
+LEFT JOIN `leadalytics-471218`.`thrive`.`ghl_contacts` AS gc
+  ON
+    cp.Phone
+      = CAST(REGEXP_REPLACE(CAST(gc.phone AS STRING), r'^\+?1', '') AS INT64)
+    OR LOWER(cp.Email) = gc.emailLowerCase
+WHERE gc.dateAdded >= TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 16 MONTH))
+GROUP BY month, gc.attributionSource_campaign
+ORDER BY gc.attributionSource_campaign, month;
+
+
+
+
+
+SELECT 
+  gc.attributionSource_campaign,
+  COUNT(*) AS count
+FROM `leadalytics-471218`.`thrive`.`chirotouch_patients` AS cp
+LEFT JOIN `leadalytics-471218`.`thrive`.`ghl_contacts` AS gc
+  ON cp.Phone = CAST(REGEXP_REPLACE(CAST(gc.phone AS STRING), r'^\+?1', '') AS INT64)
+  OR LOWER(cp.Email) = gc.emailLowerCase
+GROUP BY gc.attributionSource_campaign
+ORDER BY count DESC;
+
+
+
+
+-----------------
+List of people who we converted from the Belmar-25 campaign
+WITH normalized_patients AS (
+  SELECT 
+    *,
+    LOWER(TRIM(Email)) AS normalized_email,
+    TRIM(CAST(Phone AS STRING)) AS normalized_phone
+  FROM `leadalytics-471218.thrive.chirotouch_patients`
+),
+
+normalized_contacts AS (
+  SELECT 
+    *,
+    LOWER(TRIM(email)) AS normalized_email,
+    CASE 
+      WHEN STARTS_WITH(TRIM(CAST(phone AS STRING)), '1') 
+        THEN SUBSTR(TRIM(CAST(phone AS STRING)), 2)
+      ELSE TRIM(CAST(phone AS STRING))
+    END AS normalized_phone
+  FROM `leadalytics-471218.thrive.ghl_contacts`
+  WHERE lastAttributionSource_campaign = '{campaignname}'
+     OR attributionSource_campaign = '{campaignname}'
+),
+
+matched_records AS (
+  SELECT DISTINCT
+    p.Phone,
+    p.Email
+  FROM normalized_patients p
+  INNER JOIN normalized_contacts c
+    ON (p.normalized_email = c.normalized_email AND p.normalized_email != '')
+    OR (p.normalized_phone = c.normalized_phone AND p.normalized_phone != '')
+)
+
+SELECT * FROM matched_records

@@ -1,0 +1,22 @@
+## EHR
+
+### Unified Practice
+
+1. Run a report for: Reports -> Patient Summary -> Export
+2. Drag report to pipeline/client-data/paom/raw/unifiedpractice
+3. Rename to MM-DD-YYYY
+4. $ pnpm run pipeline:ehr-preprocess paom // Normalize patients
+5. $ pnpm run pipeline:patients-to-db paom // Patients to db (upsert)
+6. $ pnpm run pipeline:fetch-contacts paom // Fetch contacts from GHL
+7. $ pnpm run pipeline:contacts-to-db paom // Leds to DB
+8. $ pnpm run pipeline:link-patients paom // link patients
+
+### Thrive
+
+1. Chirotouch -> Chirotouch Front Desk (from the big hand menu) -> Billing statements & Reports -> Reports -> New patient list -> Preview-> Select all -> Next -> Export -> new-patients-02-28-2026.xls (name is important). It doesn't matter how far back you export as long as it overlaps w/ a previous import it will ensure all new patients are added
+2. Ensure the process is done for for Belmar & Thrive
+3. $ pnpm run pipeline:ehr-preprocess thrive // Normalize patients - Since there are two locations, it will process ALL files with the latest date. If one date is behind the other it will only process the most recent.
+4. $ pnpm run pipeline:patients-to-db thrive // Patients to db (upsert)
+5. $ pnpm run pipeline:fetch-contacts thrive // Fetch contacts from GHL
+6. $ pnpm run pipeline:contacts-to-db thrive // Leds to DB
+7. $ pnpm run pipeline:link-patients thrive // link patients
