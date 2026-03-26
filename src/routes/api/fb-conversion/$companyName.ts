@@ -12,6 +12,7 @@ function hashValue(val: string) {
 const bodySchema = z.object({
   eventName: z.string().min(1),
   fbCLID: z.string().min(1),
+  eventSourceUrl: z.string().url(),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   email: z.string().optional(),
@@ -31,6 +32,9 @@ function json(status: number, body: unknown) {
 export const Route = createFileRoute('/api/fb-conversion/$companyName')({
   server: {
     handlers: {
+      GET: () => {
+        return json(200, { message: 'FB conversion endpoint is working' })
+      },
       POST: async ({ request, params }) => {
         console.log('FB conversion request received')
         const { companyName } = params
@@ -78,6 +82,7 @@ export const Route = createFileRoute('/api/fb-conversion/$companyName')({
           {
             event_name: input.eventName,
             event_time: eventTime,
+            event_source_url: input.eventSourceUrl,
             user_data: userData,
             action_source: 'website',
           },

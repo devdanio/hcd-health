@@ -6,24 +6,28 @@ function hashValue(val) {
     .digest('hex')
 }
 
+// Amanda I tried at 11:52am mar 26 for the first time with euser eventSourceURL
+
 // 2026 PAOM
 const pixelId = '667439912697145'
 const accessToken =
   'EAATzPGr8cBUBQWco4BFFheCMV3f0WnW5nhZAw0lM2aywMK65byvnHnVlVQt7BgMMcZBW8ZBQLzMOn0j0jlonjZBbnywan4f3dQ2Q5UatcqYYc78q5KNNhI7HhrYVyZAPVbZAvmoeF6KX6Wqo9trQ2JanZAlRdFdR3N1aTEHizYLhWBe44ckl6AqjCr5qw3OPQZDZD'
 
 const data = {
-  firstName: 'Judith',
-  lastName: 'Koubek',
-  email: 'judyandluke@gmail.com',
-  phone: '6095773896',
+  firstName: 'Amanda',
+  lastName: '',
+  email: 'amandastadler016@gmail.com',
+  phone: '7323974507',
   fbCLID:
-    'IwZXh0bgNhZW0BMABhZGlkAas4w3578epzcnRjBmFwcF9pZAo2NjI4NTY4Mzc5AAEejr3x9HXrVCoJ2XnY3cdalqNCOoHTNTB6BFjw7UbJ_lLu_J9jVcRqgB8mwy8_aem_0w3RZYpB99BawiNCwZF_3A',
-  ipAddress: '2601:86:4300:2440:21be:d38f:aba2:87b5',
+    'IwY2xjawQvCZBleHRuA2FlbQEwAGFkaWQBqzr_4bEUqnNydGMGYXBwX2lkDzI0NTc5MDgxODk1NTg2OAABHjidmNUYKs_wWInbMIX6GQPy8TcPytmoPqm6z3uQfr52drvw8rwCOaeJvvYo_aem_1me2zXQ2js0fdWPMAOMT9A',
+  ipAddress: '50.184.105.177',
   //   This event name is for custom conversion "Event #1"
   eventName: 'Event 1',
-  userAgent: `Mozilla/5.0 (iPhone; CPU iPhone OS 26_2_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/23C71 [FBAN/FBIOS;FBAV/550.0.0.34.65;FBBV/890804754;FBDV/iPhone17,2;FBMD/iPhone;FBSN/iOS;FBSV/26.2.1;FBSS/3;FBID/phone;FBLC/en_US;FBOP/5;FBRV/893384955;IABMV/1]`,
+  eventSourceUrl:
+    'https://pa-om.com/online-back-pain-assessment-find-the-root-cause/?campaign_id=120254685607080362&utm_source=fb_ad&utm_medium=Broad+12+mi+-+Event+1&utm_campaign=2026+Back+Pain+Assessment+-+Event+1+Conversion+-+Copy&utm_content=If+you%27ve+been+told&utm_id=120254685607080362&utm_term=120254685607090362&fbclid=IwY2xjawQvCZBleHRuA2FlbQEwAGFkaWQBqzr_4bEUqnNydGMGYXBwX2lkDzI0NTc5MDgxODk1NTg2OAABHjidmNUYKs_wWInbMIX6GQPy8TcPytmoPqm6z3uQfr52drvw8rwCOaeJvvYo_aem_1me2zXQ2js0fdWPMAOMT9A',
+  userAgent: `Mozilla/5.0 (Linux; Android 16; moto g - 2025 Build/W1VKS36H.9-12-1; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/145.0.7632.159 Mobile Safari/537.36`,
 }
-const date = new Date('2026-02-27T12:34:00-05:00')
+const date = new Date('2026-03-24T10:00:00-05:00')
 const unixTime = Math.floor(date.getTime() / 1000)
 
 const createPayload = (input) => {
@@ -34,6 +38,7 @@ const createPayload = (input) => {
     {
       event_name: input.eventName,
       event_time: unixTime,
+      event_source_url: input.eventSourceUrl,
       user_data: {
         em: [hashedEmail],
         ph: [hashedPhone],
